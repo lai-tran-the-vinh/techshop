@@ -97,7 +97,10 @@ function Login() {
           </div>
           <div className="mt-10 flex flex-col items-center">
             <button
-              onClick={() => Users.login(user, setEmailError, setPasswordError)}
+              onClick={(event) => {
+                event.preventDefault();
+                Users.login(user, setEmailError, setPasswordError);
+              }}
               className="bg-primary w-full cursor-pointer hover:opacity-80 py-6 rounded-md text-white"
             >
               Đăng nhập

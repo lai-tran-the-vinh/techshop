@@ -2,16 +2,16 @@ import { validateEmail, validatePassword } from "@/helpers";
 
 function login(user, setEmailError, setPasswordError) {
   if (validateEmail(user.email)) {
-    setEmailError(true);
-  } else {
     setEmailError(false);
+  } else {
+    setEmailError(true);
     return;
   }
 
   if (validatePassword(user.password)) {
-    setPasswordError(true);
-  } else {
     setPasswordError(false);
+  } else {
+    setPasswordError(true);
     return;
   }
 
