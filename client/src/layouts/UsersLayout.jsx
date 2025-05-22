@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Login } from "@pages/app";
-import { LoadingToast } from "@/components/app";
 import { useAppContext } from "@contexts";
 import { Outlet, Link } from "react-router-dom";
+import { LoadingToast, SuccessToast, ErrorToast } from "@/components/app";
 
 function Header() {
   const { setShowLogin } = useAppContext();
@@ -42,14 +42,27 @@ function Header() {
 }
 
 function UsersLayout() {
-  const { loading, setLoading, showLogin, setMessage } = useAppContext();
+  const {
+    loading,
+    showLogin,
+    setMessage,
+    setLoading,
+    loadingError,
+    loadingSuccess,
+    setLoadingError,
+    setLoadingSuccess,
+  } = useAppContext();
+
   return (
-    <div>
+    <div className="relative">
       <Header />
       <main>
         <Outlet />
         {showLogin && <Login />}
       </main>
+      {loading && <LoadingToast />}
+      {loadingError && <ErrorToast />}
+      {loadingSuccess && <SuccessToast />}
       <footer>Footer</footer>
     </div>
   );

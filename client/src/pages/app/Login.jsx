@@ -14,7 +14,7 @@ function Login() {
   }, []);
 
   const [emailError, setEmailError] = useState(false);
-  const { setShowLogin } = useAppContext();
+  const { setShowLogin, setLoadingSuccess } = useAppContext();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [user, setUser] = useState({ email: "", password: "" });
