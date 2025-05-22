@@ -1,6 +1,6 @@
-import { createBrowserRouter } from "react-router";
-import { UsersLayout } from "@layouts";
 import { Home } from "@pages/users";
+import { UsersLayout } from "@layouts";
+import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {

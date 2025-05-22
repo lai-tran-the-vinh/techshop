@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AiFillEye,
   AiFillWarning,
@@ -7,12 +7,15 @@ import {
 } from "react-icons/ai";
 import Users from "@services/users";
 import { useAppContext } from "@contexts";
+import { Loading } from "@components/app";
 
 function Login() {
-  document.title = "TechShop | Đăng nhập";
+  useEffect(() => {
+    document.title = "TechShop | Đăng nhập";
+  }, []);
 
   const [emailError, setEmailError] = useState(false);
-  const { showLogin, setShowLogin } = useAppContext();
+  const { setShowLogin } = useAppContext();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [user, setUser] = useState({ email: "", password: "" });
@@ -23,8 +26,8 @@ function Login() {
         <div className="border-b border-b-gray-200 rounded-t-lg flex justify-between items-center px-20 h-50">
           <h3 className="font-medium text-xl">Đăng nhập</h3>
           <div
-            onClick={() => setShowLogin(!showLogin)}
-            className="w-40 h-40 text-xl font-normal flex items-center justify-center rounded-full hover:bg-gray-200 cursor-pointer"
+            onClick={() => setShowLogin(false)}
+            className="w-40 h-40 text-xl font-light flex items-center justify-center rounded-full hover:bg-gray-200 cursor-pointer"
           >
             <AiOutlineClose />
           </div>
@@ -115,6 +118,7 @@ function Login() {
             </button>
           </div>
         </form>
+        <Loading />
       </div>
     </div>
   );

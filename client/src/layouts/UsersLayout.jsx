@@ -1,27 +1,40 @@
+import { useEffect } from "react";
 import { Login } from "@pages/app";
 import { useAppContext } from "@contexts";
-import { Outlet, Link } from "react-router";
+import { Outlet, Link } from "react-router-dom";
 
 function Header() {
-  const { showLogin, setShowLogin } = useAppContext();
-  document.title = "TechShop | Mua sắm thả ga"
+  const { setShowLogin } = useAppContext();
+
+  const style = {
+    logo: "font-bold xl:text-3xl text-primary",
+    buttonsContainer: "flex gap-8 font-medium",
+    loginButton: "border border-gray-300 py-6 px-12 rounded-lg cursor-pointer",
+    container:
+      "font-roboto xl:px-50 w-full h-60 flex items-center justify-between",
+    signupButton:
+      "py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80",
+  };
+
+  useEffect(() => {
+    document.title = "TechShop | Mua sắm thả ga";
+  }, []);
+
   return (
-    <header className="font-roboto xl:px-50 w-full h-60 flex items-center justify-between">
+    <header className={style.container}>
       <Link to="/">
-        <h3 className="font-bold xl:text-3xl text-primary">TECHSHOP</h3>
+        <h3 className={style.logo}>TECHSHOP</h3>
       </Link>
-      <div className="flex gap-8 font-medium">
+      <div className={style.buttonsContainer}>
         <button
           onClick={() => {
-            setShowLogin(!showLogin);
+            setShowLogin(true);
           }}
-          className="border border-gray-300 py-6 px-12 rounded-lg cursor-pointer"
+          className={style.loginButton}
         >
           Đăng nhập
         </button>
-        <button className="py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80">
-          Đăng ký
-        </button>
+        <button className={style.signupButton}>Đăng ký</button>
       </div>
     </header>
   );
@@ -33,10 +46,10 @@ function UsersLayout() {
   return (
     <div>
       <Header />
-      <div>
+      <main>
         <Outlet />
         {showLogin && <Login />}
-      </div>
+      </main>
       <footer>Footer</footer>
     </div>
   );

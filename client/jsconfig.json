@@ -6,8 +6,9 @@
       "@pages/*": ["./src/pages/*"],
       "@helpers/*": ["./src/helpers/*"],
       "@layouts/*": ["./src/layouts/*"],
+      "@services/*": ["./src/services/*"],
       "@contexts/*": ["./src/contexts/*"],
-      "@services/*": ["./src/services/*"]
+      "@components/*": ["./src/components/*"]
     }
   },
   "include": ["src", "eslint.config.js"]
