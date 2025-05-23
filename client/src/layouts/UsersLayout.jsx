@@ -7,35 +7,27 @@ import { LoadingToast, SuccessToast, ErrorToast } from "@/components/app";
 function Header() {
   const { setShowLogin } = useAppContext();
 
-  const style = {
-    logo: "font-bold xl:text-3xl text-primary",
-    buttonsContainer: "flex gap-8 font-medium",
-    loginButton: "border border-gray-300 py-6 px-12 rounded-lg cursor-pointer",
-    container:
-      "font-roboto xl:px-50 w-full h-60 flex items-center justify-between",
-    signupButton:
-      "py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80",
-  };
-
   useEffect(() => {
     document.title = "TechShop | Mua sắm thả ga";
   }, []);
 
   return (
-    <header className={style.container}>
+    <header className="font-roboto xl:px-50 w-full h-60 flex items-center justify-between">
       <Link to="/">
-        <h3 className={style.logo}>TECHSHOP</h3>
+        <h3 className="font-bold xl:text-3xl text-primary">TechShop</h3>
       </Link>
-      <div className={style.buttonsContainer}>
+      <div className="flex gap-8 font-medium">
         <button
           onClick={() => {
             setShowLogin(true);
           }}
-          className={style.loginButton}
+          className="border border-gray-300 py-6 px-12 rounded-lg cursor-pointer"
         >
           Đăng nhập
         </button>
-        <button className={style.signupButton}>Đăng ký</button>
+        <button className="py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80">
+          Đăng ký
+        </button>
       </div>
     </header>
   );
@@ -47,6 +39,7 @@ function UsersLayout() {
     showLogin,
     setMessage,
     setLoading,
+    toastLoading,
     loadingError,
     loadingSuccess,
     setLoadingError,
@@ -60,8 +53,8 @@ function UsersLayout() {
         <Outlet />
         {showLogin && <Login />}
       </main>
-      {loading && <LoadingToast />}
       {loadingError && <ErrorToast />}
+      {toastLoading && <LoadingToast />}
       {loadingSuccess && <SuccessToast />}
       <footer>Footer</footer>
     </div>
