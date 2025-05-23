@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { Login } from "@pages/app";
+import { Login, Signup } from "@pages/app";
 import { useAppContext } from "@contexts";
 import { Outlet, Link } from "react-router-dom";
 import { LoadingToast, SuccessToast, ErrorToast } from "@/components/app";
 
 function Header() {
-  const { setShowLogin } = useAppContext();
+  const { setShowLogin, setShowSignup } = useAppContext();
 
   useEffect(() => {
     document.title = "TechShop | Mua sắm thả ga";
@@ -25,7 +25,12 @@ function Header() {
         >
           Đăng nhập
         </button>
-        <button className="py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80">
+        <button
+          onClick={() => {
+            setShowSignup(true);
+          }}
+          className="py-6 px-12 rounded-lg bg-primary text-white cursor-pointer hover:opacity-80"
+        >
           Đăng ký
         </button>
       </div>
@@ -37,6 +42,7 @@ function UsersLayout() {
   const {
     loading,
     showLogin,
+    showSignup,
     setMessage,
     setLoading,
     toastLoading,
@@ -52,6 +58,7 @@ function UsersLayout() {
       <main>
         <Outlet />
         {showLogin && <Login />}
+        {showSignup && <Signup />}
       </main>
       {loadingError && <ErrorToast />}
       {toastLoading && <LoadingToast />}

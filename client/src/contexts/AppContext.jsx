@@ -6,6 +6,7 @@ function AppProvider({ children }) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
   const [toastLoading, setToastLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
@@ -14,6 +15,7 @@ function AppProvider({ children }) {
     loading,
     message,
     showLogin,
+    showSignup,
     loadingError,
     toastLoading,
     loadingSuccess,
@@ -21,6 +23,7 @@ function AppProvider({ children }) {
     setLoading,
     setMessage,
     setShowLogin,
+    setShowSignup,
     setLoadingError,
     setToastLoading,
     setLoadingSuccess,
