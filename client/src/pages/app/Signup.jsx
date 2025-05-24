@@ -14,6 +14,7 @@ function Signup() {
   }, []);
 
   const genderDropdownRef = useRef(null);
+  const addressDropdownRef = useRef(null);
   const [user, setUser] = useState({
     phone: "",
     email: "",
@@ -25,6 +26,7 @@ function Signup() {
 
   const genders = ["Nam", "Nữ", "Khác"];
   const { setShowSignup } = useAppContext();
+  const places = ["Tỉnh/Thành phố", "Quận/Huyện", "Xã/Phường"];
 
   const [userError, setUserError] = useState({
     emailError: false,
@@ -37,6 +39,9 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
+
+  const [selectedPlace, setSelectedPlace] = useState("Tỉnh/Thành phố");
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -45,6 +50,13 @@ function Signup() {
         !genderDropdownRef.current.contains(event.target)
       ) {
         setShowGenderDropdown(false);
+      }
+
+      if (
+        addressDropdownRef.current &&
+        !addressDropdownRef.current.contains(event.target)
+      ) {
+        setShowAddressDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -139,7 +151,7 @@ function Signup() {
               {showGenderDropdown && (
                 <ul
                   ref={genderDropdownRef}
-                  className="absolute left-0 right-0 top-full rounded-md mt-4 p-4 bg-gray-100"
+                  className="absolute left-0 right-0 z-1 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
                 >
                   {genders.map((gender) => (
                     <li
@@ -147,7 +159,7 @@ function Signup() {
                         setUser({ ...user, gender: event.target.textContent });
                         setShowGenderDropdown(false);
                       }}
-                      className={`px-8 py-2 cursor-pointer ${user.gender === gender ? "bg-gray-200" : ""}`}
+                      className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${user.gender === gender ? "bg-gray-200" : ""}`}
                     >
                       {gender}
                     </li>
@@ -168,21 +180,39 @@ function Signup() {
             </div>
           </div>
 
-          <div className="flex flex-col my-10">
+          <div className="flex flex-col my-10 relative">
             <label htmlFor="address" className="text-sm font-medium mb-4">
               Địa chỉ
             </label>
             <input
+              readOnly
               id="address"
               type="address"
               name="address"
-              placeholder="Nhập địa chỉ"
-              onChange={(event) => {
-                const fieldName = event.target.name;
-                setUser({ ...user, [fieldName]: event.target.value });
-              }}
-              className="outline-none text-base placeholder:text-sm rounded-md px-12 py-8 bg-gray-100"
+              placeholder="Chọn địa chỉ"
+              onClick={() => setShowAddressDropdown(!showAddressDropdown)}
+              className="outline-none cursor-pointer text-base placeholder:text-sm rounded-md px-12 py-8 bg-gray-100"
             />
+
+            {showAddressDropdown && (
+              <div
+                ref={addressDropdownRef}
+                className="bg-white absolute top-full mt-4 h-100 left-0 right-0 rounded-md border border-gray-200"
+              >
+                <div className="flex justify-center gap-8 border-b border-gray-200">
+                  {places.map((place, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedPlace(place)}
+                      className={`w-[33%] cursor-pointer py-6 text-center ${selectedPlace === place ? "border-b border-b-primary text-primary" : ""}`}
+                    >
+                      {place}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {userError.addressError && (
               <div className="flex items-center gap-2">
                 <div className="text-red-500">
