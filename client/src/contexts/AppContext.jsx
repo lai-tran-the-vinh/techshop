@@ -3,6 +3,7 @@ import { useContext, createContext, useState } from "react";
 const AppContext = createContext();
 
 function AppProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
