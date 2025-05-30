@@ -16,14 +16,22 @@ function Login() {
 
   const navigate = useNavigate();
   const [emailError, setEmailError] = useState(false);
+
   const {
     setMessage,
     setShowLogin,
-    setToastError,
     setToastLoading,
     setLoadingError,
     setLoadingSuccess,
   } = useAppContext();
+
+  const [emailMessage, setEmailMessage] = useState(
+    "Email không được để trống."
+  );
+  const [passwordMessage, setPasswordMessage] = useState(
+    "Mật khẩu không được để trống."
+  );
+
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [user, setUser] = useState({ email: "", password: "" });
@@ -62,7 +70,7 @@ function Login() {
                   <AiFillWarning />
                 </div>
                 <span className="text-sm mt-2 text-red-500">
-                  Email không đúng
+                  {emailMessage}
                 </span>
               </div>
             )}
@@ -96,7 +104,7 @@ function Login() {
                   <AiFillWarning />
                 </div>
                 <span className="text-sm mt-2 text-red-500">
-                  Mật khẩu không đúng
+                  {passwordMessage}
                 </span>
               </div>
             )}
@@ -110,18 +118,19 @@ function Login() {
             <button
               onClick={async (event) => {
                 event.preventDefault();
-                setToastLoading(true);
-                setMessage("Đang đăng nhập");
                 await Users.login(
                   user,
+                  navigate,
+                  setMessage,
+                  setShowLogin,
                   setEmailError,
+                  setToastLoading,
+                  setEmailMessage,
+                  setLoadingError,
                   setPasswordError,
-                  navigate
+                  setLoadingSuccess,
+                  setPasswordMessage
                 );
-                setToastLoading(false);
-                setLoadingSuccess(true);
-                setMessage("Đăng nhập thành công");
-                setShowLogin(false);
               }}
               className="bg-primary w-full cursor-pointer hover:opacity-80 py-6 rounded-md text-white"
             >
