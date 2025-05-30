@@ -3,34 +3,31 @@ import "slick-carousel/slick/slick-theme.css";
 
 import React from "react";
 import Slider from "react-slick";
+import { GoChevronLeft } from "react-icons/go";
 import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
 
 function PrevArrow(props) {
-  const { className, style, onClick } = props;
+  const { onClick } = props;
+
   return (
     <div
-      className={`${className} absolute top-1/2 right-full z-1 cursor-pointer -translate-y-1/2`}
-      style={{ ...style, display: "block" }}
       onClick={onClick}
+      className="hidden absolute z-1 top-[50%] left-30 rounded-full bg-white cursor-pointer shadow-md hover:bg-opacity-90 transition-all duration-200 group-hover:flex items-center justify-center"
     >
-      <div className="rounded-full shadow-md hover:bg-opacity-90 transition-all duration-200 flex items-center justify-center w-30 h-30">
-        <FaArrowAltCircleLeft className="text-gray-800 text-2xl" />
-      </div>
+      <FaArrowAltCircleLeft className="text-gray-800 text-3xl" />
     </div>
   );
 }
 
 function NextArrow(props) {
-  const { className, style, onClick } = props;
+  const { onClick } = props;
+
   return (
     <div
-      className={`${className} absolute top-1/2 right-0 z-1 cursor-pointer -translate-y-1/2`}
-      style={{ ...style, display: "block" }}
       onClick={onClick}
+      className="hidden absolute z-1 top-[50%] right-30 rounded-full bg-white cursor-pointer shadow-md hover:bg-opacity-90 transition-all duration-200 group-hover:flex items-center justify-center"
     >
-      <div className="rounded-full shadow-md hover:bg-opacity-90 transition-all duration-200 flex items-center justify-center w-30 h-30">
-        <FaArrowAltCircleRight className="text-gray-800 text-2xl" />
-      </div>
+      <FaArrowAltCircleRight className="text-gray-800 text-3xl" />
     </div>
   );
 }
@@ -38,30 +35,30 @@ function NextArrow(props) {
 function ImagesSlider() {
   var settings = {
     dots: true,
-    arrows: true,
-    infinite: true,
     speed: 500,
+    infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
+    accessibility: true,
+    pauseOnDotsHover: true,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
+
+  const banners = [
+    "https://mir-s3-cdn-cf.behance.net/project_modules/max_3840_webp/34b5bf180145769.6505ae7623131.jpg",
+    "https://happyphone.vn/wp-content/uploads/2024/12/Banner-Sale-Iphone-Thang-12-1920x1080-1.webp",
+  ];
+
   return (
-    <Slider {...settings}>
-      <div className="rounded-md flex justify-center px-10">
-        <img
-          alt=""
-          className="rounded-md"
-          src="https://happyphone.vn/wp-content/uploads/2024/12/Banner-Sale-Iphone-Thang-12-1920x1080-1.webp"
-        />
-      </div>
-      <div className="rounded-md flex justify-center px-10">
-        <img
-          alt=""
-          className="rounded-md"
-          src="https://happyphone.vn/wp-content/uploads/2024/12/Banner-Sale-Iphone-Thang-12-1920x1080-1.webp"
-        />
-      </div>
+    <Slider {...settings} className="group">
+      {banners.map((banner, index) => {
+        return (
+          <div key={index} className="rounded-md flex justify-center px-10">
+            <img alt="" className="rounded-md" src={banner} />
+          </div>
+        );
+      })}
     </Slider>
   );
 }

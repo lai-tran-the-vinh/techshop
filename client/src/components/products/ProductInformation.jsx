@@ -13,7 +13,6 @@ function ProductInformation({ className, product, loading }) {
   useEffect(() => {
     if (product.variants) {
       const variantMemories = product.variants.map((variant) => variant.memory);
-      console.log("Variant memories:", variantMemories);
       setMemories(variantMemories);
 
       const variantColors = product.variants
@@ -23,9 +22,6 @@ function ProductInformation({ className, product, loading }) {
       setColors(variantColors);
       setSelectedColor(variantColors[0]);
       setSelectedMemory(variantMemories[0]);
-
-      console.log("Variant memories:", variantMemories);
-      console.log("Selected memory:", selectedMemory);
     }
   }, [product.variants]);
 
@@ -34,8 +30,6 @@ function ProductInformation({ className, product, loading }) {
       const variantColors = product.variants
         .filter((variant) => variant.memory === selectedMemory)
         .map((variant) => variant.color);
-
-      console.log("Default variant colors:", variantColors);
       setSelectedColor(variantColors[0]);
       setColors(variantColors);
     }
@@ -47,8 +41,6 @@ function ProductInformation({ className, product, loading }) {
         (variant) =>
           variant.color === selectedColor && variant.memory === selectedMemory
       );
-
-      console.log("Price:", variantPrice);
       setPrice(variantPrice?.price || "");
     }
   }, [selectedColor, selectedMemory, product.variants]);

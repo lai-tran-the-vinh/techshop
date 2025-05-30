@@ -16,8 +16,14 @@ function Login() {
 
   const navigate = useNavigate();
   const [emailError, setEmailError] = useState(false);
-  const { setShowLogin, setLoadingSuccess, setMessage, setToastLoading } =
-    useAppContext();
+  const {
+    setMessage,
+    setShowLogin,
+    setToastError,
+    setToastLoading,
+    setLoadingError,
+    setLoadingSuccess,
+  } = useAppContext();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [user, setUser] = useState({ email: "", password: "" });
@@ -115,6 +121,7 @@ function Login() {
                 setToastLoading(false);
                 setLoadingSuccess(true);
                 setMessage("Đăng nhập thành công");
+                setShowLogin(false);
               }}
               className="bg-primary w-full cursor-pointer hover:opacity-80 py-6 rounded-md text-white"
             >

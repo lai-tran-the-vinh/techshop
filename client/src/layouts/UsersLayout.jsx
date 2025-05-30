@@ -12,9 +12,11 @@ function Header() {
   }, []);
 
   return (
-    <header className="font-roboto xl:px-50 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
+    <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
       <Link to="/">
-        <h3 className="font-bold xl:text-3xl text-primary">TechShop</h3>
+        <h3 className="font-bold xl:text-3xl lg:text-2xl md:text-2xl text-primary">
+          TechShop
+        </h3>
       </Link>
       <div className="flex gap-8 font-medium">
         <button

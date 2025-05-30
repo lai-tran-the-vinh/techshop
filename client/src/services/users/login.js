@@ -34,7 +34,7 @@ async function login(user, setEmailError, setPasswordError, navigate) {
       }
     }
   } catch (error) {
-    console.log("Lỗi:", error.message);
+    console.log("Đăng nhập thất bại:", error);
   }
 }
 

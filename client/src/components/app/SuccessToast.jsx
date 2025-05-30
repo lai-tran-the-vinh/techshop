@@ -15,7 +15,7 @@ function SuccessToast() {
   }, []);
 
   return (
-    <div className="bg-green-200 absolute top-0 left-[50%] -translate-x-[50%] border border-green-500 flex items-center justify-center gap-6 w-[20%] h-60 mt-20 rounded-lg">
+    <div className="bg-green-200 z-20 absolute top-0 left-[50%] -translate-x-[50%] border border-green-500 flex items-center justify-center gap-6 w-[20%] h-60 mt-20 rounded-lg">
       <div className="text-xl text-green-700">
         <AiFillCheckCircle />
       </div>

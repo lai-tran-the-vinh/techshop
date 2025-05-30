@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppContext } from "@contexts";
-import { AiFillCloseCircle , AiOutlineClose } from "react-icons/ai";
+import { AiFillCloseCircle, AiOutlineClose } from "react-icons/ai";
 
 function ErrorToast() {
   const { message, setLoadingError } = useAppContext();
@@ -15,7 +15,7 @@ function ErrorToast() {
   }, []);
 
   return (
-    <div className="bg-red-200 absolute top-0 left-[50%] -translate-x-[50%] border border-red-500 flex items-center justify-center gap-6 w-[20%] h-60 mt-20 rounded-lg">
+    <div className="bg-red-200 z-20 absolute top-0 left-[50%] -translate-x-[50%] border border-red-500 flex items-center justify-center gap-6 w-[20%] h-60 mt-20 rounded-lg">
       <div className="text-xl text-red-700">
         <AiFillCloseCircle />
       </div>
