@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import {
   validateEmail,
   validatePhone,
@@ -7,59 +8,90 @@ import {
   validateFullname,
 } from "@helpers";
 
-async function signup(user, userError, setUserError) {
+async function signup(
+  user,
+  userError,
+  setMessage,
+  setUserError,
+  setToastLoading,
+  setLoadingError,
+  setLoadingSuccess
+) {
+  const newUserError = { ...userError };
+  var hasError = false;
+
   if (validateFullname(user.fullName)) {
-    setUserError({ ...userError, fullNameError: false });
+    newUserError.fullNameError = false;
   } else {
-    setUserError({ ...userError, fullNameError: true });
-    return;
+    newUserError.fullNameError = true;
+    hasError = true;
   }
 
   if (validateAddress(user.address)) {
-    setUserError({ ...userError, addressError: false });
+    newUserError.addressError = false;
   } else {
-    setUserError({ ...userError, addressError: true });
-    return;
+    newUserError.addressError = true;
+    hasError = true;
   }
 
   if (validatePhone(user.phone)) {
-    setUserError({ ...userError, phoneError: false });
+    newUserError.phoneError = false;
   } else {
-    setUserError({ ...userError, phoneError: true });
-    return;
+    newUserError.phoneError = true;
+    hasError = true;
   }
 
   if (user.gender !== "") {
-    setUserError({ ...userError, genderError: false });
+    newUserError.genderError = false;
   } else {
-    setUserError({ ...userError, genderError: true });
-    return;
+    newUserError.genderError = true;
+    hasError = true;
   }
 
   if (validateEmail(user.email)) {
-    setUserError({ ...userError, emailError: false });
+    newUserError.emailError = false;
   } else {
-    setUserError({ ...userError, emailError: true });
-    return;
+    newUserError.emailError = true;
+    hasError = true;
   }
 
   if (validatePassword(user.password)) {
-    setUserError({ ...userError, passwordError: false });
+    newUserError.passwordError = false;
   } else {
-    setUserError({ ...userError, passwordError: true });
-    return;
+    newUserError.passwordError = true;
+    hasError = true;
   }
-  try {
-    await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`, {
-      name: user.fullName,
-      address: user.address,
-      phone: user.phone,
-      gender: user.gender,
-      email: user.email,
-      password: user.password,
-    });
-  } catch (error) {
-    console.log("Lỗi:", error.message);
+
+  setUserError(newUserError);
+
+  if (!hasError) {
+    setToastLoading(true);
+    setMessage("Đang đăng ký.");
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`,
+        {
+          name: user.fullName,
+          address: user.address,
+          phone: user.phone,
+          gender: user.gender,
+          email: user.email,
+          password: user.password,
+        }
+      );
+
+      if (response.data.statusCode === 201) {
+        setToastLoading(false);
+        setLoadingSuccess(true);
+        setMessage("Đăng ký thành công.");
+      }
+      setToastLoading(false);
+    } catch (error) {
+      setToastLoading(false);
+      setLoadingError(true);
+      setMessage("Đăng ký thất bại.");
+    }
   }
 }
 

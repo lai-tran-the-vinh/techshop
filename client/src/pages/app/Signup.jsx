@@ -70,6 +70,7 @@ function Signup() {
   const genders = ["Nam", "Nữ", "Khác"];
   const {
     setShowSignup,
+    setLoadingError,
     setLoadingSuccess,
     setShowLogin,
     setToastLoading,
@@ -136,6 +137,7 @@ function Signup() {
               id="fullName"
               type="text"
               name="fullName"
+              value={user.fullName}
               placeholder="Nhập họ và tên"
               onChange={(event) => {
                 const fieldName = event.target.name;
@@ -276,6 +278,7 @@ function Signup() {
               <input
                 id="phone"
                 type="text"
+                value={user.phone}
                 name="phone"
                 placeholder="Nhập số điện thoại"
                 onChange={(event) => {
@@ -349,6 +352,7 @@ function Signup() {
             <input
               id="email"
               type="email"
+              value={user.email}
               name="email"
               placeholder="Nhập email"
               onChange={(event) => {
@@ -376,6 +380,7 @@ function Signup() {
               <input
                 id="password"
                 name="password"
+                value={user.password}
                 placeholder="Nhập mật khẩu"
                 type={showPassword ? "text" : "password"}
                 onChange={(event) => {
@@ -406,14 +411,16 @@ function Signup() {
             <button
               onClick={async (event) => {
                 event.preventDefault();
-                setToastLoading(true);
-                setMessage("Đang đăng ký");
-                await Users.signup(user, userError, setUserError);
-                setToastLoading(false);
-                setLoadingSuccess(true);
-                setMessage("Đăng ký thành công");
-                setShowSignup(false);
-                setShowLogin(true);
+                console.log("User error:", userError);
+                await Users.signup(
+                  user,
+                  userError,
+                  setMessage,
+                  setUserError,
+                  setToastLoading,
+                  setLoadingError,
+                  setLoadingSuccess
+                );
               }}
               className="bg-primary w-full cursor-pointer hover:opacity-80 py-6 rounded-md text-white"
             >
