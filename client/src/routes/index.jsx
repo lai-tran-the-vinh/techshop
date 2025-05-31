@@ -1,6 +1,6 @@
 import { Home, ProductDetail } from "@pages/users";
-import { Dashboard } from "@pages/admin";
 import { UsersLayout, AdminLayout } from "@layouts";
+import { Dashboard, AddProduct } from "@pages/admin";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -19,7 +19,10 @@ const router = createBrowserRouter([
   },
   {
     element: <AdminLayout />,
-    children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/product/add", element: <AddProduct /> },
+    ],
   },
 ]);
 

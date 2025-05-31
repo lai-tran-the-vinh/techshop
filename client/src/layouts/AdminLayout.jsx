@@ -1,20 +1,31 @@
 import { useEffect } from "react";
 import { useAppContext } from "@contexts";
 import { Outlet, Link } from "react-router-dom";
+import { AiOutlineProduct, AiOutlineHome } from "react-icons/ai";
 import { LoadingToast, SuccessToast, ErrorToast } from "@/components/app";
 
 function Header() {
-  const { setShowLogin, setShowSignup } = useAppContext();
-
   useEffect(() => {
     document.title = "TechShop | Dashboard";
   }, []);
 
   return (
-    <header className="font-roboto xl:px-50 w-full h-60 flex items-center justify-between">
+    <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
       <Link to="/">
-        <h3 className="font-bold xl:text-3xl text-primary">TechShop</h3>
+        <h3 className="font-bold xl:text-3xl lg:text-2xl md:text-2xl text-primary">
+          TechShop
+        </h3>
       </Link>
+      <div className="flex items-center gap-8 font-medium">
+        <div className="w-40 h-40 rounded-full overflow-hidden">
+          <img
+            alt="Avatar quản trị viên"
+            className="w-full h-full rounded-full"
+            src="https://ionicframework.com/docs/img/demos/avatar.svg"
+          />
+        </div>
+        <span className="text-md">Chào Quản trị viên</span>
+      </div>
     </header>
   );
 }
@@ -23,15 +34,48 @@ function AdminLayout() {
   const { toastLoading, loadingError, loadingSuccess } = useAppContext();
 
   return (
-    <div className="relative">
+    <div className="relative font-roboto">
       <Header />
-      <main>
-        <Outlet />
+      <main className="mt-60 flex">
+        <div className="xl:pl-50 w-[20%] border-r fixed top-60 left-0 bottom-0 border-r-gray-300 flex flex-col gap-10 h-screen p-20">
+          <Link to="/dashboard">
+            <div className="flex items-center font-medium gap-8 group cursor-pointer">
+              <div>
+                <AiOutlineHome className="text-xl group-hover:text-primary" />
+              </div>
+              <span className="text-md group-hover:text-primary">
+                Trang chủ
+              </span>
+            </div>
+          </Link>
+
+          <div>
+            <div className="flex items-center font-medium gap-8">
+              <div>
+                <AiOutlineProduct className="text-xl" />
+              </div>
+              <span className="text-md cursor-pointer">Quản lý sản phẩm</span>
+            </div>
+
+            <div className="ml-30 flex flex-col items-start gap-10 mt-10">
+              <Link to="/product/add">
+                <span className="cursor-pointer hover:text-primary">
+                  Thêm sản phẩm
+                </span>
+              </Link>
+              <span className="cursor-pointer hover:text-primary">
+                Xem danh sách sản phẩm
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="w-full ml-[20%] p-20">
+          <Outlet />
+        </div>
       </main>
       {loadingError && <ErrorToast />}
       {toastLoading && <LoadingToast />}
       {loadingSuccess && <SuccessToast />}
-      <footer>Footer</footer>
     </div>
   );
 }
