@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppContext } from "@contexts";
 import { Outlet, Link } from "react-router-dom";
 import { AiOutlineProduct, AiOutlineHome } from "react-icons/ai";
@@ -11,7 +11,7 @@ function Header() {
 
   return (
     <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
-      <Link to="/">
+      <Link to="/dashboard">
         <h3 className="font-bold xl:text-3xl lg:text-2xl md:text-2xl text-primary">
           TechShop
         </h3>
@@ -21,7 +21,13 @@ function Header() {
 }
 
 function AdminLayout() {
-  const { toastLoading, loadingError, loadingSuccess } = useAppContext();
+  const {
+    toastLoading,
+    loadingError,
+    loadingSuccess,
+    sideBarSelectedTab,
+    setSideBarSelectedTab,
+  } = useAppContext();
 
   return (
     <div className="relative font-roboto">
@@ -29,11 +35,16 @@ function AdminLayout() {
       <main className="mt-60 flex">
         <div className="xl:pl-50 w-[20%] border-r fixed top-60 left-0 bottom-0 border-r-gray-300 flex flex-col gap-10 h-screen p-20">
           <Link to="/dashboard">
-            <div className="flex items-center font-medium gap-8 group cursor-pointer">
+            <div
+              onClick={() => {
+                setSideBarSelectedTab("Trang chủ");
+              }}
+              className={`${sideBarSelectedTab === "Trang chủ" && "text-primary"} flex items-center font-medium gap-8 group cursor-pointer`}
+            >
               <div>
                 <AiOutlineHome className="text-xl group-hover:text-primary" />
               </div>
-              <span className="text-md group-hover:text-primary">
+              <span className={`text-md group-hover:text-primary`}>
                 Trang chủ
               </span>
             </div>
@@ -49,11 +60,21 @@ function AdminLayout() {
 
             <div className="ml-30 flex flex-col items-start gap-10 mt-10">
               <Link to="/product/add">
-                <span className="cursor-pointer hover:text-primary">
+                <span
+                  onClick={() => {
+                    setSideBarSelectedTab("Thêm sản phẩm");
+                  }}
+                  className={`${sideBarSelectedTab === "Thêm sản phẩm" && "text-primary"} cursor-pointer hover:text-primary`}
+                >
                   Thêm sản phẩm
                 </span>
               </Link>
-              <span className="cursor-pointer hover:text-primary">
+              <span
+                onClick={() => {
+                  setSideBarSelectedTab("Xem danh sách sản phẩm");
+                }}
+                className={`${sideBarSelectedTab === "Xem danh sách sản phẩm" && "text-primary"} cursor-pointer hover:text-primary`}
+              >
                 Xem danh sách sản phẩm
               </span>
             </div>

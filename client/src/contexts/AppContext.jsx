@@ -11,6 +11,7 @@ function AppProvider({ children }) {
   const [toastLoading, setToastLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
+  const [sideBarSelectedTab, setSideBarSelectedTab] = useState("Trang chủ");
 
   const data = {
     loading,
@@ -20,6 +21,7 @@ function AppProvider({ children }) {
     loadingError,
     toastLoading,
     loadingSuccess,
+    sideBarSelectedTab,
 
     setLoading,
     setMessage,
@@ -28,6 +30,7 @@ function AppProvider({ children }) {
     setLoadingError,
     setToastLoading,
     setLoadingSuccess,
+    setSideBarSelectedTab,
   };
 
   return <AppContext.Provider value={data}>{children}</AppContext.Provider>;

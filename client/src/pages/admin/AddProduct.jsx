@@ -1,13 +1,49 @@
+import Brands from "@services/brands";
 import { Editor } from "@components/app";
+import { useAppContext } from "@contexts";
 import Skeleton from "react-loading-skeleton";
 import Categories from "@services/categories";
 import "react-loading-skeleton/dist/skeleton.css";
+import { AiFillCheckCircle } from "react-icons/ai";
 import { useState, useRef, useEffect } from "react";
 
 function AddProduct() {
+  const { setSideBarSelectedTab } = useAppContext();
   const categoryDropdownRef = useRef(null);
+  const brandDropdownRef = useRef(null);
   const [brands, setBrands] = useState([]);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    category: "",
+    brand: "",
+    specifications: {
+      weight: "",
+      battery: "",
+      processor: "",
+      dimensions: "",
+      displaySize: "",
+      displayType: "",
+      operatingSystem: "",
+    },
+    connectivity: {
+      wifi: "",
+      bluetooth: "",
+      cellular: "",
+      nfc: false,
+      gps: false,
+      ports: [],
+    },
+    camera: {
+      front: {
+        resolution: "",
+        features: [],
+      },
+      rear: null,
+      videoRecording: [],
+    },
+    variants: [],
+  });
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
@@ -20,6 +56,13 @@ function AddProduct() {
         !categoryDropdownRef.current.contains(event.target)
       ) {
         setShowCategoryDropdown(false);
+      }
+
+      if (
+        brandDropdownRef.current &&
+        !brandDropdownRef.current.contains(event.target)
+      ) {
+        setShowBrandDropdown(false);
       }
     }
 
@@ -44,6 +87,22 @@ function AddProduct() {
     }
 
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    async function fetchBrands() {
+      try {
+        setLoading(true);
+        const brands = await Brands.getAll();
+        setBrands(brands);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBrands();
   }, []);
 
   console.log("Categories:", categories);
@@ -105,17 +164,42 @@ function AddProduct() {
                 </ul>
               )}
             </div>
-            <div className="flex flex-1 flex-col gap-2">
-              <label htmlFor="tag" className="text-sm font-medium">
+            <div className="flex flex-1 flex-col gap-2 relative">
+              <label htmlFor="brand" className="text-sm font-medium">
                 Thương hiệu
               </label>
               <input
-                id="tag"
-                name="tag"
+                id="brand"
+                readOnly
+                name="brand"
+                value={product.brand || ""}
                 type="text"
                 placeholder="Chọn thương hiệu"
-                className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                onClick={() => setShowBrandDropdown(!showBrandDropdown)}
+                className="border border-gray-300 cursor-pointer hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
               />
+              {showBrandDropdown && (
+                <ul
+                  ref={brandDropdownRef}
+                  className="absolute left-0 right-0 z-10 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
+                >
+                  {brands.map((brand, index) => (
+                    <li
+                      key={index}
+                      onClick={(event) => {
+                        setProduct({
+                          ...product,
+                          brand: event.target.textContent,
+                        });
+                        setShowBrandDropdown(false);
+                      }}
+                      className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${product.brand === brand.name ? "bg-gray-200" : ""}`}
+                    >
+                      {brand.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
@@ -262,25 +346,61 @@ function AddProduct() {
                 <label htmlFor="nfc" className="font-medium text-sm">
                   NFC
                 </label>
-                <input
-                  id="nfc"
-                  name="nfc"
-                  type="text"
-                  placeholder="Chọn NFC"
-                  className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                />
+                <div className="cursor-pointer relative">
+                  <input
+                    id="nfc"
+                    name="nfc"
+                    type="text"
+                    placeholder="Chọn NFC"
+                    readOnly
+                    value={product.connectivity.nfc ? "Có" : "Không"}
+                    onClick={() =>
+                      setProduct({
+                        ...product,
+                        connectivity: {
+                          ...product.connectivity,
+                          nfc: !product.connectivity.nfc,
+                        },
+                      })
+                    }
+                    className="border w-full cursor-pointer border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                  />
+                  <div className="absolute right-12 top-1/2 -translate-y-1/2">
+                    <AiFillCheckCircle
+                      className={`${product.connectivity.nfc ? "text-green-500" : "text-gray-500"}`}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="gps" className="font-medium text-sm">
                   GPS
                 </label>
-                <input
-                  id="gps"
-                  name="gps"
-                  type="text"
-                  placeholder="Chọn GPS"
-                  className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                />
+                <div className="cursor-pointer relative">
+                  <input
+                    id="gps"
+                    name="gps"
+                    type="text"
+                    placeholder="Chọn GPS"
+                    readOnly
+                    value={product.connectivity.gps ? "Có" : "Không"}
+                    onClick={() =>
+                      setProduct({
+                        ...product,
+                        connectivity: {
+                          ...product.connectivity,
+                          gps: !product.connectivity.gps,
+                        },
+                      })
+                    }
+                    className="border w-full cursor-pointer border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                  />
+                  <div className="absolute right-12 top-1/2 -translate-y-1/2">
+                    <AiFillCheckCircle
+                      className={`${product.connectivity.gps ? "text-green-500" : "text-gray-500"}`}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="ports" className="font-medium text-sm">
