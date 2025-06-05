@@ -8,8 +8,11 @@ import { useState, useRef, useEffect } from "react";
 import {
   AiOutlinePlus,
   AiOutlineClose,
+  AiOutlineUpload,
   AiFillCheckCircle,
 } from "react-icons/ai";
+
+import { GoUpload } from "react-icons/go";
 
 function AddProduct() {
   const { setSideBarSelectedTab } = useAppContext();
@@ -208,6 +211,11 @@ function AddProduct() {
                   id="name"
                   name="name"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return { ...currentProduct, name: event.target.value };
+                    });
+                  }}
                   placeholder="Nhập tên sản phẩm"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -313,6 +321,17 @@ function AddProduct() {
                   id="processor"
                   name="processor"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          processor: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập tên vi xử lý"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -325,6 +344,17 @@ function AddProduct() {
                   id="displayType"
                   name="displayType"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          displayType: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập loại màn hình"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -340,6 +370,17 @@ function AddProduct() {
                   id="operatingSystem"
                   name="operatingSystem"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          operatingSystem: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập hệ điều hành"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -354,6 +395,17 @@ function AddProduct() {
                   id="displaySize"
                   name="displaySize"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          displaySize: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập kích thước màn hình"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -366,6 +418,17 @@ function AddProduct() {
                   id="battery"
                   name="battery"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          battery: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập thông tin pin"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -378,6 +441,17 @@ function AddProduct() {
                   id="weight"
                   name="weight"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        specifications: {
+                          ...currentProduct.specifications,
+                          weight: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập thông tin khối lượng"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -402,6 +476,17 @@ function AddProduct() {
                   id="wifi"
                   name="wifi"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        connectivity: {
+                          ...currentProduct.connectivity,
+                          wifi: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập thông tin Wifi"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -414,6 +499,17 @@ function AddProduct() {
                   id="bluetooth"
                   name="bluetooth"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        connectivity: {
+                          ...currentProduct.connectivity,
+                          bluetooth: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập thông tin Bluetooth"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -426,6 +522,17 @@ function AddProduct() {
                   id="cellular"
                   name="cellular"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        connectivity: {
+                          ...currentProduct.connectivity,
+                          cellular: event.target.value,
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập công nghệ di động"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -500,6 +607,17 @@ function AddProduct() {
                   id="ports"
                   name="ports"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        connectivity: {
+                          ...currentProduct.connectivity,
+                          ports: event.target.value.split(", "),
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập thông tin cổng kết nối"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -527,6 +645,20 @@ function AddProduct() {
                   id="front-camera-resolution"
                   name="front-camera-resolution"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          front: {
+                            ...currentProduct.camera.front,
+                            resolution: event.target.value,
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập độ phân giải camera trước"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -542,6 +674,20 @@ function AddProduct() {
                   id="front-camera-feature"
                   name="front-camera-feature"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          front: {
+                            ...currentProduct.camera.front,
+                            features: event.target.value.split(", "),
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập tính năng camera trước"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -557,6 +703,20 @@ function AddProduct() {
                   id="front-camera-videoRecording"
                   name="front-camera-videoRecording"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          front: {
+                            ...currentProduct.camera.front,
+                            videoRecording: event.target.value.split(", "),
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập tính năng quay phim camera trước"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -584,6 +744,20 @@ function AddProduct() {
                   id="rear-camera-resolution"
                   name="rear-camera-resolution"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          rear: {
+                            ...currentProduct.camera.rear,
+                            resolution: event.target.value,
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập độ phân giải camera sau"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -599,6 +773,20 @@ function AddProduct() {
                   id="rear-camera-feature"
                   name="rear-camera-feature"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          rear: {
+                            ...currentProduct.camera.rear,
+                            features: event.target.value.split(", "),
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập tính năng camera sau"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -614,6 +802,20 @@ function AddProduct() {
                   id="rear-camera-videoRecording"
                   name="rear-camera-videoRecording"
                   type="text"
+                  onChange={(event) => {
+                    setProduct((currentProduct) => {
+                      return {
+                        ...currentProduct,
+                        camera: {
+                          ...currentProduct.camera,
+                          rear: {
+                            ...currentProduct.camera.rear,
+                            videoRecording: event.target.value.split(", "),
+                          },
+                        },
+                      };
+                    });
+                  }}
                   placeholder="Nhập tính năng camera sau"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
@@ -632,7 +834,7 @@ function AddProduct() {
 
             {product.variants.map((variant, index) => {
               return (
-                <>
+                <div className="flex flex-col gap-10" key={index}>
                   <div className="grid grid-cols-3 gap-10">
                     <div className="flex flex-col gap-2">
                       <label
@@ -646,6 +848,17 @@ function AddProduct() {
                         name="name"
                         value={variant.name}
                         type="text"
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                name: event.target.value,
+                              },
+                            };
+                          });
+                        }}
                         placeholder="Nhập tên biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
@@ -662,6 +875,17 @@ function AddProduct() {
                         value={variant.price}
                         name="price"
                         type="text"
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                price: event.target.value,
+                              },
+                            };
+                          });
+                        }}
                         placeholder="Nhập giá của biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
@@ -677,6 +901,17 @@ function AddProduct() {
                         id={`variant-${index}-compareAtPrice`}
                         name="compareAtPrice"
                         type="text"
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                compareAtPrice: event.target.value,
+                              },
+                            };
+                          });
+                        }}
                         placeholder="Nhập giá so sánh của biến thể"
                         value={variant.compareAtPrice}
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
@@ -696,6 +931,20 @@ function AddProduct() {
                         id={`variant-${index}-colorName`}
                         name="name"
                         value={variant.color.name}
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                color: {
+                                  ...product.variants.color,
+                                  name: event.target.value,
+                                },
+                              },
+                            };
+                          });
+                        }}
                         type="text"
                         placeholder="Nhập tên màu biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
@@ -711,6 +960,20 @@ function AddProduct() {
                       <input
                         id={`variant-${index}-hex`}
                         value={variant.color.hex}
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                color: {
+                                  ...product.variants.color,
+                                  hex: event.target.value,
+                                },
+                              },
+                            };
+                          });
+                        }}
                         name="hex"
                         type="text"
                         placeholder="Nhập mã màu của biến thể"
@@ -728,6 +991,20 @@ function AddProduct() {
                         id={`variant-${index}-RAM`}
                         name="RAM"
                         type="text"
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                memory: {
+                                  ...product.variants.memory,
+                                  ram: event.target.value,
+                                },
+                              },
+                            };
+                          });
+                        }}
                         placeholder="Nhập RAM của biến thể"
                         value={variant.memory.ram}
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
@@ -743,6 +1020,20 @@ function AddProduct() {
                       <input
                         id={`variant-${index}-storage`}
                         name="storage"
+                        onChange={(event) => {
+                          setProduct((currentProduct) => {
+                            return {
+                              ...currentProduct,
+                              variants: {
+                                ...currentProduct.variants,
+                                memory: {
+                                  ...product.variants.memory,
+                                  storage: event.target.value,
+                                },
+                              },
+                            };
+                          });
+                        }}
                         type="text"
                         placeholder="Nhập bộ nhớ trong của biến thể"
                         value={variant.memory.storage}
@@ -759,7 +1050,7 @@ function AddProduct() {
                       >
                         Hình ảnh
                       </label>
-                      <div className="w-full min-h-[200px] focus:border-gray-400 rounded-md p-6 border border-gray-300 hover:border-gray-400">
+                      <div className="w-full min-h-[200px] focus:border-gray-400 rounded-md p-6 border-dashed border border-gray-300 hover:border-gray-400">
                         {variant.images && variant.images.length > 0 ? (
                           <div className="grid grid-cols-4 gap-4">
                             {variant.images.map((image, imageIndex) => (
@@ -790,8 +1081,9 @@ function AddProduct() {
                         ) : (
                           <label
                             htmlFor={`variant-${index}-image`}
-                            className="flex cursor-pointer items-center justify-center h-full"
+                            className="flex flex-col gap-6 cursor-pointer items-center justify-center h-full"
                           >
+                            <GoUpload className="text-xl font-thin text-gray-500" />
                             <span className="text-gray-500">
                               Chọn ảnh để xem trước
                             </span>
@@ -808,7 +1100,7 @@ function AddProduct() {
                       />
                     </div>
                   </div>
-                </>
+                </div>
               );
             })}
           </div>
@@ -820,6 +1112,15 @@ function AddProduct() {
           <Skeleton className="h-700" />
         </div>
       )}
+
+      <button
+        onClick={() => {
+          console.log("Product:", product);
+        }}
+        className="mt-10 rounded-md cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
+      >
+        Thêm
+      </button>
     </div>
   );
 }
