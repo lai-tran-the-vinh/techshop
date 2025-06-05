@@ -2,9 +2,10 @@ import Brands from "@services/brands";
 import { Editor } from "@components/app";
 import { useAppContext } from "@contexts";
 import Skeleton from "react-loading-skeleton";
+import Files from "@services/files";
 import Categories from "@services/categories";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   AiOutlinePlus,
   AiOutlineClose,
@@ -73,6 +74,37 @@ function AddProduct() {
   const [categories, setCategories] = useState([]);
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+  const handleImageUpload = useCallback(async (files, info, uploadHandler) => {
+    try {
+      const file = files[0];
+
+      if (!file) {
+        throw new Error("No file selected");
+      }
+
+      const imageUrl = await Files.upload(file);
+
+      if (typeof imageUrl === "string" && imageUrl.startsWith("http")) {
+        uploadHandler({
+          result: [
+            {
+              url: imageUrl,
+              name: file.name,
+              size: file.size,
+            },
+          ],
+        });
+      } else {
+        throw new Error("Invalid image URL");
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      uploadHandler({
+        errorMessage: "Upload failed: " + (error.message || "Unknown error"),
+      });
+    }
+  }, []);
 
   const handleFileChange = (event, variantIndex) => {
     const files = Array.from(event.target.files);
@@ -301,7 +333,11 @@ function AddProduct() {
             <label htmlFor="description" className="text-sm font-medium">
               Mô tả
             </label>
-            <Editor setProduct={setProduct} height="200px" />
+            <Editor
+              height="200px"
+              setProduct={setProduct}
+              onImageUploadBefore={handleImageUpload}
+            />
           </div>
 
           <div className="flex flex-col gap-10 mt-20">
@@ -1117,7 +1153,7 @@ function AddProduct() {
         onClick={() => {
           console.log("Product:", product);
         }}
-        className="mt-10 rounded-md cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
+        className="mt-10 rounded-md font-medium cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
       >
         Thêm
       </button>
