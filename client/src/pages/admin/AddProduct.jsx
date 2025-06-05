@@ -5,7 +5,11 @@ import Skeleton from "react-loading-skeleton";
 import Categories from "@services/categories";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useState, useRef, useEffect } from "react";
-import { AiFillCheckCircle, AiOutlineClose } from "react-icons/ai";
+import {
+  AiOutlinePlus,
+  AiOutlineClose,
+  AiFillCheckCircle,
+} from "react-icons/ai";
 
 function AddProduct() {
   const { setSideBarSelectedTab } = useAppContext();
@@ -99,6 +103,31 @@ function AddProduct() {
     });
   };
 
+  const handleAddVariant = () => {
+    setProduct((currentProduct) => {
+      return {
+        ...currentProduct,
+        variants: [
+          ...currentProduct.variants,
+          {
+            name: "",
+            price: "",
+            compareAtPrice: "",
+            color: {
+              name: "",
+              hex: "",
+            },
+            memory: {
+              ram: "",
+              storage: "",
+            },
+            images: [],
+          },
+        ],
+      };
+    });
+  };
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -162,92 +191,101 @@ function AddProduct() {
       </div>
       {!loading && (
         <div className="flex flex-col gap-10 border border-gray-300 p-10 rounded-md">
-          <div className="flex gap-10">
-            <div className="flex w-[60%] flex-col gap-2">
-              <label htmlFor="name" className="font-medium text-sm">
-                Tên sản phẩm
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Nhập tên sản phẩm"
-                className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-              />
+          <div className="flex flex-col gap-10">
+            <div className="flex gap-12 items-center">
+              <span className="text-sm text-primary font-medium">
+                Thông tin chung
+              </span>
+              <div className="flex-1 border-t border-t-gray-300"></div>
             </div>
-            <div className="flex flex-1 flex-col gap-2 relative">
-              <label htmlFor="tag" className="text-sm font-medium">
-                Thể loại
-              </label>
-              <input
-                id="tag"
-                readOnly
-                name="tag"
-                type="text"
-                placeholder="Chọn thể loại"
-                value={product.category || ""}
-                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                className="border border-gray-300 hover:border-gray-400 cursor-pointer outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-              />
-              {showCategoryDropdown && (
-                <ul
-                  ref={categoryDropdownRef}
-                  className="absolute left-0 right-0 z-10 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
-                >
-                  {categories.map((category, index) => (
-                    <li
-                      key={index}
-                      onClick={(event) => {
-                        setProduct({
-                          ...product,
-                          category: event.target.textContent,
-                        });
-                        setShowCategoryDropdown(false);
-                      }}
-                      className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${product.category === category.name ? "bg-gray-200" : ""}`}
-                    >
-                      {category.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="flex flex-1 flex-col gap-2 relative">
-              <label htmlFor="brand" className="text-sm font-medium">
-                Thương hiệu
-              </label>
-              <input
-                id="brand"
-                readOnly
-                name="brand"
-                value={product.brand || ""}
-                type="text"
-                placeholder="Chọn thương hiệu"
-                onClick={() => setShowBrandDropdown(!showBrandDropdown)}
-                className="border border-gray-300 cursor-pointer hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-              />
-              {showBrandDropdown && (
-                <ul
-                  ref={brandDropdownRef}
-                  className="absolute left-0 right-0 z-10 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
-                >
-                  {brands.map((brand, index) => (
-                    <li
-                      key={index}
-                      onClick={(event) => {
-                        setProduct({
-                          ...product,
-                          brand: event.target.textContent,
-                        });
-                        setShowBrandDropdown(false);
-                      }}
-                      className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${product.brand === brand.name ? "bg-gray-200" : ""}`}
-                    >
-                      {brand.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+            <div className="flex gap-10">
+              <div className="flex w-[60%] flex-col gap-2">
+                <label htmlFor="name" className="font-medium text-sm">
+                  Tên sản phẩm
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Nhập tên sản phẩm"
+                  className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-2 relative">
+                <label htmlFor="tag" className="text-sm font-medium">
+                  Thể loại
+                </label>
+                <input
+                  id="tag"
+                  readOnly
+                  name="tag"
+                  type="text"
+                  placeholder="Chọn thể loại"
+                  value={product.category || ""}
+                  onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                  className="border border-gray-300 hover:border-gray-400 cursor-pointer outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                />
+                {showCategoryDropdown && (
+                  <ul
+                    ref={categoryDropdownRef}
+                    className="absolute left-0 right-0 z-10 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
+                  >
+                    {categories.map((category, index) => (
+                      <li
+                        key={index}
+                        onClick={(event) => {
+                          setProduct({
+                            ...product,
+                            category: event.target.textContent,
+                          });
+                          setShowCategoryDropdown(false);
+                        }}
+                        className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${product.category === category.name ? "bg-gray-200" : ""}`}
+                      >
+                        {category.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col gap-2 relative">
+                <label htmlFor="brand" className="text-sm font-medium">
+                  Thương hiệu
+                </label>
+                <input
+                  id="brand"
+                  readOnly
+                  name="brand"
+                  value={product.brand || ""}
+                  type="text"
+                  placeholder="Chọn thương hiệu"
+                  onClick={() => setShowBrandDropdown(!showBrandDropdown)}
+                  className="border border-gray-300 cursor-pointer hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                />
+                {showBrandDropdown && (
+                  <ul
+                    ref={brandDropdownRef}
+                    className="absolute left-0 right-0 z-10 top-full rounded-md mt-4 p-6 bg-white border border-gray-200"
+                  >
+                    {brands.map((brand, index) => (
+                      <li
+                        key={index}
+                        onClick={(event) => {
+                          setProduct({
+                            ...product,
+                            brand: event.target.textContent,
+                          });
+                          setShowBrandDropdown(false);
+                        }}
+                        className={`px-8 my-2 py-4 rounded-sm hover:bg-gray-200 cursor-pointer ${product.brand === brand.name ? "bg-gray-200" : ""}`}
+                      >
+                        {brand.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
 
@@ -260,7 +298,9 @@ function AddProduct() {
 
           <div className="flex flex-col gap-10 mt-20">
             <div className="flex gap-12 items-center">
-              <span className="text-sm font-medium">Thông số kỹ thuật</span>
+              <span className="text-sm text-primary font-medium">
+                Thông số kỹ thuật
+              </span>
               <div className="flex-1 border-t border-t-gray-300"></div>
             </div>
 
@@ -347,7 +387,9 @@ function AddProduct() {
 
           <div className="flex flex-col gap-10 mt-20">
             <div className="flex gap-12 items-center">
-              <span className="text-sm font-medium">Thông tin kết nối</span>
+              <span className="text-sm text-primary font-medium">
+                Thông tin kết nối
+              </span>
               <div className="flex-1 border-t border-t-gray-300"></div>
             </div>
 
@@ -467,7 +509,9 @@ function AddProduct() {
 
           <div className="flex flex-col gap-10 mt-20">
             <div className="flex gap-12 items-center">
-              <span className="text-sm font-medium">Camera trước</span>
+              <span className="text-sm text-primary font-medium">
+                Camera trước
+              </span>
               <div className="flex-1 border-t border-t-gray-300"></div>
             </div>
 
@@ -522,7 +566,9 @@ function AddProduct() {
 
           <div className="flex flex-col gap-10 mt-20">
             <div className="flex gap-12 items-center">
-              <span className="text-sm font-medium">Camera sau</span>
+              <span className="text-sm text-primary font-medium">
+                Camera sau
+              </span>
               <div className="flex-1 border-t border-t-gray-300"></div>
             </div>
 
@@ -574,193 +620,195 @@ function AddProduct() {
               </div>
             </div>
           </div>
+
           <div className="flex flex-col gap-10 mt-20">
             <div className="flex gap-12 items-center">
-              <span className="text-sm font-medium">Biến thể</span>
+              <span className="text-sm text-primary font-medium">Biến thể</span>
               <div className="flex-1 border-t border-t-gray-300"></div>
+              <button onClick={handleAddVariant} className="cursor-pointer">
+                Thêm biến thể
+              </button>
             </div>
 
             {product.variants.map((variant, index) => {
               return (
-                <div className="grid grid-cols-3 gap-10">
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-name`}
-                      className="font-medium text-sm"
-                    >
-                      Tên biến thể
-                    </label>
-                    <input
-                      id={`variant-${index}-name`}
-                      name="name"
-                      value={variant.name}
-                      type="text"
-                      placeholder="Nhập tên biến thể"
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-price`}
-                      className="font-medium text-sm"
-                    >
-                      Giá
-                    </label>
-                    <input
-                      id={`variant-${index}-price`}
-                      value={variant.price}
-                      name="price"
-                      type="text"
-                      placeholder="Nhập giá của biến thể"
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-compareAtPrice`}
-                      className="font-medium text-sm"
-                    >
-                      Giá so sánh
-                    </label>
-                    <input
-                      id={`variant-${index}-compareAtPrice`}
-                      name="compareAtPrice"
-                      type="text"
-                      placeholder="Nhập giá so sánh của biến thể"
-                      value={variant.compareAtPrice}
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-
-            {product.variants.map((variant, index) => {
-              return (
-                <div className="grid grid-cols-4 gap-10">
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-colorName`}
-                      className="font-medium text-sm"
-                    >
-                      Tên màu
-                    </label>
-                    <input
-                      id={`variant-${index}-colorName`}
-                      name="name"
-                      value={variant.color.name}
-                      type="text"
-                      placeholder="Nhập tên màu biến thể"
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-hex`}
-                      className="font-medium text-sm"
-                    >
-                      Mã màu
-                    </label>
-                    <input
-                      id={`variant-${index}-hex`}
-                      value={variant.color.hex}
-                      name="hex"
-                      type="text"
-                      placeholder="Nhập mã màu của biến thể"
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-RAM`}
-                      className="font-medium text-sm"
-                    >
-                      RAM
-                    </label>
-                    <input
-                      id={`variant-${index}-RAM`}
-                      name="RAM"
-                      type="text"
-                      placeholder="Nhập RAM của biến thể"
-                      value={variant.memory.ram}
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-storage`}
-                      className="font-medium text-sm"
-                    >
-                      Bộ nhớ trong
-                    </label>
-                    <input
-                      id={`variant-${index}-storage`}
-                      name="storage"
-                      type="text"
-                      placeholder="Nhập bộ nhớ trong của biến thể"
-                      value={variant.memory.storage}
-                      className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-
-            {product.variants.map((variant, index) => {
-              return (
-                <div className="grid grid-cols-1 gap-10" key={index}>
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor={`variant-${index}-image`}
-                      className="font-medium text-sm"
-                    >
-                      Hình ảnh
-                    </label>
-                    <div className="w-full min-h-[200px] focus:border-gray-400 rounded-md p-6 border border-gray-300 hover:border-gray-400">
-                      {variant.images && variant.images.length > 0 ? (
-                        <div className="grid grid-cols-4 gap-4">
-                          {variant.images.map((image, imageIndex) => (
-                            <div key={imageIndex} className="relative group">
-                              <img
-                                src={URL.createObjectURL(image)}
-                                alt={`Preview ${imageIndex}`}
-                                className="w-full object-cover rounded-md"
-                              />
-                              <button
-                                onClick={() =>
-                                  handleRemoveImage(index, imageIndex)
-                                }
-                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <AiOutlineClose size={16} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <span className="text-gray-500">
-                            Chọn ảnh để xem trước
-                          </span>
-                        </div>
-                      )}
+                <>
+                  <div className="grid grid-cols-3 gap-10">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-name`}
+                        className="font-medium text-sm"
+                      >
+                        Tên biến thể
+                      </label>
+                      <input
+                        id={`variant-${index}-name`}
+                        name="name"
+                        value={variant.name}
+                        type="text"
+                        placeholder="Nhập tên biến thể"
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
                     </div>
-                    <input
-                      multiple
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id={`variant-${index}-image`}
-                      onChange={(event) => handleFileChange(event, index)}
-                    />
-                    <label
-                      htmlFor={`variant-${index}-image`}
-                      className="mt-2 inline-block px-4 py-2 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 text-center"
-                    >
-                      Chọn ảnh
-                    </label>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-price`}
+                        className="font-medium text-sm"
+                      >
+                        Giá
+                      </label>
+                      <input
+                        id={`variant-${index}-price`}
+                        value={variant.price}
+                        name="price"
+                        type="text"
+                        placeholder="Nhập giá của biến thể"
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-compareAtPrice`}
+                        className="font-medium text-sm"
+                      >
+                        Giá so sánh
+                      </label>
+                      <input
+                        id={`variant-${index}-compareAtPrice`}
+                        name="compareAtPrice"
+                        type="text"
+                        placeholder="Nhập giá so sánh của biến thể"
+                        value={variant.compareAtPrice}
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
                   </div>
-                </div>
+
+                  <div className="grid grid-cols-4 gap-10">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-colorName`}
+                        className="font-medium text-sm"
+                      >
+                        Tên màu
+                      </label>
+                      <input
+                        id={`variant-${index}-colorName`}
+                        name="name"
+                        value={variant.color.name}
+                        type="text"
+                        placeholder="Nhập tên màu biến thể"
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-hex`}
+                        className="font-medium text-sm"
+                      >
+                        Mã màu
+                      </label>
+                      <input
+                        id={`variant-${index}-hex`}
+                        value={variant.color.hex}
+                        name="hex"
+                        type="text"
+                        placeholder="Nhập mã màu của biến thể"
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-RAM`}
+                        className="font-medium text-sm"
+                      >
+                        RAM
+                      </label>
+                      <input
+                        id={`variant-${index}-RAM`}
+                        name="RAM"
+                        type="text"
+                        placeholder="Nhập RAM của biến thể"
+                        value={variant.memory.ram}
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-storage`}
+                        className="font-medium text-sm"
+                      >
+                        Bộ nhớ trong
+                      </label>
+                      <input
+                        id={`variant-${index}-storage`}
+                        name="storage"
+                        type="text"
+                        placeholder="Nhập bộ nhớ trong của biến thể"
+                        value={variant.memory.storage}
+                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-10">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor={`variant-${index}-image`}
+                        className="font-medium text-sm"
+                      >
+                        Hình ảnh
+                      </label>
+                      <div className="w-full min-h-[200px] focus:border-gray-400 rounded-md p-6 border border-gray-300 hover:border-gray-400">
+                        {variant.images && variant.images.length > 0 ? (
+                          <div className="grid grid-cols-4 gap-4">
+                            {variant.images.map((image, imageIndex) => (
+                              <div key={imageIndex} className="relative group">
+                                <img
+                                  src={URL.createObjectURL(image)}
+                                  alt={`Preview ${imageIndex}`}
+                                  className="w-full object-cover rounded-md"
+                                />
+                                <button
+                                  onClick={() =>
+                                    handleRemoveImage(index, imageIndex)
+                                  }
+                                  className="absolute top-4 right-4 p-4 text-black bg-white shadow-2xl cursor-pointer rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <AiOutlineClose size={16} />
+                                </button>
+                              </div>
+                            ))}
+                            <label
+                              htmlFor={`variant-${index}-image`}
+                              className="flex gap-4 cursor-pointer items-center justify-center h-full"
+                            >
+                              <AiOutlinePlus className="text-gray-500 text-xl" />
+                              <span className="text-gray-500">Thêm ảnh</span>
+                            </label>
+                          </div>
+                        ) : (
+                          <label
+                            htmlFor={`variant-${index}-image`}
+                            className="flex cursor-pointer items-center justify-center h-full"
+                          >
+                            <span className="text-gray-500">
+                              Chọn ảnh để xem trước
+                            </span>
+                          </label>
+                        )}
+                      </div>
+                      <input
+                        multiple
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        id={`variant-${index}-image`}
+                        onChange={(event) => handleFileChange(event, index)}
+                      />
+                    </div>
+                  </div>
+                </>
               );
             })}
           </div>
