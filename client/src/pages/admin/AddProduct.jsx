@@ -17,7 +17,8 @@ import {
 
 function AddProduct() {
   const navigate = useNavigate();
-  const { setToastLoading, setLoadingError, setMessage } = useAppContext();
+  const { setToastLoading, setLoadingError, setMessage, setLoadingSuccess } =
+    useAppContext();
   const brandDropdownRef = useRef(null);
   const categoryDropdownRef = useRef(null);
   const [brands, setBrands] = useState([]);
@@ -48,13 +49,14 @@ function AddProduct() {
       front: {
         resolution: "",
         features: [],
+        videoRecording: [],
       },
       rear: {
         resolution: "",
         features: [],
         lensCount: "",
+        videoRecording: [],
       },
-      videoRecording: [],
     },
     variants: [
       {
@@ -988,24 +990,6 @@ function AddProduct() {
                     </div>
                     <div className="flex flex-col gap-2">
                       <label
-                        htmlFor={`variant-${index}-compareAtPrice`}
-                        className="font-medium text-sm"
-                      >
-                        Giá so sánh
-                      </label>
-                      <input
-                        id={`variant-${index}-compareAtPrice`}
-                        name="compareAtPrice"
-                        type="text"
-                        placeholder="Nhập giá so sánh của biến thể"
-                        className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-4 gap-10">
-                    <div className="flex flex-col gap-2">
-                      <label
                         htmlFor={`variant-${index}-colorName`}
                         className="font-medium text-sm"
                       >
@@ -1036,6 +1020,9 @@ function AddProduct() {
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-10">
                     <div className="flex flex-col gap-2">
                       <label
                         htmlFor={`variant-${index}-hex`}
@@ -1211,36 +1198,30 @@ function AddProduct() {
 
       <button
         onClick={async () => {
-          console.log(product);
-          // console.log(JSON.stringify(product));
-          // try {
-          //   setToastLoading(true);
-          //   setMessage("Đang thêm sản phẩm.");
+          try {
+            setToastLoading(true);
+            setMessage("Đang thêm sản phẩm.");
+            const productToSubmit = { ...product };
+            for (let i = 0; i < productToSubmit.variants.length; i++) {
+              const variant = productToSubmit.variants[i];
+              const uploadedUrls = [];
+              for (let j = 0; j < variant.images.length; j++) {
+                const imageUrl = await Files.upload(variant.images[j]);
+                uploadedUrls.push(imageUrl);
+              }
+              productToSubmit.variants[i].images = uploadedUrls;
+            }
 
-          //   const productToSubmit = { ...product };
-
-          //   for (let i = 0; i < productToSubmit.variants.length; i++) {
-          //     const variant = productToSubmit.variants[i];
-          //     const uploadedUrls = [];
-
-          //     for (let j = 0; j < variant.images.length; j++) {
-          //       const imageUrl = await Files.upload(variant.images[j]);
-          //       uploadedUrls.push(imageUrl);
-          //     }
-
-          //     productToSubmit.variants[i].images = uploadedUrls;
-          //   }
-          //   console.log(productToSubmit);
-
-          //   await Products.add(productToSubmit);
-          //   setToastLoading(false);
-          //   setLoadingSuccess(true);
-          //   setMessage("Thêm sản phẩm thành công.");
-          // } catch (error) {
-          //   setToastLoading(false);
-          //   setLoadingError(true);
-          //   setMessage(error.message);
-          // }
+            await Products.add(productToSubmit);
+            setToastLoading(false);
+            navigate("/dashboard");
+            setLoadingSuccess(true);
+            setMessage("Thêm sản phẩm thành công.");
+          } catch (error) {
+            setToastLoading(false);
+            setLoadingError(true);
+            setMessage(error.message);
+          }
         }}
         className="mt-10 rounded-md font-medium cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
       >
