@@ -1,24 +1,23 @@
+import Files from "@services/files";
 import Brands from "@services/brands";
 import { Editor } from "@components/app";
+import { GoUpload } from "react-icons/go";
+import Products from "@services/products";
 import { useAppContext } from "@contexts";
 import Skeleton from "react-loading-skeleton";
-import Files from "@services/files";
 import Categories from "@services/categories";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   AiOutlinePlus,
   AiOutlineClose,
-  AiOutlineUpload,
   AiFillCheckCircle,
 } from "react-icons/ai";
 
-import { GoUpload } from "react-icons/go";
-
 function AddProduct() {
-  const { setSideBarSelectedTab } = useAppContext();
-  const categoryDropdownRef = useRef(null);
+  const { setToastLoading, setLoadingError, setMessage } = useAppContext();
   const brandDropdownRef = useRef(null);
+  const categoryDropdownRef = useRef(null);
   const [brands, setBrands] = useState([]);
   const [product, setProduct] = useState({
     name: "",
@@ -277,7 +276,7 @@ function AddProduct() {
                         onClick={(event) => {
                           setProduct({
                             ...product,
-                            category: event.target.textContent,
+                            category: category._id,
                           });
                           setShowCategoryDropdown(false);
                         }}
@@ -314,7 +313,7 @@ function AddProduct() {
                         onClick={(event) => {
                           setProduct({
                             ...product,
-                            brand: event.target.textContent,
+                            brand: brand._id,
                           });
                           setShowBrandDropdown(false);
                         }}
@@ -886,12 +885,14 @@ function AddProduct() {
                         type="text"
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              name: event.target.value,
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                name: event.target.value,
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -913,12 +914,14 @@ function AddProduct() {
                         type="text"
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              price: event.target.value,
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                price: event.target.value,
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -939,12 +942,14 @@ function AddProduct() {
                         type="text"
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              compareAtPrice: event.target.value,
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                compareAtPrice: event.target.value,
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -969,15 +974,17 @@ function AddProduct() {
                         value={variant.color.name}
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              color: {
+                                ...newVariants[index].color,
+                                name: event.target.value,
+                              },
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                color: {
-                                  ...product.variants.color,
-                                  name: event.target.value,
-                                },
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -998,15 +1005,17 @@ function AddProduct() {
                         value={variant.color.hex}
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              color: {
+                                ...newVariants[index].color,
+                                hex: event.target.value,
+                              },
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                color: {
-                                  ...product.variants.color,
-                                  hex: event.target.value,
-                                },
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -1029,15 +1038,17 @@ function AddProduct() {
                         type="text"
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              memory: {
+                                ...newVariants[index].memory,
+                                ram: event.target.value,
+                              },
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                memory: {
-                                  ...product.variants.memory,
-                                  ram: event.target.value,
-                                },
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -1058,15 +1069,17 @@ function AddProduct() {
                         name="storage"
                         onChange={(event) => {
                           setProduct((currentProduct) => {
+                            const newVariants = [...currentProduct.variants];
+                            newVariants[index] = {
+                              ...newVariants[index],
+                              memory: {
+                                ...newVariants[index].memory,
+                                storage: event.target.value,
+                              },
+                            };
                             return {
                               ...currentProduct,
-                              variants: {
-                                ...currentProduct.variants,
-                                memory: {
-                                  ...product.variants.memory,
-                                  storage: event.target.value,
-                                },
-                              },
+                              variants: newVariants,
                             };
                           });
                         }}
@@ -1150,8 +1163,20 @@ function AddProduct() {
       )}
 
       <button
-        onClick={() => {
+        onClick={async () => {
           console.log("Product:", product);
+          // try {
+          //   setToastLoading(true);
+          //   setMessage("Đang thêm sản phẩm.");
+          //   await Products.add(product);
+          //   setToastLoading(false);
+          //   setLoadingSuccess(true);
+          //   setMessage("Thêm sản phẩm thành công.");
+          // } catch (error) {
+          //   setToastLoading(false);
+          //   setLoadingError(true);
+          //   setMessage(error.message);
+          // }
         }}
         className="mt-10 rounded-md font-medium cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
       >
