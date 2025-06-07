@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
+  AiFillDelete,
   AiOutlinePlus,
   AiFillWarning,
   AiOutlineClose,
@@ -118,14 +119,12 @@ function AddProduct() {
       })),
     };
 
-    // Check required fields
     if (!product.name) newProductError.name = true;
     if (!product.description) newProductError.description = true;
     if (!product.category) newProductError.category = true;
     if (!product.brand) newProductError.brand = true;
     if (!product.discount) newProductError.discount = true;
 
-    // Check variants
     product.variants.forEach((variant, index) => {
       if (!variant.name) newProductError.variants[index].name = true;
       if (!variant.price) newProductError.variants[index].price = true;
@@ -135,10 +134,8 @@ function AddProduct() {
       if (!variant.images.length) newProductError.variants[index].images = true;
     });
 
-    // Update error state
     setProductError(newProductError);
 
-    // Return true if no errors (all values are false)
     return !Object.values(newProductError).some((value) => {
       if (typeof value === "boolean") return value;
       if (Array.isArray(value)) {
@@ -267,6 +264,22 @@ function AddProduct() {
           },
         ],
       };
+    });
+
+    setProductError({
+      ...productError,
+      variants: [
+        ...productError.variants,
+        {
+          name: false,
+          price: false,
+          color: {
+            name: false,
+            hex: false,
+          },
+          images: false,
+        },
+      ],
     });
   };
 
@@ -1065,8 +1078,15 @@ function AddProduct() {
 
             {product.variants.map((variant, index) => {
               return (
-                <div className="flex flex-col gap-10" key={index}>
-                  <div className="grid grid-cols-3 gap-10">
+                <div
+                  className="flex border border-gray-300 rounded-sm px-10 py-20 relative flex-col gap-10"
+                  key={index}
+                >
+                  <button className="absolute top-8 right-8 flex items-center gap-4 font-medium text-sm bg-gray-100 hover:bg-gray-200 px-8 cursor-pointer py-4 rounded-xs">
+                    <AiFillDelete className="text-lg" />
+                    Xóa biến thể
+                  </button>
+                  <div className="grid grid-cols-3 mt-10 gap-10">
                     <div className="flex flex-col gap-2">
                       <label
                         htmlFor={`variant-${index}-name`}
