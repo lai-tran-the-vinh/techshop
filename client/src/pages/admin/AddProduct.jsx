@@ -88,17 +88,15 @@ function AddProduct() {
     category: "Chọn thể loại",
     brand: "Chọn thương hiệu",
     discount: "Nhập phần trăm giảm giá",
-    variants: [
-      {
-        name: "Nhập tên biến thể",
-        price: "Nhập giá biến thể",
-        color: {
-          name: "Nhập tên màu",
-          hex: "Nhập mã màu",
-        },
-        images: "Vui lòng chọn ảnh",
+    variants: {
+      name: "Nhập tên biến thể",
+      price: "Nhập giá biến thể",
+      color: {
+        name: "Nhập tên màu",
+        hex: "Nhập mã màu",
       },
-    ],
+      images: "Vui lòng chọn ảnh",
+    },
   });
 
   function checkProductDataBeforeSubmit() {
@@ -282,6 +280,29 @@ function AddProduct() {
       ],
     });
   };
+
+  function handleRemoveVariant(index) {
+    if (product.variants.length > 1) {
+      setProduct((currentProduct) => {
+        const newVariants = [...currentProduct.variants]; // Tạo bản sao mới
+        newVariants.splice(index, 1); // Xóa phần tử tại index
+        return {
+          ...currentProduct,
+          variants: newVariants, // Cập nhật variants với mảng đã xóa phần tử
+        };
+      });
+
+      // Cập nhật productError state
+      setProductError((currentError) => {
+        const newVariants = [...currentError.variants];
+        newVariants.splice(index, 1);
+        return {
+          ...currentError,
+          variants: newVariants,
+        };
+      });
+    }
+  }
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -1067,6 +1088,7 @@ function AddProduct() {
             <div className="flex gap-12 items-center">
               <span className="text-sm text-primary font-medium">Biến thể</span>
               <div className="flex-1 border-t border-t-gray-300"></div>
+
               <button
                 onClick={handleAddVariant}
                 className="cursor-pointer flex items-center gap-4 bg-gray-100 hover:bg-gray-200 py-4 px-8 rounded-sm text-sm font-medium"
@@ -1079,13 +1101,20 @@ function AddProduct() {
             {product.variants.map((variant, index) => {
               return (
                 <div
-                  className="flex border border-gray-300 rounded-sm px-10 py-20 relative flex-col gap-10"
+                  className={`flex border border-gray-300 rounded-sm ${index !== 0 ? "px-10 py-20" : "p-10"} relative flex-col gap-10`}
                   key={index}
                 >
-                  <button className="absolute top-8 right-8 flex items-center gap-4 font-medium text-sm bg-gray-100 hover:bg-gray-200 px-8 cursor-pointer py-4 rounded-xs">
-                    <AiFillDelete className="text-lg" />
-                    Xóa biến thể
-                  </button>
+                  {index !== 0 && (
+                    <button
+                      onClick={() => {
+                        handleRemoveVariant(index);
+                      }}
+                      className="absolute top-8 right-8 flex items-center gap-4 font-medium text-sm bg-gray-100 hover:bg-gray-200 px-8 cursor-pointer py-4 rounded-xs"
+                    >
+                      <AiFillDelete className="text-lg" />
+                      Xóa biến thể
+                    </button>
+                  )}
                   <div className="grid grid-cols-3 mt-10 gap-10">
                     <div className="flex flex-col gap-2">
                       <label
@@ -1118,7 +1147,7 @@ function AddProduct() {
                       {productError.variants[index].name && (
                         <span className="text-sm flex items-center gap-4 text-red-500">
                           <AiFillWarning />
-                          {productMessage.variants[index].name}
+                          {productMessage.variants.name}
                         </span>
                       )}
                     </div>
@@ -1153,7 +1182,7 @@ function AddProduct() {
                       {productError.variants[index].price && (
                         <span className="text-sm flex items-center gap-4 text-red-500">
                           <AiFillWarning />
-                          {productMessage.variants[index].price}
+                          {productMessage.variants.price}
                         </span>
                       )}
                     </div>
@@ -1191,7 +1220,7 @@ function AddProduct() {
                       {productError.variants[index].color.name && (
                         <span className="text-sm flex items-center gap-4 text-red-500">
                           <AiFillWarning />
-                          {productMessage.variants[index].color.name}
+                          {productMessage.variants.color.name}
                         </span>
                       )}
                     </div>
@@ -1232,7 +1261,7 @@ function AddProduct() {
                       {productError.variants[index].color.name && (
                         <span className="text-sm flex items-center gap-4 text-red-500">
                           <AiFillWarning />
-                          {productMessage.variants[index].color.hex}
+                          {productMessage.variants.color.hex}
                         </span>
                       )}
                     </div>
@@ -1357,7 +1386,7 @@ function AddProduct() {
                       {productError.variants[index].images && (
                         <span className="text-sm flex items-center gap-4 text-red-500">
                           <AiFillWarning />
-                          {productMessage.variants[index].images}
+                          {productMessage.variants.images}
                         </span>
                       )}
                       <input
