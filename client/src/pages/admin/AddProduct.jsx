@@ -11,6 +11,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   AiOutlinePlus,
+  AiFillWarning,
   AiOutlineClose,
   AiFillCheckCircle,
 } from "react-icons/ai";
@@ -79,6 +80,99 @@ function AddProduct() {
       },
     ],
   });
+
+  const [productMessage, setProductMessage] = useState({
+    name: "Vui lòng nhập tên sản phẩm",
+    description: "Vui lòng nhập mô tả",
+    category: "Chọn thể loại",
+    brand: "Chọn thương hiệu",
+    discount: "Nhập phần trăm giảm giá",
+    variants: [
+      {
+        name: "Nhập tên biến thể",
+        price: "Nhập giá biến thể",
+        color: {
+          name: "Nhập tên màu",
+          hex: "Nhập mã màu",
+        },
+        images: "Vui lòng chọn ảnh",
+      },
+    ],
+  });
+
+  function checkProductDataBeforeSubmit() {
+    const newProductError = {
+      name: false,
+      description: false,
+      category: false,
+      brand: false,
+      discount: false,
+      variants: product.variants.map(() => ({
+        name: false,
+        price: false,
+        color: {
+          name: false,
+          hex: false,
+        },
+        images: false,
+      })),
+    };
+
+    // Check required fields
+    if (!product.name) newProductError.name = true;
+    if (!product.description) newProductError.description = true;
+    if (!product.category) newProductError.category = true;
+    if (!product.brand) newProductError.brand = true;
+    if (!product.discount) newProductError.discount = true;
+
+    // Check variants
+    product.variants.forEach((variant, index) => {
+      if (!variant.name) newProductError.variants[index].name = true;
+      if (!variant.price) newProductError.variants[index].price = true;
+      if (!variant.color.name)
+        newProductError.variants[index].color.name = true;
+      if (!variant.color.hex) newProductError.variants[index].color.hex = true;
+      if (!variant.images.length) newProductError.variants[index].images = true;
+    });
+
+    // Update error state
+    setProductError(newProductError);
+
+    // Return true if no errors (all values are false)
+    return !Object.values(newProductError).some((value) => {
+      if (typeof value === "boolean") return value;
+      if (Array.isArray(value)) {
+        return value.some((v) => {
+          if (typeof v === "boolean") return v;
+          return Object.values(v).some((nested) => {
+            if (typeof nested === "boolean") return nested;
+            return Object.values(nested).some(Boolean);
+          });
+        });
+      }
+      return false;
+    });
+  }
+
+  const [productError, setProductError] = useState({
+    name: false,
+    description: false,
+    category: false,
+    brand: false,
+    discount: false,
+    variants: [
+      {
+        name: false,
+        price: false,
+        color: {
+          name: false,
+          hex: false,
+        },
+        images: false,
+      },
+    ],
+  });
+
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
@@ -264,6 +358,12 @@ function AddProduct() {
                   placeholder="Nhập tên sản phẩm"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
+                {productError.name && (
+                  <span className="text-sm flex items-center gap-4 text-red-500">
+                    <AiFillWarning />
+                    {productMessage.name}
+                  </span>
+                )}
               </div>
               <div className="flex flex-1 flex-col gap-2">
                 <label htmlFor="discount" className="font-medium text-sm">
@@ -284,6 +384,12 @@ function AddProduct() {
                   placeholder="Nhập phần trăm giảm giá"
                   className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
+                {productError.discount && (
+                  <span className="text-sm flex items-center gap-4 text-red-500">
+                    <AiFillWarning />
+                    {productMessage.discount}
+                  </span>
+                )}
               </div>
               <div className="flex flex-1 flex-col gap-2 relative">
                 <label htmlFor="tag" className="text-sm font-medium">
@@ -302,6 +408,12 @@ function AddProduct() {
                   onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
                   className="border border-gray-300 hover:border-gray-400 cursor-pointer outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
+                {productError.category && (
+                  <span className="text-sm flex items-center gap-4 text-red-500">
+                    <AiFillWarning />
+                    {productMessage.category}
+                  </span>
+                )}
                 {showCategoryDropdown && (
                   <ul
                     ref={categoryDropdownRef}
@@ -341,6 +453,12 @@ function AddProduct() {
                   onClick={() => setShowBrandDropdown(!showBrandDropdown)}
                   className="border border-gray-300 cursor-pointer hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                 />
+                {productError.brand && (
+                  <span className="text-sm flex items-center gap-4 text-red-500">
+                    <AiFillWarning />
+                    {productMessage.brand}
+                  </span>
+                )}
                 {showBrandDropdown && (
                   <ul
                     ref={brandDropdownRef}
@@ -376,6 +494,12 @@ function AddProduct() {
               setProduct={setProduct}
               onImageUploadBefore={handleImageUpload}
             />
+            {productError.description && (
+              <span className="text-sm flex items-center gap-4 text-red-500">
+                <AiFillWarning />
+                {productMessage.description}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-10 mt-20">
@@ -930,7 +1054,11 @@ function AddProduct() {
             <div className="flex gap-12 items-center">
               <span className="text-sm text-primary font-medium">Biến thể</span>
               <div className="flex-1 border-t border-t-gray-300"></div>
-              <button onClick={handleAddVariant} className="cursor-pointer">
+              <button
+                onClick={handleAddVariant}
+                className="cursor-pointer flex items-center gap-4 bg-gray-100 hover:bg-gray-200 py-4 px-8 rounded-sm text-sm font-medium"
+              >
+                <AiOutlinePlus />
                 Thêm biến thể
               </button>
             </div>
@@ -967,6 +1095,12 @@ function AddProduct() {
                         placeholder="Nhập tên biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
+                      {productError.variants[index].name && (
+                        <span className="text-sm flex items-center gap-4 text-red-500">
+                          <AiFillWarning />
+                          {productMessage.variants[index].name}
+                        </span>
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <label
@@ -996,6 +1130,12 @@ function AddProduct() {
                         placeholder="Nhập giá của biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
+                      {productError.variants[index].price && (
+                        <span className="text-sm flex items-center gap-4 text-red-500">
+                          <AiFillWarning />
+                          {productMessage.variants[index].price}
+                        </span>
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <label
@@ -1028,6 +1168,12 @@ function AddProduct() {
                         placeholder="Nhập tên màu biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
+                      {productError.variants[index].color.name && (
+                        <span className="text-sm flex items-center gap-4 text-red-500">
+                          <AiFillWarning />
+                          {productMessage.variants[index].color.name}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -1063,6 +1209,12 @@ function AddProduct() {
                         placeholder="Nhập mã màu của biến thể"
                         className="border border-gray-300 hover:border-gray-400 outline-none focus:border-gray-400 placeholder:text-sm placeholder:font-medium rounded-md px-12 py-6"
                       />
+                      {productError.variants[index].color.name && (
+                        <span className="text-sm flex items-center gap-4 text-red-500">
+                          <AiFillWarning />
+                          {productMessage.variants[index].color.hex}
+                        </span>
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <label
@@ -1182,6 +1334,12 @@ function AddProduct() {
                           </label>
                         )}
                       </div>
+                      {productError.variants[index].images && (
+                        <span className="text-sm flex items-center gap-4 text-red-500">
+                          <AiFillWarning />
+                          {productMessage.variants[index].images}
+                        </span>
+                      )}
                       <input
                         multiple
                         type="file"
@@ -1207,29 +1365,32 @@ function AddProduct() {
 
       <button
         onClick={async () => {
-          try {
-            setToastLoading(true);
-            setMessage("Đang thêm sản phẩm.");
-            const productToSubmit = { ...product };
-            for (let i = 0; i < productToSubmit.variants.length; i++) {
-              const variant = productToSubmit.variants[i];
-              const uploadedUrls = [];
-              for (let j = 0; j < variant.images.length; j++) {
-                const imageUrl = await Files.upload(variant.images[j]);
-                uploadedUrls.push(imageUrl);
+          const isValidData = checkProductDataBeforeSubmit();
+          if (isValidData) {
+            try {
+              setToastLoading(true);
+              setMessage("Đang thêm sản phẩm.");
+              const productToSubmit = { ...product };
+              for (let i = 0; i < productToSubmit.variants.length; i++) {
+                const variant = productToSubmit.variants[i];
+                const uploadedUrls = [];
+                for (let j = 0; j < variant.images.length; j++) {
+                  const imageUrl = await Files.upload(variant.images[j]);
+                  uploadedUrls.push(imageUrl);
+                }
+                productToSubmit.variants[i].images = uploadedUrls;
               }
-              productToSubmit.variants[i].images = uploadedUrls;
-            }
 
-            await Products.add(productToSubmit);
-            setToastLoading(false);
-            navigate("/dashboard");
-            setLoadingSuccess(true);
-            setMessage("Thêm sản phẩm thành công.");
-          } catch (error) {
-            setToastLoading(false);
-            setLoadingError(true);
-            setMessage(error.message);
+              await Products.add(productToSubmit);
+              setToastLoading(false);
+              navigate("/dashboard");
+              setLoadingSuccess(true);
+              setMessage("Thêm sản phẩm thành công.");
+            } catch (error) {
+              setToastLoading(false);
+              setLoadingError(true);
+              setMessage(error.message);
+            }
           }
         }}
         className="mt-10 rounded-md font-medium cursor-pointer float-right min-w-100 bg-primary text-white py-8 hover:opacity-80"
