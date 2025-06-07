@@ -187,17 +187,24 @@ function AddProduct() {
         // Xử lý arrays
         if (Array.isArray(value)) {
           if (value.length > 0) {
-            filtered[key] = value
-              .map((item) =>
-                typeof item === "object" ? removeEmptyFields(item) : item
-              )
-              .filter(Boolean);
+            // Kiểm tra nếu là mảng File objects thì giữ nguyên
+            if (value[0] instanceof File) {
+              filtered[key] = value;
+            } else {
+              filtered[key] = value
+                .map((item) =>
+                  typeof item === "object" && !(item instanceof File)
+                    ? removeEmptyFields(item)
+                    : item
+                )
+                .filter(Boolean);
+            }
           }
         }
         // Xử lý objects
-        else if (typeof value === "object") {
+        else if (typeof value === "object" && !(value instanceof File)) {
           const nestedObj = removeEmptyFields(value);
-          if (Object.keys(nestedObj).length > 0) {
+          if (Object.values(nestedObj).length > 0) {
             filtered[key] = nestedObj;
           }
         }
@@ -1454,6 +1461,8 @@ function AddProduct() {
               setToastLoading(true);
               setMessage("Đang thêm sản phẩm.");
               const productToSubmit = removeEmptyFields({ ...product });
+              // const productToSubmit = { ...product };
+
               for (let i = 0; i < productToSubmit.variants.length; i++) {
                 const variant = productToSubmit.variants[i];
                 const uploadedUrls = [];
