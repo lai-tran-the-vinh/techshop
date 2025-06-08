@@ -1,5 +1,6 @@
 export { default as Dashboard } from "./Dashboard";
 export { default as AddProduct } from "./AddProduct";
+export { default as ListProduct } from "./ListProduct";
 export { default as Variants } from "./AddProduct_Variants";
 export { default as Specifications } from "./AddProduct_Specifications";
 export { default as CommonInformation } from "./AddProduct_CommonInformation";

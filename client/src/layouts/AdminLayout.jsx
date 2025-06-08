@@ -10,7 +10,7 @@ function Header() {
   }, []);
 
   return (
-    <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
+    <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-100 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
       <Link to="/dashboard">
         <h3 className="font-bold xl:text-3xl lg:text-2xl md:text-2xl text-primary">
           TechShop
@@ -30,7 +30,7 @@ function AdminLayout() {
   } = useAppContext();
 
   return (
-    <div className="relative font-roboto">
+    <div className="relative font-roboto overflow-x-hidden">
       <Header />
       <main className="mt-60 flex">
         <div className="xl:pl-50 w-[20%] border-r fixed top-60 left-0 bottom-0 border-r-gray-300 flex flex-col gap-10 h-screen p-20">
@@ -69,18 +69,23 @@ function AdminLayout() {
                   Thêm sản phẩm
                 </span>
               </Link>
-              <span
-                onClick={() => {
-                  setSideBarSelectedTab("Xem danh sách sản phẩm");
-                }}
-                className={`${sideBarSelectedTab === "Xem danh sách sản phẩm" && "text-primary"} cursor-pointer hover:text-primary`}
-              >
-                Xem danh sách sản phẩm
-              </span>
+
+              <Link to="/product/all">
+                <span
+                  onClick={() => {
+                    setSideBarSelectedTab("Xem danh sách sản phẩm");
+                  }}
+                  className={`${sideBarSelectedTab === "Xem danh sách sản phẩm" && "text-primary"} cursor-pointer hover:text-primary`}
+                >
+                  Xem danh sách sản phẩm
+                </span>
+              </Link>
             </div>
           </div>
         </div>
-        <div className="w-full ml-[20%] p-20">
+        <div
+          className={`w-full ml-[20%] p-20 ${window.location.pathname === "/product/all" && "h-[50vh] overflow-y-hidden"}`}
+        >
           <Outlet />
         </div>
       </main>
