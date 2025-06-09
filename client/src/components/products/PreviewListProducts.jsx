@@ -1,6 +1,6 @@
-import { Card } from "./";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import CardProduct from "./Card";
 
 function PreviewListProducts({ title, loading }) {
   const brands = ["Samsung", "Apple", "Xiaomi", "Oppo", "Vivo", "Realme"];
@@ -45,48 +45,48 @@ function PreviewListProducts({ title, loading }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
         {loading ? (
           <div className="w-230">
             <Skeleton className="h-360" />
           </div>
         ) : (
-          <Card />
+          <CardProduct />
         )}
       </div>
     </div>
