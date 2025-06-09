@@ -212,12 +212,12 @@ function ListProduct() {
           <Skeleton className="h-1000" />
         </div>
       ) : (
-        <div className="p-6 font-roboto min-h-screen overflow-x-hidden flex flex-col justify-start">
+        <div className="p-6 font-roboto min-h-screen flex flex-col justify-start">
           <div className="mb-10">
             <h1 className="text-xl font-medium">Danh sách sản phẩm</h1>
           </div>
           <div
-            className="overflow-x-auto rounded-lg border border-gray-200 bg-white max-h-[70vh]"
+            className="overflow-x-auto rounded-md border border-gray-300 bg-white max-h-[70vh]"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             <style>{`
@@ -231,9 +231,9 @@ function ListProduct() {
                       <th
                         key={col}
                         className={
-                          `px-12 py-8 text-center border-r min-w-100 font-semibold text-gray-700 whitespace-nowrap bg-gray-50 border-b border-gray-200 z-20 ` +
+                          `px-12 py-8 text-center border-r min-w-100 font-semibold text-gray-700 whitespace-nowrap bg-white border-b border-gray-200 z-20 ` +
                           (i === 0
-                            ? "sticky left-0 z-30  border-gray-300"
+                            ? "sticky left-0 z-30 border-gray-300"
                             : "sticky top-0")
                         }
                         style={i === 0 ? { left: 0, top: 0 } : { top: 0 }}
@@ -249,75 +249,75 @@ function ListProduct() {
                       key={idx}
                       className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
                     >
-                      <td className="px-12 py-8 text-center border-b whitespace-nowrap sticky left-0 z-30 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center whitespace-nowrap sticky left-0 z-1000 border-gray-200">
                         {row.name || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row.description || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row.discount || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row.category.name || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row.brand.name || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row?.specifications?.displaySize || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row?.specifications?.displayStyle || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center border-b border-l max-w-200 overflow-x-hidden whitespace-nowrap sticky left-0 z-20 border-r border-gray-200">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {row?.specifications?.processor || "Không có"}
                       </td>
-                      {/*
-                      
-                      
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.specifications?.processor || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.specifications?.operatingSystem || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.specifications?.operatingSystem || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.specifications?.battery || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.specifications?.battery || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.specifications?.weight || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.specifications?.weight || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.connectivity?.wifi || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.connectivity?.wifi || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.connectivity?.bluetooth || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.connectivity?.bluetooth || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.connectivity?.cellular || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.connectivity?.cellular || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.connectivity?.nfc || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.connectivity?.nfc || "Không có"}
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {row?.connectivity?.gps || "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {row.connectivity?.gps || "Không có"}
-                      </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {Array.isArray(row.connectivity?.ports)
                           ? row.connectivity?.ports?.join(", ")
                           : "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
-                        {Array.isArray(row.camera.front.resolution)
-                          ? row.camera.front.resolution?.join(", ")
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {Array.isArray(row?.camera?.front?.resolution)
+                          ? row?.camera?.front?.resolution?.join(", ")
                           : "Không có"}
                       </td>
-                      <td className="px-12 py-8 text-center whitespace-nowrap">
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
                         {Array.isArray(row.camera?.front?.features)
                           ? row.camera?.front?.features?.join(", ")
                           : "Không có"}
                       </td>
+                      <td className="px-12 py-8 text-center border-gray-300 border-l max-w-200 overflow-x-hidden whitespace-nowrap">
+                        {Array.isArray(row.camera?.front?.videoRecording)
+                          ? row.camera?.front?.videoRecording?.join(", ")
+                          : "Không có"}
+                      </td>
+                      {/*
                       <td className="px-12 py-8 text-center whitespace-nowrap">
                         {Array.isArray(row.camera?.front?.videoRecording)
                           ? row.camera?.front?.videoRecording?.join(", ")
