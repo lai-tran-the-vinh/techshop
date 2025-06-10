@@ -60,7 +60,7 @@ function CardProduct() {
             size="large"
             type="primary"
             icon={<ShoppingCartOutlined />}
-            className="h-[44]! rounded-sm! font-roboto! font-medium! bg-red-500!"
+            className="h-[44]! rounded-sm! font-roboto! font-medium! bg-primary!"
           >
             Mua ngay
           </Button>
