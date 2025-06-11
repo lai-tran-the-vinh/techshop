@@ -13,34 +13,29 @@ function ConnectionInformation({ product, setProduct }) {
 
       <Row gutter={[10, 0]}>
         <Col span={8}>
-          <Form.Item
-            name="wifi"
-            label="Wifi"
-           
-          >
-            <Input
-              placeholder="Nhập thông tin Wifi"
-              style={{ padding: "12px 24px" }}
-            />
+          <Form.Item name="wifi" label="Wifi">
+            <Input placeholder="Nhập thông tin Wifi" />
           </Form.Item>
         </Col>
 
         <Col span={8}>
-          <Form.Item
-            name="bluetooth"
-            label="Bluetooth"
-          
-          >
-            <Input
-              placeholder="Nhập thông tin Bluetooth"
-              style={{ padding: "12px 24px" }}
-            />
+          <Form.Item name="bluetooth" label="Bluetooth">
+            <Input placeholder="Nhập thông tin Bluetooth" />
           </Form.Item>
         </Col>
+
         <Col span={8}>
           <Form.Item name="nfc" label="NFC" valuePropName="checked">
             <Switch
-            
+              onClick={() =>
+                setProduct({
+                  ...product,
+                  connectivity: {
+                    ...product.connectivity,
+                    nfc: !product.connectivity.nfc,
+                  },
+                })
+              }
               checkedChildren="Có"
               unCheckedChildren="Không"
               style={{
@@ -52,40 +47,34 @@ function ConnectionInformation({ product, setProduct }) {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            name="cellular"
-            label="Công nghệ di động"
-           
-          >
-            <Input
-              placeholder="Nhập công nghệ di động"
-              style={{ padding: "12px 24px" }}
-            />
+          <Form.Item name="cellular" label="Công nghệ di động">
+            <Input placeholder="Nhập công nghệ di động" />
           </Form.Item>
         </Col>
 
         <Col span={8}>
-          <Form.Item
-            name="ports"
-            label="Cổng kết nối"
-           
-          >
-            <Input
-              placeholder="Nhập thông tin cổng kết nối (phân cách bằng dấu phẩy)"
-              style={{ padding: "12px 24px" }}
-            />
+          <Form.Item name="ports" label="Cổng kết nối">
+            <Input placeholder="Nhập thông tin cổng kết nối (phân cách bằng dấu phẩy)" />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name="gps" label="GPS" valuePropName="checked">
             <Switch
-             
               checkedChildren="Có"
               unCheckedChildren="Không"
+              onClick={() =>
+                setProduct({
+                  ...product,
+                  connectivity: {
+                    ...product.connectivity,
+                    gps: !product.connectivity.gps,
+                  },
+                })
+              }
               style={{
                 backgroundColor: product?.connectivity?.gps
-                  ? "#d9d9d9"
-                  : "#52c41a",
+                  ? "#52c41a"
+                  : "#d9d9d9",
               }}
             />
           </Form.Item>
