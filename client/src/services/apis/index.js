@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
     Authorization: `Bearer ${token}`,
   },
 });
+/*
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -41,7 +42,7 @@ axiosInstance.interceptors.response.use(
     }
     return Promise.reject(error);
   }
-);
+); */
 export const callLogin = async (email, password) => {
   const response = await axiosInstance.post(`/api/v1/auth/login`, {
     username: email,
