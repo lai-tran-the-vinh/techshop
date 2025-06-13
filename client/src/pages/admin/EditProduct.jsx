@@ -149,15 +149,28 @@ function EditProduct() {
           setProductError={setProductError}
         />
       </div>
-
-      <Button
-        type="primary"
-        size="large"
-        className="mt-8 float-right"
-        onClick={onSubmit}
-      >
-        Cập nhật
-      </Button>
+      <div className="px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex gap-3">
+            <Button
+              size="large"
+              disabled={loading}
+              className="mt-8 float-right"
+              onClick={() => navigate(-1)}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              className="mt-8 float-right"
+              onClick={onSubmit}
+            >
+              Cập nhật
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
