@@ -7,6 +7,7 @@ import {
   Image,
   Row,
   Col,
+  Modal,
   Statistic,
   Input,
   Typography,
@@ -47,6 +48,9 @@ const { Text, Title } = Typography;
 const { Option } = Select;
 
 function ListProduct() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState("Bạn có chắc chắn muốn xóa?");
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -100,12 +104,16 @@ function ListProduct() {
   }, []);
 
   const handleDeleteProducts = async () => {
+    setModalText("The modal will be closed after two seconds");
+    setConfirmLoading(true);
     try {
       await Promise.all(selectedRowKeys.map((id) => callDeleteProduct(id)));
       setProducts((prev) =>
         prev.filter((p) => !selectedRowKeys.includes(p._id))
       );
       setSelectedRowKeys([]);
+      setOpen(false);
+      setConfirmLoading(false);
     } catch (error) {
       console.error("Xóa sản phẩm thất bại", error);
     }
@@ -490,6 +498,15 @@ function ListProduct() {
           <Title level={1} style={{ color: "white", margin: 0, fontSize: 32 }}>
             Quản lý sản phẩm
           </Title>
+          <Modal
+            title="Xác nhận"
+            open={open}
+            onOk={handleDeleteProducts}
+            confirmLoading={confirmLoading}
+            onCancel={() => setOpen(false)}
+          >
+            <p>{modalText}</p>
+          </Modal>
           <Text style={{ color: "rgba(255,255,255,0.8)", fontSize: 16 }}>
             Quản lý toàn bộ sản phẩm trong hệ thống
           </Text>
@@ -606,7 +623,7 @@ function ListProduct() {
 
                 <Button
                   danger
-                  onClick={handleDeleteProducts}
+                  onClick={() => setOpen(true)}
                   disabled={selectedRowKeys.length === 0}
                   icon={<DeleteOutlined />}
                 >
