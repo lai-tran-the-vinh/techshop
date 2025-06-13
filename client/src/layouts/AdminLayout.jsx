@@ -8,6 +8,11 @@ import {
   Menu,
   Space,
   Avatar,
+  Badge,
+  Divider,
+  Button,
+  Tooltip,
+  Card,
 } from "antd";
 import {
   DashboardOutlined,
@@ -18,57 +23,57 @@ import {
   ShoppingOutlined,
   UserOutlined,
   MenuUnfoldOutlined,
+  MenuFoldOutlined,
   TagsOutlined,
   ContainerOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  BellOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { callLogout } from "@/services/apis";
 
 function AdminLayout() {
   const { Title, Text } = Typography;
   const { Header, Footer, Sider, Content } = Layout;
   const { sideBarSelectedTab, setSideBarSelectedTab } = useAppContext();
   const [collapsed, setCollapsed] = useState(false);
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  function highlight(text) {
-    if (sideBarSelectedTab === text) return "text-primary!";
-    return "text-black! hover:text-primary!";
-  }
+
   const navItems = [
     {
       key: "dashboard",
-      label: "Quản lý hệ thống",
+      label: "Tổng quan",
       icon: <DashboardOutlined />,
       onClick: () => navigate("/dashboard"),
     },
     {
+      type: "divider",
+    },
+    {
       key: "product",
-      label: "Quản lý sản phẩm",
+      label: "Sản phẩm",
       icon: <ProductOutlined />,
       children: [
-        {
-          key: "addproduct",
-          label: "Thêm sản phẩm",
-          onClick: () => navigate("/product/add"),
-        },
-        // {
-        //   key: "editproduct",
-        //   label: "Sửa sản phẩm",
-        //   onClick: () => navigate("/product/edit"),
-        // },
         {
           key: "allproducts",
           label: "Danh sách sản phẩm",
           onClick: () => navigate("/product/all"),
         },
+        {
+          key: "addproduct",
+          label: "Thêm sản phẩm",
+          onClick: () => navigate("/product/add"),
+        },
       ],
     },
     {
       key: "inventory",
-      label: "Quản lý kho hàng",
+      label: "Kho hàng",
       icon: <ContainerOutlined />,
       children: [
         {
@@ -76,21 +81,11 @@ function AdminLayout() {
           label: "Danh sách kho hàng",
           onClick: () => navigate("/inventory/all"),
         },
-        // {
-        //   key: "addinventory",
-        //   label: "Thêm kho hàng",
-        //   onClick: () => navigate("/inventory/add"),
-        // },
         {
           key: "importinventory",
           label: "Nhập hàng",
           onClick: () => navigate("/inventory/import"),
         },
-        // {
-        //   key: "exportinventory",
-        //   label: "Xuất hàng",
-        //   onClick: () => navigate("/inventory/export"),
-        // },
         {
           key: "transferinventory",
           label: "Chuyển kho",
@@ -99,34 +94,37 @@ function AdminLayout() {
       ],
     },
     {
+      key: "order",
+      label: "Đơn hàng",
+      icon: <ShoppingOutlined />,
+      onClick: () => navigate("/admin/order"),
+    },
+    {
+      type: "divider",
+    },
+    {
       key: "branch",
-      label: "Quản lý chi nhánh",
+      label: "Chi nhánh",
       icon: <HomeOutlined />,
       onClick: () => navigate("/branch"),
     },
     {
       key: "category",
-      label: "Quản lý danh mục",
+      label: "Danh mục",
       icon: <ShoppingOutlined />,
       onClick: () => navigate("/category"),
     },
     {
       key: "brand",
-      label: "Quản lý thương hiệu",
+      label: "Thương hiệu",
       icon: <TagsOutlined />,
       onClick: () => navigate("/brand"),
     },
     {
       key: "user",
-      label: "Quản lý người dùng",
+      label: "Người dùng",
       icon: <UserOutlined />,
       onClick: () => navigate("/user"),
-    },
-    {
-      key: "order",
-      label: "Quản lý đơn hàng",
-      icon: <ShoppingOutlined />,
-      onClick: () => navigate("/admin/order"),
     },
   ];
 
@@ -158,14 +156,44 @@ function AdminLayout() {
     navigate("/dashboard");
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth < 768) {
+        setCollapsed(true);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const getCurrentPath = () => {
     const path = location.pathname.split("/");
-    return path.length > 2 ? path[2] : "";
+    return path.length > 2 ? path[2] : path[1];
   };
 
+  const handleLogout = async () => {
+    await callLogout();
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   return (
     <Layout className="w-full!">
-      <Header className="font-roboto! xl:px-50! lg:px-30! md:px-20! w-full! fixed! top-0! left-0! right-0! z-100! bg-white! border-b! border-b-gray-300! h-60! flex! items-center! justify-between!">
+      <Header className="font-roboto! xl:px-50! lg:px-30! md:px-20! w-full! fixed! top-0! left-0! right-0! z-100! bg-white! border-b! border-b-gray-300! h-60! flex! items-center! ">
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            fontSize: "16px",
+            width: 40,
+            height: 40,
+            color: "#7f7f7f",
+            right: 40,
+          }}
+        />
+
         <Link to="/dashboard">
           <div className="flex items-end space-x-2 cursor-pointer">
             <Title
@@ -178,58 +206,180 @@ function AdminLayout() {
           </div>
         </Link>
       </Header>
-      <Layout className="mt-60! min-h-700!">
+
+      <Layout style={{ marginTop: 64 }}>
         <Sider
+          trigger={null}
           collapsible
           collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-          theme="light"
-          width={250}
+          width={280}
+          collapsedWidth={80}
           style={{
-            overflow: "clip",
-            alignSelf: "flex-start",
+            overflow: "hidden",
             height: "100vh",
-            position: "sticky",
-            marginTop: "20px",
-            insetInlineStart: 1,
-            top: 80,
+            position: "fixed",
+            left: 0,
+            top: 64,
             bottom: 0,
+            background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+            borderRight: "1px solid #e2e8f0",
+            zIndex: 999,
           }}
         >
           <div
             style={{
+              padding: collapsed ? "0" : "24px",
+              textAlign: "center",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              padding: collapsed ? "16px 0" : "16px",
-              borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+              background: collapsed ? "none" : "white",
+              margin: collapsed ? "16px 8px" : "16px",
+              borderRadius: 50,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              border: "1px solid #f0f0f0",
             }}
           >
             {collapsed ? (
-              <Avatar size={40}>
-                <UserOutlined />
-              </Avatar>
-            ) : (
-              <Space direction="vertical" align="center">
-                <Avatar size={64}>
+              <Tooltip title="Admin User" placement="right">
+                <Avatar
+                  size={48}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    border: "2px solid white",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <UserOutlined />
                 </Avatar>
+              </Tooltip>
+            ) : (
+              <Space direction="vertical" size={8} style={{ width: "100%" }}>
+                <Avatar
+                  size={64}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    border: "3px solid white",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  }}
+                >
+                  <UserOutlined />
+                </Avatar>
+                <div>
+                  <Text strong style={{ fontSize: 16, display: "block" }}>
+                    Admin
+                  </Text>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    Quản trị viên
+                  </Text>
+                </div>
               </Space>
             )}
           </div>
-          <Menu
-            mode="inline"
-            items={navItems }
-            selectedKeys={[getCurrentPath()]}
-            style={{ height: "100vh", borderRight: 0 }}
-          />
+
+          <div style={{ padding: collapsed ? "0 8px" : "0 16px" }}>
+            <Menu
+              mode="inline"
+              items={navItems}
+              style={{
+                border: "none",
+                background: "transparent",
+                fontSize: 14,
+              }}
+              theme="light"
+            />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 70,
+              left: collapsed ? 8 : 16,
+              right: collapsed ? 8 : 16,
+            }}
+          >
+            {collapsed ? (
+              <Space direction="vertical" size={8} style={{ width: "100%" }}>
+                <Tooltip title="Cài đặt" placement="right">
+                  <Button
+                    type="text"
+                    icon={<SettingOutlined />}
+                    style={{ width: "100%", height: 40 }}
+                  />
+                </Tooltip>
+                <Tooltip title="Đăng xuất" placement="right">
+                  <Button
+                    type="text"
+                    danger
+                    icon={<LogoutOutlined />}
+                    style={{ width: "100%", height: 40 }}
+                    onClick={() => handleLogout()}
+                  />
+                </Tooltip>
+              </Space>
+            ) : (
+              <Space direction="vertical" size={8} style={{ width: "100%" }}>
+                <Button
+                  type="text"
+                  icon={<SettingOutlined />}
+                  style={{
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    height: 40,
+                  }}
+                >
+                  Cài đặt
+                </Button>
+                <Button
+                  type="text"
+                  danger
+                  onClick={() => handleLogout()}
+                  icon={<LogoutOutlined />}
+                  style={{
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    height: 40,
+                  }}
+                >
+                  Đăng xuất
+                </Button>
+              </Space>
+            )}
+          </div>
         </Sider>
-        <Content className="bg-white! p-20! m-20!">
-          <Space>
-            <Breadcrumb items={getBreadcrumbItems()} />
-          </Space>
-          <Outlet />
-        </Content>
+
+        <Layout
+          style={{
+            marginLeft: collapsed ? 80 : 280,
+            transition: "margin-left 0.2s",
+          }}
+        >
+          <Content
+            style={{
+              margin: "24px",
+              padding: "24px",
+              background: "#ffffff",
+              borderRadius: 12,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              minHeight: "calc(100vh - 112px)",
+            }}
+          >
+            <div style={{ marginBottom: 16 }}>
+              <Breadcrumb
+                items={getBreadcrumbItems()}
+                style={{
+                  fontSize: 14,
+                  color: "#64748b",
+                }}
+              />
+            </div>
+            <Outlet />
+          </Content>
+        </Layout>
       </Layout>
     </Layout>
   );

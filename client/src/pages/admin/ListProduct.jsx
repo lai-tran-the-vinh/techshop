@@ -18,6 +18,7 @@ import {
   Spin,
   Table,
   Badge,
+  Avatar,
 } from "antd";
 import {
   TagOutlined,
@@ -36,7 +37,6 @@ import {
   StopOutlined,
 } from "@ant-design/icons";
 import {
-  callCreateProduct,
   callDeleteProduct,
   callFetchBrands,
   callFetchCategories,
@@ -421,7 +421,7 @@ function ListProduct() {
                 label={
                   <Avatar
                     shape="square"
-                    size={150}
+                    size={160}
                     src={variant.images?.[0]}
                     alt={`Variant ${index + 1}`}
                   />
