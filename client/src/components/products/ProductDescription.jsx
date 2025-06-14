@@ -6,7 +6,7 @@ function ProductDescription({ className, product, loading }) {
   const descriptionRef = useRef(null);
 
   return (
-    <div className="w-[60%]">
+    <div className={className}>
       <span className="font-bold text-primary text-xl uppercase">
         {loading ? (
           <div className="w-250">

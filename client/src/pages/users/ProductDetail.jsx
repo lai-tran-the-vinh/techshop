@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
 import Products from "@services/products";
+import { ProductSpecification } from "@components/products";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { ImagesSlider } from "@components/app";
@@ -60,11 +61,14 @@ function ProductDetail() {
         />
       </div>
 
-      <ProductDescription
-        product={product}
-        loading={loading}
-        className="w-[60%]"
-      />
+      <div className="flex gap-20 p-20">
+        <ProductDescription
+          product={product}
+          loading={loading}
+          className="w-2/3"
+        />
+        <ProductSpecification className="flex-1" />
+      </div>
 
       <Comments
         product={product}
