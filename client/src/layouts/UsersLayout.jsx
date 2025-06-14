@@ -2,71 +2,73 @@ import { useEffect } from "react";
 import { Login, Signup } from "@pages/app";
 import { useAppContext } from "@contexts";
 import { Outlet, Link } from "react-router-dom";
+import { Layout, Input, Typography, Button, Flex } from "antd";
 import { LoadingToast, SuccessToast, ErrorToast } from "@/components/app";
 
 function Header() {
   const { setShowLogin, setShowSignup } = useAppContext();
+
+  function onSearch() {}
 
   useEffect(() => {
     document.title = "TechShop | Mua sắm thả ga";
   }, []);
 
   return (
-    <header className="font-roboto xl:px-50 lg:px-30 md:px-20 w-full fixed top-0 left-0 right-0 z-10 bg-white border-b border-b-gray-300 h-60 flex items-center justify-between">
+    <Layout.Header className="font-roboto! xl:px-50! lg:px-30! md:px-20! w-full! fixed! top-0! left-0! right-0! z-10! bg-white! border-b! border-b-gray-300! h-60! flex! items-center! justify-between!">
       <Link to="/">
-        <h3 className="font-bold xl:text-3xl lg:text-2xl md:text-2xl text-primary">
+        <Typography.Title
+          level={3}
+          className="font-bold! mb-0! font-roboto! xl:text-3xl! lg:text-2xl! md:text-2xl! text-primary!"
+        >
           TechShop
-        </h3>
+        </Typography.Title>
       </Link>
-      <div className="flex gap-8 font-medium">
-        <button
+      <Input.Search
+        onSearch={onSearch}
+        placeholder="Nhập nội dung"
+        className="w-300! text-base! font-roboto! placeholder:font-roboto!"
+      />
+      <Flex gap={8}>
+        <Button
           onClick={() => {
             setShowLogin(true);
           }}
-          className="border border-gray-300 min-w-100 py-6 px-12 rounded-md cursor-pointer"
+          className="border! h-40! font-roboto! border-gray-300! text-base! font-medium! hover:text-primary! hover:border-primary! min-w-100! py-6! px-12! rounded-md! cursor-pointer!"
         >
           Đăng nhập
-        </button>
-        <button
+        </Button>
+        <Button
+          type="primary"
           onClick={() => {
             setShowSignup(true);
           }}
-          className="py-6 px-12 rounded-md min-w-100 bg-primary text-white cursor-pointer hover:opacity-80"
+          className="text-base! h-40! font-roboto! rounded-md! min-w-100! font-medium! bg-primary! text-white! cursor-pointer!"
         >
           Đăng ký
-        </button>
-      </div>
-    </header>
+        </Button>
+      </Flex>
+    </Layout.Header>
   );
 }
 
 function UsersLayout() {
-  const {
-    loading,
-    showLogin,
-    showSignup,
-    setMessage,
-    setLoading,
-    toastLoading,
-    loadingError,
-    loadingSuccess,
-    setLoadingError,
-    setLoadingSuccess,
-  } = useAppContext();
+  const { showLogin, showSignup, toastLoading, loadingError, loadingSuccess } =
+    useAppContext();
 
   return (
-    <div className="font-roboto relative flex flex-col items-center">
+    <Layout className="font-roboto! relative! flex! flex-col! items-center!">
       <Header />
-      <main className="w-full mt-60 flex flex-col items-center">
+      <Layout.Content className="w-full! mt-60! flex! flex-col! items-center!">
         <Outlet />
         {showLogin && <Login />}
         {showSignup && <Signup />}
-      </main>
+      </Layout.Content>
       {loadingError && <ErrorToast />}
       {toastLoading && <LoadingToast />}
       {loadingSuccess && <SuccessToast />}
       {/* <footer>Footer</footer> */}
-    </div>
+    </Layout>
   );
 }
 
