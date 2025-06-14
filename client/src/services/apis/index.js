@@ -110,13 +110,33 @@ export const callFetchProductDetail = (id) => {
   return axiosInstance.get(`/api/v1/products/${id}`);
 }
 
-export const  callUpdateProduct = (value) => {
+export const callUpdateProduct = (value) => {
   return axiosInstance.patch(`/api/v1/products/${value._id}`, {
     ...value
   });
 }
 export const callDeleteProduct = (id) => {
   return axiosInstance.delete(`/api/v1/products/${id}`);
+}
+export const callFetchBranches = () => {
+  return axiosInstance.get(`/api/v1/branchs`);
+}
+
+export const callCreateBranch = (value) => {
+
+  return axiosInstance.post(`/api/v1/branchs`, {
+    ...value
+  });
+}
+
+export const callDeleteBranch = (id) => {
+  return axiosInstance.delete(`/api/v1/branchs/${id}`);
+}
+
+export const callUpdateBranch = (value) => {
+  return axiosInstance.patch(`/api/v1/branchs/${value._id}`, {
+    ...value
+  });
 }
 
 export const callFetchCategories = () => {

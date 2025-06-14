@@ -1,71 +1,84 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   Button,
-  Typography,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Popconfirm,
+  message,
   Card,
   Row,
   Col,
-  Input,
-  message,
-  Tooltip,
   Tag,
+  Typography,
+  Divider,
+  Select,
   Flex,
-  Modal,
+  Tooltip,
 } from 'antd';
 import {
-  DeleteOutlined,
-  EditOutlined,
   PlusOutlined,
-  ReloadOutlined,
-  AppstoreOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  ShopOutlined,
   SearchOutlined,
+  AppstoreOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { callDeleteCategory, callFetchCategories } from '@/services/apis';
-import ModalCategory from '@/components/admin/category';
+import {
+  callDeleteBranch,
+  callFetchBranches,
+  callUpdateBranch,
+} from '@/services/apis';
+import ModalBranch from '@/components/admin/branch';
 
-const { Title, Text } = Typography;
-const { Search } = Input;
+const { Title } = Typography;
+const { TextArea } = Input;
 
-const CategoryPage = () => {
-  const [categories, setCategories] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [dataInit, setDataInit] = useState(null);
-  const [loading, setLoading] = useState(true);
+const BranchManagement = () => {
+  const [branches, setBranches] = useState([{}]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingBranch, setEditingBranch] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [openModalDelete, setOpenModalDelete] = useState(false);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const [dataInit, setDataInit] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const FetchBranchs = async () => {
     setLoading(true);
     try {
-      const response = await callFetchCategories();
-      setCategories(response.data.data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      message.error('Failed to load categories');
-    } finally {
+      const res = await callFetchBranches();
+      setBranches(res.data.data);
       setLoading(false);
+      message.success('Lấy danh sách chi nhánh thành công!');
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      message.error('Lấy danh sách chi nhánh thất bại!');
     }
   };
+  useEffect(() => {
+    FetchBranchs();
+  }, []);
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all(selectedRowKeys.map((id) => callDeleteCategory(id)));
-      message.success(`Đã xóa ${selectedRowKeys.length} danh mục thành công`);
+      setLoading(true);
+      await Promise.all(selectedRowKeys.map((id) => callDeleteBranch(id)));
+      setLoading(false);
+      message.success(`Đã xóa ${selectedRowKeys.length} chi nhánh thành công`);
       setSelectedRowKeys([]);
       setSelectedRows([]);
       setOpenModalDelete(false);
-      fetchCategories();
+      reloadTable();
     } catch (error) {
-      console.error('Failed to delete categories:', error);
+      console.error('Failed to delete :', error);
       message.error('Xóa thất bại');
     }
   };
@@ -73,61 +86,130 @@ const CategoryPage = () => {
   const reloadTable = async () => {
     setLoading(true);
     try {
-      const response = await callFetchCategories();
-      setCategories(response.data.data);
-      message.success('Categories refreshed successfully');
+      const response = await callFetchBranches();
+      setBranches(response.data.data);
+      message.success('refreshed successfully');
     } catch (error) {
-      console.error('Failed to reload categories:', error);
-      message.error('Failed to refresh categories');
+      console.error('Failed to reload :', error);
+      message.error('Failed to refresh');
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredCategories = categories.filter(
-    (category) =>
-      category.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-      category.description?.toLowerCase().includes(searchText.toLowerCase()),
+  const filteredBranch = branches.filter(
+    (branch) =>
+      branch.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+      branch.address?.toLowerCase().includes(searchText.toLowerCase()),
   );
 
   const columns = [
     {
-      title: 'Tên danh mục',
+      title: 'Tên chi nhánh',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <Text strong>{text}</Text>,
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      render: (name) => (
+        <Tooltip title={name}>
+          <div
+            style={{
+              maxWidth: 150,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {name}
+          </div>
+        </Tooltip>
+      ),
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text) =>
-        text ? (
-          text.length > 100 ? (
-            <Tooltip title={text}>{text.substring(0, 100)}...</Tooltip>
-          ) : (
-            text
-          )
-        ) : (
-          <Text type="secondary" italic>
-            No description
-          </Text>
-        ),
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      render: (address) => (
+        <Tooltip title={address}>
+          <div
+            style={{
+              maxWidth: 150,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {address}
+          </div>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
+      key: 'phone',
+      render: (phone) => (
+        <Tooltip title={phone}>
+          <div
+            style={{
+              maxWidth: 150,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {phone}
+          </div>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      render: (email) => (
+        <Tooltip title={email}>
+          <div
+            style={{
+              maxWidth: 150,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {email}
+          </div>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Quản lý',
+      dataIndex: 'manager',
+      key: 'manager',
+      render: (manager) => (
+        <Tooltip title={manager?.name || 'Không có'}>
+          <div
+            style={{
+              maxWidth: 150,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {manager?.name || 'Không có'}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       title: 'Trạng thái',
-      key: 'status',
-      render: (s) =>
-        s.isActive ? (
-          <Tooltip title="Đang hoạt động">
-            <Tag color="green">Đang hoạt động</Tag>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Ngưng hoạt động">
-            <Tag color="red">Ngưng hoạt động</Tag>
-          </Tooltip>
-        ),
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: (isActive) => (
+        <Tooltip title={isActive ? 'Hoạt động' : 'Ngưng hoạt động'}>
+          <Tag color={isActive ? 'green' : 'red'}>
+            {isActive ? 'Hoạt động' : 'Ngưng hoạt động'}
+          </Tag>
+        </Tooltip>
+      ),
     },
   ];
 
@@ -138,9 +220,8 @@ const CategoryPage = () => {
       setSelectedRows(selectedRows);
     },
   };
-
   return (
-    <>
+    <div style={{ padding: '24px' }}>
       <Modal
         title="Xóa danh mục"
         open={openModalDelete}
@@ -158,16 +239,15 @@ const CategoryPage = () => {
             style={{ color: '#ff4d4f', fontSize: 22, marginRight: 8 }}
           />
           <span style={{ fontSize: 16, fontWeight: 500 }}>
-            Xác nhận xóa danh mục
+            Xác nhận xóa chi nhánh này
           </span>
         </div>
         <div>
           <p>
-            Bạn có chắc là muốn xóa {selectedRowKeys.length} danh mục đã chọn?
+            Bạn có chắc là muốn xóa {selectedRowKeys.length} chi nhánh đã chọn?
           </p>
         </div>
       </Modal>
-
       <Card
         style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
       >
@@ -179,7 +259,7 @@ const CategoryPage = () => {
           <Col>
             <Title level={4} style={{ margin: 0 }}>
               <AppstoreOutlined style={{ marginRight: 8 }} />
-              Danh sách các danh mục
+              Danh sách các chi nhánh
             </Title>
           </Col>
         </Row>
@@ -218,7 +298,7 @@ const CategoryPage = () => {
                   setOpenModal(true);
                 }}
               >
-                Thêm danh mục
+                Thêm chi nhánh
               </Button>
 
               <Button
@@ -265,23 +345,25 @@ const CategoryPage = () => {
           </Col>
         </Row>
 
+        <Divider />
+
         <Table
-          loading={loading}
+          columns={columns}
+          dataSource={filteredBranch}
+          bordered
           rowKey={(record) => record._id}
           rowSelection={rowSelection}
-          dataSource={filteredCategories}
-          columns={columns}
-          bordered
-          size="middle"
           pagination={{
-            defaultPageSize: 10,
+            pageSize: 10,
             showSizeChanger: true,
-            pageSizeOptions: ['10', '20', '50'],
-            showTotal: (total) => `Total ${total} categories`,
+            showQuickJumper: true,
+            total: branches.length,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} của ${total} chi nhánh`,
           }}
+          scroll={{ x: 800 }}
         />
-
-        <ModalCategory
+        <ModalBranch
           openModal={openModal}
           setOpenModal={setOpenModal}
           reloadTable={reloadTable}
@@ -290,8 +372,8 @@ const CategoryPage = () => {
           visible={openModal}
         />
       </Card>
-    </>
+    </div>
   );
 };
 
-export default CategoryPage;
+export default BranchManagement;
