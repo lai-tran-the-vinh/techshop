@@ -1,7 +1,10 @@
+import { useRef, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function ProductDescription({ className, product, loading }) {
+  const descriptionRef = useRef(null);
+
   return (
     <div className="w-[60%]">
       <span className="font-bold text-primary text-xl uppercase">
@@ -13,9 +16,11 @@ function ProductDescription({ className, product, loading }) {
           "Mô tả sản phẩm"
         )}
       </span>
-      <p className="text-justify text-lg leading-24 my-10">
-        {product.introduction || <Skeleton className="h-300" />}
-      </p>
+      <p
+        ref={descriptionRef}
+        dangerouslySetInnerHTML={{ __html: product.description }}
+        className="text-justify text-lg leading-24 my-10"
+      />
     </div>
   );
 }

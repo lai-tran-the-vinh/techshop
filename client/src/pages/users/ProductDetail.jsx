@@ -9,9 +9,22 @@ import { ProductInformation, ProductDescription } from "@components/products";
 
 function ProductDetail() {
   const { id } = useParams();
+  const [images, setImages] = useState([]);
   const [comment, setComment] = useState("");
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (product.variants) {
+      product.variants.forEach((variant) => {
+        variant.images.forEach((image) => {
+          setImages([...images, image]);
+        });
+      });
+    }
+  }, [product.variants]);
+
+  console.log(images);
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -33,7 +46,11 @@ function ProductDetail() {
       <div className="flex">
         <div className="w-[60%] relative">
           <div className="py-20 px-40">
-            {product.images ? <ImagesSlider /> : <Skeleton className="h-500" />}
+            {images.length > 0 ? (
+              <ImagesSlider images={images} />
+            ) : (
+              <Skeleton className="h-500" />
+            )}
           </div>
         </div>
         <ProductInformation

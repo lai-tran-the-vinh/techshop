@@ -32,7 +32,7 @@ function NextArrow(props) {
   );
 }
 
-function ImagesSlider() {
+function ImagesSlider({ images }) {
   var settings = {
     dots: true,
     speed: 500,
@@ -45,17 +45,12 @@ function ImagesSlider() {
     nextArrow: <NextArrow />,
   };
 
-  const banners = [
-    "https://mir-s3-cdn-cf.behance.net/project_modules/max_3840_webp/34b5bf180145769.6505ae7623131.jpg",
-    "https://happyphone.vn/wp-content/uploads/2024/12/Banner-Sale-Iphone-Thang-12-1920x1080-1.webp",
-  ];
-
   return (
     <Slider {...settings} className="group">
-      {banners.map((banner, index) => {
+      {images.map((image, index) => {
         return (
           <div key={index} className="rounded-md flex justify-center px-10">
-            <img alt="" className="rounded-md" src={banner} />
+            <img alt="" className="rounded-md" src={image} />
           </div>
         );
       })}

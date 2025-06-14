@@ -51,7 +51,7 @@ function ProductInformation({ className, product, loading }) {
         {product.name || <Skeleton className="h-40" />}
       </h3>
       <span className="text-lg font-bold text-primary">
-        {price || <Skeleton className="h-40" />}
+        {`${price} VNĐ` || <Skeleton className="h-40" />}
       </span>
 
       {product.variants ? (

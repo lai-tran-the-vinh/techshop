@@ -2,7 +2,6 @@ import { Input, Divider, Typography, Space, Row, Col, Form } from "antd";
 
 function Specifications({ setProduct, product }) {
   const { specifications } = product;
-  console.log(specifications);
   return (
     <>
       <div className="flex gap-12 items-center">
