@@ -1,9 +1,19 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { Card, Badge, Button, Space, Typography, Divider, Image } from "antd";
 
 const { Text, Title } = Typography;
 
-function CardProduct() {
+function CardProduct({ product, loading }) {
+  if (loading) {
+    return (
+      <div className="w-230">
+        <Skeleton className="h-360" />
+      </div>
+    );
+  }
+
   return (
     <Badge.Ribbon
       text="Mới"
@@ -17,7 +27,9 @@ function CardProduct() {
             preview={false}
             alt="iPhone 16 Pro Max"
             className="object-fill mx-auto mt-20 w-[80%]! h-auto rounded-xl!"
-            src="https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg"
+            src={
+              "https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg"
+            }
           />
         }
         className="w-280 rounded-md! overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-[rgb(245,239,239)]"
@@ -27,7 +39,7 @@ function CardProduct() {
           level={4}
           className="mb-8! font-roboto! text-[16px]! leading-1.4!"
         >
-          iPhone 16 Pro Max 256GB | Chính hãng VN/A
+          {product.name || "iPhone 16 Pro Max 256GB | Chính hãng VN/A"}
         </Title>
         <div className="mb-16">
           <Space direction="vertical" size={4}>
@@ -46,10 +58,10 @@ function CardProduct() {
         <div className="mb-10">
           <div>
             <Text className="text-xl! font-bold! font-roboto! text-[#d32f2f]! mr-8!">
-              30.000.000₫
+              {product.variants[0].price * product.discount || "30.000.000 VNĐ"}
             </Text>
             <Text delete type="secondary" className="text-sm! font-roboto!">
-              35.290.000₫
+              {product.variants[0].price || "35.290.000 VNĐ"}
             </Text>
           </div>
         </div>

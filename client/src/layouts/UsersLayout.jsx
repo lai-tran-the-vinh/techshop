@@ -63,7 +63,7 @@ function UsersLayout() {
   return (
     <Layout className="font-roboto! relative! flex! flex-col! items-center!">
       <Header />
-      <Layout.Content className="w-full! mt-60! flex! flex-col! items-center!">
+      <Layout.Content className="w-full! bg-white! mt-60! flex! flex-col! items-center!">
         <Outlet />
         {showLogin && <Login />}
         {showSignup && <Signup />}

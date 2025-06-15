@@ -1,5 +1,7 @@
+import { useAppContext } from "@contexts";
+import { useNavigate } from "react-router-dom";
+import { Input, List, Flex, Typography } from "antd";
 import React, { useState, useRef, useEffect } from "react";
-import { Input, List, Flex, Card, Space } from "antd";
 
 const dataSource = [
   "Apple",
@@ -7,16 +9,18 @@ const dataSource = [
   "Orange",
   "Grapes",
   "Mango",
+  "Iphone 16",
   "Pineapple",
 ];
 
 function SearchBox() {
-  const [searchText, setSearchText] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const navigate = useNavigate();
   const containerRef = useRef(null);
+  const { query, setQuery } = useAppContext();
+  const [showResults, setShowResults] = useState(false);
 
   const filteredResults = dataSource.filter((item) =>
-    item.toLowerCase().includes(searchText.toLowerCase())
+    item.toLowerCase().includes(query.toLowerCase())
   );
 
   useEffect(() => {
@@ -33,14 +37,28 @@ function SearchBox() {
   }, []);
 
   const handleFocus = () => {
-    if (searchText.trim() !== "") {
+    if (query.trim() !== "") {
       setShowResults(true);
     }
   };
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setSearchText(value);
+  function onSearch() {
+    if (query.trim() !== "") {
+      setShowResults(false);
+      navigate(`/search/${query}`);
+    }
+  }
+
+  function handleItemClick(event) {
+    const value = event.target.textContent;
+    setQuery(value);
+    setShowResults(false);
+    navigate(`/search/${value}`);
+  }
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setQuery(value);
     if (value.trim() !== "") {
       setShowResults(true);
     } else {
@@ -55,25 +73,41 @@ function SearchBox() {
       style={{ width: 300, position: "relative" }}
     >
       <Input.Search
-        value={searchText}
+        value={query}
+        onSearch={onSearch}
         onFocus={handleFocus}
         onChange={handleChange}
-        placeholder="Search fruits..."
+        className="font-roboto!"
+        placeholder="Tìm kiếm sản phẩm..."
       />
 
       {showResults && (
-        <Space className="absolute! bg-white! shadow-md! p-6! border! border-gray-300! rounded-md top-full! mt-6! left-0! right-0! z-1000! max-h-200! overflow-auto!">
+        <Flex
+          justify="center"
+          className="absolute! bg-white! rounded-md! max-h-200! p-6! border! border-gray-300! top-full! mt-6! left-0! right-0! z-1000! overflow-auto!"
+        >
           {filteredResults.length > 0 ? (
             <List
               size="small"
-              className="w-full! hover:bg-gray-200! cursor-pointer! rounded-sm!"
+              className="w-full! font-roboto!  cursor-pointer! rounded-sm!"
               dataSource={filteredResults}
-              renderItem={(item) => <List.Item>{item}</List.Item>}
+              renderItem={(item) => (
+                <List.Item
+                  onClick={handleItemClick}
+                  className="w-full! border-none! rounded-sm! hover:bg-gray-100!"
+                >
+                  {item}
+                </List.Item>
+              )}
             />
           ) : (
-            <div>No results found</div>
+            <Flex align="center" justify="center" className="min-h-100!">
+              <Typography.Text className="font-roboto!">
+                Không tìm thấy sản phẩm nào
+              </Typography.Text>
+            </Flex>
           )}
-        </Space>
+        </Flex>
       )}
     </Flex>
   );

@@ -4,6 +4,7 @@ const AppContext = createContext();
 
 function AppProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -14,6 +15,7 @@ function AppProvider({ children }) {
   const [sideBarSelectedTab, setSideBarSelectedTab] = useState();
 
   const data = {
+    query,
     loading,
     message,
     showLogin,
@@ -23,6 +25,7 @@ function AppProvider({ children }) {
     loadingSuccess,
     sideBarSelectedTab,
 
+    setQuery,
     setLoading,
     setMessage,
     setShowLogin,

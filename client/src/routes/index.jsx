@@ -1,36 +1,40 @@
-import BranchManagement from '@/pages/admin/branch';
-import CategoryPage from '@/pages/admin/category/category';
-import Dashboard from '@/pages/admin/dashboard/Dashboard';
-import { AddProduct, EditProduct, ListProduct } from '@/pages/admin/product';
-import { Home, ProductDetail } from '@/pages/users';
-import { UsersLayout, AdminLayout } from '@layouts';
+import { UsersLayout, AdminLayout } from "@layouts";
+import BranchManagement from "@/pages/admin/branch";
+import Dashboard from "@/pages/admin/dashboard/Dashboard";
+import CategoryPage from "@/pages/admin/category/category";
+import { Home, ProductDetail, SearchProductResult } from "@/pages/users";
+import { AddProduct, EditProduct, ListProduct } from "@/pages/admin/product";
 
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     element: <UsersLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home />,
       },
       {
-        path: '/product/:id',
+        path: "/product/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "/search/:query",
+        element: <SearchProductResult />,
       },
     ],
   },
   {
     element: <AdminLayout />,
     children: [
-      { path: '/dashboard', element: <Dashboard /> },
-      { path: '/product/add', element: <AddProduct /> },
-      { path: '/product/', element: <ListProduct /> },
-      { path: '/product/edit/:id', element: <EditProduct /> },
-      { path: '/category', element: <CategoryPage /> },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/product/add", element: <AddProduct /> },
+      { path: "/product/", element: <ListProduct /> },
+      { path: "/product/edit/:id", element: <EditProduct /> },
+      { path: "/category", element: <CategoryPage /> },
       {
-        path: '/branch/management',
+        path: "/branch/management",
         element: <BranchManagement />,
       },
     ],
