@@ -59,8 +59,14 @@ function PreviewListProducts({
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
-        {products.map((product) => {
-          return <CardProduct product={product} loading={loading} />;
+        {products.map((product, index) => {
+          return loading ? (
+            <div className="w-230">
+              <Skeleton className="h-360" />
+            </div>
+          ) : (
+            <CardProduct key={index} product={product} loading={loading} />
+          );
         })}
       </div>
     </div>

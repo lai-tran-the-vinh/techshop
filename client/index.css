@@ -4,5 +4,6 @@
 @theme {
   --font-roboto: "Roboto", sans-serif;
   --spacing: 1px;
-  --color-primary: #FE2C55;
+  /* --color-primary: #FE2C55; */
+  --color-primary: #EE4D2D;
 }

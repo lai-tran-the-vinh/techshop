@@ -5,15 +5,7 @@ import { Card, Badge, Button, Space, Typography, Divider, Image } from "antd";
 
 const { Text, Title } = Typography;
 
-function CardProduct({ product, loading }) {
-  if (loading) {
-    return (
-      <div className="w-230">
-        <Skeleton className="h-360" />
-      </div>
-    );
-  }
-
+function CardProduct({ product }) {
   return (
     <Badge.Ribbon
       text="Mới"
@@ -37,7 +29,7 @@ function CardProduct({ product, loading }) {
         <Divider className="mt-10!" />
         <Title
           level={4}
-          className="mb-8! font-roboto! text-[16px]! leading-1.4!"
+          className="mb-8! line-clamp-1! font-roboto! text-[16px]! leading-1.4!"
         >
           {product.name || "iPhone 16 Pro Max 256GB | Chính hãng VN/A"}
         </Title>
@@ -56,12 +48,17 @@ function CardProduct({ product, loading }) {
           </Space>
         </div>
         <div className="mb-10">
-          <div>
+          <div className="line-clamp-1">
             <Text className="text-xl! font-bold! font-roboto! text-[#d32f2f]! mr-8!">
-              {product.variants[0].price * product.discount || "30.000.000 VNĐ"}
+              {product?.variants[0]?.price * product?.discount ||
+                "30.000.000 VNĐ"}
             </Text>
-            <Text delete type="secondary" className="text-sm! font-roboto!">
-              {product.variants[0].price || "35.290.000 VNĐ"}
+            <Text
+              delete
+              type="secondary"
+              className="text-sm! font-roboto!"
+            >
+              {product?.variants[0]?.price || "35.290.000 VNĐ"}
             </Text>
           </div>
         </div>

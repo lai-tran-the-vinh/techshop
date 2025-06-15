@@ -1,27 +1,41 @@
 import { useAppContext } from "@contexts";
 import { useNavigate } from "react-router-dom";
-import { Input, List, Flex, Typography } from "antd";
+import Products from "@services/products";
+import { Input, List, Flex, Typography, Skeleton } from "antd";
 import React, { useState, useRef, useEffect } from "react";
-
-const dataSource = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Grapes",
-  "Mango",
-  "Iphone 16",
-  "Pineapple",
-];
 
 function SearchBox() {
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const { query, setQuery } = useAppContext();
+  const [result, setResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  const filteredResults = dataSource.filter((item) =>
-    item.toLowerCase().includes(query.toLowerCase())
-  );
+  async function fetchSearchResult() {
+    try {
+      setLoading(true);
+      const result = await Products.search(query);
+      setResult(result);
+      setLoading(false);
+    } catch (error) {
+      console.error(error.message);
+    }
+    console.log("Response:", result);
+  }
+
+  useEffect(() => {
+    if (query.trim() !== "") {
+      fetchSearchResult();
+      const resultAfterFilter = Array.isArray(result)
+        ? result.filter((item) =>
+            item.name.toLowerCase().includes(query.toLowerCase())
+          )
+        : [];
+      setFilteredResults(resultAfterFilter);
+    }
+  }, [query]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,12 +106,14 @@ function SearchBox() {
               className="w-full! font-roboto!  cursor-pointer! rounded-sm!"
               dataSource={filteredResults}
               renderItem={(item) => (
-                <List.Item
-                  onClick={handleItemClick}
-                  className="w-full! border-none! rounded-sm! hover:bg-gray-100!"
-                >
-                  {item}
-                </List.Item>
+                <>
+                  <List.Item
+                    onClick={handleItemClick}
+                    className="w-full! border-none! rounded-sm! hover:bg-gray-100!"
+                  >
+                    {item.name}
+                  </List.Item>
+                </>
               )}
             />
           ) : (
