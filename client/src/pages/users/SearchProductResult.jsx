@@ -21,13 +21,7 @@ function SearchProductResult() {
 
   useEffect(() => {
     fetchSearchResult();
-  }, []);
-
-  useEffect(() => {
-    if (result) {
-      console.log("Result:", result);
-    }
-  }, [result]);
+  }, [query]);
 
   return (
     <Flex align="center" justify="center" className="w-full!">

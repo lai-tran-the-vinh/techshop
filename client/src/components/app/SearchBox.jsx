@@ -22,7 +22,6 @@ function SearchBox() {
     } catch (error) {
       console.error(error.message);
     }
-    console.log("Response:", result);
   }
 
   useEffect(() => {
