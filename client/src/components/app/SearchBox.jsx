@@ -97,12 +97,12 @@ function SearchBox() {
       {showResults && (
         <Flex
           justify="center"
-          className="absolute! bg-white! rounded-md! max-h-200! p-6! border! border-gray-300! top-full! mt-6! left-0! right-0! z-1000! overflow-auto!"
+          className="absolute! bg-white! rounded-md! max-h-200! animate-[fadeInUp_0.1s_ease-out]! p-6! border! border-gray-300! top-full! mt-6! left-0! right-0! z-1000! overflow-auto!"
         >
           {filteredResults.length > 0 ? (
             <List
               size="small"
-              className="w-full! font-roboto!  cursor-pointer! rounded-sm!"
+              className="w-full! font-roboto! cursor-pointer! rounded-sm!"
               dataSource={filteredResults}
               renderItem={(item) => (
                 <>
