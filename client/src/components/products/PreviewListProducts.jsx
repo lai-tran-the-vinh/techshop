@@ -48,7 +48,7 @@ function PreviewListProducts({
               ) : (
                 <Tag
                   key={index}
-                  className="font-roboto! text-sm! px-8! rounded-md! cursor-pointer! min-w-80! text-center! bg-gray-200! border-gray-300! py-4! border!"
+                  className="font-roboto! text-sm! px-8! rounded-md! cursor-pointer! min-w-80! text-center! bg-gray-200! border-none! py-4!"
                 >
                   {brand}
                 </Tag>
