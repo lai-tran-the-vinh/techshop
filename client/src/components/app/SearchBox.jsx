@@ -2,7 +2,7 @@ import Products from "@services/products";
 import { useAppContext } from "@contexts";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
-import { Input, List, Flex, Typography, Skeleton } from "antd";
+import { Input, List, Flex, Typography, Skeleton, Empty } from "antd";
 
 function SearchBox() {
   const navigate = useNavigate();
@@ -120,10 +120,14 @@ function SearchBox() {
           )}
 
           {filteredResults.length === 0 && !loading && (
-            <Flex align="center" justify="center" className="min-h-100!">
-              <Typography.Text className="font-roboto!">
-                Không tìm thấy sản phẩm nào
-              </Typography.Text>
+            <Flex align="center" justify="center" className="min-h-100! p-20!">
+              <Empty
+                description={
+                  <Typography.Text className="font-roboto! text-gray-400!">
+                    Không tìm thấy sản phẩm
+                  </Typography.Text>
+                }
+              />
             </Flex>
           )}
         </Flex>
