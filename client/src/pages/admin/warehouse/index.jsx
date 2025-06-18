@@ -43,9 +43,6 @@ const WarehouseManagement = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("all");
   const [filteredData, setFilteredData] = useState([]);
-
-  // Mock callFetchInventories function - replace with your actual import
-
   const fetchInventory = async () => {
     try {
       setLoading(true);
@@ -63,7 +60,7 @@ const WarehouseManagement = () => {
     fetchInventory();
   }, []);
 
-  // Filter data based on search and branch selection
+
   useEffect(() => {
     let filtered = warehouses;
 

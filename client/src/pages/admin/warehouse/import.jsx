@@ -24,6 +24,8 @@ import {
   Popconfirm,
   Alert,
   Spin,
+  Drawer,
+  Descriptions,
 } from "antd";
 import {
   PlusOutlined,
@@ -41,18 +43,25 @@ import {
   PrinterOutlined,
   UploadOutlined,
   ReloadOutlined,
+  SearchOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import {
   callFetchBranches,
+  callFetchDetailInbound,
   callFetchInboundHistory,
   callFetchProducts,
   callImportInventory,
+  // callFetchInboundDetail, // API mới để lấy chi tiết phiếu nhập
 } from "@/services/apis";
+import Search from "antd/es/transfer/search";
+import ModalSearchProduct from "../../../components/admin/warehouse/modalSearchProduct";
+import InboundConfirmModal from "@/components/admin/warehouse/InboundConfirmModal";
+import InboundForm from "@/components/admin/warehouse/InboundForm";
+import InboundSummary from "@/components/admin/warehouse/InboundSummary";
+import InboundDetailDrawer from "@/components/admin/warehouse/InboundDetailDrawer";
 
-const { Title, Text } = Typography;
-const { Option } = Select;
-const { TextArea } = Input;
-const { Dragger } = Upload;
+const { Text } = Typography;
 
 const WarehouseInbound = () => {
   const [form] = Form.useForm();
@@ -65,11 +74,19 @@ const WarehouseInbound = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [previewData, setPreviewData] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
+  const [detailDrawerVisible, setDetailDrawerVisible] = useState(false);
+  const [productSearchVisible, setProductSearchVisible] = useState(false);
+  const [selectedInboundDetail, setSelectedInboundDetail] = useState(null);
+  const [productSearchText, setProductSearchText] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [detailLoading, setDetailLoading] = useState(false);
 
   const fetchProducts = async () => {
     try {
       const response = await callFetchProducts();
-      setProducts(response.data.data.result);
+      const productsData = response.data.data.result;
+      setProducts(productsData);
+      setFilteredProducts(productsData);
     } catch (error) {
       console.error("Error fetching products:", error);
       message.error("Không thể tải danh sách sản phẩm");
@@ -96,6 +113,20 @@ const WarehouseInbound = () => {
     }
   };
 
+  const fetchInboundDetail = async (inboundId) => {
+    setDetailLoading(true);
+    try {
+      const response = await callFetchDetailInbound(inboundId);
+      setSelectedInboundDetail(response.data.data);
+      setDetailDrawerVisible(true);
+    } catch (error) {
+      console.error("Error fetching inbound detail:", error);
+      message.error("Không thể tải chi tiết phiếu nhập");
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
   const loadAllData = async () => {
     setPageLoading(true);
     try {
@@ -115,10 +146,28 @@ const WarehouseInbound = () => {
     loadAllData();
   }, []);
 
-  const handleProductChange = (productId) => {
-    const product = products.find((p) => p._id === productId);
+  const handleProductSearch = (value) => {
+    setProductSearchText(value);
+    if (!value.trim()) {
+      setFilteredProducts(products);
+      return;
+    }
+
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  };
+
+  const handleSelectProduct = (product) => {
     setSelectedProduct(product);
-    form.setFieldsValue({ variantId: undefined });
+    console.log("Selected product:", product);
+    form.setFieldsValue({
+      productId: product._id,
+      variantId: undefined,
+    });
+    setProductSearchVisible(false);
+    message.success(`Đã chọn sản phẩm: ${product.name}`);
   };
 
   const handleAddItem = () => {
@@ -147,16 +196,17 @@ const WarehouseInbound = () => {
           productId: values.productId,
           branchId: values.branchId,
           productName: product.name,
+          productCode: product.code,
           variantName: variant.name,
           variantId: values.variantId,
+          variantSku: variant.sku,
           quantity: values.quantity,
           cost: values.cost || variant.cost,
-          total: values.quantity * variant.cost,
+          total: values.quantity * (values.cost || variant.cost),
         };
 
         setInboundItems([...inboundItems, newItem]);
         form.setFieldsValue({
-          branchId: undefined,
           productId: undefined,
           variantId: undefined,
           quantity: undefined,
@@ -197,6 +247,11 @@ const WarehouseInbound = () => {
     form
       .validateFields(["branchId"])
       .then((values) => {
+        if (inboundItems.length === 0) {
+          message.error("Vui lòng thêm ít nhất một sản phẩm");
+          return;
+        }
+
         const inboundData = {
           ...values,
           items: inboundItems,
@@ -216,6 +271,7 @@ const WarehouseInbound = () => {
   };
 
   const confirmInbound = async () => {
+    setLoading(true);
     try {
       const importRequests = {};
 
@@ -233,9 +289,11 @@ const WarehouseInbound = () => {
           cost: item.cost,
         });
       });
+
       await Promise.all(
         Object.values(importRequests).map((data) => callImportInventory(data))
       );
+
       message.success("Nhập kho thành công!");
       setInboundItems([]);
       form.resetFields();
@@ -243,8 +301,67 @@ const WarehouseInbound = () => {
       await fetchInboundHistory();
     } catch (error) {
       message.error(error.message || "Có lỗi xảy ra khi nhập kho");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const productSearchColumns = [
+    {
+      title: "Sản phẩm",
+      key: "product",
+
+      render: (_, record) => (
+        <div>
+          <Text strong>{record.name}</Text>
+          <br />
+          <Text type="secondary" style={{ fontSize: "12px" }}>
+            Mã: {record.code}
+          </Text>
+          <br />
+          <Tag color="blue" style={{ fontSize: "10px" }}>
+            {record.category?.name}
+          </Tag>
+        </div>
+      ),
+    },
+    {
+      title: "Số biến thể",
+      key: "variants",
+      width: 100,
+      align: "center",
+      render: (_, record) => (
+        <Badge
+          count={record.variants?.length || 0}
+          style={{ backgroundColor: "#52c41a" }}
+        />
+      ),
+    },
+    {
+      title: "Trạng thái",
+      key: "status",
+      width: 100,
+      render: (_, record) => (
+        <Tag color={record.status === "active" ? "green" : "red"}>
+          {record.status === "active" ? "Hoạt động" : "Ngừng bán"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Thao tác",
+      key: "actions",
+      width: 100,
+      render: (_, record) => (
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => handleSelectProduct(record)}
+        >
+          Chọn
+        </Button>
+      ),
+    },
+  ];
 
   const itemColumns = [
     {
@@ -353,7 +470,6 @@ const WarehouseInbound = () => {
         </Tooltip>
       ),
     },
-
     {
       title: "Sản phẩm",
       key: "product",
@@ -369,6 +485,7 @@ const WarehouseInbound = () => {
       title: "Chi nhánh",
       key: "branch",
       width: 200,
+      fixed: "left",
       render: (_, record) => (
         <Space>
           <ShopOutlined style={{ color: "#52c41a" }} />
@@ -376,7 +493,6 @@ const WarehouseInbound = () => {
         </Space>
       ),
     },
-
     {
       title: "Số lượng",
       key: "totalItems",
@@ -418,10 +534,12 @@ const WarehouseInbound = () => {
       render: (_, record) => (
         <Space>
           <Tooltip title="Xem chi tiết">
-            <Button type="text" icon={<EyeOutlined />} />
-          </Tooltip>
-          <Tooltip title="In phiếu">
-            <Button type="text" icon={<PrinterOutlined />} />
+            <Button
+              type="text"
+              icon={<EyeOutlined />}
+              onClick={() => fetchInboundDetail(record._id)}
+              loading={detailLoading}
+            />
           </Tooltip>
         </Space>
       ),
@@ -455,6 +573,7 @@ const WarehouseInbound = () => {
         padding: "24px",
         backgroundColor: "#f5f5f5",
         minHeight: "100vh",
+        borderRadius: "8px",
       }}
     >
       <div style={{ marginBottom: "24px" }}>
@@ -483,8 +602,7 @@ const WarehouseInbound = () => {
                   maxCount={1}
                   accept=".xlsx"
                   showUploadList={false}
-                  // beforeUpload={handleImportExcel}
-                  onChange={() => console.log("Đếu có dì hết")}
+                  onChange={() => console.log("Import Excel")}
                   disabled={loading}
                 >
                   <Button icon={<UploadOutlined />}>Import Excel</Button>
@@ -492,166 +610,24 @@ const WarehouseInbound = () => {
               </Space>
             }
           >
-            <Form form={form} layout="vertical">
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    name="branchId"
-                    label="Chi nhánh"
-                    rules={[
-                      { required: true, message: "Vui lòng chọn chi nhánh" },
-                    ]}
-                  >
-                    <Select placeholder="Chọn chi nhánh">
-                      {branches.map((branch) => (
-                        <Option key={branch._id} value={branch._id}>
-                          {branch.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    name="productId"
-                    label="Sản phẩm"
-                    rules={[
-                      { required: true, message: "Vui lòng chọn sản phẩm" },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Chọn sản phẩm"
-                      onChange={handleProductChange}
-                      showSearch
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {products.map((product) => (
-                        <Option key={product._id} value={product._id}>
-                          {product.name} ({product.code})
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="variantId"
-                    label="Biến thể"
-                    rules={[
-                      { required: true, message: "Vui lòng chọn biến thể" },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Chọn biến thể"
-                      disabled={!selectedProduct}
-                    >
-                      {selectedProduct?.variants.map((variant) => (
-                        <Option key={variant._id} value={variant._id}>
-                          {variant.name} (Tồn: {variant.stock})
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={[16, 16]}>
-                <Col span={7}>
-                  <Form.Item
-                    name="quantity"
-                    label="Số lượng"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập số lượng" },
-                      {
-                        type: "number",
-                        min: 1,
-                        message: "Số lượng phải lớn hơn 0",
-                      },
-                    ]}
-                  >
-                    <InputNumber
-                      placeholder="Nhập số lượng"
-                      style={{ width: "100%" }}
-                      min={1}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={9}>
-                  <Form.Item name="cost" label="Giá vốn (tùy chọn)">
-                    <InputNumber
-                      placeholder="Để trống sẽ dùng giá mặc định"
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                      addonAfter="₫"
-                      style={{ width: "100%" }}
-                      min={0}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={8} style={{ display: "flex", alignItems: "end" }}>
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={handleAddItem}
-                      style={{ width: "100%" }}
-                    >
-                      Thêm
-                    </Button>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item name="note" label="Ghi chú">
-                <TextArea placeholder="Ghi chú về phiếu nhập kho..." rows={3} />
-              </Form.Item>
-            </Form>
+            <InboundForm
+              form={form}
+              branches={branches}
+              selectedProduct={selectedProduct}
+              setProductSearchVisible={setProductSearchVisible}
+              handleAddItem={handleAddItem}
+            />
           </Card>
         </Col>
 
         <Col xs={24} lg={10}>
-          <Card title="Tóm tắt phiếu nhập">
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Row justify="space-between">
-                <Text>Tổng sản phẩm:</Text>
-                <Text strong>{inboundItems.length}</Text>
-              </Row>
-              <Row justify="space-between">
-                <Text>Tổng số lượng:</Text>
-                <Badge
-                  count={totalQuantity}
-                  style={{ backgroundColor: "#52c41a" }}
-                />
-              </Row>
-              <Row justify="space-between">
-                <Text>Tổng giá trị:</Text>
-                <Text strong style={{ color: "#fa8c16" }}>
-                  {totalValue.toLocaleString("vi-VN")} ₫
-                </Text>
-              </Row>
-              <Divider />
-              <Button
-                type="primary"
-                size="large"
-                icon={<SaveOutlined />}
-                onClick={handleSubmitInbound}
-                disabled={inboundItems.length === 0}
-                style={{ width: "100%" }}
-                loading={loading}
-              >
-                Xác nhận nhập kho
-              </Button>
-            </Space>
-          </Card>
+          <InboundSummary
+            inboundItems={inboundItems}
+            totalQuantity={totalQuantity}
+            totalValue={totalValue}
+            handleSubmitInbound={handleSubmitInbound}
+            loading={loading}
+          />
 
           {inboundItems.length > 0 && (
             <Card title="Danh sách sản phẩm" style={{ marginTop: "16px" }}>
@@ -708,6 +684,7 @@ const WarehouseInbound = () => {
           <Table
             columns={itemColumns}
             dataSource={inboundItems}
+            bordered
             rowKey="id"
             pagination={false}
             scroll={{ x: 1000 }}
@@ -723,67 +700,32 @@ const WarehouseInbound = () => {
           rowKey="_id"
           pagination={{
             pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `Tổng ${total} bản ghi`,
           }}
-          scroll={{ x: 1200 }}
         />
       </Card>
 
-      <Modal
-        title="Xác nhận phiếu nhập kho"
+      <ModalSearchProduct
+        setProductSearchVisible={setProductSearchVisible}
+        productSearchVisible={productSearchVisible}
+        handleSelectProduct={handleSelectProduct}
+        filteredProducts={filteredProducts}
+        setFilteredProducts={setFilteredProducts}
+        products={products}
+        setProducts={setProducts}
+      />
+      <InboundDetailDrawer
+        open={detailDrawerVisible}
+        onClose={() => setDetailDrawerVisible(false)}
+        selectedInboundDetail={selectedInboundDetail}
+      />
+      <InboundConfirmModal
         open={isModalVisible}
-        onOk={confirmInbound}
-        onCancel={() => setIsModalVisible(false)}
-        okText="Xác nhận nhập kho"
-        cancelText="Hủy"
-        confirmLoading={loading}
-        width={600}
-      >
-        {previewData && (
-          <div>
-            <Alert
-              message="Vui lòng kiểm tra thông tin trước khi xác nhận"
-              type="info"
-              style={{ marginBottom: "16px" }}
-            />
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
-                <Text strong>Chi nhánh:</Text>
-                <br />
-                <Text>
-                  {branches.find((b) => b.id === previewData.branchId)?.name}
-                </Text>
-              </Col>
-              {/* <Col span={12}>
-                <Text strong>Nhà cung cấp:</Text>
-                <br />
-                <Text>
-                  {suppliers.find((s) => s.id === previewData.supplierId)?.name}
-                </Text>
-              </Col> */}
-              <Col span={12}>
-                <Text strong>Tổng sản phẩm:</Text>
-                <br />
-                <Text>{previewData.items.length}</Text>
-              </Col>
-              <Col span={12}>
-                <Text strong>Tổng số lượng:</Text>
-                <br />
-                <Text>{previewData.totalItems}</Text>
-              </Col>
-              <Col span={24}>
-                <Text strong>Tổng giá trị:</Text>
-                <br />
-                <Text style={{ fontSize: "18px", color: "#fa8c16" }}>
-                  {previewData.totalValue.toLocaleString("vi-VN")} ₫
-                </Text>
-              </Col>
-            </Row>
-          </div>
-        )}
-      </Modal>
+        onClose={() => setIsModalVisible(false)}
+        onConfirm={confirmInbound}
+        loading={loading}
+        previewData={previewData}
+        branches={branches}
+      />
     </div>
   );
 };

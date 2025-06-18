@@ -152,6 +152,10 @@ export const callFetchInboundHistory = () => {
   return axiosInstance.get(`/api/v1/inventories/getImport`);
 }
 
+export const callFetchDetailInbound = (id) => {
+  return axiosInstance.get(`/api/v1/inventories/getImport/${id}`);
+}
+
 
 export const callFetchCategories = () => {
   return axiosInstance.get(`/api/v1/categories`);
