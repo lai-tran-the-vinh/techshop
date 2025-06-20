@@ -148,12 +148,28 @@ export const callImportInventory = (value) => {
   });
 }
 
+export const callExportInventory = (value) => {
+  return axiosInstance.post(`/api/v1/inventories/export`, {
+    ...value
+  });
+}
+
 export const callFetchInboundHistory = () => {
   return axiosInstance.get(`/api/v1/inventories/getImport`);
 }
 
 export const callFetchDetailInbound = (id) => {
   return axiosInstance.get(`/api/v1/inventories/getImport/${id}`);
+}
+
+
+export const callFetchOutboundHistory = () => {
+  return axiosInstance.get(`/api/v1/inventories/getExport`);
+}
+
+export const callFetchDetailOutbound = (id) => {
+  console.log(id);
+  return axiosInstance.get(`/api/v1/inventories/getExport/${id}`);
 }
 
 
@@ -213,9 +229,9 @@ export const callCreateOrder = (value) => {
   });
 }
 
-export const callUpdateOrder = (id, status) => {
+export const callUpdateOrder = (id, value) => {
   return axiosInstance.patch(`/api/v1/orders/${id}`, {
-    status: status
+    ...value
   });
 }
 

@@ -106,7 +106,7 @@ function EditProduct() {
       message.success("Cập nhật thành công!");
       setToastLoading(false);
       setLoadingSuccess(true);
-      navigate("/product/all");
+      navigate("/product");
     } catch (err) {
       console.error(err);
       setToastLoading(false);

@@ -57,7 +57,7 @@ const InboundForm = ({
             <Select placeholder="Chọn biến thể" disabled={!selectedProduct}>
               {selectedProduct?.variants?.map((variant) => (
                 <Option key={variant._id} value={variant._id}>
-                  {variant.name} (Tồn: {variant.stock})
+                  {variant.name}
                 </Option>
               ))}
             </Select>
@@ -115,7 +115,7 @@ const InboundForm = ({
       </Row>
 
       <Form.Item name="note" label="Ghi chú">
-        <TextArea placeholder="Ghi chú về phiếu nhập kho..." rows={3} />
+        <TextArea placeholder="Ghi chú về phiếu ..." rows={3} />
       </Form.Item>
     </Form>
   );

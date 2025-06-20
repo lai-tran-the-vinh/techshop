@@ -2,8 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import { Modal, Input, Table, Tag, Button, Badge, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-const ModalSearchProduct = ({
-  inbound,
+const ModalSearchProductInventory = ({
   productSearchVisible,
   setProductSearchVisible,
   handleSelectProduct,
@@ -116,4 +115,4 @@ const ModalSearchProduct = ({
   );
 };
 
-export default ModalSearchProduct;
+export default ModalSearchProductInventory;
