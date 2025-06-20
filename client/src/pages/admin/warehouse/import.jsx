@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Card,
   Form,
-  Select,
   InputNumber,
   Button,
   Table,
@@ -10,41 +9,24 @@ import {
   Typography,
   Row,
   Col,
-  Divider,
   message,
-  Modal,
   Tag,
   Avatar,
-  Input,
-  DatePicker,
   Upload,
   Tooltip,
-  Statistic,
   Badge,
   Popconfirm,
-  Alert,
   Spin,
-  Drawer,
-  Descriptions,
 } from "antd";
 import {
-  PlusOutlined,
   DeleteOutlined,
-  SaveOutlined,
-  FileExcelOutlined,
-  InboxOutlined,
   ProductOutlined,
   ShopOutlined,
   UserOutlined,
   CalendarOutlined,
-  DollarOutlined,
-  EditOutlined,
   EyeOutlined,
-  PrinterOutlined,
   UploadOutlined,
   ReloadOutlined,
-  SearchOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
 import {
   callFetchBranches,
@@ -52,9 +34,8 @@ import {
   callFetchInboundHistory,
   callFetchProducts,
   callImportInventory,
-  // callFetchInboundDetail, // API mới để lấy chi tiết phiếu nhập
 } from "@/services/apis";
-import Search from "antd/es/transfer/search";
+
 import ModalSearchProduct from "../../../components/admin/warehouse/modalSearchProduct";
 import InboundConfirmModal from "@/components/admin/warehouse/InboundConfirmModal";
 import InboundForm from "@/components/admin/warehouse/InboundForm";
@@ -146,19 +127,6 @@ const WarehouseInbound = () => {
   useEffect(() => {
     loadAllData();
   }, []);
-
-  const handleProductSearch = (value) => {
-    setProductSearchText(value);
-    if (!value.trim()) {
-      setFilteredProducts(products);
-      return;
-    }
-
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
 
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
@@ -515,7 +483,6 @@ const WarehouseInbound = () => {
     <div
       style={{
         padding: "24px",
-        backgroundColor: "#f5f5f5",
         minHeight: "100vh",
         borderRadius: "8px",
       }}
@@ -528,6 +495,10 @@ const WarehouseInbound = () => {
               icon={<ReloadOutlined />}
               onClick={loadAllData}
               loading={pageLoading}
+              style={{
+                marginRight: "8px",
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+              }}
             >
               Làm mới
             </Button>
@@ -538,6 +509,7 @@ const WarehouseInbound = () => {
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={14}>
           <Card
+            style={{ boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)" }}
             title="Tạo phiếu nhập kho"
             extra={
               <Space>
@@ -564,7 +536,7 @@ const WarehouseInbound = () => {
           </Card>
         </Col>
 
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={10} style={{ marginBottom: "24px" }}>
           <InboundSummary
             inbound={inbound}
             inboundItems={inboundItems}

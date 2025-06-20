@@ -30,7 +30,7 @@ const InboundDetailDrawer = ({
       extra={
         <Space>
           <Button icon={<PrinterOutlined />}>In phiếu</Button>
-          <Button icon={<CloseOutlined />} onClick={onClose} />
+          {/* <Button icon={<CloseOutlined />} onClick={onClose} /> */}
         </Space>
       }
     >

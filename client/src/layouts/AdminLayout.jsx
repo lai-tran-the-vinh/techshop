@@ -14,6 +14,7 @@ import {
   Tooltip,
   Card,
   FloatButton,
+  message,
 } from "antd";
 import {
   DashboardOutlined,
@@ -33,6 +34,7 @@ import {
   SearchOutlined,
   CustomerServiceOutlined,
   ToolOutlined,
+  SafetyOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { callLogout } from "@/services/apis";
@@ -52,7 +54,7 @@ function AdminLayout() {
       key: "dashboard",
       label: "Tổng quan",
       icon: <DashboardOutlined />,
-      onClick: () => navigate("/dashboard"),
+      onClick: () => navigate("/admin/dashboard"),
     },
     {
       type: "divider",
@@ -65,12 +67,12 @@ function AdminLayout() {
         {
           key: "allproducts",
           label: "Danh sách sản phẩm",
-          onClick: () => navigate("/product"),
+          onClick: () => navigate("/admin/product"),
         },
         {
           key: "addproduct",
           label: "Thêm sản phẩm",
-          onClick: () => navigate("/product/add"),
+          onClick: () => navigate("/admin/product/add"),
         },
       ],
     },
@@ -82,22 +84,22 @@ function AdminLayout() {
         {
           key: "allinventory",
           label: "Danh sách kho hàng",
-          onClick: () => navigate("/warehouse"),
+          onClick: () => navigate("/admin/warehouse"),
         },
         {
           key: "importinventory",
           label: "Nhập hàng",
-          onClick: () => navigate("/warehouse/import"),
+          onClick: () => navigate("/admin/warehouse/import"),
         },
         {
           key: "exportinventory",
           label: "Xuất hàng",
-          onClick: () => navigate("/warehouse/export"),
+          onClick: () => navigate("/admin/warehouse/export"),
         },
         {
           key: "transferinventory",
           label: "Chuyển kho",
-          onClick: () => navigate("/inventory/transfer"),
+          onClick: () => navigate("/admin/warehouse/transfer"),
         },
       ],
     },
@@ -105,7 +107,7 @@ function AdminLayout() {
       key: "order",
       label: "Đơn hàng",
       icon: <ShoppingOutlined />,
-      onClick: () => navigate("/order"),
+      onClick: () => navigate("/admin/order"),
     },
     {
       type: "divider",
@@ -114,25 +116,32 @@ function AdminLayout() {
       key: "branch",
       label: "Chi nhánh",
       icon: <HomeOutlined />,
-      onClick: () => navigate("/branch/management"),
+      onClick: () => navigate("/admin/branch/management"),
     },
     {
       key: "category",
       label: "Danh mục",
       icon: <ShoppingOutlined />,
-      onClick: () => navigate("/category"),
+      onClick: () => navigate("/admin/category"),
     },
     {
       key: "brand",
       label: "Thương hiệu",
       icon: <TagsOutlined />,
-      onClick: () => navigate("/brand"),
+      onClick: () => navigate("/admin/brand"),
     },
     {
       key: "user",
       label: "Người dùng",
       icon: <UserOutlined />,
-      onClick: () => navigate("/user"),
+      onClick: () => navigate("/admin/user"),
+    },
+    {
+      key: "permission",
+      label: "Phân quyền",
+      icon: <SafetyOutlined />,
+      // Chưa có route cụ thể trong router — bạn có thể thêm sau
+      onClick: () => navigate("/admin/permission"),
     },
   ];
 
@@ -141,7 +150,7 @@ function AdminLayout() {
     const breadcrumbItems = [
       {
         title: (
-          <Link to="/dashboard" style={{ color: "#4F46E5" }}>
+          <Link to="/admin/dashboard" style={{ color: "#4F46E5" }}>
             Admin
           </Link>
         ),
@@ -169,7 +178,7 @@ function AdminLayout() {
   };
 
   useEffect(() => {
-    navigate("/dashboard");
+    navigate("/admin/dashboard");
   }, []);
 
   useEffect(() => {
@@ -184,27 +193,26 @@ function AdminLayout() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const getCurrentPath = () => {
-    const path = location.pathname.split("/");
-    return path.length > 2 ? path[2] : path[1];
-  };
-
   const handleLogout = async () => {
     await callLogout();
-    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    message.success("Đăng xuất thành công");
+
     navigate("/");
   };
-
+  useEffect(() => {
+    message.success("Đã vào AdminLayout");
+  }, []);
   return (
     <Layout className="w-full!">
       <Header
         className="font-roboto xl:px-12 lg:px-8 md:px-6 px-4 w-full fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between backdrop-blur-lg"
-        style={{
-          background: `linear-gradient(135deg, rgba(79, 70, 229, 0.95) 0%, rgba(99, 102, 241, 0.95) 50%, rgba(6, 182, 212, 0.95) 100%)`,
-          borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
-          boxShadow:
-            "0 4px 24px rgba(79, 70, 229, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)",
-        }}
+        // style={{
+        //   background: `linear-gradient(135deg, rgba(183, 183, 195, 0.95) 0%, rgba(99, 102, 241, 0.95) 50%, rgba(6, 182, 212, 0.95) 100%)`,
+        //   borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
+        //   boxShadow:
+        //     "0 4px 24px rgba(79, 70, 229, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)",
+        // }}
       >
         <div className="flex items-center space-x-4">
           <Button
@@ -270,7 +278,7 @@ function AdminLayout() {
             bottom: 0,
             background: "#F1F5F9",
             borderRight: `1px solid #E2E8F0"`,
-            zIndex: 999,
+            // zIndex: 999,
             boxShadow: "2px 0 8px rgba(0, 0, 0, 0.06)",
           }}
         >
@@ -352,11 +360,6 @@ function AdminLayout() {
                 fontSize: 14,
               }}
               theme="light"
-              itemStyle={{
-                color: "#475569",
-                borderRadius: "8px",
-                margin: "4px 0",
-              }}
             />
           </div>
         </Sider>
@@ -365,14 +368,13 @@ function AdminLayout() {
           style={{
             marginLeft: collapsed ? 80 : 280,
             transition: "margin-left 0.2s",
-            background: "#F8FAFC",
           }}
         >
           <Content
             style={{
               margin: "24px",
               padding: "32px",
-              background: "#FEFEFE",
+              background: "rgb(255, 255, 255)",
               borderRadius: 16,
               boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
               minHeight: "calc(100vh - 112px)",

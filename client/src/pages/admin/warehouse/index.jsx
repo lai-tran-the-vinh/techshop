@@ -79,37 +79,7 @@ const WarehouseManagement = () => {
     setFilteredData(filtered);
   }, [searchText, selectedBranch, warehouses]);
 
-  const getStatistics = () => {
-    const totalProducts = warehouses.length;
-    const totalVariants = warehouses.reduce(
-      (sum, item) => sum + (item.variants?.length || 0),
-      0
-    );
-    const totalStock = warehouses.reduce(
-      (sum, item) =>
-        sum +
-        (item.variants?.reduce(
-          (varSum, variant) => varSum + variant.stock,
-          0
-        ) || 0),
-      0
-    );
-    const lowStockItems = warehouses.filter((item) =>
-      item.variants?.some((variant) => variant.stock < 10)
-    ).length;
-    const branches = [...new Set(warehouses.map((item) => item.branch.name))];
-
-    return {
-      totalProducts,
-      totalVariants,
-      totalStock,
-      lowStockItems,
-      branches,
-    };
-  };
-
-  const { totalProducts, totalVariants, totalStock, lowStockItems, branches } =
-    getStatistics();
+  const branches = [...new Set(warehouses.map((item) => item.branch.name))];
 
   const getStockStatus = (stock) => {
     if (stock === 0) return { color: "red", text: "Hết hàng" };
@@ -127,15 +97,18 @@ const WarehouseManagement = () => {
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (name) => (
         <Space>
-          <Avatar
-            icon={<ProductOutlined />}
-            style={{ backgroundColor: "#1890ff" }}
-          />
-          <div>
-            <Text strong style={{ fontSize: "14px" }}>
+          <Tooltip title={name}>
+            <div
+              style={{
+                maxWidth: 200,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {name}
-            </Text>
-          </div>
+            </div>
+          </Tooltip>
         </Space>
       ),
     },
@@ -156,13 +129,7 @@ const WarehouseManagement = () => {
       key: "variantCount",
       width: 100,
       align: "center",
-      render: (_, record) => (
-        <Badge
-          count={record.variants?.length || 0}
-          style={{ backgroundColor: "#722ed1" }}
-          showZero
-        />
-      ),
+      render: (_, record) => <Text> {record.variants?.length || 0}</Text>,
     },
     {
       title: "Tổng tồn kho",
@@ -173,11 +140,11 @@ const WarehouseManagement = () => {
         const totalStock =
           record.variants?.reduce((sum, variant) => sum + variant.stock, 0) ||
           0;
-        const status = getStockStatus(totalStock);
+
         return (
-          <Tag color={status.color} style={{ fontWeight: "bold" }}>
-            {totalStock}
-          </Tag>
+          <Space>
+            <Text> {totalStock}</Text>
+          </Space>
         );
       },
     },
@@ -201,11 +168,6 @@ const WarehouseManagement = () => {
       width: 150,
       render: (name) => (
         <Space>
-          <Avatar
-            size="small"
-            icon={<TeamOutlined />}
-            style={{ backgroundColor: "#87d068" }}
-          />
           <Text>{name}</Text>
         </Space>
       ),
@@ -292,13 +254,18 @@ const WarehouseManagement = () => {
     <div
       style={{
         padding: "24px",
-        backgroundColor: "#f5f5f5",
+        // backgroundColor: "#f5f5f5",
         minHeight: "100vh",
         borderRadius: "8px",
       }}
     >
-      <Row gutter={[16, 16]} style={{ marginBottom: "24px" }}>
-        <Col xs={24} sm={12} md={8}>
+      {/* <Row gutter={[16, 16]} style={{ marginBottom: "24px" }}>
+        <Col
+          xs={24}
+          sm={12}
+          md={8}
+          style={{ boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)" }}
+        >
           <Card>
             <Statistic
               title="Tổng sản phẩm"
@@ -329,9 +296,14 @@ const WarehouseManagement = () => {
             />
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
-      <Card style={{ marginBottom: "24px" }}>
+      <Card
+        style={{
+          marginBottom: "24px",
+          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+        }}
+      >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={12} md={8}>
             <Input
@@ -371,16 +343,15 @@ const WarehouseManagement = () => {
         </Row>
       </Card>
 
-      <Card>
+      <Card
+        style={{
+          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+          minHeight: "90vh",
+        }}
+      >
         <div style={{ marginBottom: "16px" }}>
           <Space>
-            <Title level={4} style={{ margin: 0 }}>
-              Danh sách kho hàng
-            </Title>
-            <Badge
-              count={filteredData.length}
-              style={{ backgroundColor: "#52c41a" }}
-            />
+            <Title level={4}>Danh sách kho hàng</Title>
           </Space>
         </div>
 

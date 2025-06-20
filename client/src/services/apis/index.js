@@ -168,6 +168,7 @@ export const callFetchOutboundHistory = () => {
 }
 
 export const callFetchDetailOutbound = (id) => {
+  console.log(id);
   return axiosInstance.get(`/api/v1/inventories/getExport/${id}`);
 }
 
@@ -228,9 +229,9 @@ export const callCreateOrder = (value) => {
   });
 }
 
-export const callUpdateOrder = (id, status) => {
+export const callUpdateOrder = (id, value) => {
   return axiosInstance.patch(`/api/v1/orders/${id}`, {
-    status: status
+    ...value
   });
 }
 

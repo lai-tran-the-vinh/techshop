@@ -12,6 +12,7 @@ const InboundConfirmModal = ({
   previewData,
   branches = [],
 }) => {
+  console.log(previewData);
   return (
     <Modal
       title={inbound ? "Xác nhận nhập kho" : "Xác nhận xuất kho"}
@@ -53,6 +54,7 @@ const InboundConfirmModal = ({
               <br />
               <Text>{new Date().toLocaleDateString("vi-VN")}</Text>
             </Col>
+
             <Col span={24}>
               <Text strong>Tổng giá trị:</Text>
               <br />

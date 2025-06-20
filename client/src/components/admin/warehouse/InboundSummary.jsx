@@ -12,7 +12,10 @@ const InboundSummary = ({
   loading = false,
 }) => {
   return (
-    <Card title={inbound ? "Chi tiết phiếu nhập" : "Chi tiết phiêu xuất"}>
+    <Card
+      style={{ boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)" }}
+      title={inbound ? "Chi tiết phiếu nhập" : "Chi tiết phiêu xuất"}
+    >
       <Space direction="vertical" style={{ width: "100%" }}>
         <Row justify="space-between">
           <Text>Tổng sản phẩm:</Text>
@@ -40,9 +43,7 @@ const InboundSummary = ({
           style={{ width: "100%" }}
           loading={loading}
         >
-         {
-           inbound ? "Xây dựng phieu nhap kho" : "Xây dựng phieu xuat kho"
-         }
+          {inbound ? "Xây dựng phieu nhap kho" : "Xây dựng phieu xuat kho"}
         </Button>
       </Space>
     </Card>

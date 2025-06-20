@@ -52,7 +52,7 @@ async function login(
         setMessage("Đăng nhập thành công.");
         localStorage.setItem("access_token", response.data.data.access_token);
         if (response.data.data.role.roleName.includes("admin")) {
-          navigate("/dashboard");
+          navigate("/admin/dashboard");
         } else {
           setShowLogin(false);
         }

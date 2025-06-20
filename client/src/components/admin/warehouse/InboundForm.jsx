@@ -57,7 +57,7 @@ const InboundForm = ({
             <Select placeholder="Chọn biến thể" disabled={!selectedProduct}>
               {selectedProduct?.variants?.map((variant) => (
                 <Option key={variant._id} value={variant._id}>
-                  {variant.name} (Tồn: {variant.stock})
+                  {variant.name}
                 </Option>
               ))}
             </Select>

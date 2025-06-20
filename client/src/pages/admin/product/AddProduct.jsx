@@ -261,10 +261,11 @@ function AddProduct() {
         }
 
         const addProduct = await Products.add(productToSubmit);
+
         if (addProduct) {
           message.success("Thêm sản phẩm thành công");
           setToastLoading(false);
-          navigate("/product/add");
+          navigate("/product");
           setLoadingSuccess(true);
         }
       } catch (error) {
