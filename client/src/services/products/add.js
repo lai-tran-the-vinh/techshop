@@ -5,6 +5,7 @@ async function add(product) {
   if (response.status !== 201) {
     throw new Error("Thêm sản phẩm không thành công.");
   }
+  return response.data.data;
 }
 
 export default add;

@@ -125,7 +125,7 @@ function ListProduct() {
     const productToEdit = selectedRows[0];
     console.log("Sửa sản phẩm:", productToEdit._id);
 
-    navigate(`/product/edit/${productToEdit._id}`);
+    navigate(`/admin/product/edit/${productToEdit._id}`);
   };
 
   const handleFilterChange = (type, value) => {
@@ -489,7 +489,7 @@ function ListProduct() {
       <div
         style={{
           padding: "24px",
-          backgroundColor: "#f5f5f5",
+          // backgroundColor: "#f5f5f5",
           minHeight: "100vh",
           borderRadius: "8px",
         }}
@@ -634,7 +634,7 @@ function ListProduct() {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  onClick={() => navigate("/product/add")}
+                  onClick={() => navigate("/admin/product/add")}
                   style={{
                     backgroundColor: "rgb(11, 162, 36)",
                     borderRadius: 8,

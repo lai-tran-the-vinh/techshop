@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Card,
   Form,
-  Select,
   InputNumber,
   Button,
   Table,
@@ -10,41 +9,24 @@ import {
   Typography,
   Row,
   Col,
-  Divider,
   message,
-  Modal,
   Tag,
   Avatar,
-  Input,
-  DatePicker,
   Upload,
   Tooltip,
-  Statistic,
   Badge,
   Popconfirm,
-  Alert,
   Spin,
-  Drawer,
-  Descriptions,
 } from "antd";
 import {
-  PlusOutlined,
   DeleteOutlined,
-  SaveOutlined,
-  FileExcelOutlined,
-  InboxOutlined,
   ProductOutlined,
   ShopOutlined,
   UserOutlined,
   CalendarOutlined,
-  DollarOutlined,
-  EditOutlined,
   EyeOutlined,
-  PrinterOutlined,
   UploadOutlined,
   ReloadOutlined,
-  SearchOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
 import {
   callFetchBranches,
@@ -52,9 +34,8 @@ import {
   callFetchInboundHistory,
   callFetchProducts,
   callImportInventory,
-  // callFetchInboundDetail, // API mới để lấy chi tiết phiếu nhập
 } from "@/services/apis";
-import Search from "antd/es/transfer/search";
+
 import ModalSearchProduct from "../../../components/admin/warehouse/modalSearchProduct";
 import InboundConfirmModal from "@/components/admin/warehouse/InboundConfirmModal";
 import InboundForm from "@/components/admin/warehouse/InboundForm";
@@ -80,6 +61,7 @@ const WarehouseInbound = () => {
   const [productSearchText, setProductSearchText] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [detailLoading, setDetailLoading] = useState(false);
+  const inbound = useState(true);
 
   const fetchProducts = async () => {
     try {
@@ -145,19 +127,6 @@ const WarehouseInbound = () => {
   useEffect(() => {
     loadAllData();
   }, []);
-
-  const handleProductSearch = (value) => {
-    setProductSearchText(value);
-    if (!value.trim()) {
-      setFilteredProducts(products);
-      return;
-    }
-
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
 
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
@@ -306,63 +275,6 @@ const WarehouseInbound = () => {
     }
   };
 
-  const productSearchColumns = [
-    {
-      title: "Sản phẩm",
-      key: "product",
-
-      render: (_, record) => (
-        <div>
-          <Text strong>{record.name}</Text>
-          <br />
-          <Text type="secondary" style={{ fontSize: "12px" }}>
-            Mã: {record.code}
-          </Text>
-          <br />
-          <Tag color="blue" style={{ fontSize: "10px" }}>
-            {record.category?.name}
-          </Tag>
-        </div>
-      ),
-    },
-    {
-      title: "Số biến thể",
-      key: "variants",
-      width: 100,
-      align: "center",
-      render: (_, record) => (
-        <Badge
-          count={record.variants?.length || 0}
-          style={{ backgroundColor: "#52c41a" }}
-        />
-      ),
-    },
-    {
-      title: "Trạng thái",
-      key: "status",
-      width: 100,
-      render: (_, record) => (
-        <Tag color={record.status === "active" ? "green" : "red"}>
-          {record.status === "active" ? "Hoạt động" : "Ngừng bán"}
-        </Tag>
-      ),
-    },
-    {
-      title: "Thao tác",
-      key: "actions",
-      width: 100,
-      render: (_, record) => (
-        <Button
-          type="primary"
-          size="small"
-          onClick={() => handleSelectProduct(record)}
-        >
-          Chọn
-        </Button>
-      ),
-    },
-  ];
-
   const itemColumns = [
     {
       title: "Sản phẩm",
@@ -458,7 +370,7 @@ const WarehouseInbound = () => {
 
   const historyColumns = [
     {
-      title: "Mã phiếu nhập",
+      title: "Mã phiếu xuất",
       dataIndex: "_id",
       key: "code",
       width: 150,
@@ -505,7 +417,7 @@ const WarehouseInbound = () => {
       },
     },
     {
-      title: "Ngày nhập",
+      title: "Ngày xuất",
       dataIndex: "createdAt",
       key: "date",
       width: 150,
@@ -571,7 +483,6 @@ const WarehouseInbound = () => {
     <div
       style={{
         padding: "24px",
-        backgroundColor: "#f5f5f5",
         minHeight: "100vh",
         borderRadius: "8px",
       }}
@@ -584,6 +495,10 @@ const WarehouseInbound = () => {
               icon={<ReloadOutlined />}
               onClick={loadAllData}
               loading={pageLoading}
+              style={{
+                marginRight: "8px",
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+              }}
             >
               Làm mới
             </Button>
@@ -594,6 +509,7 @@ const WarehouseInbound = () => {
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={14}>
           <Card
+            style={{ boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)" }}
             title="Tạo phiếu nhập kho"
             extra={
               <Space>
@@ -620,8 +536,9 @@ const WarehouseInbound = () => {
           </Card>
         </Col>
 
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={10} style={{ marginBottom: "24px" }}>
           <InboundSummary
+            inbound={inbound}
             inboundItems={inboundItems}
             totalQuantity={totalQuantity}
             totalValue={totalValue}
@@ -629,53 +546,51 @@ const WarehouseInbound = () => {
             loading={loading}
           />
 
-          {inboundItems.length > 0 && (
-            <Card title="Danh sách sản phẩm" style={{ marginTop: "16px" }}>
-              <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-                {inboundItems.map((item) => (
-                  <div
-                    key={item.id}
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #f0f0f0",
-                      borderRadius: "4px",
-                      marginBottom: "8px",
-                      backgroundColor: "#fafafa",
-                    }}
-                  >
-                    <Row justify="space-between" align="middle">
-                      <Col span={18}>
-                        <Text strong style={{ fontSize: "12px" }}>
-                          {item.productName}
-                        </Text>
-                        <br />
-                        <Text type="secondary" style={{ fontSize: "11px" }}>
-                          {item.variantName} × {item.quantity}
-                        </Text>
-                        <br />
-                        <Text type="secondary" style={{ fontSize: "10px" }}>
-                          SKU: {item.variantSku}
-                        </Text>
-                      </Col>
-                      <Col span={6} style={{ textAlign: "right" }}>
-                        <Text style={{ fontSize: "11px", color: "#fa8c16" }}>
-                          {item.total.toLocaleString("vi-VN")}₫
-                        </Text>
-                        <br />
-                        <Button
-                          type="text"
-                          size="small"
-                          danger
-                          icon={<DeleteOutlined />}
-                          onClick={() => handleRemoveItem(item.id)}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+          <Card title="Danh sách sản phẩm" style={{ marginTop: "16px" }}>
+            <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+              {inboundItems.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    padding: "8px",
+                    border: "1px solid #f0f0f0",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                    backgroundColor: "#fafafa",
+                  }}
+                >
+                  <Row justify="space-between" align="middle">
+                    <Col span={18}>
+                      <Text strong style={{ fontSize: "12px" }}>
+                        {item.productName}
+                      </Text>
+                      <br />
+                      <Text type="secondary" style={{ fontSize: "11px" }}>
+                        {item.variantName} × {item.quantity}
+                      </Text>
+                      <br />
+                      <Text type="secondary" style={{ fontSize: "10px" }}>
+                        SKU: {item.variantSku}
+                      </Text>
+                    </Col>
+                    <Col span={6} style={{ textAlign: "right" }}>
+                      <Text style={{ fontSize: "11px", color: "#fa8c16" }}>
+                        {item.total.toLocaleString("vi-VN")}₫
+                      </Text>
+                      <br />
+                      <Button
+                        type="text"
+                        size="small"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleRemoveItem(item.id)}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </div>
+          </Card>
         </Col>
       </Row>
 
@@ -705,6 +620,7 @@ const WarehouseInbound = () => {
       </Card>
 
       <ModalSearchProduct
+        inbound={inbound}
         setProductSearchVisible={setProductSearchVisible}
         productSearchVisible={productSearchVisible}
         handleSelectProduct={handleSelectProduct}
@@ -714,11 +630,13 @@ const WarehouseInbound = () => {
         setProducts={setProducts}
       />
       <InboundDetailDrawer
+        inbound={inbound}
         open={detailDrawerVisible}
         onClose={() => setDetailDrawerVisible(false)}
         selectedInboundDetail={selectedInboundDetail}
       />
       <InboundConfirmModal
+        inbound={inbound}
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onConfirm={confirmInbound}

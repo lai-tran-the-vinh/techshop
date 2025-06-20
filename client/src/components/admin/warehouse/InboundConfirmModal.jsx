@@ -4,6 +4,7 @@ import { Modal, Row, Col, Divider, Alert, Typography } from "antd";
 const { Text, Title } = Typography;
 
 const InboundConfirmModal = ({
+  inbound,
   open,
   onClose,
   onConfirm,
@@ -11,13 +12,14 @@ const InboundConfirmModal = ({
   previewData,
   branches = [],
 }) => {
+  console.log(previewData);
   return (
     <Modal
-      title="Xác nhận phiếu nhập kho"
+      title={inbound ? "Xác nhận nhập kho" : "Xác nhận xuất kho"}
       open={open}
       onOk={onConfirm}
       onCancel={onClose}
-      okText="Xác nhận nhập kho"
+      okText={inbound ? "Xác nhận nhập" : "Xác nhận xuất"}
       cancelText="Hủy"
       confirmLoading={loading}
       width={600}
@@ -48,10 +50,11 @@ const InboundConfirmModal = ({
               <Text>{previewData.totalItems}</Text>
             </Col>
             <Col span={12}>
-              <Text strong>Ngày nhập:</Text>
+              <Text strong>{inbound ? "Ngày nhập:" : "Ngày xuất:"}</Text>
               <br />
               <Text>{new Date().toLocaleDateString("vi-VN")}</Text>
             </Col>
+
             <Col span={24}>
               <Text strong>Tổng giá trị:</Text>
               <br />
