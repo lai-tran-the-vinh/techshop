@@ -1,4 +1,5 @@
 // import { callFetchAccount } from "@/services/apis";
+import { callFetchAccount, callLogout } from "@/services/apis";
 import { useContext, createContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
@@ -23,8 +24,9 @@ function AppProvider({ children }) {
         return;
       }
       try {
+        setLoading(true);
         const response = await callFetchAccount();
-        console.log(response);
+        setLoading(false);
         if (response.data) {
           setUser(response.data.data.user);
           setLoading(false);
@@ -60,7 +62,7 @@ function AppProvider({ children }) {
       localStorage.removeItem("access_token");
       // Reset state
       setUser(null);
-      message.success("Đăng xuất thành công!");
+      success("Đăng xuất thành công!");
 
       // Chuyển về trang đăng nhập
       setTimeout(() => {
@@ -107,6 +109,7 @@ function AppProvider({ children }) {
     logout,
     isAuthenticated,
     isAdmin,
+    user,
   };
 
   return <AppContext.Provider value={data}>{children}</AppContext.Provider>;
