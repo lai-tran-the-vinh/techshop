@@ -1,4 +1,4 @@
-import { Tag } from "antd";
+import { Tag, Typography, Empty, Row, Col } from "antd";
 import CardProduct from "./Card";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -6,11 +6,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 function PreviewListProducts({
   title,
   loading,
-  products = {},
+  products = [],
   canViewAll = true,
   showListBrands = true,
 }) {
-  const brands = ["Samsung", "Apple", "Xiaomi", "Oppo", "Vivo", "Realme"];
+  const brands = [...new Set(products.map((product) => product.brand.name))];
 
   return (
     <div className="w-full xl:px-50 lg:px-30 md:px-20 mt-20">
@@ -20,9 +20,12 @@ function PreviewListProducts({
             <Skeleton className="h-32" />
           </div>
         ) : (
-          <h3 className="text-xl font-bold text-primary uppercase mb-6">
+          <Typography.Title
+            level={3}
+            className="text-2xl! font-roboto! font-bold! text-primary! mb-6!"
+          >
             {title}
-          </h3>
+          </Typography.Title>
         )}
 
         {loading && (
@@ -30,7 +33,7 @@ function PreviewListProducts({
             <Skeleton className="h-24" />
           </div>
         )}
-        {!loading && canViewAll && (
+        {!loading && canViewAll && products.length > 0 && (
           <span className="cursor-pointer font-medium text-primary">
             Xem tất cả
           </span>
@@ -39,51 +42,83 @@ function PreviewListProducts({
 
       {showListBrands && (
         <div className="mb-15 flex gap-2">
+          {loading && (
+            <>
+              <div className="w-80">
+                <Skeleton className="h-25" />
+              </div>
+              <div className="w-80">
+                <Skeleton className="h-25" />
+              </div>
+              <div className="w-80">
+                <Skeleton className="h-25" />
+              </div>
+              <div className="w-80">
+                <Skeleton className="h-25" />
+              </div>
+              <div className="w-80">
+                <Skeleton className="h-25" />
+              </div>
+            </>
+          )}
           {brands.map((brand, index) => (
             <div key={index}>
-              {loading ? (
-                <div className="w-80">
-                  <Skeleton className="h-25" />
-                </div>
-              ) : (
-                <Tag
-                  key={index}
-                  className="font-roboto! text-sm! px-8! rounded-md! cursor-pointer! min-w-80! text-center! bg-gray-200! border-none! py-4!"
-                >
-                  {brand}
-                </Tag>
-              )}
+              <Tag
+                key={index}
+                className="font-roboto! text-sm! px-8! rounded-md! cursor-pointer! min-w-80! text-center! bg-gray-100! border-none! py-4!"
+              >
+                {brand}
+              </Tag>
             </div>
           ))}
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
+      <Row
+        gutter={10}
+        justify={loading ? "start" : products.length > 0 ? "start" : "center"}
+      >
         {loading && (
           <>
-            <div className="w-275">
+            <Col className="w-275">
               <Skeleton className="h-500" />
-            </div>
-            <div className="w-275">
+            </Col>
+            <Col className="w-275">
               <Skeleton className="h-500" />
-            </div>
-            <div className="w-275">
+            </Col>
+            <Col className="w-275">
               <Skeleton className="h-500" />
-            </div>
-            <div className="w-275">
+            </Col>
+            <Col className="w-275">
               <Skeleton className="h-500" />
-            </div>
-            <div className="w-275">
+            </Col>
+            <Col className="w-275">
               <Skeleton className="h-500" />
-            </div>
+            </Col>
           </>
         )}
+
+        {products.length === 0 && !loading && (
+          <Col span={24}>
+            <Empty
+              className="mx-auto!"
+              description={
+                <Typography.Text className="font-roboto! text-gray-400!">
+                  Không tìm thấy sản phẩm
+                </Typography.Text>
+              }
+            />
+          </Col>
+        )}
+
         {products.map((product, index) => {
           return (
-            <CardProduct key={index} product={product} loading={loading} />
+            <Col>
+              <CardProduct key={index} product={product} loading={loading} />
+            </Col>
           );
         })}
-      </div>
+      </Row>
     </div>
   );
 }
