@@ -18,12 +18,7 @@ function SearchBox() {
       setLoading(true);
       const result = await Products.search(query);
       setResult(result);
-      const resultAfterFilter = Array.isArray(result)
-        ? result.filter((item) =>
-            item.name.toLowerCase().includes(query.toLowerCase())
-          )
-        : [];
-      setFilteredResults(resultAfterFilter);
+      setFilteredResults(Array.isArray(result) ? result : []);
       setLoading(false);
     } catch (error) {
       console.error(error.message);
@@ -33,6 +28,7 @@ function SearchBox() {
   useEffect(() => {
     if (query.trim() !== "") {
       fetchSearchResult();
+      console.log("Result:", filteredResults);
     }
   }, [query]);
 
