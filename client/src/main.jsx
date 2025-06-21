@@ -11,6 +11,14 @@ createRoot(document.getElementById('root')).render(
         token: {
           fontFamily: 'Roboto, sans-serif',
         },
+        components: {
+          Input: {
+            // paddingBlock: '8px',
+            activeBorderColor: '#ee4d2d',
+            hoverBorderColor: '#ee4d2d',
+            activeShadow: '0',
+          },
+        },
         message: {
           top: 80,
           duration: 2,
