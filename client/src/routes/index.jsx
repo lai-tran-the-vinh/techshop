@@ -14,6 +14,8 @@ import NotExist from '@/components/error/notExist';
 import OrderList from '@/pages/admin/order';
 import OrderManagement from '@/pages/admin/order';
 import ProtectedRoute from './ProtectedRoute';
+import BrandManagement from '@/pages/admin/brand';
+import CategoryManagerment from '@/pages/admin/category/category';
 
 const router = createBrowserRouter([
   // User routes
