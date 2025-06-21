@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  Form,
-  Input,
-  Button,
-  Divider,
-  Typography,
-  Space,
-  message,
-  Card,
-} from 'antd';
+import { useLogin } from '@hooks/users';
+import { Modal, Form, Input, Button, Divider, Typography, Space } from 'antd';
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -17,62 +8,16 @@ import {
   CloseOutlined,
   UserOutlined,
   LockOutlined,
-  ShopOutlined,
 } from '@ant-design/icons';
-import Users from '@services/users';
 import { useAppContext } from '@contexts';
-import { useNavigate } from 'react-router-dom';
 
 const { Title, Link, Text } = Typography;
 
 function Login() {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const {
-    setMessage,
-    setShowLogin,
-    setShowSignup,
-    setToastLoading,
-    setLoadingError,
-    setLoadingSuccess,
-  } = useAppContext();
-
-  useEffect(() => {
-    document.title = 'TechShop | Đăng nhập';
-  }, []);
-
-  const handleLogin = async (values) => {
-    setLoading(true);
-    try {
-      await Users.login(
-        values,
-        navigate,
-        setMessage,
-        setShowLogin,
-        () => {},
-        setToastLoading,
-        () => {},
-        setLoadingError,
-        () => {}, // setPasswordError
-        setLoadingSuccess,
-        () => {}, // setPasswordMessage
-      );
-    } catch (error) {
-      message.error('Đăng nhập thất bại. Vui lòng thử lại!');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = () => {
-    message.info('Tính năng đăng nhập với Google đang được phát triển');
-  };
-
-  const handleForgotPassword = () => {
-    message.info('Tính năng quên mật khẩu đang được phát triển');
-  };
+  const [user, setUser] = useState({ email: '', password: '' });
+  const { setShowLogin, setShowSignup, message } = useAppContext();
+  const { handleLogin } = useLogin(message);
 
   return (
     <Modal
@@ -107,7 +52,10 @@ function Login() {
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleLogin}
+          onValuesChange={(_, allValues) => {
+            setUser(allValues);
+          }}
+          onFinish={() => handleLogin(user)}
           autoComplete="off"
           size="large"
         >
@@ -194,7 +142,6 @@ function Login() {
 
           <div style={{ textAlign: 'right', marginBottom: 32 }}>
             <Link
-              onClick={handleForgotPassword}
               style={{
                 fontSize: 14,
                 fontWeight: 500,
@@ -210,7 +157,6 @@ function Login() {
             <Button
               type="link"
               htmlType="submit"
-              loading={loading}
               block
               style={{
                 height: 50,
@@ -247,7 +193,6 @@ function Login() {
 
           <Button
             icon={<GoogleOutlined style={{ fontSize: 18 }} />}
-            onClick={handleGoogleLogin}
             block
             style={{
               height: 50,

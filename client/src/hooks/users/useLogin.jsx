@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Users from '@services/users';
 import { useAppContext } from '@/contexts';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,11 @@ function useLogin(message) {
   const navigate = useNavigate();
   const { setShowLogin } = useAppContext();
 
-  const handleLogin = (user) => {
+  useEffect(() => {
+    document.title = 'TechShop | Đăng nhập';
+  }, []);
+
+  function handleLogin(user) {
     const usersService = new Users();
 
     message.loading('Đang đăng nhập');
@@ -27,7 +32,7 @@ function useLogin(message) {
         message.destroyLoading();
         message.error(`Lỗi: ${error.message}`);
       });
-  };
+  }
 
   return { handleLogin };
 }
