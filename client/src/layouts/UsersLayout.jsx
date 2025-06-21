@@ -40,7 +40,7 @@ function Header() {
             onClick={() => {
               setShowLogin(true);
             }}
-            className="border! h-40! font-roboto! border-gray-300! text-base! font-medium! hover:text-primary! hover:border-primary! min-w-100! py-6! px-12! rounded-md! cursor-pointer!"
+            className="border! h-36! font-roboto! border-gray-300! text-base! font-medium! hover:text-primary! hover:border-primary! min-w-100! rounded-md! cursor-pointer!"
           >
             Đăng nhập
           </Button>
@@ -49,7 +49,7 @@ function Header() {
             onClick={() => {
               setShowSignup(true);
             }}
-            className="text-base! h-40! font-roboto! rounded-md! min-w-100! font-medium! bg-primary! text-white! cursor-pointer!"
+            className="text-base! h-36! font-roboto! rounded-md! min-w-100! font-medium! bg-primary! text-white! cursor-pointer!"
           >
             Đăng ký
           </Button>
