@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function useLogin(message) {
   const navigate = useNavigate();
-  const { setShowLogin } = useAppContext();
+  const { setShowLogin, setUser } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Đăng nhập';
@@ -13,7 +13,6 @@ function useLogin(message) {
 
   function handleLogin(user) {
     const usersService = new Users();
-
     message.loading('Đang đăng nhập');
 
     usersService
@@ -24,6 +23,7 @@ function useLogin(message) {
           const accessToken = response.data.data.access_token;
           navigate('/');
           setShowLogin(false);
+          setUser(response.data.data.name);
           localStorage.setItem('access_token', accessToken);
         }
         message.success('Đăng nhập thành công');
@@ -31,7 +31,7 @@ function useLogin(message) {
       .catch((error) => {
         message.destroyLoading();
         message.error(`Lỗi: ${error.message}`);
-      });
+      })
   }
 
   return { handleLogin };

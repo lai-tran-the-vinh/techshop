@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppContext } from '@/contexts';
+import { useAppContext } from '@contexts';
 import { UserOutlined } from '@ant-design/icons';
-import { Dropdown, Space, Avatar, Flex, Typography, Skeleton } from 'antd';
+import { Dropdown, Avatar, Flex, Typography, Skeleton } from 'antd';
 
 function UserInformation() {
   const { user, logout, loading } = useAppContext();
@@ -9,17 +10,20 @@ function UserInformation() {
   function renderInformation() {
     if (loading) {
       return (
-        <div>
-          <Skeleton />
-        </div>
+        <>
+          <Skeleton.Avatar active={loading} size="default" shape="circle"className='w-34! h-34!' />
+          <Skeleton.Input active={loading} className="w-100! h-30!" size="small" />
+        </>
       );
     }
 
     return (
-      <Flex align="center" gap={6} className="cursor-pointer!">
-        <Avatar icon={<UserOutlined />} />
-        <Typography.Text className="">{user?.name}</Typography.Text>
-      </Flex>
+      <>
+        <Avatar icon={<UserOutlined />} className='w-34! h-34!' />
+        <Typography.Text className="text-base! font-normal!">
+          {user.name}
+        </Typography.Text>
+      </>
     );
   }
 
@@ -41,21 +45,9 @@ function UserInformation() {
 
   return (
     <Dropdown menu={{ items }}>
-      <Space>
-        {/* {loading && (
-          <div>
-            <Skeleton />
-          </div>
-        )}
-        {!loading && (
-          <Flex align="center" gap={6} className="cursor-pointer!">
-            <Avatar icon={<UserOutlined />} />
-            <Typography.Text className="">{user?.name}</Typography.Text>
-          </Flex>
-        )} */}
-
+      <Flex align="center" gap={6} className="h-full! cursor-pointer!">
         {renderInformation()}
-      </Space>
+      </Flex>
     </Dropdown>
   );
 }

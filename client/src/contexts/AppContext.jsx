@@ -8,13 +8,14 @@ function AppProvider({ children }) {
   const message = useMessage();
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [toastLoading, setToastLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
   const [sideBarSelectedTab, setSideBarSelectedTab] = useState();
+  
   useEffect(() => {
     const verifyToken = async () => {
       const accessToken = localStorage.getItem('access_token');
@@ -86,6 +87,7 @@ function AppProvider({ children }) {
   };
 
   const data = {
+    user,
     query,
     loading,
     message,
@@ -96,20 +98,19 @@ function AppProvider({ children }) {
     loadingSuccess,
     sideBarSelectedTab,
 
+    login,
+    logout,
+    isAdmin,
+    setUser,
     setQuery,
     setLoading,
     setShowLogin,
     setShowSignup,
     setLoadingError,
+    isAuthenticated,
     setToastLoading,
     setLoadingSuccess,
     setSideBarSelectedTab,
-
-    login,
-    logout,
-    isAuthenticated,
-    isAdmin,
-    user,
   };
 
   return <AppContext.Provider value={data}>{children}</AppContext.Provider>;

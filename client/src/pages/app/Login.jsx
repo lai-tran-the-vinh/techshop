@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLogin } from '@hooks/users';
 import { Modal, Form, Input, Button, Divider, Typography, Space } from 'antd';
 import {
-  EyeInvisibleOutlined,
   EyeTwoTone,
-  GoogleOutlined,
-  CloseOutlined,
-  UserOutlined,
   LockOutlined,
+  UserOutlined,
+  CloseOutlined,
+  GoogleOutlined,
+  EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import { useAppContext } from '@contexts';
 
