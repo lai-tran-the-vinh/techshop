@@ -1,8 +1,6 @@
 import useMessage from '@/hooks/useMessage';
 import { callFetchAccount, callLogout } from '@/services/apis';
 import { useContext, createContext, useState, useEffect } from 'react';
-import { callFetchAccount, callLogout } from "@/services/apis";
-import { useContext, createContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
 
@@ -64,7 +62,7 @@ function AppProvider({ children }) {
       localStorage.removeItem('access_token');
       // Reset state
       setUser(null);
-      success('Đăng xuất thành công!');
+      message.success('Đăng xuất thành công!');
 
       // Chuyển về trang đăng nhập
       setTimeout(() => {

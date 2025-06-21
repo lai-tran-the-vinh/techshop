@@ -1,17 +1,8 @@
-<<<<<<< HEAD
+import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { Spin, Button, Alert, Result } from 'antd';
-import { Link } from 'react-router-dom';
 import { useAppContext } from '@/contexts';
 
-import React, { useState } from 'react';
-=======
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { useAppContext } from "@/contexts";
-
-import React, { useState } from "react";
-import { Button, Result, Spin } from "antd";
->>>>>>> a9aa70516d4e39cc53895dc5fbfe6870bd805a9c
+import { Button, Result, Spin } from 'antd';
 
 const UnauthenticatedContent = ({ redirectUrl }) => {
   const { showLogin, setShowLogin } = useAppContext();
@@ -33,9 +24,9 @@ const UnauthenticatedContent = ({ redirectUrl }) => {
           type="primary"
           size="large"
           style={{
-            borderRadius: "8px",
-            padding: "0 24px",
-            height: "40px",
+            borderRadius: '8px',
+            padding: '0 24px',
+            height: '40px',
           }}
         >
           Đăng nhập ngay
