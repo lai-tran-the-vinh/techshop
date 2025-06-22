@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   Button,
@@ -7,26 +7,37 @@ import {
   Typography,
   Space,
   message,
+  Skeleton,
 } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
 function Cart() {
-  const [cartItems, setCartItems] = React.useState([
-    {
-      id: 1,
-      name: 'Sản phẩm A',
-      price: 200000,
-      quantity: 2,
-    },
-    {
-      id: 2,
-      name: 'Sản phẩm B',
-      price: 150000,
-      quantity: 1,
-    },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Giả lập tải dữ liệu
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCartItems([
+        {
+          id: 1,
+          name: 'Sản phẩm A',
+          price: 200000,
+          quantity: 2,
+        },
+        {
+          id: 2,
+          name: 'Sản phẩm B',
+          price: 150000,
+          quantity: 1,
+        },
+      ]);
+      setLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const updateQuantity = (id, value) => {
     if (value < 1) return;
@@ -93,32 +104,112 @@ function Cart() {
     },
   ];
 
+  const renderSkeletonTable = () => {
+    const skeletonRows = Array.from({ length: 4 });
+    const cellStyle = {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+
+    return (
+      <div className="border-none! p-0!">
+        {/* Header giả */}
+        <div className="bg-[#fafafa] rounded-t-md py-12 px-16 border-b border-b-[#f0f0f0] font-medium flex items-center justify-between text-center">
+          <div style={{ width: '25%', ...cellStyle }}>Sản phẩm</div>
+          <div style={{ width: '15%', ...cellStyle }}>Đơn giá</div>
+          <div style={{ width: '20%', ...cellStyle }}>Số lượng</div>
+          <div style={{ width: '20%', ...cellStyle }}>Thành tiền</div>
+          <div style={{ width: '10%', ...cellStyle }}>Xóa</div>
+        </div>
+
+        {/* Dòng skeleton */}
+        {skeletonRows.map((_, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '12px 16px',
+              borderBottom: '1px solid #f0f0f0',
+            }}
+          >
+            <div style={{ width: '25%', ...cellStyle }}>
+              <Skeleton.Input
+                active
+                size="small"
+                style={{ width: '80%', borderRadius: 6 }}
+              />
+            </div>
+            <div style={{ width: '15%', ...cellStyle }}>
+              <Skeleton.Input
+                active
+                size="small"
+                style={{ width: '70%', borderRadius: 6 }}
+              />
+            </div>
+            <div style={{ width: '20%', ...cellStyle }}>
+              <Skeleton.Input
+                active
+                size="small"
+                style={{ width: '60%', borderRadius: 6 }}
+              />
+            </div>
+            <div style={{ width: '20%', ...cellStyle }}>
+              <Skeleton.Input
+                active
+                size="small"
+                style={{ width: '70%', borderRadius: 6 }}
+              />
+            </div>
+            <div style={{ width: '10%', ...cellStyle }}>
+              <Skeleton.Button
+                active
+                size="small"
+                shape="circle"
+                style={{ width: 32, height: 32 }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full px-50 py-20">
       <Title level={3}>Giỏ hàng của bạn</Title>
-      <Table
-        columns={columns}
-        dataSource={cartItems}
-        rowKey="id"
-        pagination={false}
-        locale={{ emptyText: 'Giỏ hàng trống' }}
-      />
-      <Card className="mt-24! text-right!">
-        <Space direction="vertical">
-          <Text strong>Tổng tiền:</Text>
-          <Title level={3} className="m-0!">
-            {total.toLocaleString()}₫
-          </Title>
-          <Button
-            type="primary"
-            size="large"
-            disabled={cartItems.length === 0}
-            className="rounded-md!"
-          >
-            Tiến hành thanh toán
-          </Button>
-        </Space>
-      </Card>
+
+      {loading ? (
+        renderSkeletonTable()
+      ) : (
+        <>
+          <Table
+            columns={columns}
+            dataSource={cartItems}
+            rowKey="id"
+            pagination={false}
+            locale={{ emptyText: 'Giỏ hàng trống' }}
+          />
+          <Card className="mt-24! text-right!">
+            <Space direction="vertical">
+              <Text strong>Tổng tiền:</Text>
+              <Title level={3} className="m-0!">
+                {total.toLocaleString()}₫
+              </Title>
+              <Button
+                type="primary"
+                size="large"
+                disabled={cartItems.length === 0}
+                className="rounded-md!"
+              >
+                Tiến hành thanh toán
+              </Button>
+            </Space>
+          </Card>
+        </>
+      )}
     </div>
   );
 }
