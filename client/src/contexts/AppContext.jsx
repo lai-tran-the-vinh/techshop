@@ -15,7 +15,7 @@ function AppProvider({ children }) {
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
   const [sideBarSelectedTab, setSideBarSelectedTab] = useState();
-  
+
   useEffect(() => {
     const verifyToken = async () => {
       const accessToken = localStorage.getItem('access_token');
@@ -59,19 +59,11 @@ function AppProvider({ children }) {
   const logout = async () => {
     try {
       await callLogout();
-
       localStorage.removeItem('access_token');
-      // Reset state
       setUser(null);
       message.success('Đăng xuất thành công!');
-
-      // Chuyển về trang đăng nhập
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 500);
     } catch (error) {
-      console.error('Logout error:', error);
-      // Xóa token dù có lỗi hay không
+      message.error('Đăng xuất thất bại');
       localStorage.removeItem('access_token');
       setUser(null);
     }
