@@ -38,6 +38,10 @@ function UserInformation() {
     },
     {
       key: '4',
+      label: <Link to="/admin/dashboard">Giỏ hàng</Link>,
+    },
+    {
+      key: '5',
       label: 'Đăng xuất',
       onClick: logout,
     },
