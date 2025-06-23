@@ -5,33 +5,34 @@ import { useNavigate } from 'react-router-dom';
 
 function useLogin(message) {
   const navigate = useNavigate();
-  const { setShowLogin, setUser } = useAppContext();
+  const { setShowLogin } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Đăng nhập';
   }, []);
 
-  function handleLogin(user) {
+  function handleLogin(value) {
     const usersService = new Users();
     message.loading('Đang đăng nhập');
 
     usersService
-      .login(user)
+      .login(value)
       .then((response) => {
         message.destroyLoading();
         if (response.status === 201) {
           const accessToken = response.data.data.access_token;
-          navigate('/');
-          setShowLogin(false);
-          setUser(response.data.data.name);
           localStorage.setItem('access_token', accessToken);
+          if (response.data.data.role === 'admin') {
+            navigate('/admin/dashboard');
+          }
+          window.location.reload();
         }
         message.success('Đăng nhập thành công');
       })
       .catch((error) => {
         message.destroyLoading();
         message.error(`Lỗi: ${error.message}`);
-      })
+      });
   }
 
   return { handleLogin };

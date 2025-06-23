@@ -35,6 +35,8 @@ import {
   CustomerServiceOutlined,
   ToolOutlined,
   SafetyOutlined,
+  PlaySquareOutlined,
+  SlidersOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { callLogout } from '@/services/apis';
@@ -133,6 +135,9 @@ function AdminLayout() {
       onClick: () => navigate('/admin/brand/management'),
     },
     {
+      type: 'divider',
+    },
+    {
       key: 'user',
       label: 'Người dùng',
       icon: <UserOutlined />,
@@ -142,8 +147,33 @@ function AdminLayout() {
       key: 'permission',
       label: 'Phân quyền',
       icon: <SafetyOutlined />,
-      // Chưa có route cụ thể trong router — bạn có thể thêm sau
-      onClick: () => navigate('/admin/permission/'),
+
+      children: [
+        {
+          key: 'role',
+          label: 'Vai trò',
+          onClick: () => navigate('/admin/authorization/role/management'),
+        },
+        {
+          key: 'permission',
+          label: 'Phân quyền hạn',
+          onClick: () => navigate('/admin/authorization/permission/management'),
+        },
+        {
+          key: 'user-role',
+          label: 'Vai trò người dùng',
+          onClick: () => navigate('/admin/user-role/management'),
+        },
+      ],
+    },
+    {
+      type: 'divider',
+    },
+
+    {
+      key: 'banner',
+      label: 'BANNER',
+      icon: <SlidersOutlined />,
     },
   ];
 

@@ -1,5 +1,5 @@
 import useMessage from '@/hooks/useMessage';
-import { callFetchAccount, callLogout } from '@/services/apis';
+import { callFetchAccount, callLogin, callLogout } from '@/services/apis';
 import { useContext, createContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
@@ -40,21 +40,6 @@ function AppProvider({ children }) {
     verifyToken();
   }, []);
 
-  const login = async (username, password) => {
-    setIsSubmit(true);
-    const res = await callLogin(username, password);
-    const redirect = localStorage.getItem('redirectUrl');
-    if (res?.data) {
-      const { access_token } = res.data;
-      localStorage.setItem('access_token', access_token);
-      message.success('Đăng nhập thành công!');
-      window.location.href = redirect || '/';
-      localStorage.removeItem('redirectUrl');
-    } else {
-      throw new Error(res?.message || 'Đăng nhập thất bại');
-    }
-  };
-
   // Hàm đăng xuất
   const logout = async () => {
     try {
@@ -90,7 +75,6 @@ function AppProvider({ children }) {
     loadingSuccess,
     sideBarSelectedTab,
 
-    login,
     logout,
     isAdmin,
     setUser,

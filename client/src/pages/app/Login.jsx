@@ -16,7 +16,7 @@ const { Title, Link, Text } = Typography;
 function Login() {
   const [form] = Form.useForm();
   const [user, setUser] = useState({ email: '', password: '' });
-  const { setShowLogin, setShowSignup, message } = useAppContext();
+  const { setShowLogin, setShowSignup, message} = useAppContext();
   const { handleLogin } = useLogin(message);
 
   return (
@@ -30,7 +30,7 @@ function Login() {
         <CloseOutlined
           style={{
             fontSize: 20,
-            
+
             transition: 'all 0.3s ease',
           }}
         />

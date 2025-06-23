@@ -11,15 +11,28 @@ function UserInformation() {
     if (loading) {
       return (
         <>
-          <Skeleton.Avatar active={loading} size="default" shape="circle"className='w-34! h-34!' />
-          <Skeleton.Input active={loading} className="w-100! h-30!" size="small" />
+          <Skeleton.Avatar
+            active={loading}
+            size="default"
+            shape="circle"
+            className="w-34! h-34!"
+          />
+          <Skeleton.Input
+            active={loading}
+            className="w-100! h-30!"
+            size="small"
+          />
         </>
       );
     }
-
+    console.log(user);
     return (
       <>
-        <Avatar icon={<UserOutlined />} className='w-34! h-34!' />
+        <Avatar
+          src={user.avatar}
+          icon={!user.avatar && <UserOutlined />}
+          className="w-34! h-34!"
+        />
         <Typography.Text className="text-base! font-normal!">
           {user.name}
         </Typography.Text>
