@@ -1,9 +1,8 @@
-import { Tag, Typography, Empty, Row, Col } from 'antd';
 import CardProduct from './Card';
-import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '@/contexts';
 import Skeleton from 'react-loading-skeleton';
+import { useNavigate } from 'react-router-dom';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { Tag, Typography, Empty, Row, Col } from 'antd';
 
 function PreviewListProducts({
   title,
@@ -26,7 +25,7 @@ function PreviewListProducts({
         ) : (
           <Typography.Title
             level={3}
-            className="text-2xl! font-roboto! font-bold! text-primary! mb-6!"
+            className="text-2xl! font-roboto! text-primary! font-bold! uppercase! mb-6!"
           >
             {title}
           </Typography.Title>
