@@ -17,7 +17,7 @@ function CardProduct({ product = {}, className, loading = false }) {
               <Image
                 preview={false}
                 alt="iPhone 16 Pro Max"
-                className="object-fill! aspect-square! mx-auto! mt-20! w-[80%]! rounded-xl!"
+                className="object-fill! aspect-square! mx-auto! mt-20! w-[80%]!"
                 src={
                   product?.variants?.[0]?.images?.[0] ||
                   'https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg'

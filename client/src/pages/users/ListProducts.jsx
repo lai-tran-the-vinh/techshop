@@ -16,8 +16,9 @@ function ProductListPage() {
   const [currentBrand, setCurrentBrand] = useState('');
 
   useEffect(() => {
-    if (products.length > 0) {
+    if (products.length > 0 && brands.length === 0) {
       const brands = [
+        'Tất cả',
         ...new Set(products.map((product) => product.brand.name)),
       ];
       setBrands(brands);
@@ -41,7 +42,6 @@ function ProductListPage() {
     if (category) {
       callFetchProducts(1, 10, category.name, currentBrand)
         .then((response) => {
-          message.success('Lấy danh sách sản phẩm thành công');
           setProducts(response.data.data.result);
         })
         .catch(() => {
@@ -52,8 +52,6 @@ function ProductListPage() {
         });
     }
   }, [category, currentBrand]);
-
-  console.log('Products:', products);
 
   return (
     <div className="w-full xl:px-50 lg:px-30 md:px-20 my-20">
@@ -79,26 +77,44 @@ function ProductListPage() {
             placeholder="Sắp xếp theo giá"
             className="cursor-pointer! min-w-200!"
             options={[
-              { value: '1', label: 'Tăng dần' },
-              { value: '2', label: 'Giảm dần' },
+              { value: 1, label: 'Tăng dần' },
+              { value: 2, label: 'Giảm dần' },
             ]}
-            onChange={(value, option) => {}}
+            onChange={(value) => {
+              if (value === 1) {
+                const priceAscending = [...products].sort(
+                  (a, b) => a.variants[0].price - b.variants[0].price,
+                );
+                setProducts(priceAscending);
+              }
+              if (value === 2) {
+                const priceDescending = [...products].sort(
+                  (a, b) => b.variants[0].price - a.variants[0].price,
+                );
+                setProducts(priceDescending);
+              }
+            }}
           />
         </Space>
       </div>
-      {brands.map((brand, index) => (
-        <div key={index}>
+      <div>
+        {brands.map((brand, index) => (
           <Tag
             key={index}
-            onClick={() => {
+            onClick={(event) => {
+              const tag = event.target.textContent;
+              if (tag === 'Tất cả') {
+                setCurrentBrand('');
+                return;
+              }
               setCurrentBrand(brand);
             }}
             className={`font-roboto! text-sm! px-8! border-none! rounded-md! cursor-pointer! ${currentBrand === brand && 'bg-gray-200!'}  min-w-80! text-center! bg-gray-100! py-4! mb-12!`}
           >
             {brand}
           </Tag>
-        </div>
-      ))}
+        ))}
+      </div>
       <Row gutter={10} justify="start">
         {loading && (
           <>
