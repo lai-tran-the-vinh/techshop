@@ -231,7 +231,7 @@ function AdminLayout() {
     <Layout className="w-full!">
       {contextHolder}
       <Header
-        className="font-roboto xl:px-12 lg:px-8 md:px-6 px-4 w-full fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between backdrop-blur-lg"
+        className="font-roboto! xl:px-50! lg:px-30! md:px-20! w-full! fixed! top-0! left-0! right-0! z-10! bg-white! border-b! border-b-gray-300! h-60! flex! items-center! justify-between!"
         // style={{
         //   background: `linear-gradient(135deg, rgba(183, 183, 195, 0.95) 0%, rgba(99, 102, 241, 0.95) 50%, rgba(6, 182, 212, 0.95) 100%)`,
         //   borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
@@ -244,6 +244,7 @@ function AdminLayout() {
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
+            className='text-primary! border! border-primary! mr-8!'
             style={{
               fontSize: '16px',
               width: 40,
@@ -262,17 +263,17 @@ function AdminLayout() {
             <div className="flex items-end space-x-3 cursor-pointer">
               <Title
                 level={1}
-                className="font-bold font-roboto xl:text-3xl lg:text-2xl md:text-xl text-lg m-0"
-                style={{
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  textShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                  background: 'transparent',
-                }}
+                className="font-bold! mb-0! font-roboto! xl:text-3xl! lg:text-2xl! md:text-2xl! text-primary!"
+                // style={{
+                //   fontWeight: 800,
+                //   color: '#FFFFFF',
+                //   textShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                //   background: 'transparent',
+                // }}
               >
                 TechShop
               </Title>
-              <span
+              {/* <span
                 className="text-xs pb-1 font-medium"
                 style={{
                   color: 'rgba(255, 255, 255, 0.85)',
@@ -280,7 +281,7 @@ function AdminLayout() {
                 }}
               >
                 Trang quản lý
-              </span>
+              </span> */}
             </div>
           </Link>
         </div>
