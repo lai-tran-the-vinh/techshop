@@ -1,10 +1,10 @@
 import { useAppContext } from '@contexts';
 import { Card } from '@components/products';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Categories from '@services/categories';
-import { useEffect, useState } from 'react';
 import { callFetchProducts } from '@services/apis';
-import { Typography, Row, Col, Tag, Skeleton } from 'antd';
+import { Typography, Row, Col, Tag, Space, Skeleton, Select } from 'antd';
 
 function ProductListPage() {
   const { id } = useParams();
@@ -53,6 +53,8 @@ function ProductListPage() {
     }
   }, [category, currentBrand]);
 
+  console.log('Products:', products);
+
   return (
     <div className="w-full xl:px-50 lg:px-30 md:px-20 my-20">
       <div className="flex items-center justify-between mt-10 mb-5">
@@ -61,10 +63,28 @@ function ProductListPage() {
             <Skeleton.Input active className="h-32" />
           </div>
         ) : (
-          <Typography.Title level={3} className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!">
+          <Typography.Title
+            level={3}
+            className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!"
+          >
             {category.name}
           </Typography.Title>
         )}
+        <Space>
+          <Typography.Text className="font-medium!">
+            Lọc theo giá
+          </Typography.Text>
+          <Select
+            showSearch
+            placeholder="Sắp xếp theo giá"
+            className="cursor-pointer! min-w-200!"
+            options={[
+              { value: '1', label: 'Tăng dần' },
+              { value: '2', label: 'Giảm dần' },
+            ]}
+            onChange={(value, option) => {}}
+          />
+        </Space>
       </div>
       {brands.map((brand, index) => (
         <div key={index}>
