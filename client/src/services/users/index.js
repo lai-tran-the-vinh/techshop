@@ -7,6 +7,10 @@ class Users {
       password: user.password,
     });
   }
+
+  signup(user) {
+    return axiosInstance.post('/api/v1/auth/register', user);
+  }
 }
 
 export default Users;
