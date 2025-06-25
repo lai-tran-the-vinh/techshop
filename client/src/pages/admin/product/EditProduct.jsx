@@ -69,8 +69,6 @@ function EditProduct() {
       setToastLoading(true);
       message.destroy();
       message.loading({ content: 'Đang cập nhật sản phẩm...', key: 'update' });
-
-      // Xoá ảnh cũ trước (chỉ ảnh là URL)
       await Promise.all(imagesToDelete.map((imgUrl) => callDeleteFile(imgUrl)));
       const formValues = form.getFieldsValue();
       const prodSub = { ...product, ...formValues };

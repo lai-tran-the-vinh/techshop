@@ -82,9 +82,8 @@ export const callUpdateUser = (value) => {
   });
 };
 export const callUpdateRoleUser = (value) => {
-  console.log(value);
   return axiosInstance.patch(`/api/v1/users/${value.userId}`, {
-    ...value,
+    role: value.roleId,
   });
 }
 export const callCreateProduct = (value) => {

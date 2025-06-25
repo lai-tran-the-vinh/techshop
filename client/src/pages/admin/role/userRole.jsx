@@ -38,6 +38,7 @@ import {
   callUpdateRoleUser,
 } from '@/services/apis';
 import useMessage from '@/hooks/useMessage';
+import { useAppContext } from '@/contexts';
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -57,7 +58,7 @@ const UserRoleManagement = () => {
   const [filters, setFilters] = useState({
     role: '',
   });
-  const { success, error, warning, contextHolder } = useMessage();
+  const { message } = useAppContext();
 
   useEffect(() => {
     fetchUsers();
@@ -68,11 +69,10 @@ const UserRoleManagement = () => {
     setLoading(true);
     try {
       const response = await callFetchUsers();
-      console.log(response.data.data);
       setUsers(response.data.data);
     } catch (error) {
       console.error('Error fetching users:', error);
-      error('Failed to load users');
+      message.error('Tải danh sách người dùng thất bại');
     } finally {
       setLoading(false);
     }
@@ -83,6 +83,7 @@ const UserRoleManagement = () => {
       const response = await callFetchRoles();
       setRoles(response.data.data);
     } catch (error) {
+      message.error('Tải danh sách quyen thất bại');
       console.error('Error fetching roles:', error);
     }
   };
@@ -91,10 +92,10 @@ const UserRoleManagement = () => {
     setLoading(true);
     try {
       await Promise.all([fetchUsers(), fetchRoles()]);
-      message.success('Data refreshed successfully');
+      message.success('Dữ liệu tải lại thành công!');
     } catch (error) {
       console.error('Failed to reload data:', error);
-      error('Failed to refresh data');
+      message.error('Failed to refresh data');
     } finally {
       setLoading(false);
     }
@@ -104,7 +105,7 @@ const UserRoleManagement = () => {
     if (selectedUser) {
       form.setFieldsValue({
         userId: selectedUser._id,
-        roleId: selectedUser.role._id,
+        roleId: selectedUser.role?._id,
       });
     } else {
       form.resetFields();
@@ -122,7 +123,7 @@ const UserRoleManagement = () => {
 
     return matchRole && matchSearch;
   });
-
+  console.log(filteredUsers);
   // const getRoleInfo = (roleId) => {
   //   return roles.find((r) => r._id === roleId);
   // };
@@ -161,7 +162,9 @@ const UserRoleManagement = () => {
       dataIndex: 'role',
       key: 'role',
       align: 'center',
-      render: (role) => <Tag icon={<TeamOutlined />}>{role.name}</Tag>,
+      render: (role) => (
+        <Tag icon={<TeamOutlined />}>{role?.name || 'chưa có role'}</Tag>
+      ),
     },
     {
       title: 'Số quyền',
@@ -171,8 +174,8 @@ const UserRoleManagement = () => {
       render: (permission) => {
         return (
           <Tag icon={<SafetyOutlined />}>
-            {permission.permissions.length
-              ? permission.permissions.length
+            {permission?.permissions
+              ? permission?.permissions.length
               : 'Không có quyền nào'}
           </Tag>
         );
@@ -222,25 +225,25 @@ const UserRoleManagement = () => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    console.log(values);
+
     try {
       await callUpdateRoleUser({
         userId: values.userId,
-        roleId: values.roleId,
+        roleId: values?.roleId || null,
       });
       setUsers(
         users.map((user) =>
-          user._id === values.userId
+          user?._id === values?.userId
             ? { ...user, roleId: values.roleId }
             : user,
         ),
       );
 
-      success('Gán role cho user thành công');
+      message.success('Gán role cho user thành công');
       handleCancel();
     } catch (error) {
       console.error('Failed to update user role:', error);
-      error('Gán role thất bại');
+      message.error('Gán role thất bại');
     } finally {
       setLoading(false);
     }
@@ -282,7 +285,6 @@ const UserRoleManagement = () => {
 
   return (
     <>
-      {contextHolder}
       <Card
         style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
       >
@@ -294,11 +296,11 @@ const UserRoleManagement = () => {
           <Col>
             <Title level={4} style={{ margin: 0 }}>
               <TeamOutlined style={{ marginRight: 8 }} />
-              Gán Role cho User
+              Gán vai trò cho người dùng
             </Title>
             <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý phân quyền cho từng user. Tổng cộng:{' '}
-              <strong>{users.length}</strong> users
+              Quản lý phân quyền cho từng người dùng. Tổng cộng:{' '}
+              <strong>{users.length}</strong> Người dùng
             </p>
           </Col>
         </Row>
@@ -422,7 +424,9 @@ const UserRoleManagement = () => {
                 {previewUser.role ? (
                   <div>
                     <Tag color="blue" style={{ marginBottom: 4 }}>
-                      {previewUser.role.name}
+                      {previewUser.role.name
+                        ? previewUser.role.name
+                        : 'Chưa có vai trò'}
                     </Tag>
                   </div>
                 ) : (
@@ -432,12 +436,15 @@ const UserRoleManagement = () => {
               <Descriptions.Item label="Số quyền">
                 <Tag
                   color={
-                    previewUser.role.permissions.length > 0
+                    previewUser?.role?.permissions?.length > 0
                       ? 'green'
                       : 'default'
                   }
                 >
-                  {previewUser.role.permissions.length} quyền
+                  {previewUser?.role?.permissions?.length
+                    ? previewUser.role.permissions.length
+                    : 'Không có quyền'}{' '}
+                  quyền
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Trạng thái">
