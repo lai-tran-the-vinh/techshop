@@ -42,6 +42,7 @@ function AddProduct() {
     category: '',
     brand: '',
     discount: '',
+    isActive: true,
     specifications: {
       weight: '',
       battery: '',
@@ -95,6 +96,7 @@ function AddProduct() {
     category: false,
     brand: false,
     discount: false,
+    isActive: false,
     variants: [
       {
         name: false,
@@ -132,6 +134,7 @@ function AddProduct() {
       category: false,
       brand: false,
       discount: false,
+      isActive: false,
       variants: product.variants.map(() => ({
         name: false,
         price: false,

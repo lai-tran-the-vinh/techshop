@@ -46,6 +46,8 @@ import {
 } from '@/services/apis';
 import { useNavigate } from 'react-router-dom';
 import useMessage from '@/hooks/useMessage';
+import AppContext from 'antd/es/app/context';
+import { useAppContext } from '@/contexts';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -61,7 +63,7 @@ function ListProduct() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState('');
-  const { error, success, warning, contextHolder, infor } = useMessage();
+  const { message } = useAppContext();
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState({
@@ -73,7 +75,7 @@ function ListProduct() {
     try {
       const fetchedProducts = await Products.getAll();
       setProducts(fetchedProducts);
-      success('Lấy danh sách sản phẩm');
+      message.success('Lấy danh sách sản phẩm thành công');
     } catch (error) {
       console.error('Failed to fetch products:', error.message);
       error('Lấy danh sách sản phẩm thất bại');
@@ -130,8 +132,6 @@ function ListProduct() {
 
   const handleEditProduct = () => {
     const productToEdit = selectedRows[0];
-    console.log('Sửa sản phẩm:', productToEdit._id);
-
     navigate(`/admin/product/edit/${productToEdit._id}`);
   };
 
@@ -244,16 +244,16 @@ function ListProduct() {
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'isActive',
+      key: 'isActive',
       width: 120,
       align: 'center',
-      render: (status) => (
+      render: (isActive) => (
         <Badge
-          status={status === 'active' ? 'success' : 'default'}
-          text={status === 'active' ? 'Hoạt động' : 'Ngừng bán'}
+          status={isActive ? 'success' : 'default'}
+          text={isActive ? 'Hoạt động' : 'Ngừng bán'}
           style={{
-            color: status === 'active' ? '#8B5CF6' : '#94A3B8',
+            color: isActive === 'active' ? '#8B5CF6' : '#94A3B8',
           }}
         />
       ),
@@ -487,8 +487,6 @@ function ListProduct() {
           borderRadius: '8px',
         }}
       >
-        {' '}
-        {contextHolder}
         <Modal
           title="Xác nhận"
           open={open}

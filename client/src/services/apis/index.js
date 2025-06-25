@@ -306,7 +306,9 @@ export const callUploadSingleImage = (file) => {
   });
 };
 
-export const callDeleteFile = (fileName) => {
-  return axiosInstance.delete(`/api/v1/delete/${fileName}`);
+export const callDeleteFile = (url) => {
+  return axiosInstance.delete(`/api/v1/upload/image`, {
+    params: { url }
+  });
 };
 export default axiosInstance;

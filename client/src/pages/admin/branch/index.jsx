@@ -203,6 +203,8 @@ const BranchManagement = () => {
       title: 'Trạng thái',
       dataIndex: 'isActive',
       key: 'isActive',
+      width: 150,
+      align: 'center',
       render: (isActive) => (
         <Tooltip title={isActive ? 'Hoạt động' : 'Ngưng hoạt động'}>
           <Tag color={isActive ? 'green' : 'red'}>

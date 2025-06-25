@@ -43,6 +43,7 @@ import {
   Typography,
   Popconfirm,
   message,
+  Empty,
 } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -566,6 +567,14 @@ const OrderManagement = () => {
             pageSize: 10,
           }}
           loading={loading}
+          locale={{
+            emptyText: (
+              <Empty
+                description="Không tìm thấy đơn hàng nào"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ),
+          }}
         />
       </Card>
 

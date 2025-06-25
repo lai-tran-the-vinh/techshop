@@ -1,11 +1,12 @@
 import useMessage from '@/hooks/useMessage';
 import { callFetchAccount, callLogin, callLogout } from '@/services/apis';
+import { message } from 'antd';
 import { useContext, createContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
 function AppProvider({ children }) {
-  const message = useMessage();
+  // const message = useMessage();
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -14,9 +15,14 @@ function AppProvider({ children }) {
   const [toastLoading, setToastLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState(null); 
+  const [currentCategory, setCurrentCategory] = useState(null);
   const [sideBarSelectedTab, setSideBarSelectedTab] = useState();
+  const [messageApi, contextHolder] = message.useMessage();
 
+  const contextValue = {
+    message: messageApi,
+    contextHolder,
+  };
   useEffect(() => {
     const verifyToken = async () => {
       const accessToken = localStorage.getItem('access_token');
@@ -76,6 +82,7 @@ function AppProvider({ children }) {
     loadingSuccess,
     currentCategory,
     sideBarSelectedTab,
+    ...contextValue,
 
     logout,
     isAdmin,
@@ -92,7 +99,12 @@ function AppProvider({ children }) {
     setSideBarSelectedTab,
   };
 
-  return <AppContext.Provider value={data}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={data}>
+      {contextHolder}
+      {children}
+    </AppContext.Provider>
+  );
 }
 
 export function useAppContext() {

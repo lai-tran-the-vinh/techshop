@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { Button, message, Spin } from 'antd';
+import { Button, Form, message, Spin } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -21,15 +21,10 @@ import { callFetchProductDetail, callUpdateProduct } from '@/services/apis';
 function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    setSideBarSelectedTab,
-    setToastLoading,
-    setLoadingSuccess,
-    setLoadingError,
-  } = useAppContext();
+  const { setToastLoading, setLoadingSuccess, setLoadingError } =
+    useAppContext();
 
-  const brandDropdownRef = useRef(null);
-  const categoryDropdownRef = useRef(null);
+  const { message } = useAppContext();
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
@@ -39,11 +34,7 @@ function EditProduct() {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [productError, setProductError] = useState({});
   const [productMessage, setProductMessage] = useState({});
-
-  useEffect(() => {
-    setSideBarSelectedTab('Sửa sản phẩm');
-  }, []);
-
+  const [form] = Form.useForm();
   useEffect(() => {
     async function fetchData() {
       try {
@@ -56,8 +47,10 @@ function EditProduct() {
         setCategories(cats);
         setBrands(brs);
         setProduct(prod.data.data);
+        message.success('Lấy thống tin sản phẩm');
       } catch (err) {
         console.error(err);
+        message.error('Không thể tải thống tin sản phẩm');
         setLoadingError(true);
       } finally {
         setLoading(false);
@@ -66,30 +59,12 @@ function EditProduct() {
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (
-        categoryDropdownRef.current &&
-        !categoryDropdownRef.current.contains(e.target)
-      ) {
-        setShowCategoryDropdown(false);
-      }
-      if (
-        brandDropdownRef.current &&
-        !brandDropdownRef.current.contains(e.target)
-      ) {
-        setShowBrandDropdown(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   const onSubmit = async () => {
     try {
       setToastLoading(true);
       message.loading('Đang cập nhật sản phẩm...');
-      const prodSub = { ...product };
+      const formValues = form.getFieldsValue();
+      const prodSub = { ...product, ...formValues };
       for (let v of prodSub.variants) {
         const newImgs = [];
         for (let img of v.images) {
@@ -100,13 +75,15 @@ function EditProduct() {
           }
         }
         v.images = newImgs;
+
+        v.images = newImgs;
       }
 
       await callUpdateProduct(prodSub);
       message.success('Cập nhật thành công!');
       setToastLoading(false);
       setLoadingSuccess(true);
-      navigate('/product');
+      navigate('/admin/product');
     } catch (err) {
       console.error(err);
       setToastLoading(false);
@@ -122,54 +99,55 @@ function EditProduct() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">Chỉnh sửa sản phẩm</h1>
-      <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
-        <CommonInformation
-          brands={brands}
-          categories={categories}
-          product={product}
-          setProduct={setProduct}
-          productError={productError}
-          productMessage={productMessage}
-          showBrandDropdown={showBrandDropdown}
-          setShowBrandDropdown={setShowBrandDropdown}
-          brandDropdownRef={brandDropdownRef}
-          showCategoryDropdown={showCategoryDropdown}
-          setShowCategoryDropdown={setShowCategoryDropdown}
-          categoryDropdownRef={categoryDropdownRef}
-        />
-        <Specifications setProduct={setProduct} product={product} />
-        <ConnectionInformation product={product} setProduct={setProduct} />
-        <CameraInformations setProduct={setProduct} product={product} />
-        <Variants
-          product={product}
-          setProduct={setProduct}
-          productError={productError}
-          productMessage={productMessage}
-          setProductError={setProductError}
-        />
-      </div>
-      <div className="px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-end">
-          <div className="flex gap-3">
-            <Button
-              size="large"
-              disabled={loading}
-              className="mt-8 float-right"
-              onClick={() => navigate(-1)}
-            >
-              Hủy bỏ
-            </Button>
-            <Button
-              type="primary"
-              size="large"
-              className="mt-8 float-right"
-              onClick={onSubmit}
-            >
-              Cập nhật
-            </Button>
+
+      <Form form={form} layout="vertical" autoComplete="off">
+        <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
+          <CommonInformation
+            brands={brands}
+            categories={categories}
+            product={product}
+            productError={productError}
+            productMessage={productMessage}
+            form={form}
+          />
+          <Specifications
+            setProduct={setProduct}
+            product={product}
+            form={form}
+          />
+          <ConnectionInformation
+            setProduct={setProduct}
+            product={product}
+            form={form}
+          />
+          <CameraInformations
+            setProduct={setProduct}
+            product={product}
+            form={form}
+          />
+          <Variants
+            setProduct={setProduct}
+            product={product}
+            productError={productError}
+            productMessage={productMessage}
+            setProductError={setProductError}
+            form={form}
+          />
+        </div>
+
+        <div className="px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex gap-3">
+              <Button size="large" onClick={() => navigate(-1)}>
+                Hủy bỏ
+              </Button>
+              <Button type="primary" size="large" onClick={onSubmit}>
+                Cập nhật
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </Form>
     </div>
   );
 }
