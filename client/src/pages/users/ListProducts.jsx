@@ -324,7 +324,11 @@ function ProductsList() {
       </Row>
       {!loading && filteredProducts.length > 0 && (
         <Flex justify="center" className="mt-20!">
-          <Pagination defaultCurrent={currentPage} total={products.length} />
+          <Pagination
+            total={products.length}
+            defaultCurrent={currentPage}
+            onChange={(page) => setCurrentPage(page)}
+          />
         </Flex>
       )}
     </div>
