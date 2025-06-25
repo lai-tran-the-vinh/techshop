@@ -136,7 +136,7 @@ function ProductsList() {
   }, [category, currentBrand, currentPage]);
 
   return (
-    <div className="w-full xl:px-50 lg:px-30 md:px-20 my-20">
+    <div className="w-full xl:px-50 lg:px-30 md:px-20 my-10">
       <div className="flex items-center justify-between mt-10 mb-5">
         {loading ? (
           <div className="w-200 mb-20">
@@ -145,7 +145,7 @@ function ProductsList() {
         ) : (
           <Typography.Title
             level={3}
-            className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!"
+            // className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!"
           >
             {category.name}
           </Typography.Title>
