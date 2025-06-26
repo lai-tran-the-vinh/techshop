@@ -113,6 +113,9 @@ const UserRoleManagement = () => {
   }, [selectedUser, form]);
 
   const filteredUsers = users.filter((user) => {
+    // Chỉ lấy user có role là nhân viên cửa hàng
+    const staff = user.role?.permissions.length > 0;
+
     const matchRole =
       !filters.role || filters.role === '' || user.role?._id === filters.role;
     const search = searchText.toLowerCase();
@@ -121,12 +124,8 @@ const UserRoleManagement = () => {
       user.email?.toLowerCase().includes(search) ||
       user.role?.name?.toLowerCase().includes(search);
 
-    return matchRole && matchSearch;
+    return matchRole && matchSearch 
   });
-  console.log(filteredUsers);
-  // const getRoleInfo = (roleId) => {
-  //   return roles.find((r) => r._id === roleId);
-  // };
 
   const columns = [
     {
@@ -138,6 +137,7 @@ const UserRoleManagement = () => {
           <Avatar
             size={40}
             icon={<UserOutlined />}
+            src={record?.avatar}
             style={{ backgroundColor: '#1890ff' }}
           >
             {text?.charAt(0)?.toUpperCase()}
@@ -535,11 +535,7 @@ const UserRoleManagement = () => {
             </span>
           </Divider>
 
-          <Form.Item
-            name="roleId"
-            label="Vai trò"
-            rules={[{ required: true, message: 'Vui lòng chọn role!' }]}
-          >
+          <Form.Item name="roleId" label="Vai trò">
             <Select
               placeholder="Chọn role cho user"
               size="large"
