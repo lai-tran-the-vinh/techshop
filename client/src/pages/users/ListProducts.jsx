@@ -45,7 +45,7 @@ function ProductsList() {
       : true;
 
     let matchStorage = filter.storage
-      ? product.variants?.some((v) => v.memory.storage === filter.storage.label)
+      ? product.variants?.some((v) => v.memory.storage?.toLowerCase().includes(filter.storage.label?.toLowerCase()))
       : true;
 
     return matchPrice && matchColor && matchRam && matchStorage;
