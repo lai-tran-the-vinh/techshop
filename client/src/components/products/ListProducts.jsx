@@ -16,23 +16,22 @@ import { ReloadOutlined } from '@ant-design/icons';
 
 function ListProducts(properties) {
   const {
-    rams,
     sort,
+    rams,
     title,
     brands,
-    colors,
     filter,
     setSort,
     loading,
-    storages,
     products,
+    storages,
     setFilter,
     setProducts,
-    currentPage,
     currentBrand,
-    setCurrentPage,
     setCurrentBrand,
     filteredProducts,
+    currentPage = null,
+    setCurrentPage = {},
   } = properties;
 
   return (
@@ -43,12 +42,7 @@ function ListProducts(properties) {
             <Skeleton.Input active className="h-32" />
           </div>
         ) : (
-          <Typography.Title
-            level={3}
-            // className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!"
-          >
-            {title}
-          </Typography.Title>
+          <Typography.Title level={3}>{title}</Typography.Title>
         )}
       </div>
 
@@ -90,20 +84,7 @@ function ListProducts(properties) {
               }}
             />
           </Space>
-          <Space>
-            <Typography.Text className="font-medium!">Màu sắc</Typography.Text>
-            <Select
-              value={filter.color}
-              placeholder="Màu sắc"
-              className="min-w-120!"
-              allowClear
-              options={colors.map((color) => ({
-                value: color.name,
-                label: color.name,
-              }))}
-              onChange={(value) => setFilter((f) => ({ ...f, color: value }))}
-            />
-          </Space>
+
           <Space>
             <Typography.Text className="font-medium!">RAM</Typography.Text>
             <Select
@@ -111,8 +92,10 @@ function ListProducts(properties) {
               placeholder="RAM"
               className="min-w-120!"
               allowClear
-              options={rams.map((ram) => ({ value: ram, label: ram }))}
-              onChange={(value) => setFilter((f) => ({ ...f, ram: value }))}
+              options={rams.map((ram, index) => ({ value: index, label: ram }))}
+              onChange={(_, label) =>
+                setFilter((filter) => ({ ...filter, ram: label }))
+              }
             />
           </Space>
           <Space>
@@ -124,11 +107,13 @@ function ListProducts(properties) {
               placeholder="Bộ nhớ trong"
               className="min-w-120!"
               allowClear
-              options={storages.map((storage) => ({
-                value: storage,
+              options={storages.map((storage, index) => ({
+                value: index,
                 label: storage,
               }))}
-              onChange={(value) => setFilter((f) => ({ ...f, storage: value }))}
+              onChange={(_, label) =>
+                setFilter((filter) => ({ ...filter, storage: label }))
+              }
             />
           </Space>
           <Button
@@ -222,7 +207,7 @@ function ListProducts(properties) {
           </Col>
         )}
       </Row>
-      {!loading && filteredProducts.length > 0 && (
+      {!loading && filteredProducts.length > 0 && currentPage && (
         <Flex justify="center" className="mt-20!">
           <Pagination
             total={products.length}

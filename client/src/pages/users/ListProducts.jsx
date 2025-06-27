@@ -8,25 +8,23 @@ import { callFetchProducts } from '@services/apis';
 function ProductsList() {
   const { id } = useParams();
   const { message } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rams, setRams] = useState([]);
   const [sort, setSort] = useState(null);
-  const [colors, setColors] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [storages, setStorages] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState(null);
-  const [currentBrand, setCurrentBrand] = useState('');
   const [filter, setFilter] = useState({
     price: null,
     color: null,
     ram: null,
     storage: null,
   });
+  const [rams, setRams] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [storages, setStorages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentBrand, setCurrentBrand] = useState('');
 
   const filteredProducts = products.filter((product) => {
-    // Lọc theo giá
     let matchPrice = true;
     const realPrice =
       product?.variants?.[0]?.price -
@@ -39,20 +37,21 @@ function ProductsList() {
       matchPrice = realPrice > 20000000;
     }
 
-    // Lọc theo màu
-    let matchColor = filter.color
-      ? product.variants?.some((v) => v.color.name === filter.color)
-      : true;
-    // Lọc theo RAM
     let matchRam = filter.ram
-      ? product.variants?.some((v) => v.memory.ram === filter.ram)
-      : true;
-    // Lọc theo bộ nhớ trong
-    let matchStorage = filter.storage
-      ? product.variants?.some((v) => v.memory.storage === filter.storage)
+      ? product.variants?.some((v) =>
+          v.memory.ram?.toLowerCase().includes(filter.ram.label?.toLowerCase()),
+        )
       : true;
 
-    return matchPrice && matchColor && matchRam && matchStorage;
+    let matchStorage = filter.storage
+      ? product.variants?.some((v) =>
+          v.memory.storage
+            ?.toLowerCase()
+            .includes(filter.storage.label?.toLowerCase()),
+        )
+      : true;
+
+    return matchPrice && matchRam && matchStorage;
   });
 
   useEffect(() => {
@@ -63,32 +62,17 @@ function ProductsList() {
       ];
       setBrands(brands);
 
-      const colors = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.color))
-            .filter(Boolean),
-        ),
-      ];
-      setColors(colors);
+      const allRams = products.flatMap(
+        (product) =>
+          product.variants?.map((v) => v.memory.ram).filter(Boolean) || [],
+      );
+      setRams([...new Set(allRams)]);
 
-      const rams = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.memory.ram))
-            .filter(Boolean),
-        ),
-      ];
-      setRams(rams);
-
-      const storages = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.memory.storage))
-            .filter(Boolean),
-        ),
-      ];
-      setStorages(storages);
+      const allStorages = products.flatMap(
+        (product) =>
+          product.variants?.map((v) => v.memory.storage).filter(Boolean) || [],
+      );
+      setStorages([...new Set(allStorages)]);
     }
   }, [products]);
 
@@ -126,12 +110,11 @@ function ProductsList() {
         rams={rams}
         sort={sort}
         brands={brands}
-        colors={colors}
         filter={filter}
         setSort={setSort}
         loading={loading}
-        storages={storages}
         products={products}
+        storages={storages}
         setFilter={setFilter}
         title={category?.name}
         setProducts={setProducts}
