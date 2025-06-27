@@ -16,15 +16,12 @@ import { ReloadOutlined } from '@ant-design/icons';
 
 function ListProducts(properties) {
   const {
-    rams,
     sort,
     title,
     brands,
-    colors,
     filter,
     setSort,
     loading,
-    storages,
     products,
     setFilter,
     setProducts,
@@ -43,12 +40,7 @@ function ListProducts(properties) {
             <Skeleton.Input active className="h-32" />
           </div>
         ) : (
-          <Typography.Title
-            level={3}
-            // className="text-2xl! uppercase! font-roboto! text-primary! font-bold! mb-6!"
-          >
-            {title}
-          </Typography.Title>
+          <Typography.Title level={3}>{title}</Typography.Title>
         )}
       </div>
 
@@ -90,20 +82,7 @@ function ListProducts(properties) {
               }}
             />
           </Space>
-          <Space>
-            <Typography.Text className="font-medium!">Màu sắc</Typography.Text>
-            <Select
-              value={filter.color}
-              placeholder="Màu sắc"
-              className="min-w-120!"
-              allowClear
-              options={colors.map((color) => ({
-                value: color.name,
-                label: color.name,
-              }))}
-              onChange={(value) => setFilter((f) => ({ ...f, color: value }))}
-            />
-          </Space>
+
           <Space>
             <Typography.Text className="font-medium!">RAM</Typography.Text>
             <Select
@@ -111,8 +90,14 @@ function ListProducts(properties) {
               placeholder="RAM"
               className="min-w-120!"
               allowClear
-              options={rams.map((ram) => ({ value: ram, label: ram }))}
-              onChange={(value) => setFilter((f) => ({ ...f, ram: value }))}
+              options={[
+                { value: 1, label: '4GB' },
+                { value: 2, label: '8GB' },
+                { value: 3, label: '12GB' },
+                { value: 4, label: '16GB' },
+                { value: 5, label: '64GB' },
+              ]}
+              onChange={(value, label) => setFilter((f) => ({ ...f, ram: label }))}
             />
           </Space>
           <Space>
@@ -124,11 +109,16 @@ function ListProducts(properties) {
               placeholder="Bộ nhớ trong"
               className="min-w-120!"
               allowClear
-              options={storages.map((storage) => ({
-                value: storage,
-                label: storage,
-              }))}
-              onChange={(value) => setFilter((f) => ({ ...f, storage: value }))}
+              options={[
+                { value: 1, label: '32GB' },
+                { value: 2, label: '64GB' },
+                { value: 3, label: '128GB' },
+                { value: 4, label: '256GB' },
+                { value: 5, label: '512GB' },
+                { value: 6, label: '1TB' },
+                { value: 7, label: '2TB' },
+              ]}
+              onChange={(value, label) => setFilter((f) => ({ ...f, storage: label }))}
             />
           </Space>
           <Button

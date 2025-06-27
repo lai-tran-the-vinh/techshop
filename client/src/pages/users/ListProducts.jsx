@@ -9,11 +9,8 @@ function ProductsList() {
   const { id } = useParams();
   const { message } = useAppContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const [rams, setRams] = useState([]);
   const [sort, setSort] = useState(null);
-  const [colors, setColors] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [storages, setStorages] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(null);
@@ -39,17 +36,16 @@ function ProductsList() {
       matchPrice = realPrice > 20000000;
     }
 
-    // Lọc theo màu
     let matchColor = filter.color
       ? product.variants?.some((v) => v.color.name === filter.color)
       : true;
-    // Lọc theo RAM
+
     let matchRam = filter.ram
-      ? product.variants?.some((v) => v.memory.ram === filter.ram)
+      ? product.variants?.some((v) => v.memory.ram === filter.ram.label)
       : true;
-    // Lọc theo bộ nhớ trong
+
     let matchStorage = filter.storage
-      ? product.variants?.some((v) => v.memory.storage === filter.storage)
+      ? product.variants?.some((v) => v.memory.storage === filter.storage.label)
       : true;
 
     return matchPrice && matchColor && matchRam && matchStorage;
@@ -62,33 +58,6 @@ function ProductsList() {
         ...new Set(products.map((product) => product.brand.name)),
       ];
       setBrands(brands);
-
-      const colors = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.color))
-            .filter(Boolean),
-        ),
-      ];
-      setColors(colors);
-
-      const rams = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.memory.ram))
-            .filter(Boolean),
-        ),
-      ];
-      setRams(rams);
-
-      const storages = [
-        ...new Set(
-          products
-            .flatMap((p) => p.variants?.map((v) => v.memory.storage))
-            .filter(Boolean),
-        ),
-      ];
-      setStorages(storages);
     }
   }, [products]);
 
@@ -123,14 +92,12 @@ function ProductsList() {
   return (
     <div className="w-full xl:px-50 lg:px-30 md:px-20 my-10">
       <ListProducts
-        rams={rams}
         sort={sort}
         brands={brands}
-        colors={colors}
         filter={filter}
         setSort={setSort}
         loading={loading}
-        storages={storages}
+        // storages={storages}
         products={products}
         setFilter={setFilter}
         title={category?.name}
