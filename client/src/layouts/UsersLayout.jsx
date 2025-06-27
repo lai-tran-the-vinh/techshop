@@ -13,7 +13,7 @@ import { UserInformation } from '@components/users';
 import { Layout, Typography, Button, Flex } from 'antd';
 
 function Header() {
-  const { setShowLogin, setShowSignup } = useAppContext();
+  const { setShowLogin, setShowSignup, message } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Mua sắm thả ga';

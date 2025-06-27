@@ -77,14 +77,14 @@ export const callDeleteUser = (id) => {
   return axiosInstance.delete(`/api/v1/users/${id}`);
 };
 export const callUpdateUser = (value) => {
+  console.log('sca', value);
   return axiosInstance.patch(`/api/v1/users/${value._id}`, {
     ...value,
   });
 };
 export const callUpdateRoleUser = (value) => {
-  console.log(value);
   return axiosInstance.patch(`/api/v1/users/${value.userId}`, {
-    ...value,
+    role: value.roleId,
   });
 }
 export const callCreateProduct = (value) => {
@@ -306,7 +306,9 @@ export const callUploadSingleImage = (file) => {
   });
 };
 
-export const callDeleteFile = (fileName) => {
-  return axiosInstance.delete(`/api/v1/delete/${fileName}`);
+export const callDeleteFile = (url) => {
+  return axiosInstance.delete(`/api/v1/upload/image`, {
+    params: { url }
+  });
 };
 export default axiosInstance;

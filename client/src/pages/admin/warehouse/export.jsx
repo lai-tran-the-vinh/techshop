@@ -62,6 +62,7 @@ import InboundConfirmModal from '@/components/admin/warehouse/InboundConfirmModa
 import InboundForm from '@/components/admin/warehouse/InboundForm';
 import InboundSummary from '@/components/admin/warehouse/InboundSummary';
 import InboundDetailDrawer from '@/components/admin/warehouse/InboundDetailDrawer';
+import { useAppContext } from '@/contexts';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -69,7 +70,7 @@ const { Option } = Select;
 const WarehouseOutbound = () => {
   const [form] = Form.useForm();
 
-  const { success, error, warning, contextHolder } = useMessage();
+  const { message } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -93,10 +94,10 @@ const WarehouseOutbound = () => {
     try {
       const response = await callFetchInventories();
       setInventories(response.data.data);
-      success('Lấy danh sách tồn kho');
+      message.success('Lấy danh sách tồn kho thành công');
     } catch (err) {
       console.error('Error fetching inventories:', err);
-      error('Không thể tải danh sách tồn kho');
+      message.error('Không thể tải danh sách tồn kho');
     }
   };
 
@@ -106,7 +107,7 @@ const WarehouseOutbound = () => {
       setBranches(response.data.data);
     } catch (err) {
       console.error('Error fetching branches:', err);
-      error('Không thể tải danh sách chi nhánh');
+      message.error('Không thể tải danh sách chi nhánh');
     }
   };
 
@@ -116,7 +117,7 @@ const WarehouseOutbound = () => {
       setOutboundHistory(response.data.data);
     } catch (error) {
       console.error('Error fetching outbound history:', error);
-      error('Không thể tải lịch sử xuất kho');
+      message.error('Không thể tải lịch sử xuất kho');
     }
   };
 
@@ -128,7 +129,7 @@ const WarehouseOutbound = () => {
       setDetailDrawerVisible(true);
     } catch (error) {
       console.error('Error fetching outbound detail:', error);
-      error('Không thể tải chi tiết phiếu xuất');
+      message.error('Không thể tải chi tiết phiếu xuất');
     } finally {
       setDetailLoading(false);
     }
@@ -144,11 +145,13 @@ const WarehouseOutbound = () => {
           fetchOutboundHistory(),
         ]);
       } catch (error) {
-        error('Có lỗi xảy ra khi tải dữ liệu');
+        message.error('Có lỗi xảy ra khi tải dữ liệu');
       } finally {
         setPageLoading(false);
       }
     };
+
+    loadAllData();
   }, []);
 
   const getFilteredInventories = () => {
@@ -202,7 +205,7 @@ const WarehouseOutbound = () => {
         }
 
         if (!checkStockAvailability(values.variantId, values.quantity)) {
-          warning(
+          message.warning(
             `Số lượng tồn kho không đủ. Tồn kho hiện tại: ${variantInfo.stock}`,
           );
           return;
@@ -218,11 +221,10 @@ const WarehouseOutbound = () => {
           // Kiểm tra tổng số lượng sau khi cộng thêm
           const totalQuantity = existingItem.quantity + values.quantity;
           if (!checkStockAvailability(values.variantId, totalQuantity)) {
-            warning(
+            message.warning(
               `Tổng số lượng vượt quá tồn kho. Tồn kho hiện tại: ${variantInfo.stock}, Đã chọn: ${existingItem.quantity}`,
             );
 
-            console.log('Số lượng vượt quá tồn kho');
             return;
           }
 
@@ -238,7 +240,7 @@ const WarehouseOutbound = () => {
                 : item,
             ),
           );
-          success('Đã cập nhật số lượng sản phẩm');
+          message.success('Đã cập nhật số lượng sản phẩm');
         } else {
           const newItem = {
             id: Date.now(),
@@ -256,7 +258,7 @@ const WarehouseOutbound = () => {
           };
 
           setOutboundItems([...outboundItems, newItem]);
-          success('Đã thêm sản phẩm vào danh sách xuất kho');
+          message.success('Đã thêm sản phẩm vào danh sách xuất kho');
         }
 
         form.setFieldsValue({
@@ -268,13 +270,13 @@ const WarehouseOutbound = () => {
         setSelectedInventory(null);
       })
       .catch((errorInfo) => {
-        error('Vui lòng điền đầy đủ thông tin');
+        message.error('Vui lòng điền đầy đủ thông tin');
       });
   };
 
   const handleRemoveItem = (id) => {
     setOutboundItems(outboundItems.filter((item) => item.id !== id));
-    success('Đã xóa sản phẩm khỏi danh sách');
+    message.success('Đã xóa sản phẩm khỏi danh sách');
   };
 
   const handleUpdateQuantity = (id, quantity) => {
@@ -282,7 +284,7 @@ const WarehouseOutbound = () => {
     if (!item) return;
 
     if (!checkStockAvailability(item.variantId, quantity)) {
-      warning(
+      message.warning(
         `Số lượng vượt quá tồn kho. Tồn kho hiện tại: ${item.availableStock}`,
       );
       return;
@@ -310,7 +312,7 @@ const WarehouseOutbound = () => {
       .validateFields(['branchId'])
       .then((values) => {
         if (outboundItems.length === 0) {
-          error('Vui lòng thêm ít nhất một sản phẩm');
+          message.error('Vui lòng thêm ít nhất một sản phẩm');
           return;
         }
 
@@ -328,7 +330,7 @@ const WarehouseOutbound = () => {
         setIsModalVisible(true);
       })
       .catch(() => {
-        error('Vui lòng chọn chi nhánh');
+        message.error('Vui lòng chọn chi nhánh');
       });
   };
 
@@ -356,7 +358,7 @@ const WarehouseOutbound = () => {
         Object.values(exportRequests).map((data) => callExportInventory(data)),
       );
 
-      success('Xuất kho thành công!');
+      message.success('Xuất kho thành công!');
       setOutboundItems([]);
       form.resetFields();
       setSelectedBranch(null);
@@ -365,7 +367,7 @@ const WarehouseOutbound = () => {
       setIsModalVisible(false);
       await Promise.all([fetchInventories(), fetchOutboundHistory()]); // Refresh cả inventory và history
     } catch (error) {
-      error(error.message || 'Có lỗi xảy ra khi xuất kho');
+      message.error(error.message || 'Có lỗi xảy ra khi xuất kho');
     } finally {
       setLoading(false);
     }
@@ -595,21 +597,16 @@ const WarehouseOutbound = () => {
         borderRadius: '8px',
       }}
     >
-      {contextHolder}
-      <div style={{ marginBottom: '24px' }}>
+      {/* <div style={{ marginBottom: '24px' }}>
         <Row justify="space-between" align="middle">
           <Col></Col>
           <Col>
-            <Button
-              icon={<ReloadOutlined />}
-              onClick={loadAllData}
-              loading={pageLoading}
-            >
+            <Button icon={<ReloadOutlined />} loading={pageLoading}>
               Làm mới
             </Button>
           </Col>
         </Row>
-      </div>
+      </div> */}
 
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={14}>

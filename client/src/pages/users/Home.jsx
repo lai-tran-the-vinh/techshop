@@ -3,7 +3,9 @@ import Products from '@services/products';
 import { useState, useEffect } from 'react';
 import Categories from '@services/categories';
 import { PreviewListProducts } from '@components/products';
+
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -63,6 +65,7 @@ function Home() {
 
   return (
     <>
+
       <div className="relative w-[60%] h-300 mt-20 mb-250">
         <Carousel
           arrows
@@ -73,15 +76,16 @@ function Home() {
           autoplay={{ dotDuration: true }}
         >
           {banners.map((banner, index) => (
-            <Image
+            <Imagekey={index}
               key={index}
               src={banner}
               preview={false}
               className="object-cover! rounded-md! w-full! h-full!"
             />
-          ))}
-        </Carousel>
-      </div>
+
+      </Carousel>
+    </div>
+  
 
       <div className="mb-50 w-full">
         {categories.map((category, index) => {

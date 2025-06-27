@@ -30,8 +30,6 @@ import {
   ContainerOutlined,
   SettingOutlined,
   LogoutOutlined,
-  BellOutlined,
-  SearchOutlined,
   CustomerServiceOutlined,
   ToolOutlined,
   SafetyOutlined,
@@ -45,14 +43,14 @@ import useMessage from '@/hooks/useMessage';
 function AdminLayout() {
   const { Title, Text } = Typography;
   const { Header, Footer, Sider, Content } = Layout;
-  const { sideBarSelectedTab, setSideBarSelectedTab } = useAppContext();
+
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const navigate = useNavigate();
-  const { contextHolder } = useMessage();
+
   const location = useLocation();
-  const { user } = useAppContext();
+  const { user, message } = useAppContext();
 
   const navItems = [
     {
@@ -225,12 +223,9 @@ function AdminLayout() {
 
     navigate('/');
   };
-  useEffect(() => {
-    message.success('Đã vào AdminLayout');
-  }, []);
+
   return (
     <Layout className="w-full!">
-      {contextHolder}
       <Header className="font-roboto! xl:px-50! lg:px-30! md:px-20! w-full! fixed! top-0! left-0! right-0! z-10! bg-white! border-b! border-b-gray-300! h-60! flex! items-center! justify-between!">
         <div className="flex items-center space-x-4">
           <Button
@@ -241,7 +236,7 @@ function AdminLayout() {
               fontSize: '20px',
               width: 50,
               height: 50,
-              // backgroundColor: 'rgba(255, 255, 255, 0.15)',
+
               border: `1px solid rgba(255, 255, 255, 0.25)`,
               borderRadius: '12px',
               display: 'flex',
@@ -258,15 +253,6 @@ function AdminLayout() {
               >
                 TechShop
               </Title>
-              {/* <span
-                className="text-xs pb-1 font-medium"
-                style={{
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  textShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                }}
-              >
-                Trang quản lý
-              </span> */}
               <Text
                 type="secondary"
                 style={{
@@ -290,10 +276,10 @@ function AdminLayout() {
           style={{
             overflow: 'auto',
             height: '100vh',
-            maxHeight: '90vh',
+            maxHeight: '100vh',
             position: 'fixed',
             left: 0,
-            top: 64,
+            top: 50,
             bottom: 0,
             background: '#F1F5F9',
             borderRight: `1px solid #E2E8F0"`,

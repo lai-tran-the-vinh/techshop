@@ -5,11 +5,13 @@ import {
   callFetchBranches,
   callUpdateBranch,
 } from '@/services/apis';
+import useMessage from '@/hooks/useMessage';
 
 const ModalBranch = (props) => {
   const { setOpenModal, reloadTable, dataInit, setDataInit, visible } = props;
   const [form] = Form.useForm();
   const [branches, setBranches] = useState([]);
+  const { success, error, warning } = useMessage();
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -54,21 +56,21 @@ const ModalBranch = (props) => {
       ? await callUpdateBranch(branchData)
       : await callCreateBranch(branchData);
     if (res.data) {
-      message.success(
+      success(
         dataInit?._id
-          ? 'Branch updated successfully.'
-          : 'Branch created successfully.',
+          ? 'Cập nhật chi nhánh thành công!'
+          : 'Tạo chi nhánh mới thành công',
       );
       setOpenModal(false);
       reloadTable();
     } else {
-      message.error('Failed to save branch.');
+      error('Lưu thông tin chi nhánh thất bại!');
     }
   };
 
   return (
     <Modal
-      title={dataInit?._id ? 'Update Branch' : 'Create Branch'}
+      title={dataInit?._id ? 'Cập nhật chi nhánh' : 'Tạo chi nhánh mới'}
       visible={visible}
       onCancel={handleReset}
       onOk={form.submit}
@@ -82,12 +84,12 @@ const ModalBranch = (props) => {
       >
         <Form.Item
           name="name"
-          label="Branch Name"
+          label="Tên chi nhánh"
           rules={[
-            { required: true, message: 'Please input the branch name!' },
+            { required: true, message: 'Vui lòng nhập tên chi nhánh!' },
             {
               min: 5,
-              message: 'Branch name must be at least 5 characters!',
+              message: 'Tên chi nhánh phải có ít nhất 5 ký tự!',
             },
           ]}
         >
@@ -96,8 +98,8 @@ const ModalBranch = (props) => {
 
         <Form.Item
           name="address"
-          label="Address"
-          rules={[{ required: true, message: 'Please input the address!' }]}
+          label="Địa chỉ"
+          rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
         >
           <Input.TextArea rows={2} />
         </Form.Item>
@@ -105,12 +107,12 @@ const ModalBranch = (props) => {
           <Col span={12}>
             <Form.Item
               name="phone"
-              label="Phone"
+              label="Số điện thoại"
               rules={[
-                { required: true, message: 'Please input the phone number!' },
+                { required: true, message: 'Vui lòng nhập số điện thoại!' },
                 {
                   pattern: /^[\d\-\s]+$/,
-                  message: 'Invalid phone number format!',
+                  message: 'Định dạng số điện thoại không hợp lệ!',
                 },
               ]}
             >
@@ -122,10 +124,10 @@ const ModalBranch = (props) => {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: 'Please input the email!' },
+                { required: true, message: 'Vui lòng nhập email!' },
                 {
                   type: 'email',
-                  message: 'Invalid email format!',
+                  message: 'Định dạng email không hợp lệ!',
                 },
               ]}
             >
@@ -135,17 +137,16 @@ const ModalBranch = (props) => {
         </Row>
         <Form.Item
           name="manager"
-          label="Manager"
-          rules={[
-            { required: true, message: 'Please input the manager name!' },
-          ]}
+          label="Quản lý"
+              
+          rules={[{ required: true, message: 'Vui lòng nhập tên quản lý!' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="isActive"
-          label="Status"
-          rules={[{ required: true, message: 'Please select a status!' }]}
+          label="Trạng thái"
+          rules={[{ required: true, message: 'Vui lòng chọn trạng thái!' }]}
         >
           <Select>
             <Select.Option value={true}>Hoạt động</Select.Option>

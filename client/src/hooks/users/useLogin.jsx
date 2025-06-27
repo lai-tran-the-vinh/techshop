@@ -18,19 +18,19 @@ function useLogin(message) {
     usersService
       .login(value)
       .then((response) => {
-        message.destroyLoading();
+        message.destroy();
         if (response.status === 201) {
           const accessToken = response.data.data.access_token;
           localStorage.setItem('access_token', accessToken);
           if (response.data.data.role === 'admin') {
+            message.success('Đăng nhập thành công');
             navigate('/admin/dashboard');
           }
           window.location.reload();
         }
-        message.success('Đăng nhập thành công');
       })
       .catch((error) => {
-        message.destroyLoading();
+        message.destroy();
         message.error(`Lỗi: ${error.message}`);
       });
   }

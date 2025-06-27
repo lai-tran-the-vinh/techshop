@@ -43,6 +43,7 @@ import {
   Typography,
   Popconfirm,
   message,
+  Empty,
 } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -349,6 +350,9 @@ const OrderManagement = () => {
       ),
     },
     {
+      title: 'Người tạo đơn hàng',
+      dataIndex: 'createdBy',
+      key: 'createdBy',
       width: 180,
       render: (_, record) => (
         <div>
@@ -504,7 +508,7 @@ const OrderManagement = () => {
             />
           </Col>
 
-          <Col span={4}>
+          <Col span={5}>
             <Select
               placeholder="Chi nhánh"
               style={{ width: '100%' }}
@@ -545,7 +549,7 @@ const OrderManagement = () => {
               Làm mới
             </Button>
           </Col>
-          <Col span={6}>
+          <Col span={5}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -566,6 +570,14 @@ const OrderManagement = () => {
             pageSize: 10,
           }}
           loading={loading}
+          locale={{
+            emptyText: (
+              <Empty
+                description="Không tìm thấy đơn hàng nào"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ),
+          }}
         />
       </Card>
 
@@ -618,7 +630,7 @@ const OrderManagement = () => {
                 {selectedOrder.phone}
               </Descriptions.Item>
               <Descriptions.Item label="Chi nhánh">
-                {selectedOrder.branch.name}
+                {selectedOrder?.branch?.name}
               </Descriptions.Item>
               <Descriptions.Item label="Phương thức thanh toán" span={2}>
                 <Select
@@ -704,9 +716,9 @@ const OrderManagement = () => {
                   title: 'Sản phẩm',
                   render: (_, item) => (
                     <div>
-                      <div>{item.product.name}</div>
+                      <div>{item.product?.name}</div>
                       <div style={{ fontSize: '12px', color: '#666' }}>
-                        {item.variant.name}
+                        {item.variant?.name}
                       </div>
                     </div>
                   ),
@@ -748,7 +760,7 @@ const OrderManagement = () => {
             phone: '',
             items: [],
             paymentMethod: 'cash',
-            branch: '665ab123456789abcdef0001',
+            branch: '',
           });
           setSelectedProduct(null);
           setSelectedVariant(null);

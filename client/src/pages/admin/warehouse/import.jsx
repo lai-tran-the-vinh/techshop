@@ -9,7 +9,6 @@ import {
   Typography,
   Row,
   Col,
-  message,
   Tag,
   Avatar,
   Upload,
@@ -41,6 +40,7 @@ import InboundConfirmModal from '@/components/admin/warehouse/InboundConfirmModa
 import InboundForm from '@/components/admin/warehouse/InboundForm';
 import InboundSummary from '@/components/admin/warehouse/InboundSummary';
 import InboundDetailDrawer from '@/components/admin/warehouse/InboundDetailDrawer';
+import { useAppContext } from '@/contexts';
 
 const { Text } = Typography;
 
@@ -58,10 +58,11 @@ const WarehouseInbound = () => {
   const [detailDrawerVisible, setDetailDrawerVisible] = useState(false);
   const [productSearchVisible, setProductSearchVisible] = useState(false);
   const [selectedInboundDetail, setSelectedInboundDetail] = useState(null);
-  const [productSearchText, setProductSearchText] = useState('');
+
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [detailLoading, setDetailLoading] = useState(false);
   const inbound = useState(true);
+  const { message } = useAppContext();
 
   const fetchProducts = async () => {
     try {
@@ -125,6 +126,7 @@ const WarehouseInbound = () => {
   };
 
   useEffect(() => {
+    message.success('Nhập kho');
     loadAllData();
   }, []);
 
