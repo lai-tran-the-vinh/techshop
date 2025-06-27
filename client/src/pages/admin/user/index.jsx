@@ -34,7 +34,6 @@ import {
   DeleteOutlined,
   HomeOutlined,
   UserAddOutlined,
-  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import {
   callFetchUsers,
@@ -59,12 +58,10 @@ const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
+
   const [searchText, setSearchText] = useState('');
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewUser, setPreviewUser] = useState(null);
-  const [addressValues, setAddressValues] = useState({});
   const addressDropdownRef = useRef(null);
   const [selectedWard, setSelectedWard] = useState({});
   const [selectedProvince, setSelectedProvince] = useState({});
@@ -73,6 +70,7 @@ const UserManagement = () => {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [showAddressDropdown, setShowAddressDropdown] = useState(false);
+  const [activeAddressKey, setActiveAddressKey] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState('Tỉnh/Thành phố');
 
   const places = ['Tỉnh/Thành phố', 'Quận/Huyện', 'Xã/Phường'];
@@ -151,67 +149,73 @@ const UserManagement = () => {
       message.error('Không thể tải danh sách xã/phường');
     }
   };
-  const handleProvinceSelect = async (province, event, key) => {
-    const newAddress = event.target.textContent;
 
-    // Cập nhật addressValues cho item cụ thể
-    setAddressValues((prev) => ({
-      ...prev,
-      [key]: newAddress,
-    }));
+  const handleProvinceSelect = async (provinceData, fieldKey) => {
+    const currentAddresses = form.getFieldValue('addresses') || [];
+    const newAddressDetail = provinceData.name;
 
-    setSelectedProvince(province);
+    const updatedAddresses = [...currentAddresses];
+    if (updatedAddresses[fieldKey]) {
+      updatedAddresses[fieldKey] = {
+        ...updatedAddresses[fieldKey],
+        addressDetail: newAddressDetail,
+      };
+      form.setFieldsValue({ addresses: updatedAddresses });
+    }
+
+    setSelectedProvince(provinceData);
     setSelectedPlace('Quận/Huyện');
     setSelectedDistrict({});
     setSelectedWard({});
+    setWards([]);
 
-    await fetchDistricts(province.code);
+    await fetchDistricts(provinceData.code);
   };
 
-  const handleDistrictSelect = async (district, event, key) => {
-    const districtName = event.target.textContent;
-    const currentAddress = addressValues[key] || '';
+  const handleDistrictSelect = async (districtData, fieldKey) => {
+    const currentAddressDetail =
+      form.getFieldValue(['addresses', fieldKey, 'addressDetail']) || '';
+    const newAddressDetail = currentAddressDetail + ', ' + districtData.name;
 
-    const newAddress =
-      selectedDistrict.name === district.name
-        ? selectedProvince.name + ', ' + districtName
-        : currentAddress + ', ' + districtName;
+    const currentAddresses = form.getFieldValue('addresses') || [];
+    const updatedAddresses = [...currentAddresses];
+    if (updatedAddresses[fieldKey]) {
+      updatedAddresses[fieldKey] = {
+        ...updatedAddresses[fieldKey],
+        addressDetail: newAddressDetail,
+      };
+      form.setFieldsValue({ addresses: updatedAddresses });
+    }
 
-    // Cập nhật addressValues cho item cụ thể
-    setAddressValues((prev) => ({
-      ...prev,
-      [key]: newAddress,
-    }));
-
-    setSelectedDistrict(district);
+    setSelectedDistrict(districtData);
     setSelectedPlace('Xã/Phường');
     setSelectedWard({});
 
-    await fetchWards(district.code);
+    await fetchWards(districtData.code);
   };
 
-  const handleWardSelect = (ward, event, key) => {
-    const wardName = event.target.textContent;
-    const newAddress =
-      selectedWard.name === ward.name
-        ? selectedProvince.name + ', ' + selectedDistrict.name + ', ' + wardName
-        : selectedProvince.name +
-          ', ' +
-          selectedDistrict.name +
-          ', ' +
-          wardName;
+  const handleWardSelect = (wardData, fieldKey) => {
+    const currentAddressDetail =
+      form.getFieldValue(['addresses', fieldKey, 'addressDetail']) || '';
+    const newAddressDetail = currentAddressDetail + ', ' + wardData.name;
 
-    setAddressValues((prev) => ({
-      ...prev,
-      [key]: newAddress,
-    }));
+    const currentAddresses = form.getFieldValue('addresses') || [];
+    const updatedAddresses = [...currentAddresses];
+    if (updatedAddresses[fieldKey]) {
+      updatedAddresses[fieldKey] = {
+        ...updatedAddresses[fieldKey],
+        addressDetail: newAddressDetail,
+      };
+      form.setFieldsValue({ addresses: updatedAddresses });
+    }
 
-    setSelectedWard(ward);
+    setSelectedWard(wardData);
 
     setShowAddressDropdown((prev) => ({
       ...prev,
-      [key]: false,
+      [fieldKey]: false,
     }));
+    setActiveAddressKey(null);
   };
   const reloadTable = async () => {
     setLoading(true);
@@ -229,6 +233,7 @@ const UserManagement = () => {
   useEffect(() => {
     if (selectedUser && modalType === 'edit') {
       form.setFieldsValue({
+        _id: selectedUser._id,
         name: selectedUser.name,
         email: selectedUser.email,
         gender: selectedUser.gender,
@@ -236,17 +241,32 @@ const UserManagement = () => {
         userType: selectedUser.userType,
         branch: selectedUser.branch?._id || selectedUser.branch,
         isActive: selectedUser.isActive,
-        addresses: selectedUser.address.map((address) => {
-          return {
-            addressDetail: address.addressDetail,
-            default: address.default,
-          };
-        }),
+        addresses: selectedUser.addresses.map((address) => ({
+          specificAddress: address.specificAddress,
+          addressDetail: address.addressDetail,
+          default: address.default,
+        })),
       });
+
+      setShowAddressDropdown({});
+      setActiveAddressKey(null);
+      setSelectedPlace('Tỉnh/Thành phố');
+      setSelectedProvince({});
+      setSelectedDistrict({});
+      setSelectedWard({});
+      setDistricts([]);
+      setWards([]);
     } else {
       form.resetFields();
+      setShowAddressDropdown({});
+      setActiveAddressKey(null);
+      setSelectedPlace('Tỉnh/Thành phố');
+      setSelectedProvince({});
+      setSelectedDistrict({});
+      setSelectedWard({});
+      setDistricts([]);
+      setWards([]);
     }
-    console.log('selectedUser', form.getFieldValue());
   }, [selectedUser, modalType, form]);
 
   const filteredUsers = users.filter((user) => {
@@ -261,11 +281,7 @@ const UserManagement = () => {
       !filters.userType ||
       filters.userType === '' ||
       user.userType === filters.userType;
-    const matchBranch =
-      !filters.branch ||
-      filters.branch === '' ||
-      user.branch?._id === filters.branch ||
-      user.branch === filters.branch;
+
     const search = searchText.toLowerCase();
     const matchSearch =
       user.name?.toLowerCase().includes(search) ||
@@ -274,9 +290,7 @@ const UserManagement = () => {
       user.userType?.toLowerCase().includes(search) ||
       user.branch?.name?.toLowerCase().includes(search);
 
-    return (
-      matchRole && matchStatus && matchUserType && matchBranch && matchSearch
-    );
+    return matchRole && matchStatus && matchUserType && matchSearch;
   });
 
   const columns = [
@@ -417,6 +431,7 @@ const UserManagement = () => {
   };
 
   const handleSubmit = async (values) => {
+    console.log('Form values:', values);
     setSubmitLoading(true);
     try {
       if (modalType === 'create') {
@@ -424,7 +439,7 @@ const UserManagement = () => {
         setUsers([...users, response.data.data]);
         message.success('Tạo người dùng thành công');
       } else {
-        const response = await callUpdateUser(selectedUser._id, values);
+        const response = await callUpdateUser(values);
         setUsers(
           users.map((user) =>
             user._id === selectedUser._id ? response.data.data : user,
@@ -433,7 +448,7 @@ const UserManagement = () => {
         message.success('Cập nhật người dùng thành công');
       }
       handleCancel();
-      fetchUsers(); // Refresh data to get updated relations
+      fetchUsers();
     } catch (error) {
       console.error('Failed to save user:', error);
       message.error(
@@ -486,6 +501,14 @@ const UserManagement = () => {
     setOpenModal(false);
     setSelectedUser(null);
     setModalType('create');
+    setShowAddressDropdown({});
+    setActiveAddressKey(null);
+    setSelectedPlace('Tỉnh/Thành phố');
+    setSelectedProvince({});
+    setSelectedDistrict({});
+    setSelectedWard({});
+    setDistricts([]);
+    setWards([]);
   };
 
   return (
@@ -690,14 +713,17 @@ const UserManagement = () => {
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Địa chỉ">
-                {previewUser.address && previewUser.address.length > 0 ? (
+                {previewUser.addresses && previewUser.addresses.length > 0 ? (
                   <div>
-                    {previewUser.address.map((addr, index) => (
+                    {previewUser.addresses.map((addr, index) => (
                       <div key={index} style={{ marginBottom: 4 }}>
                         <Tag color={addr.default ? 'blue' : 'default'}>
                           {addr.default ? 'Mặc định' : 'Phụ'}
                         </Tag>
-                        <Text>{addr.addressDetail}</Text>
+                        <Text>
+                          {' '}
+                          {addr.specificAddress}, {addr.addressDetail}
+                        </Text>
                       </div>
                     ))}
                   </div>
@@ -788,6 +814,9 @@ const UserManagement = () => {
           </Divider>
 
           <Row gutter={16}>
+            <Form.Item name="_id" hidden>
+              <Input />
+            </Form.Item>
             <Col span={8}>
               <Form.Item
                 name="name"
@@ -911,8 +940,24 @@ const UserManagement = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Row gutter={16} key={key}>
-                    <Col span={18}>
+                  <Row gutter={16} key={key} align="middle">
+                    <Col span={24}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'specificAddress']}
+                        label="Địa chỉ cụ thể (số nhà, tên đường, thôn, xóm)"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Vui lòng nhập địa chỉ cụ thể!',
+                          },
+                        ]}
+                      >
+                        <Input.TextArea
+                          placeholder="Ví dụ: 255, đường Thái Thị Thạnh, khu vực Thới Xứng 2"
+                          autoSize={{ minRows: 2, maxRows: 4 }}
+                        />
+                      </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'addressDetail']}
@@ -923,14 +968,29 @@ const UserManagement = () => {
                       >
                         <div style={{ position: 'relative' }}>
                           <Input
-                            readOnly
+                            readOnly={true}
                             placeholder="Chọn địa chỉ"
-                            onClick={() =>
-                              setShowAddressDropdown((prev) => ({
-                                ...prev,
-                                [key]: !prev[key],
-                              }))
+                            value={
+                              form.getFieldValue('addresses')?.[key]
+                                ?.addressDetail || ''
                             }
+                            onClick={() => {
+                              const newShowAddressDropdown = {};
+
+                              newShowAddressDropdown[key] =
+                                !showAddressDropdown[key];
+                              setShowAddressDropdown(newShowAddressDropdown);
+                              setActiveAddressKey(
+                                newShowAddressDropdown[key] ? key : null,
+                              );
+
+                              setSelectedPlace('Tỉnh/Thành phố');
+                              setSelectedProvince({});
+                              setSelectedDistrict({});
+                              setSelectedWard({});
+                              setDistricts([]);
+                              setWards([]);
+                            }}
                             prefix={
                               <HomeOutlined style={{ color: '#8c8c8c' }} />
                             }
@@ -944,7 +1004,11 @@ const UserManagement = () => {
 
                           {showAddressDropdown[key] && (
                             <div
-                              ref={addressDropdownRef}
+                              ref={(element) => {
+                                if (key === activeAddressKey) {
+                                  addressDropdownRef.current = element;
+                                }
+                              }}
                               style={{
                                 backgroundColor: 'white',
                                 position: 'absolute',
@@ -1004,12 +1068,8 @@ const UserManagement = () => {
                                   provinces.map((province, index) => (
                                     <div
                                       key={index}
-                                      onClick={(event) =>
-                                        handleProvinceSelect(
-                                          province,
-                                          event,
-                                          key,
-                                        )
+                                      onClick={() =>
+                                        handleProvinceSelect(province, key)
                                       }
                                       style={{
                                         padding: '8px 12px',
@@ -1031,12 +1091,8 @@ const UserManagement = () => {
                                   districts.map((district, index) => (
                                     <div
                                       key={index}
-                                      onClick={(event) =>
-                                        handleDistrictSelect(
-                                          district,
-                                          event,
-                                          key,
-                                        )
+                                      onClick={() =>
+                                        handleDistrictSelect(district, key)
                                       }
                                       style={{
                                         padding: '8px 12px',
@@ -1058,8 +1114,8 @@ const UserManagement = () => {
                                   wards.map((ward, index) => (
                                     <div
                                       key={index}
-                                      onClick={(event) =>
-                                        handleWardSelect(ward, event, key)
+                                      onClick={() =>
+                                        handleWardSelect(ward, key)
                                       }
                                       style={{
                                         padding: '8px 12px',
@@ -1081,16 +1137,18 @@ const UserManagement = () => {
                         </div>
                       </Form.Item>
                     </Col>
-                    <Col span={4}>
+                    <Col span={24}>
                       <Form.Item
+                        {...restField}
                         name={[name, 'default']}
                         valuePropName="checked"
+                        style={{ marginBottom: 24 }}
                       >
                         <Checkbox>Địa chỉ mặc định</Checkbox>
                       </Form.Item>
                     </Col>
                     <Col span={2}>
-                      <Form.Item>
+                      <Form.Item style={{ marginBottom: 0 }}>
                         <Button
                           type="text"
                           danger
