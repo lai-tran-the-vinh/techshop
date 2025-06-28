@@ -4,55 +4,13 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { Button, Typography, Tag, Image, Flex } from 'antd';
 
 function ProductInformation({ className, product, loading }) {
-  const [price, setPrice] = useState('');
-  const [colors, setColors] = useState([]);
-  const [memories, setMemories] = useState([]);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedMemory, setSelectedMemory] = useState(null);
-
   function formatCurrency(amount, locale = 'vi-VN', currency = 'VND') {
     return new Intl.NumberFormat(locale, {
-      style: 'decimal', // hoặc 'currency' nếu bạn muốn hiển thị ký hiệu tiền tệ
-      // currency: currency, // Chỉ dùng nếu style là 'currency'
-      minimumFractionDigits: 0, // Đảm bảo không có số lẻ sau dấu phẩy
-      maximumFractionDigits: 0, // Đảm bảo không có số lẻ sau dấu phẩy
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   }
-
-  useEffect(() => {
-    if (product.variants) {
-      const variantMemories = product.variants.map((variant) => variant.memory);
-      setMemories(variantMemories);
-
-      const variantColors = product.variants
-        .filter((variant) => variant.memory === variantMemories[0])
-        .map((variant) => variant.color);
-
-      setColors(variantColors);
-      setSelectedColor(variantColors[0]);
-      setSelectedMemory(variantMemories[0]);
-    }
-  }, [product.variants]);
-
-  useEffect(() => {
-    if (product.variants) {
-      const variantColors = product.variants
-        .filter((variant) => variant.memory === selectedMemory)
-        .map((variant) => variant.color);
-      setSelectedColor(variantColors[0]);
-      setColors(variantColors);
-    }
-  }, [selectedMemory]);
-
-  useEffect(() => {
-    if (product.variants) {
-      const variantPrice = product.variants.find(
-        (variant) =>
-          variant.color === selectedColor && variant.memory === selectedMemory,
-      );
-      setPrice(variantPrice?.price || '');
-    }
-  }, [selectedColor, selectedMemory, product.variants]);
 
   return (
     <div className={className}>
