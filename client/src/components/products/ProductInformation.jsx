@@ -1,7 +1,7 @@
-import { useState, useEffect, use } from 'react';
-import { RiGiftFill } from 'react-icons/ri';
+import { useState, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { Button, Typography, Tag, Image, Flex } from 'antd';
 
 function ProductInformation({ className, product, loading }) {
   const [price, setPrice] = useState('');
@@ -9,6 +9,15 @@ function ProductInformation({ className, product, loading }) {
   const [memories, setMemories] = useState([]);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
+
+  function formatCurrency(amount, locale = 'vi-VN', currency = 'VND') {
+    return new Intl.NumberFormat(locale, {
+      style: 'decimal', // hoặc 'currency' nếu bạn muốn hiển thị ký hiệu tiền tệ
+      // currency: currency, // Chỉ dùng nếu style là 'currency'
+      minimumFractionDigits: 0, // Đảm bảo không có số lẻ sau dấu phẩy
+      maximumFractionDigits: 0, // Đảm bảo không có số lẻ sau dấu phẩy
+    }).format(amount);
+  }
 
   useEffect(() => {
     if (product.variants) {
@@ -47,35 +56,44 @@ function ProductInformation({ className, product, loading }) {
 
   return (
     <div className={className}>
-      <h3 className="text-2xl font-medium">
-        {product.name || <Skeleton className="h-40" />}
-      </h3>
-      <span className="text-lg font-bold text-primary">
-        {`${price} VNĐ` || <Skeleton className="h-40" />}
-      </span>
+      <Typography.Title level={3} className="text-2xl! mb-0! font-medium!">
+        <Flex gap={10} align="center">
+          {product.name || <Skeleton className="h-40" />}
+          <Tag color="red" className="py-2! px-12! rounded-sm!">
+            {' '}
+            -{product.discount}%
+          </Tag>
+        </Flex>
+      </Typography.Title>
+      <Flex gap={8} align="center">
+        <Typography.Text className="text-lg! font-bold! text-primary!">
+          {`${formatCurrency(price - price * (product?.discount / 100))}đ` || (
+            <Skeleton className="h-40" />
+          )}
+        </Typography.Text>
+        <Typography.Text
+          delete
+          type="secondary"
+          className="text-lg! font-roboto!"
+        >
+          {`${formatCurrency(price)}đ` || <Skeleton className="h-40" />}
+        </Typography.Text>
+      </Flex>
 
       {product.variants ? (
         <div className="border rounded-md border-[#e5e7eb]">
           <div className="bg-[#f3f4f6] rounded-t-md px-12 py-6 font-medium">
-            Bộ nhớ
+            Phiên bản
           </div>
-          <div className="p-8 grid grid-cols-2 gap-8">
-            {memories.map((memory, index) => (
+          <div className="p-8">
+            {product.variants.map((variant, index) => (
               <div
                 key={index}
-                onClick={() => {
-                  setSelectedMemory(memory);
-                  setSelectedColor(null);
-                  const variants = product.variants.filter((variant) => {
-                    return variant.memory === memory;
-                  });
-                  const colors = variants.map((variant) => variant.color);
-                  setColors(colors);
-                }}
-                className={`flex cursor-pointer ${selectedMemory === memory && 'border-primary'} hover:border-primary flex-col gap-4 p-6 border border-[#e5e7eb] rounded-sm`}
+                className={`flex cursor-pointer h-auto! w-150! hover:border-primary hover:border-2 flex-col gap-4 py-8 px-10 border border-[#e5e7eb] rounded-sm`}
               >
-                <span className="font-medium">Ram {memory.ram}</span>
-                <span className="font-medium">Bộ nhớ {memory.storage}</span>
+                <Typography.Text className="font-medium">
+                  {variant.name}
+                </Typography.Text>
               </div>
             ))}
           </div>
@@ -87,21 +105,32 @@ function ProductInformation({ className, product, loading }) {
       {product.variants ? (
         <div className="border rounded-md border-[#e5e7eb]">
           <div className="bg-[#f3f4f6] rounded-t-md px-12 py-6 font-medium">
-            Màu
+            Màu sắc
           </div>
-          <div className="p-8 grid grid-cols-2 gap-8">
-            {colors.map((color, index) => (
+          <div className="p-8">
+            {product.variants.map((variant, index) => (
               <div
                 key={index}
-                onClick={() => {
-                  setSelectedColor(color);
-                }}
-                className={`flex ${selectedColor === color && 'border-primary'} hover:border-primary cursor-pointer items-center gap-4 p-6 border border-[#e5e7db] rounded-sm`}
+                className={`flex hover:border-primary h-auto w-150! cursor-pointer items-center gap-4 p-6 border border-[#e5e7db] rounded-sm`}
               >
-                <span className="font-medium">Màu {color.name}</span>
-                <div
-                  className={`w-30 h-30 bg-[${color.hex}] rounded-full`}
-                ></div>
+                <Flex gap={10} align="center" justify="center">
+                  <Flex className="w-[30%]">
+                    <Image
+                      preview={false}
+                      src={variant.images[0]}
+                      className="aspect-square!"
+                    />
+                  </Flex>
+
+                  <Flex vertical>
+                    <Typography.Text className="font-medium!">
+                      {variant.color.name}
+                    </Typography.Text>
+                    <Typography.Text className="">
+                      {`${formatCurrency(variant.price)}đ`}
+                    </Typography.Text>
+                  </Flex>
+                </Flex>
               </div>
             ))}
           </div>
@@ -109,26 +138,6 @@ function ProductInformation({ className, product, loading }) {
       ) : (
         <Skeleton className="h-100" />
       )}
-
-      {/* {product.giftsAndOffers ? (
-        <div className="border rounded-md border-[#e5e7eb]">
-          <div className="bg-[#f3f4f6] rounded-t-md px-12 py-6 font-medium">
-            Quà tặng và ưu đãi khác
-          </div>
-          <div className="p-8 flex flex-col gap-4">
-            <div className="flex items-center gap-8">
-              <RiGiftFill className="text-[#8a7d71] text-lg" />
-              <span>Tặng phiếu mua hàng 50,000đ khi mua sim kèm máy</span>
-            </div>
-            <div className="flex items-center gap-8">
-              <RiGiftFill className="text-[#8a7d71] text-lg" />
-              <span>Tặng phiếu mua hàng 150,000đ khi mua ốp kèm máy</span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <Skeleton className="h-100" />
-      )} */}
 
       <div className="flex gap-10 mt-16">
         {loading ? (
@@ -136,9 +145,9 @@ function ProductInformation({ className, product, loading }) {
             <Skeleton className="h-40" />
           </div>
         ) : (
-          <button className="w-[50%] font-medium py-8 text-md hover:opacity-90 bg-gray-200 cursor-pointer rounded-sm">
+          <Button className="w-[50%] font-medium h-40! text-md hover:opacity-90 bg-gray-200 cursor-pointer rounded-md!">
             Thêm vào giỏ hàng
-          </button>
+          </Button>
         )}
 
         {loading ? (
@@ -146,9 +155,12 @@ function ProductInformation({ className, product, loading }) {
             <Skeleton className="h-40" />
           </div>
         ) : (
-          <button className="w-[50%] font-medium py-8 text-md hover:opacity-80 text-white rounded-sm cursor-pointer bg-primary">
+          <Button
+            type="primary"
+            className="w-[50%] font-medium h-40! text-md hover:opacity-80 text-white rounded-md! cursor-pointer bg-primary"
+          >
             Mua ngay
-          </button>
+          </Button>
         )}
       </div>
     </div>

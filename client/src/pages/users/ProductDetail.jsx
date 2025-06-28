@@ -16,6 +16,10 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = 'TechShop | Chi tiết sản phẩm';
+  }, []);
+
+  useEffect(() => {
     if (product.variants) {
       product.variants.forEach((variant) => {
         variant.images.forEach((image) => {

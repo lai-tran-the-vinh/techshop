@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { AiOutlineLike, AiOutlineRollback } from 'react-icons/ai';
@@ -32,15 +33,15 @@ function Comments({ className, product, loading, comment, setComment }) {
             className="w-full rounded-md border-gray-300 border p-8"
           ></textarea>
         )}
-        <div className="flex items-center justify-end mt-10">
+        <div className="flex gap-10 items-center justify-end mt-10">
           {loading ? (
             <div className="w-100 mr-10">
               <Skeleton className="h-36" />
             </div>
           ) : (
-            <button className="px-8 cursor-pointer hover:opacity-80 bg-gray-200 rounded-sm py-6 min-w-100 mr-10">
+            <Button className="px-8 cursor-pointer hover:opacity-80 bg-gray-200 rounded-md! min-w-100 h-40! mr-10">
               Hủy
-            </button>
+            </Button>
           )}
 
           {loading ? (
@@ -48,9 +49,9 @@ function Comments({ className, product, loading, comment, setComment }) {
               <Skeleton className="h-36" />
             </div>
           ) : (
-            <button className="px-8 cursor-pointer hover:opacity-80 bg-primary text-white rounded-sm py-6 min-w-100">
+            <Button type='primary' className="px-8 cursor-pointer hover:opacity-80 bg-primary text-white rounded-md! h-40! min-w-100">
               Bình luận
-            </button>
+            </Button>
           )}
         </div>
       </div>

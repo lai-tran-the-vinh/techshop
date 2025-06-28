@@ -19,12 +19,7 @@ import { Button, Form, message } from 'antd';
 import Products from '@/services/products';
 
 function AddProduct() {
-  const {
-    setLoadingError,
-    setToastLoading,
-    setLoadingSuccess,
-    setSideBarSelectedTab,
-  } = useAppContext();
+  const { message } = useAppContext();
 
   const navigate = useNavigate();
 
@@ -154,34 +149,29 @@ function AddProduct() {
   }, []);
 
   const onSubmit = async () => {
-    const isValidData = checkProductDataBeforeSubmit();
-    if (isValidData) {
-      try {
-        setToastLoading(true);
-        message.loading('Đang thêm sản phẩm');
-        const productToSubmit = removeEmptyFields({ ...product });
+    try {
+      message.loading('Đang thêm sản phẩm');
+      const productToSubmit = removeEmptyFields({ ...product });
 
-        for (let i = 0; i < productToSubmit.variants.length; i++) {
-          const variant = productToSubmit.variants[i];
-          const uploadedUrls = [];
-          for (let j = 0; j < variant.images.length; j++) {
-            const imageUrl = await Files.upload(variant.images[j]);
-            uploadedUrls.push(imageUrl);
-          }
-          productToSubmit.variants[i].images = uploadedUrls;
+      for (let i = 0; i < productToSubmit.variants.length; i++) {
+        const variant = productToSubmit.variants[i];
+        const uploadedUrls = [];
+        for (let j = 0; j < variant.images.length; j++) {
+          const imageUrl = await Files.upload(variant.images[j]);
+          uploadedUrls.push(imageUrl);
         }
-        message.loading('Đang thêm sản phẩm');
-        const addProduct = await Products.add(productToSubmit);
-
-        if (addProduct) {
-          message.destroy();
-          message.success('Thêm sản phẩm thành công');
-
-          navigate('/admin/product');
-        }
-      } catch (error) {
-        message.error('Thêm thất bại', 0, error);
+        productToSubmit.variants[i].images = uploadedUrls;
       }
+
+      const addProduct = await Products.add(productToSubmit);
+
+      if (addProduct) {
+        message.destroyLoading();
+        message.success('Thêm sản phẩm thành công');
+        navigate('/admin/product');
+      }
+    } catch (error) {
+      message.error('Thêm sản phẩm thất bại');
     }
   };
 
