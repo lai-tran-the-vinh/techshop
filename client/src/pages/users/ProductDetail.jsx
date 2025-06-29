@@ -31,6 +31,8 @@ function ProductDetail() {
     }
   }, [product.variants]);
 
+  console.log('Product:', product);
+
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
