@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Tag, Typography, Empty, Flex, Row, Col, Carousel } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import CardProduct from './Card';
 
 function PreviewListProducts({
   title,
@@ -154,8 +155,17 @@ function PreviewListProducts({
             />
           </div>
         )}
-
-        
+        {products.map((product, index) => {
+          return (
+            <Col span={5} key={index}>
+              <CardProduct
+                product={product}
+                loading={loading}
+                className="w-full!"
+              />
+            </Col>
+          );
+        })}
       </Row>
     </div>
   );
