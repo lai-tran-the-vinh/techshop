@@ -34,38 +34,42 @@ function SearchProductResult() {
     fetchSearchResult();
   }, [query]);
 
-  const filteredProducts = result.filter((product) => {
-    let matchPrice = true;
-    const realPrice =
-      product?.variants?.[0]?.price -
-      product?.variants?.[0]?.price * (product?.discount / 100);
-    if (filter.price === 1) {
-      matchPrice = realPrice < 10000000;
-    } else if (filter.price === 2) {
-      matchPrice = realPrice >= 10000000 && realPrice <= 20000000;
-    } else if (filter.price === 3) {
-      matchPrice = realPrice > 20000000;
-    }
+  const filteredProducts = Array.isArray(result)
+    ? result.filter((product) => {
+        let matchPrice = true;
+        const realPrice =
+          product?.variants?.[0]?.price -
+          product?.variants?.[0]?.price * (product?.discount / 100);
+        if (filter.price === 1) {
+          matchPrice = realPrice < 10000000;
+        } else if (filter.price === 2) {
+          matchPrice = realPrice >= 10000000 && realPrice <= 20000000;
+        } else if (filter.price === 3) {
+          matchPrice = realPrice > 20000000;
+        }
 
-    let matchRam = filter.ram
-      ? product.variants?.some((v) =>
-          v.memory.ram?.toLowerCase().includes(filter.ram.label?.toLowerCase()),
-        )
-      : true;
+        let matchRam = filter.ram
+          ? product.variants?.some((v) =>
+              v.memory.ram
+                ?.toLowerCase()
+                .includes(filter.ram.label?.toLowerCase()),
+            )
+          : true;
 
-    let matchStorage = filter.storage
-      ? product.variants?.some((v) =>
-          v.memory.storage
-            ?.toLowerCase()
-            .includes(filter.storage.label?.toLowerCase()),
-        )
-      : true;
+        let matchStorage = filter.storage
+          ? product.variants?.some((v) =>
+              v.memory.storage
+                ?.toLowerCase()
+                .includes(filter.storage.label?.toLowerCase()),
+            )
+          : true;
 
-    return matchPrice && matchRam && matchStorage;
-  });
+        return matchPrice && matchRam && matchStorage;
+      })
+    : [];
 
   useEffect(() => {
-    if (result.length > 0 && brands.length === 0) {
+    if (Array.isArray(result) && result.length > 0 && brands.length === 0) {
       const brands = [
         'Tất cả',
         ...new Set(result.map((product) => product.brand.name)),
