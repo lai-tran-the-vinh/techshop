@@ -27,7 +27,7 @@ function ProductInformation({ className, product, loading }) {
       </Typography.Title>
       <Flex gap={8} align="center">
         <Typography.Text className="text-lg! font-bold! text-primary!">
-          {`${formatCurrency(product.variants[currentVariant].price - product.variants[currentVariant].price * (product?.discount / 100))}đ` || (
+          {`${formatCurrency(product?.variants?.[currentVariant]?.price - product?.variants?.[currentVariant]?.price * (product?.discount / 100))}đ` || (
             <Skeleton className="h-40" />
           )}
         </Typography.Text>
@@ -36,7 +36,7 @@ function ProductInformation({ className, product, loading }) {
           type="secondary"
           className="text-lg! font-roboto!"
         >
-          {`${formatCurrency(product.variants[currentVariant].price)}đ` || (
+          {`${formatCurrency(product?.variants?.[currentVariant]?.price)}đ` || (
             <Skeleton className="h-40" />
           )}
         </Typography.Text>

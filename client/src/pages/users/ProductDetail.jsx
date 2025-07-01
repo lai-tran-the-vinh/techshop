@@ -19,8 +19,6 @@ function ProductDetail() {
     document.title = 'TechShop | Chi tiết sản phẩm';
   }, []);
 
-  console.log('Product:', product);
-
   useEffect(() => {
     if (product.variants) {
       product.variants.forEach((variant) => {
@@ -30,8 +28,6 @@ function ProductDetail() {
       });
     }
   }, [product.variants]);
-
-  console.log('Product:', product);
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -47,6 +43,12 @@ function ProductDetail() {
 
     fetchProductDetail();
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(product).length > 0) {
+      console.log('Product:', product);
+    }
+  }, [product]);
 
   return (
     <div className="w-full xl:px-50 mt-30">
