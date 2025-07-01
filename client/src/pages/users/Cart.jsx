@@ -59,6 +59,15 @@ function Cart() {
     message.success('Đã xóa sản phẩm khỏi giỏ hàng');
   };
 
+  const handleRemoveItems = async (id) => {
+    try {
+      const cartServices = new CartServices();
+      const response = await cartServices.deleteOne(id);
+    } catch (error) {
+      
+    }
+  };
+
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
