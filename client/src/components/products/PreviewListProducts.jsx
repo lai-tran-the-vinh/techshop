@@ -16,7 +16,10 @@ function PreviewListProducts({
   showListBrands = true,
 }) {
   const navigate = useNavigate();
-  const brands = [...new Set(products.map((product) => product.brand.name))];
+  const brands = [
+    'Tất cả',
+    ...new Set(products.map((product) => product.brand.name)),
+  ];
 
   const chunkArray = (array) => {
     const itemsPerRow = 4;
