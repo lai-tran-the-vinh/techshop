@@ -1,15 +1,17 @@
 import Products from '@services/products';
-import { ProductSpecification } from '@components/products';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { ImagesSlider } from '@components/app';
+import { useAppContext } from '@contexts';
 import { Comments } from '@components/products';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { ProductSpecification } from '@components/products';
 import { ProductInformation, ProductDescription } from '@components/products';
 
 function ProductDetail() {
   const { id } = useParams();
+  const { user } = useAppContext();
   const [images, setImages] = useState([]);
   const [comment, setComment] = useState('');
   const [product, setProduct] = useState({});
@@ -45,10 +47,21 @@ function ProductDetail() {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(product).length > 0) {
-      console.log('Product:', product);
-    }
-  }, [product]);
+    window.scroll(0, 0);
+  }, []);
+
+  useEffect(() => {
+    // console.log('User:', user);
+    // if(user) {
+    //   consosle.log
+    // }
+  }, [user]);
+
+  // useEffect(() => {
+  //   if (Object.keys(product).length > 0) {
+  //     console.log('Product:', product);
+  //   }
+  // }, [product]);
 
   return (
     <div className="w-full xl:px-50 mt-30">
