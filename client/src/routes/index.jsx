@@ -1,6 +1,6 @@
 import { UsersLayout, AdminLayout } from '@layouts';
-import { Cart, Order, ListProducts } from '@pages/users';
-import BranchManagement from '@/pages/admin/branch';
+import { Cart, ListProducts, Order } from '@pages/users';
+import BranchManagement from '@/pages/admin/banner/branch';
 import Dashboard from '@/pages/admin/dashboard/Dashboard';
 import { Home, ProductDetail, SearchProductResult } from '@/pages/users';
 import { AddProduct, EditProduct, ListProduct } from '@/pages/admin/product';
@@ -19,6 +19,8 @@ import CategoryManagement from '@/pages/admin/category/category';
 import UserManagement from '@/pages/admin/user';
 import RoleManagement from '@/pages/admin/role/role';
 import UserRoleManagement from '@/pages/admin/role/userRole';
+import WarehouseTransfer from '@/pages/admin/warehouse/transfer';
+import BannerManagement from '@/pages/admin/banner';
 import PermissionsManagement from '@/pages/admin/permission/permission';
 
 const router = createBrowserRouter([
@@ -144,10 +146,10 @@ const router = createBrowserRouter([
             path: 'export',
             element: <WarehouseOutbound />,
           },
-          // {
-          //   path: "transfer",
-          //   element: <WarehouseTransfer />, // Component riêng cho transfer
-          // },
+          {
+            path: 'transfer',
+            element: <WarehouseTransfer />,
+          },
         ],
       },
       {
@@ -170,6 +172,19 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <OrderManagement />,
+          },
+        ],
+      },
+      {
+        path: 'banner',
+        children: [
+          {
+            index: true,
+            element: <BannerManagement />,
+          },
+          {
+            path: 'management',
+            element: <BannerManagement />,
           },
         ],
       },
