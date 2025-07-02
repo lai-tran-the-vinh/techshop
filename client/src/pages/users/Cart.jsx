@@ -25,7 +25,7 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.get();
       if (response.status === 200) {
-        setCartItems(response.data.data[0].items);
+        setCartItems(response.data.data.items);
         setLoading(false);
         message.success('Lấy giỏ hàng thành công');
       }
