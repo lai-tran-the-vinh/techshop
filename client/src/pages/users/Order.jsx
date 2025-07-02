@@ -3,8 +3,7 @@ import { formatCurrency } from '@helpers';
 import { useAppContext } from '@contexts';
 import CartServices from '@services/carts';
 import { useState, useEffect } from 'react';
-import { GiftOutlined } from '@ant-design/icons';
-import { Typography, Flex, Card, Tag, Image, Button } from 'antd';
+import { Typography, Flex, Card, Tag, Image, Space, Input } from 'antd';
 
 function Order() {
   const { message, user } = useAppContext();
@@ -85,47 +84,43 @@ function Order() {
           </div>
         </div>
 
-        <div className="border min-h-185 w-full! h-185 rounded-md border-[#e5e7eb]">
+        <div className="border min-h-185 w-full! rounded-md border-[#e5e7eb]">
           <div className="bg-[#f3f4f6] rounded-t-md px-12 py-6 font-medium">
             <Typography.Title level={5} className="m-0!">
-              Sản phẩm trong đơn
+              Thông tin người đặt hàng
             </Typography.Title>
           </div>
           <div className="p-12 flex flex-col gap-10">
-            {cartItems.map((item, index) => {
-              return (
-                <Card key={index} className="rounded-xl">
-                  <div className="flex gap-12 items-start">
-                    <Image
-                      width={64}
-                      height={64}
-                      preview={false}
-                      src={item.variant.images[0]}
-                      className="rounded-md border"
-                    />
-
-                    <div className="flex-1">
-                      <div className="font-medium text-base leading-5">
-                        {item.variant.name}
-                      </div>
-                      <Tag color="default" className="mt-10!">
-                        {`Màu: ${item.variant.color.name}`}
-                      </Tag>
-                    </div>
-
-                    <div className="text-right">
-                      <Typography.Text type="secondary">{`x${item.quantity}`}</Typography.Text>
-                      <div className="text-red-600 font-semibold text-lg">
-                        {`${formatCurrency(item.price)}đ`}
-                      </div>
-                      <div className="line-through text-gray-400 text-sm">
-                        2.990.000 ₫
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
+            <Flex
+              gap={4}
+              vertical
+              align="start"
+              justify="center"
+              className="w-full!"
+            >
+              <Typography.Text strong>Họ và tên</Typography.Text>
+              <Input value={user.name} className="w-full! flex-1 py-8!" />
+            </Flex>
+            <Flex
+              gap={4}
+              vertical
+              align="start"
+              justify="center"
+              className="w-full!"
+            >
+              <Typography.Text strong>Số điện thoại</Typography.Text>
+              <Input value={"0393266713"} className="w-full! flex-1 py-8!" />
+            </Flex>
+            <Flex
+              gap={4}
+              vertical
+              align="start"
+              justify="center"
+              className="w-full!"
+            >
+              <Typography.Text strong>Địa chỉ</Typography.Text>
+              <Input value={"Tổ 1, Ấp Mỹ Hòa ..."} className="w-full! flex-1 py-8!" />
+            </Flex>
           </div>
         </div>
       </Flex>
