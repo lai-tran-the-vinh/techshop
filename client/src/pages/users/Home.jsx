@@ -64,6 +64,14 @@ function Home() {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="w-full h-[calc(100vh-60px)] px-50 flex justify-center items-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <>
       {loading && (

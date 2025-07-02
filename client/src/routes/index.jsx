@@ -1,8 +1,12 @@
 import { UsersLayout, AdminLayout } from '@layouts';
+<<<<<<< HEAD
 import { Cart, ListProducts } from '@pages/users';
 import BranchManagement from '@/pages/admin/banner/branch';
+=======
+import { Cart, Order, ListProducts } from '@pages/users';
+import BranchManagement from '@/pages/admin/branch';
+>>>>>>> 031c98fb9a39f1b14687dd8fbb146f790f271705
 import Dashboard from '@/pages/admin/dashboard/Dashboard';
-import CategoryPage from '@/pages/admin/category/category';
 import { Home, ProductDetail, SearchProductResult } from '@/pages/users';
 import { AddProduct, EditProduct, ListProduct } from '@/pages/admin/product';
 import { createBrowserRouter } from 'react-router-dom';
@@ -12,17 +16,21 @@ import WarehouseOutbound from '@/pages/admin/warehouse/export';
 
 import NotExist from '@/components/error/notExist';
 
-import OrderManagement from '@/pages/admin/order';
 import ProtectedRoute from './ProtectedRoute';
+import OrderManagement from '@/pages/admin/order';
 import BrandManagement from '@/pages/admin/brand';
 import CategoryManagement from '@/pages/admin/category/category';
 
-import PermissionsManagement from '@/pages/admin/permission/permission';
+import UserManagement from '@/pages/admin/user';
 import RoleManagement from '@/pages/admin/role/role';
 import UserRoleManagement from '@/pages/admin/role/userRole';
+<<<<<<< HEAD
 import UserManagement from '@/pages/admin/user';
 import WarehouseTransfer from '@/pages/admin/warehouse/transfer';
 import BannerManagement from '@/pages/admin/banner';
+=======
+import PermissionsManagement from '@/pages/admin/permission/permission';
+>>>>>>> 031c98fb9a39f1b14687dd8fbb146f790f271705
 
 const router = createBrowserRouter([
   {
@@ -32,6 +40,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'order',
+        element: <Order />,
       },
       {
         path: 'cart',

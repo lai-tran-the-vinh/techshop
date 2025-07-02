@@ -6,7 +6,6 @@ import { useContext, createContext, useState, useEffect } from 'react';
 const AppContext = createContext();
 
 function AppProvider({ children }) {
-  // const message = useMessage();
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);

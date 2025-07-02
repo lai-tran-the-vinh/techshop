@@ -1,15 +1,18 @@
+import { Spin } from 'antd';
 import Products from '@services/products';
-import { ProductSpecification } from '@components/products';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { ImagesSlider } from '@components/app';
+import { useAppContext } from '@contexts';
 import { Comments } from '@components/products';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { ProductSpecification } from '@components/products';
 import { ProductInformation, ProductDescription } from '@components/products';
 
 function ProductDetail() {
   const { id } = useParams();
+  const { user } = useAppContext();
   const [images, setImages] = useState([]);
   const [comment, setComment] = useState('');
   const [product, setProduct] = useState({});
@@ -45,21 +48,23 @@ function ProductDetail() {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(product).length > 0) {
-      console.log('Product:', product);
-    }
-  }, [product]);
+    window.scroll(0, 0);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-[calc(100vh-60px)] px-50 flex justify-center items-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full xl:px-50 mt-30">
       <div className="flex">
         <div className="w-[60%] relative">
           <div className="py-20 px-40">
-            {images.length > 0 ? (
-              <ImagesSlider images={images} />
-            ) : (
-              <Skeleton className="h-500" />
-            )}
+            <ImagesSlider images={images} />
           </div>
         </div>
         <ProductInformation
