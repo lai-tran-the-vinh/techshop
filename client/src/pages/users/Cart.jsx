@@ -12,6 +12,7 @@ import {
   Skeleton,
   Flex,
   Divider,
+  Spin,
 } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
@@ -129,81 +130,17 @@ function Cart() {
     }),
   };
 
-  const renderSkeletonTable = () => {
-    const skeletonRows = Array.from({ length: 4 });
-    const cellStyle = {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    };
-
+  if (loading) {
     return (
-      <div className="border-none! flex gap-12 p-0!">
-        <div className="bg-[#fafafa] rounded-t-md py-12 px-16 border-b border-b-[#f0f0f0] font-medium flex items-center justify-between text-center">
-          <div style={{ width: '25%', ...cellStyle }}>Sản phẩm</div>
-          <div style={{ width: '15%', ...cellStyle }}>Đơn giá</div>
-          <div style={{ width: '20%', ...cellStyle }}>Số lượng</div>
-          <div style={{ width: '20%', ...cellStyle }}>Thành tiền</div>
-          <div style={{ width: '10%', ...cellStyle }}>Xóa</div>
-        </div>
-
-        {skeletonRows.map((_, idx) => (
-          <div
-            key={idx}
-            className="w-2/3"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px 16px',
-              borderBottom: '1px solid #f0f0f0',
-            }}
-          >
-            <div style={{ width: '25%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '80%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '15%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '70%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '20%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '60%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '20%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '70%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '10%', ...cellStyle }}>
-              <Skeleton.Button
-                active
-                size="small"
-                shape="circle"
-                style={{ width: 32, height: 32 }}
-              />
-            </div>
-          </div>
-        ))}
+      <div className="w-full h-[calc(100vh-60px)] px-50 flex justify-center items-center">
+        <Spin size="large" />
       </div>
     );
-  };
+  }
 
   return (
     <div className="w-full px-50 py-20">
-      <Title level={3}>Giỏ hàng của bạn</Title>
+      <Title level={3} className='text-primary! font-bold!'>Giỏ hàng của bạn</Title>
 
       {loading ? (
         renderSkeletonTable()
@@ -213,10 +150,12 @@ function Cart() {
             rowKey="id"
             columns={columns}
             pagination={false}
-            className="w-2/3"
             dataSource={cartItems}
-            locale={<Empty description={<Text>Giỏ hàng trống</Text>} />}
+            className="w-2/3 border border-[#e5e7eb] rounded-lg! overflow-hidden!"
             rowSelection={Object.assign({ type: 'checkbox' }, rowSelection)}
+            locale={{
+              emptyText: <Empty description={<Text>Giỏ hàng trống</Text>} />,
+            }}
           />
 
           <div className="border flex-1 rounded-md border-[#e5e7eb]">
@@ -226,7 +165,7 @@ function Cart() {
               </Typography.Title>
             </div>
             <div className="p-12 flex flex-col gap-10">
-              <Flex justify='space-between'>
+              <Flex justify="space-between">
                 <Typography.Text className="text-lg!">
                   Tổng tiền
                 </Typography.Text>
