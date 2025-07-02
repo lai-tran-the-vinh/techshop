@@ -232,9 +232,9 @@ function Cart() {
                 </Typography.Text>
                 <Typography.Text
                   level={3}
-                  className="m-0! text-lg! font-medium!"
+                  className="m-0! text-primary! text-lg! font-medium!"
                 >
-                  {total.toLocaleString()}₫
+                  {total.toLocaleString()}đ
                 </Typography.Text>
               </Flex>
               <Divider className="my-0!" />
