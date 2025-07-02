@@ -69,10 +69,10 @@ function SearchProductResult() {
     : [];
 
   useEffect(() => {
-    if (Array.isArray(result) && result.length > 0 && brands.length === 0) {
+    if (Array.isArray(result) && result.length > 0) {
       const brands = [
         'Tất cả',
-        ...new Set(result.map((product) => product.brand.name)),
+        ...new Set(result.map((product) => product?.brand?.[0]?.name?.[0])),
       ];
       setBrands(brands);
 
@@ -88,9 +88,7 @@ function SearchProductResult() {
       );
       setStorages([...new Set(allStorages)]);
     }
-  }, [result]);
-
-  console.log('Brands:', brands);
+  }, [result, query]);
 
   return (
     <div className="w-full xl:px-50 lg:px-30 md:px-20 my-10">
