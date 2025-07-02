@@ -10,6 +10,9 @@ import {
   Space,
   Empty,
   Skeleton,
+  Flex,
+  Divider,
+  Spin,
 } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
@@ -25,7 +28,7 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.get();
       if (response.status === 200) {
-        setCartItems(response.data.data[0].items);
+        setCartItems(response.data.data.items);
         setLoading(false);
         message.success('Lấy giỏ hàng thành công');
       }
@@ -38,12 +41,6 @@ function Cart() {
   useEffect(() => {
     getCart();
   }, []);
-
-  // useEffect(() => {
-  //   if (cartItems.length > 0) {
-  //     console.log(cartItems);
-  //   }
-  // }, [cartItems]);
 
   const updateQuantity = (id, value) => {
     if (value < 1) return;
@@ -63,9 +60,7 @@ function Cart() {
     try {
       const cartServices = new CartServices();
       const response = await cartServices.deleteOne(id);
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   const total = cartItems.reduce(
@@ -121,100 +116,67 @@ function Cart() {
     },
   ];
 
-  const renderSkeletonTable = () => {
-    const skeletonRows = Array.from({ length: 4 });
-    const cellStyle = {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    };
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        'selectedRows: ',
+        selectedRows,
+      );
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
 
+  if (loading) {
     return (
-      <div className="border-none! p-0!">
-        {/* Header giả */}
-        <div className="bg-[#fafafa] rounded-t-md py-12 px-16 border-b border-b-[#f0f0f0] font-medium flex items-center justify-between text-center">
-          <div style={{ width: '25%', ...cellStyle }}>Sản phẩm</div>
-          <div style={{ width: '15%', ...cellStyle }}>Đơn giá</div>
-          <div style={{ width: '20%', ...cellStyle }}>Số lượng</div>
-          <div style={{ width: '20%', ...cellStyle }}>Thành tiền</div>
-          <div style={{ width: '10%', ...cellStyle }}>Xóa</div>
-        </div>
-
-        {/* Dòng skeleton */}
-        {skeletonRows.map((_, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px 16px',
-              borderBottom: '1px solid #f0f0f0',
-            }}
-          >
-            <div style={{ width: '25%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '80%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '15%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '70%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '20%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '60%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '20%', ...cellStyle }}>
-              <Skeleton.Input
-                active
-                size="small"
-                style={{ width: '70%', borderRadius: 6 }}
-              />
-            </div>
-            <div style={{ width: '10%', ...cellStyle }}>
-              <Skeleton.Button
-                active
-                size="small"
-                shape="circle"
-                style={{ width: 32, height: 32 }}
-              />
-            </div>
-          </div>
-        ))}
+      <div className="w-full h-[calc(100vh-60px)] px-50 flex justify-center items-center">
+        <Spin size="large" />
       </div>
     );
-  };
+  }
 
   return (
     <div className="w-full px-50 py-20">
-      <Title level={3}>Giỏ hàng của bạn</Title>
+      <Title level={3} className='text-primary! font-bold!'>Giỏ hàng của bạn</Title>
 
       {loading ? (
         renderSkeletonTable()
       ) : (
-        <>
+        <Flex className="w-full" gap={12}>
           <Table
-            columns={columns}
-            dataSource={cartItems}
             rowKey="id"
+            columns={columns}
             pagination={false}
-            locale={<Empty description={<Text>Giỏ hàng trống</Text>} />}
+            dataSource={cartItems}
+            className="w-2/3 border border-[#e5e7eb] rounded-lg! overflow-hidden!"
+            rowSelection={Object.assign({ type: 'checkbox' }, rowSelection)}
+            locale={{
+              emptyText: <Empty description={<Text>Giỏ hàng trống</Text>} />,
+            }}
           />
-          <Card className="mt-24! text-right!">
-            <Space direction="vertical">
-              <Text strong>Tổng tiền:</Text>
-              <Title level={3} className="m-0!">
-                {total.toLocaleString()}₫
-              </Title>
+
+          <div className="border flex-1 rounded-md border-[#e5e7eb]">
+            <div className="bg-[#f3f4f6] rounded-t-md px-12 py-6 font-medium">
+              <Typography.Title level={5} className="m-0!">
+                Thông tin đơn hàng
+              </Typography.Title>
+            </div>
+            <div className="p-12 flex flex-col gap-10">
+              <Flex justify="space-between">
+                <Typography.Text className="text-lg!">
+                  Tổng tiền
+                </Typography.Text>
+                <Typography.Text
+                  level={3}
+                  className="m-0! text-primary! text-lg! font-medium!"
+                >
+                  {total.toLocaleString()}đ
+                </Typography.Text>
+              </Flex>
+              <Divider className="my-0!" />
               <Button
                 type="primary"
                 size="large"
@@ -223,9 +185,9 @@ function Cart() {
               >
                 Tiến hành thanh toán
               </Button>
-            </Space>
-          </Card>
-        </>
+            </div>
+          </div>
+        </Flex>
       )}
     </div>
   );
