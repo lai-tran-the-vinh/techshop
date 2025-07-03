@@ -1,6 +1,6 @@
 import { UsersLayout, AdminLayout } from '@layouts';
 import { Cart, ListProducts, Order } from '@pages/users';
-import BranchManagement from '@/pages/admin/banner/branch';
+import BranchManagement from '@/pages/admin/branch';
 import Dashboard from '@/pages/admin/dashboard/Dashboard';
 import { Home, ProductDetail, SearchProductResult } from '@/pages/users';
 import { AddProduct, EditProduct, ListProduct } from '@/pages/admin/product';

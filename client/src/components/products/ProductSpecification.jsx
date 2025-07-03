@@ -4,7 +4,7 @@ import { Descriptions, Typography } from 'antd';
 const { Title } = Typography;
 
 const renderDescriptions = (title, data) => (
-  <div className="mb-20">
+  <div className="mb-6 ">
     <Title level={4}>{title}</Title>
     <Descriptions column={1} bordered size="small">
       {data.map((item) => (
@@ -16,43 +16,91 @@ const renderDescriptions = (title, data) => (
   </div>
 );
 
-const ProductSpecification = ({ className }) => {
+const ProductSpecification = ({ product }) => {
+  if (
+    !product ||
+    !product.specifications ||
+    !product.connectivity ||
+    !product.camera
+  ) {
+    return <p>Không có thông tin kỹ thuật.</p>;
+  }
+
+  const specs = product.specifications || {};
+  const connectivity = product.connectivity || {};
+  const frontCam = product.camera?.front || {};
+  const rearCam = product.camera?.rear || {};
+
   const technicalSpecs = [
-    { label: 'Kích cỡ màn hình', value: '6.5 inch' },
-    { label: 'Loại màn hình', value: 'AMOLED, 120Hz' },
-    { label: 'Vi xử lý', value: 'Snapdragon 8 Gen 2' },
-    { label: 'Hệ điều hành', value: 'Android 14' },
-    { label: 'Trọng lượng', value: '190g' },
-    { label: 'Pin', value: '5000mAh, sạc nhanh 67W' },
+    { label: 'Kích cỡ màn hình', value: specs.displaySize || 'Đang cập nhật' },
+    { label: 'Loại màn hình', value: specs.displayType || 'Đang cập nhật' },
+    { label: 'Vi xử lý', value: specs.processor || 'Đang cập nhật' },
+    { label: 'Hệ điều hành', value: specs.operatingSystem || 'Đang cập nhật' },
+    { label: 'Trọng lượng', value: specs.weight || 'Đang cập nhật' },
+    { label: 'Pin', value: specs.battery || 'Đang cập nhật' },
   ];
 
-  const connectivity = [
-    { label: 'Wi-Fi', value: 'Wi-Fi 6' },
-    { label: 'Bluetooth', value: 'v5.3' },
-    { label: 'Mạng di động', value: '5G' },
-    { label: 'GPS', value: 'Có, hỗ trợ A-GPS, GLONASS' },
-    { label: 'Cổng kết nối', value: 'USB-C' },
+  const connectivitySpecs = [
+    { label: 'Wi-Fi', value: connectivity.wifi || 'Không rõ' },
+    { label: 'Bluetooth', value: connectivity.bluetooth || 'Không rõ' },
+    { label: 'Mạng di động', value: connectivity.cellular || 'Không rõ' },
+    { label: 'GPS', value: connectivity.gps ? 'Có' : 'Không' },
+    { label: 'NFC', value: connectivity.nfc ? 'Có' : 'Không' },
+    {
+      label: 'Cổng kết nối',
+      value:
+        connectivity.ports && connectivity.ports.length > 0
+          ? connectivity.ports.join(', ')
+          : 'Không rõ',
+    },
   ];
 
-  const frontCamera = [
-    { label: 'Độ phân giải', value: '32MP' },
-    { label: 'Tính năng', value: 'Làm đẹp AI, HDR' },
-    { label: 'Quay video', value: '1080p@30fps' },
+  const frontCameraSpecs = [
+    { label: 'Độ phân giải', value: frontCam.resolution || 'Không rõ' },
+    {
+      label: 'Tính năng',
+      value:
+        frontCam.features && frontCam.features.length > 0
+          ? frontCam.features.join(', ')
+          : 'Không rõ',
+    },
+    {
+      label: 'Quay video',
+      value:
+        frontCam.videoRecording && frontCam.videoRecording.length > 0
+          ? frontCam.videoRecording.join(', ')
+          : 'Không rõ',
+    },
   ];
 
-  const rearCamera = [
-    { label: 'Độ phân giải', value: '50MP (chính) + 12MP (góc rộng)' },
-    { label: 'Tính năng', value: 'Chống rung OIS, HDR, Night Mode' },
-    { label: 'Quay video', value: '4K@60fps' },
-    { label: 'Số lượng ống kính', value: '3' },
+  const rearCameraSpecs = [
+    { label: 'Độ phân giải', value: rearCam.resolution || 'Không rõ' },
+    {
+      label: 'Tính năng',
+      value:
+        rearCam.features && rearCam.features.length > 0
+          ? rearCam.features.join(', ')
+          : 'Không rõ',
+    },
+    {
+      label: 'Quay video',
+      value:
+        rearCam.videoRecording && rearCam.videoRecording.length > 0
+          ? rearCam.videoRecording.join(', ')
+          : 'Không rõ',
+    },
+    {
+      label: 'Số lượng ống kính',
+      value: rearCam.lensCount || 'Không rõ',
+    },
   ];
 
   return (
-    <div className={className}>
+    <div>
       {renderDescriptions('Thông số kỹ thuật', technicalSpecs)}
-      {renderDescriptions('Kết nối', connectivity)}
-      {renderDescriptions('Camera trước', frontCamera)}
-      {renderDescriptions('Camera sau', rearCamera)}
+      {renderDescriptions('Kết nối', connectivitySpecs)}
+      {renderDescriptions('Camera trước', frontCameraSpecs)}
+      {renderDescriptions('Camera sau', rearCameraSpecs)}
     </div>
   );
 };

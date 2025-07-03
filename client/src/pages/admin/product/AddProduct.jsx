@@ -132,10 +132,10 @@ function AddProduct() {
   const onSubmit = async () => {
     try {
       setProduct(form.getFieldsValue());
-      console.log(product);
-      message.loading('Đang thêm sản phẩm');
+
+      message.loading({ content: 'Đang thêm sản phẩm', key: 'adding-product' });
+
       const productToSubmit = product;
-      console.log(productToSubmit);
 
       for (let i = 0; i < productToSubmit.variants.length; i++) {
         const variant = productToSubmit.variants[i];
@@ -150,15 +150,21 @@ function AddProduct() {
       const addProduct = await Products.add(productToSubmit);
 
       if (addProduct) {
-      
-        message.success('Thêm sản phẩm thành công');
+        message.success({
+          content: 'Thêm sản phẩm thành công',
+          key: 'adding-product',
+        });
         navigate('/admin/product');
       }
     } catch (error) {
-      console.error(error);
-      message.error('Thêm sản phẩm thất bại');
+      console.error('Đã có lỗi xảy ra khi thêm sản phẩm:', error);
+      message.error({
+        content: 'Thêm sản phẩm thất bại',
+        key: 'adding-product',
+      });
     }
   };
+
   return (
     <div className="min-h-screen p-4 sm:p-6">
       <div className="mb-8">

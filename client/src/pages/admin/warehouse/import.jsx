@@ -170,7 +170,6 @@ const WarehouseInbound = () => {
     return isMatch;
   });
 
-  console.log(filteredInbound);
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
 

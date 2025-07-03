@@ -60,20 +60,13 @@ function Header() {
 }
 
 function UsersLayout() {
-  const {
-    message,
-    showLogin,
-    showSignup,
-    toastLoading,
-    loadingError,
-    loadingSuccess,
-  } = useAppContext();
+  const { showLogin, showSignup, toastLoading, loadingError, loadingSuccess } =
+    useAppContext();
 
   return (
     <Layout className="font-roboto! relative! flex! flex-col! items-center!">
-      {message.contextHolder}
       <Header />
-      <Layout.Content className="w-full! bg-white! mt-60! flex! flex-col! items-center!">
+      <Layout.Content className="w-5/6 bg-white mt-60 flex flex-col items-center">
         <Outlet />
         {showLogin && <Login />}
         {showSignup && <Signup />}
