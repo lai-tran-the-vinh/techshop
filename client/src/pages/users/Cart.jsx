@@ -74,6 +74,7 @@ function Cart() {
       if (response.status === 200) {
         await getCart();
         message.destroy();
+        await getCart();
         message.success('Xóa sản phẩm khỏi giỏ hàng thành công');
         setOpen(false);
         setConfirmLoading(false);
@@ -81,7 +82,6 @@ function Cart() {
       }
       throw new Error('Xóa sản phẩm khỏi giỏ hàng thất bại');
     } catch (error) {
-      message.destroy();
       message.error('Xóa sản phẩm khỏi giỏ hàng thất bại');
       console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
     }
