@@ -54,7 +54,6 @@ const searchParams = new URLSearchParams(window.location.search);
 function ListProduct() {
   const [open, setOpen] = useState(false);
   const [total, setTotal] = useState(0);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState('Bạn có chắc chắn muốn xóa?');
