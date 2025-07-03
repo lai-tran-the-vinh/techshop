@@ -72,6 +72,7 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.deleteOne(productId, variantId);
       if (response.status === 200) {
+        await getCart();
         message.destroy();
         message.success('Xóa sản phẩm khỏi giỏ hàng thành công');
         setOpen(false);
@@ -92,11 +93,8 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.delete(userId);
       if (response.status === 200) {
-        await getCart();
         message.destroy();
         message.success('Xóa tất cả sản phẩm khỏi giỏ hàng thành công');
-        setCartItems([]);
-        setSelectedRowKeys([]);
         setOpen(false);
         setConfirmLoading(false);
         return;
