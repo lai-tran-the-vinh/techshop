@@ -22,13 +22,13 @@ function ProductInformation({ className, product, loading }) {
       message.loading('Đang thêm sản phẩm vào giỏ hàng...');
       const response = await cartServices.add(items);
       if (response.status === 201) {
-        message.destroy();
+        
         message.success('Thêm sản phẩm vào giỏ hàng thành công');
         return;
       }
       throw new Error('Thêm sản phẩm vào giỏ hàng thất bại');
     } catch (error) {
-      message.destroy();
+    
       console.error('Error adding items to cart:', error);
       message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
     }

@@ -24,23 +24,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
   const [previewImage, setPreviewImage] = useState('');
 
   const { message } = useAppContext();
-  // setProduct({
-  //   variants: [
-  //     {
-  //       name: '',
-  //       price: '',
-  //       color: {
-  //         name: '',
-  //         hex: '',
-  //       },
-  //       memory: {
-  //         ram: '',
-  //         storage: '',
-  //       },
-  //       images: [],
-  //     },
-  //   ],
-  // });
+
   useEffect(() => {
     if (product) {
       form?.setFieldsValue({ variants: product.variants });
@@ -127,6 +111,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
   };
 
   const handleAddVariant = () => {
+    console.log('các', product);
     setProduct((currentProduct) => ({
       ...currentProduct,
       variants: [
@@ -194,7 +179,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
       </div>
 
       <div className="space-y-6">
-        {product.variants?.map((variant, index) => (
+        {product.variants.map((variant, index) => (
           <div key={index} className={`relative ${index !== 0 ? 'pt-12' : ''}`}>
             {index !== 0 && (
               <Button

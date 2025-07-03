@@ -64,7 +64,7 @@ function EditProduct() {
   const onSubmit = async () => {
     try {
       setToastLoading(true);
-      message.destroy();
+      message.();
       message.loading({ content: 'Đang cập nhật sản phẩm...', key: 'update' });
       await Promise.all(imagesToDelete.map((imgUrl) => callDeleteFile(imgUrl)));
       const formValues = form.getFieldsValue();
