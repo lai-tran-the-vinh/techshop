@@ -93,6 +93,8 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.delete(userId);
       if (response.status === 200) {
+        await getCart();
+        setSelectedRowKeys([]);
         message.destroy();
         message.success('Xóa tất cả sản phẩm khỏi giỏ hàng thành công');
         setOpen(false);
@@ -229,18 +231,19 @@ function Cart() {
         <Button
           icon={<DeleteOutlined />}
           onClick={() => {
+            console.log('Selected row keys:', selectedRowKeys);
             setModalText(
               'Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng không?',
             );
             setOpen(true);
             setDeleteType('all');
           }}
-          disabled={
-            !(
-              selectedRowKeys.length === cartItems.length &&
-              cartItems.length > 0
-            )
-          }
+          // disabled={
+          //   !(
+          //     selectedRowKeys.length === cartItems.length &&
+          //     cartItems.length > 0
+          //   )
+          // }
           className="absolute! z-10 left-840! -top-40"
         >
           Xóa tất cả
