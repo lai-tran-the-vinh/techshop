@@ -64,7 +64,7 @@ function EditProduct() {
   const onSubmit = async () => {
     try {
       setToastLoading(true);
-      message.();
+
       message.loading({ content: 'Đang cập nhật sản phẩm...', key: 'update' });
       await Promise.all(imagesToDelete.map((imgUrl) => callDeleteFile(imgUrl)));
       const formValues = form.getFieldsValue();
@@ -101,7 +101,7 @@ function EditProduct() {
   }
 
   return (
-     <div className="min-h-screen p-4 sm:p-6">
+    <div className="min-h-screen p-4 sm:p-6">
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
           Thêm sản phẩm mới

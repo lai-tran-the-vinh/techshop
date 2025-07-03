@@ -69,7 +69,7 @@ function Cart() {
       const response = await cartServices.deleteOne(productId, variantId);
       if (response.status === 200) {
         await getCart();
-        message.();
+
         message.success('Xóa sản phẩm khỏi giỏ hàng thành công');
         setOpen(false);
         setConfirmLoading(false);
@@ -77,7 +77,6 @@ function Cart() {
       }
       throw new Error('Xóa sản phẩm khỏi giỏ hàng thất bại');
     } catch (error) {
-      message.();
       message.error('Xóa sản phẩm khỏi giỏ hàng thất bại');
       console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
     }
