@@ -14,26 +14,53 @@ import {
 
 import { formatCurrency } from '@helpers';
 import { useAppContext } from '@contexts';
+import { useNavigate } from 'react-router-dom';
 import UserService from '@services/users';
 import CartServices from '@services/carts';
 import { useState, useEffect } from 'react';
+import Products from '@/services/products';
 import BranchService from '@services/branches';
+import InventoryService from '@services/inventories';
 
 function Order() {
+  const navigate = useNavigate();
   const { message, user } = useAppContext();
   const [loading, setLoading] = useState(true);
   const [branches, setBranches] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [inventories, setInventories] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [shippingMethod, setShippingMethod] = useState('Giao hàng tận nơi');
   const [paymentMethod, setPaymentMethod] = useState(
     'Thanh toán khi nhận hàng',
   );
+  const [shippingMethod, setShippingMethod] = useState('Giao hàng tận nơi');
 
   const total = cartItems.reduce((acc, item) => {
     return acc + item.price * item.quantity;
   }, 0);
+
+  const items = cartItems.map((item) => {
+    return {
+      product: item.product._id,
+      variant: item.variant._id,
+      quantity: item.quantity,
+      price: item.price,
+    };
+  });
+
+  const order = {
+    user: user?._id,
+    totalPrice: total,
+    status: 'pending',
+    branch: selectedBranch,
+    shippingAddress: selectedAddress,
+    paymentMethod:
+      paymentMethod === 'Thanh toán khi nhận hàng' ? 'cash' : 'momo',
+  };
+
+  // console.log(JSON.stringify)
 
   const getCart = async () => {
     try {
@@ -45,6 +72,19 @@ function Order() {
     } catch (error) {
       message.error('Không thể lấy giỏ hàng');
       console.error('Lỗi khi lấy giỏ hàng:', error);
+    }
+  };
+
+  const getAllInventories = async () => {
+    try {
+      const inventoryService = new InventoryService();
+      const response = await inventoryService.getAll();
+      if (response.status === 200) {
+        setInventories(response.data.data);
+        return;
+      }
+    } catch (error) {
+      console.error('Không thể lấy danh sách kho hàng.');
     }
   };
 
@@ -77,8 +117,55 @@ function Order() {
   };
 
   useEffect(() => {
+    if (inventories) {
+      // Lấy tất cả branchId duy nhất từ inventories
+      const branchIds = [...new Set(inventories.map((inv) => inv.branch._id))];
+
+      // Lọc ra các branch còn đủ hàng cho toàn bộ items
+      const availableBranchIds = branchIds.filter((branchId) => {
+        // Với mỗi item trong items, kiểm tra có inventory nào cùng branch, cùng product, cùng variant và đủ stock không
+        return items.every((item) => {
+          // Tìm inventory ứng với branch, product, variant
+          const inv = inventories.find(
+            (inv) =>
+              inv.branch._id === branchId &&
+              inv.product._id === item.product &&
+              inv.variants.some(
+                (v) =>
+                  v.variantId._id === item.variant && v.stock >= item.quantity,
+              ),
+          );
+          return !!inv;
+        });
+      });
+
+      setSelectedBranch(availableBranchIds[0]);
+    }
+  }, [inventories]);
+
+  const handleOrder = async () => {
+    try {
+      message.loading('Đang đặt hàng');
+      const productService = new Products();
+      const response = await productService.order(order);
+      if (response.status === 201) {
+        message.destroy();
+        message.success('Đặt hàng thành công');
+        navigate('/');
+        return;
+      }
+      throw new Error('Đặt hàng thất bại');
+    } catch (error) {
+      message.destroy();
+      message.error('Đặt hàng thất bại');
+      console.error('Đặt hàng thất bại', error);
+    }
+  };
+
+  useEffect(() => {
     getCart();
     getAllBranches();
+    getAllInventories();
     if (user && user._id) {
       getUser();
     }
@@ -107,12 +194,6 @@ function Order() {
       setSelectedAddress(selectedAddress);
     }
   }, [shippingMethod]);
-
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      console.log('Cart items:', cartItems);
-    }
-  }, [cartItems]);
 
   if (loading) {
     return (
@@ -403,7 +484,13 @@ function Order() {
               <Typography.Text className="text-sm! text-primary! font-medium!">{`${formatCurrency(total)}đ`}</Typography.Text>
             </Flex>
             <Divider className="my-0!" />
-            <Button type="primary" className="h-40!">
+            <Button
+              onClick={() => {
+                handleOrder(order);
+              }}
+              type="primary"
+              className="h-40!"
+            >
               Đặt hàng
             </Button>
           </div>
