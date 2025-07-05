@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
-import { Button, Input, Flex, Typography } from 'antd';
+import { Button, Input, Flex, Typography, Spin } from 'antd';
 import { SendOutlined, MessageOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
@@ -20,21 +20,29 @@ const ChatBot = () => {
 
     const userMessage = { sender: 'user', text: input };
 
-    setChatHistory((prev) => [...prev, userMessage]);
+    setChatHistory((prev) => [
+      ...prev,
+      userMessage,
+      { sender: 'bot', loading: true },
+    ]);
     setInput('');
+    setLoading(true);
     try {
       const response = await axios.post('http://localhost:8080/chat', {
         message: input,
       });
       if (response.status === 201) {
         setChatHistory((prev) => [
-          ...prev,
+          ...prev.slice(0, -1), // Xóa phần tử loading cuối cùng
           { sender: 'bot', text: response.data.data.reply },
         ]);
+        setLoading(false);
         return;
       }
       throw new Error('Không tìm thấy câu trả lời.');
     } catch (error) {
+      setChatHistory((prev) => prev.slice(0, -1)); // Xóa phần tử loading cuối cùng
+      setLoading(false);
       console.error('Lỗi:', error);
     }
   };
@@ -49,7 +57,12 @@ const ChatBot = () => {
               Đóng
             </Button>
           </Flex>
-          <div className="mt-10 overflow-y-auto flex-1 mb-8 pr-4">
+          <div className={`mt-10 ${chatHistory.length === 0 && !loading && "flex items-center justify-center"} overflow-y-auto flex-1 mb-8 pr-4`}>
+            {chatHistory.length === 0 && !loading && (
+              <Text className="text-center! text-gray-400!">
+                Chúng tôi có thể giúp gì cho bạn?
+              </Text>
+            )}
             {chatHistory.map((msg, index) => (
               <div
                 key={index}
@@ -58,7 +71,9 @@ const ChatBot = () => {
                 <Text
                   className={`py-8! px-12! rounded-lg! inline-block! max-w-[80%]! whitespace-pre-line! ${msg.sender === 'user' ? 'bg-[#d6f2ff]!' : 'bg-[#f1f1f1]!'}`}
                 >
-                  {msg.sender === 'bot' ? (
+                  {msg.loading ? (
+                    <Spin size="small" />
+                  ) : msg.sender === 'bot' ? (
                     <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                       {msg.text}
                     </ReactMarkdown>
