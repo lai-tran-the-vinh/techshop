@@ -2,6 +2,7 @@ import { SearchBox } from '@/components/app';
 import { useEffect } from 'react';
 import { useAppContext } from '@contexts';
 import { Login, Signup } from '@pages/app';
+import { ChatBot } from '@components/users';
 import { Outlet, Link } from 'react-router-dom';
 import { UserInformation } from '@components/users';
 import { CustomerServiceOutlined } from '@ant-design/icons';
@@ -64,11 +65,12 @@ function UsersLayout() {
         <Outlet />
         {showLogin && <Login />}
         {showSignup && <Signup />}
-        <FloatButton
+        <ChatBot />
+        {/* <FloatButton
           type="primary"
           shape="circle"
           icon={<CustomerServiceOutlined />}
-        />
+        /> */}
       </Layout.Content>
 
       {/* <footer>Footer</footer> */}
