@@ -3,6 +3,7 @@ import { Modal, Button, Form, Input, Select, message, Row, Col } from 'antd';
 import {
   callCreateBranch,
   callFetchBranches,
+  callFetchUsers,
   callUpdateBranch,
 } from '@/services/apis';
 import useMessage from '@/hooks/useMessage';
@@ -11,18 +12,35 @@ const ModalBranch = (props) => {
   const { setOpenModal, reloadTable, dataInit, setDataInit, visible } = props;
   const [form] = Form.useForm();
   const [branches, setBranches] = useState([]);
+  const [managers, setManagers] = useState([]);
   const { success, error, warning } = useMessage();
+  const fetchBranches = async () => {
+    try {
+      const response = await callFetchBranches();
+      setBranches(response.data.data.result);
+    } catch (error) {
+      console.error('Error fetching branches:', error);
+    }
+  };
+  const fetchManagers = async () => {
+    try {
+      const response = await callFetchUsers();
+      const allUsers = response.data.data;
+      console.log('allUsers', allUsers);
+    
+      const onlyManagers = allUsers.filter((user) => {
+        return user.role
+      });
+
+      setManagers(onlyManagers);
+    } catch (error) {
+      console.error('Error fetching managers:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const response = await callFetchBranches();
-        setBranches(response.data.data.result);
-      } catch (error) {
-        console.error('Error fetching branches:', error);
-      }
-    };
     fetchBranches();
+    fetchManagers();
   }, []);
 
   useEffect(() => {
@@ -33,7 +51,7 @@ const ModalBranch = (props) => {
         address: dataInit.address,
         email: dataInit.email,
         phone: dataInit.phone,
-        manager: dataInit.manager,
+        manager: dataInit.manager?._id || dataInit.manager, // Lấy ID của manager
         isActive: dataInit.isActive,
       });
     } else {
@@ -138,10 +156,24 @@ const ModalBranch = (props) => {
         <Form.Item
           name="manager"
           label="Quản lý"
-              
-          rules={[{ required: true, message: 'Vui lòng nhập tên quản lý!' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn quản lý!' }]}
         >
-          <Input />
+          <Select
+            placeholder="Chọn quản lý"
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.children ?? '')
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
+          >
+            {managers.map((manager) => (
+              <Select.Option key={manager._id} value={manager._id}>
+                {manager.name} - {manager.email}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           name="isActive"

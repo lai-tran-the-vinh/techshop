@@ -48,6 +48,7 @@ function ImagesSlider({ images }) {
   return (
     <Slider {...settings} className="group">
       {images.map((image, index) => {
+        console.log(image);
         return (
           <div key={index} className="rounded-md flex justify-center px-10">
             <img alt="" className="rounded-md" src={image} />

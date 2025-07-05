@@ -64,11 +64,22 @@ function EditProduct() {
   const onSubmit = async () => {
     try {
       setToastLoading(true);
-
       message.loading({ content: 'Đang cập nhật sản phẩm...', key: 'update' });
-      await Promise.all(imagesToDelete.map((imgUrl) => callDeleteFile(imgUrl)));
+
+      await Promise.all(
+        imagesToDelete.map(async (imgUrl) => {
+          try {
+            await callDeleteFile(imgUrl);
+          } catch (e) {
+            console.warn('Không thể xóa ảnh (bỏ qua):', imgUrl);
+          }
+        }),
+      );
+
       const formValues = form.getFieldsValue();
+      console.log(formValues);
       const prodSub = { ...product, ...formValues };
+
       for (let v of prodSub.variants) {
         const newImgs = [];
         for (let img of v.images) {
@@ -78,8 +89,6 @@ function EditProduct() {
             newImgs.push(img);
           }
         }
-        v.images = newImgs;
-
         v.images = newImgs;
       }
 
