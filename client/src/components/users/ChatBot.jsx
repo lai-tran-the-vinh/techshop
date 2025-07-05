@@ -1,17 +1,24 @@
 import axios from 'axios';
-import { useState } from 'react';
 import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
+import { useState, useRef, useEffect } from 'react';
 import { Button, Input, Flex, Typography, Spin } from 'antd';
 import { SendOutlined, MessageOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
 const ChatBot = () => {
+  const chatBoxRef = useRef(null);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
+
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [chatHistory]);
 
   const toggleChat = () => setVisible(!visible);
 
@@ -57,7 +64,10 @@ const ChatBot = () => {
               Đóng
             </Button>
           </Flex>
-          <div className={`mt-10 ${chatHistory.length === 0 && !loading && "flex items-center justify-center"} overflow-y-auto flex-1 mb-8 pr-4`}>
+          <div
+            ref={chatBoxRef}
+            className={`mt-10 ${chatHistory.length === 0 && !loading && 'flex items-center justify-center'} overflow-y-auto flex-1 mb-8 pr-4`}
+          >
             {chatHistory.length === 0 && !loading && (
               <Text className="text-center! text-gray-400!">
                 Chúng tôi có thể giúp gì cho bạn?
@@ -69,7 +79,7 @@ const ChatBot = () => {
                 className={`${msg.sender === 'user' ? 'text-right' : 'text-left'} mb-8`}
               >
                 <Text
-                  className={`py-8! px-12! rounded-lg! inline-block! max-w-[80%]! whitespace-pre-line! ${msg.sender === 'user' ? 'bg-[#d6f2ff]!' : 'bg-[#f1f1f1]!'}`}
+                  className={`py-8! px-12! text-justify! rounded-lg! inline-block! max-w-[80%]! whitespace-pre-line! ${msg.sender === 'user' ? 'bg-[#d6f2ff]!' : 'bg-[#f1f1f1]!'}`}
                 >
                   {msg.loading ? (
                     <Spin size="small" />
