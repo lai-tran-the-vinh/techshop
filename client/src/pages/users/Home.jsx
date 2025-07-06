@@ -1,4 +1,4 @@
-import { Carousel, Image, Spin, Typography, Flex } from 'antd';
+import { Carousel, Image, Row, Spin } from 'antd';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
 import Categories from '@services/categories';
@@ -27,7 +27,7 @@ function Home() {
     try {
       const products = await Products.getAll();
       setProducts(products.result);
-      console.log(products.result);
+
       setLoading(false);
     } catch (error) {
       console.error(error.message);
@@ -100,7 +100,7 @@ function Home() {
 
   return (
     <>
-      <div className="relative w-[60%] h-300 mt-20 mb-200">
+      <div className="relative w-[60%] h-300 mt-20 mb-250 ">
         <Carousel
           arrows
           autoplaySpeed={5000}
@@ -123,35 +123,7 @@ function Home() {
         </Carousel>
       </div>
 
-      <Flex gap={12}>
-        {categories.map((category, index) => {
-          return (
-            <div
-              key={index}
-              className="bg-white group cursor-pointer gap-8 flex w-200 p-12 rounded-xl"
-            >
-              <div className="w-[60%] flex justify-start">
-                <Typography.Text className="text-base! font-medium! w-[80%]!">
-                  {category.name}
-                </Typography.Text>
-              </div>
-              <div className="flex-1">
-                <Image
-                  preview={false}
-                  className="group-hover:scale-105! transition-all!"
-                  src={
-                    categoryImages.find((image) => {
-                      return image.name === category.name;
-                    })?.url
-                  }
-                ></Image>
-              </div>
-            </div>
-          );
-        })}
-      </Flex>
-
-      <div className="mb-50 w-full">
+      <div className="mb-50 w-full bg-white rounded-[10px] p-10">
         {categories.map((category, index) => {
           const filteredProducts = products.filter((product) => {
             return product.category.name === category.name;

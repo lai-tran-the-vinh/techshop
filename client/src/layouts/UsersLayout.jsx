@@ -17,7 +17,7 @@ function Header() {
 
   return (
     <Layout.Header className="font-roboto! px-0! w-full! fixed! top-0! left-0! right-0! z-10! bg-white! border-b! border-b-gray-300! h-60! flex items-center justify-center">
-      <div className='w-5/6 flex! items-center! justify-between!'>
+      <div className="w-5/6 flex! items-center! justify-between!">
         <Link to="/">
           <Typography.Title
             level={3}
@@ -56,7 +56,7 @@ function Header() {
 }
 
 function UsersLayout() {
-  const { showLogin, showSignup, loading } = useAppContext();
+  const { showLogin, showSignup, loading, setLoading } = useAppContext();
 
   return (
     <Layout className="font-roboto! relative! flex! flex-col! items-center!">
@@ -64,7 +64,7 @@ function UsersLayout() {
       {loading ? (
         <Spin />
       ) : (
-        <Layout.Content className="w-5/6 bg-[#f3f4f7] mt-60 flex flex-col items-center rounded-[10px]">
+        <Layout.Content className="w-[90%] bg-[#f5f5f5]! mt-60 flex flex-col items-center rounded-[10px]">
           <Outlet />
           {showLogin && <Login />}
           {showSignup && <Signup />}
