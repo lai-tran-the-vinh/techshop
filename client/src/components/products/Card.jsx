@@ -35,27 +35,13 @@ function CardProduct({ product = {}, className, loading = false }) {
             }
             className={`${className} rounded-lg! overflow-hidden hover:shadow-md! hover:border-[rgb(245,239,239)]! border border-[rgb(245,239,239)]`}
           >
-            <Divider className="mt-10!" />
+            <Divider className="my-0! mb-10!" />
             <Typography.Title
               level={4}
-              className="mb-8! line-clamp-1! font-roboto! text-[16px]! leading-1.4!"
+              className="line-clamp-1! mb-10! font-roboto! text-[16px]! leading-1.4!"
             >
               {product.name || 'iPhone 16 Pro Max 256GB | Chính hãng VN/A'}
             </Typography.Title>
-            <div className="mb-16">
-              <Space direction="vertical" size={4}>
-                <div className="flex items-center gap-8">
-                  <Typography.Text className="text-xs! font-roboto! text-[#52c41a]!">
-                    Miễn phí vận chuyển
-                  </Typography.Text>
-                </div>
-                <div className="flex items-center gap-8">
-                  <Typography.Text className="text-xs! font-roboto! text-[#1890ff]!">
-                    Trả góp 0% qua thẻ tín dụng
-                  </Typography.Text>
-                </div>
-              </Space>
-            </div>
             <div className="mb-10">
               <div className="line-clamp-1">
                 <Typography.Text className="text-xl! font-bold! font-roboto! text-[#d32f2f]! mr-8!">
@@ -72,7 +58,22 @@ function CardProduct({ product = {}, className, loading = false }) {
                 </Typography.Text>
               </div>
             </div>
-            <Divider className="my-12!" />
+            <div className="mb-10">
+              <Space direction="vertical" size={4}>
+                <div className="flex items-center gap-8">
+                  <Typography.Text className="text-xs! mb-10 font-roboto! text-[#52c41a]!">
+                    Miễn phí vận chuyển
+                  </Typography.Text>
+                </div>
+                <div className="flex items-center gap-8">
+                  <Typography.Text className="text-xs! font-roboto! text-[#1890ff]!">
+                    Trả góp 0% qua thẻ tín dụng
+                  </Typography.Text>
+                </div>
+              </Space>
+            </div>
+            
+            <Divider className="my-10!" />
             <Space direction="vertical" size={8} className="w-full!">
               <Button
                 block
