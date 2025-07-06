@@ -1,4 +1,4 @@
-import { Carousel, Image, Row, Spin } from 'antd';
+import { Carousel, Flex, Image, Row, Spin, Typography } from 'antd';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
 import Categories from '@services/categories';
@@ -123,7 +123,35 @@ function Home() {
         </Carousel>
       </div>
 
-      <div className="mb-50 w-full bg-white rounded-[10px] p-10">
+      <Flex gap={12}>
+        {categories.map((category, index) => {
+          return (
+            <div
+              key={index}
+              className="bg-white group cursor-pointer gap-8 flex w-200 p-12 rounded-xl"
+            >
+              <div className="w-[60%] flex justify-start">
+                <Typography.Text className="text-base! font-medium! w-[80%]!">
+                  {category.name}
+                </Typography.Text>
+              </div>
+              <div className="flex-1">
+                <Image
+                  preview={false}
+                  className="group-hover:scale-105! transition-all!"
+                  src={
+                    categoryImages.find((image) => {
+                      return image.name === category.name;
+                    })?.url
+                  }
+                ></Image>
+              </div>
+            </div>
+          );
+        })}
+      </Flex>
+
+      <div className="mb-50 w-full">
         {categories.map((category, index) => {
           const filteredProducts = products.filter((product) => {
             return product.category.name === category.name;
