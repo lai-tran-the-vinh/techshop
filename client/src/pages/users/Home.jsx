@@ -126,16 +126,19 @@ function Home() {
       <Flex gap={12}>
         {categories.map((category, index) => {
           return (
-            <div key={index} className="bg-white group cursor-pointer flex w-200 p-12 rounded-xl">
-              <div className="w-[60%]">
-                <Typography.Text className="text-base! font-medium!">
+            <div
+              key={index}
+              className="bg-white group cursor-pointer gap-8 flex w-200 p-12 rounded-xl"
+            >
+              <div className="w-[60%] flex justify-start">
+                <Typography.Text className="text-base! font-medium! w-[80%]!">
                   {category.name}
                 </Typography.Text>
               </div>
               <div className="flex-1">
                 <Image
                   preview={false}
-                  className='group-hover:scale-105! transition-all!'
+                  className="group-hover:scale-105! transition-all!"
                   src={
                     categoryImages.find((image) => {
                       return image.name === category.name;
