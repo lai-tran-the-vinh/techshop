@@ -1,4 +1,4 @@
-import { Carousel, Image, Spin } from 'antd';
+import { Carousel, Image, Spin, Typography, Flex } from 'antd';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
 import Categories from '@services/categories';
@@ -71,9 +71,36 @@ function Home() {
     );
   }
 
+  const categoryImages = [
+    {
+      name: 'Điện Thoại',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/phone_cate_c6a412f60a.png',
+    },
+    {
+      name: 'Máy tính',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/96x0/filters:format(webp):quality(75)/laptop_thumb_2_4df0fab60f.png',
+    },
+    {
+      name: 'Máy tính bảng',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/may_tinh_bang_cate_thumb_00e3b3eefa.png',
+    },
+    {
+      name: 'Tai nghe có dây',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/2024_5_20_638518110616919801_havit-fuxi-h3-thumb.jpg',
+    },
+    {
+      name: 'Chuột gaming',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/chuot_gaming_co_day_icore_gm06_2_bb288842b2.jpg',
+    },
+    {
+      name: 'Đồng Hồ',
+      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/joystar_w10_xanh_1_b4c36dc80b.jpg',
+    },
+  ];
+
   return (
     <>
-      <div className="relative w-[60%] h-300 mt-20 mb-250">
+      <div className="relative w-[60%] h-300 mt-20 mb-200">
         <Carousel
           arrows
           autoplaySpeed={5000}
@@ -95,6 +122,31 @@ function Home() {
           ))}
         </Carousel>
       </div>
+
+      <Flex gap={12}>
+        {categories.map((category, index) => {
+          return (
+            <div key={index} className="bg-white group cursor-pointer flex w-200 p-12 rounded-xl">
+              <div className="w-[60%]">
+                <Typography.Text className="text-base! font-medium!">
+                  {category.name}
+                </Typography.Text>
+              </div>
+              <div className="flex-1">
+                <Image
+                  preview={false}
+                  className='group-hover:scale-105! transition-all!'
+                  src={
+                    categoryImages.find((image) => {
+                      return image.name === category.name;
+                    })?.url
+                  }
+                ></Image>
+              </div>
+            </div>
+          );
+        })}
+      </Flex>
 
       <div className="mb-50 w-full">
         {categories.map((category, index) => {

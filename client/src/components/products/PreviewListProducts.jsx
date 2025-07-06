@@ -46,7 +46,7 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
 
   return (
     <div className="w-full bg-white p-20 rounded-xl mt-20">
-      <div className="flex items-center justify-between">
+      <div className="flex mb-10 items-center justify-between">
         <Typography.Title
           level={3}
           className="font-roboto! uppercase font-bold! ml-8! mb-6!"
