@@ -24,8 +24,8 @@ function CardProduct({ product = {}, className, loading = false }) {
             hoverable
             cover={
               <Image
-                preview={false} 
-                alt="iPhone 16 Pro Max"
+                preview={false}
+                alt="Product Image"
                 className="object-fill! aspect-square! mx-auto! mt-20! w-[80%]!"
                 src={
                   product?.variants?.[0]?.images?.[0] ||
@@ -40,24 +40,24 @@ function CardProduct({ product = {}, className, loading = false }) {
               level={4}
               className="line-clamp-1! mb-10! font-roboto! text-[16px]! leading-1.4!"
             >
-              {product.name || 'iPhone 16 Pro Max 256GB | Chính hãng VN/A'}
+              {product.name || 'Sản phẩm mới'}
             </Typography.Title>
             <div className="mb-10">
-              <div className="line-clamp-1">
-                <Typography.Text className="text-xl! font-bold! font-roboto! text-[#d32f2f]! mr-8!">
-                  {`${formatCurrency(product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100))}đ` ||
-                    '30.000.000 VNĐ'}
-                </Typography.Text>
+              <div className="flex flex-col items-start gap-1">
                 <Typography.Text
                   delete
                   type="secondary"
                   className="text-sm! font-roboto!"
                 >
-                  {`${formatCurrency(product?.variants?.[0]?.price)}đ` ||
-                    '35.290.000 VNĐ'}
+                  {`${formatCurrency(product?.variants?.[0]?.price)}đ` || ''}
+                </Typography.Text>
+                <Typography.Text className="text-xl! font-bold! font-roboto! text-[#d32f2f]!">
+                  {`${formatCurrency(product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100))}đ` ||
+                    'Liên hệ'}
                 </Typography.Text>
               </div>
             </div>
+
             <div className="mb-10">
               <Space direction="vertical" size={4}>
                 <div className="flex items-center gap-8">
@@ -72,7 +72,7 @@ function CardProduct({ product = {}, className, loading = false }) {
                 </div>
               </Space>
             </div>
-            
+
             <Divider className="my-10!" />
             <Space direction="vertical" size={8} className="w-full!">
               <Button
@@ -82,7 +82,7 @@ function CardProduct({ product = {}, className, loading = false }) {
                 onClick={() => {
                   navigate(`/product/${product._id}`);
                 }}
-                className="h-[44]! rounded-md! font-roboto! font-medium! bg-primary!"
+                className="h-[44]! rounded-[10]! font-roboto! font-medium! bg-primary!"
               >
                 Mua ngay
               </Button>

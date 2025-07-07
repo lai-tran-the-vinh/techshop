@@ -7,6 +7,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { UserInformation } from '@components/users';
 import { CustomerServiceOutlined } from '@ant-design/icons';
 import { Layout, Typography, Button, Flex, FloatButton, Spin } from 'antd';
+import FooterComponent from './footer';
 
 function Header() {
   const { setShowLogin, setShowSignup } = useAppContext();
@@ -61,6 +62,7 @@ function UsersLayout() {
   return (
     <Layout className="font-roboto! relative! flex! flex-col! items-center!">
       <Header />
+
       {loading ? (
         <Spin />
       ) : (
@@ -71,6 +73,8 @@ function UsersLayout() {
           <ChatBot />
         </Layout.Content>
       )}
+
+      <FooterComponent />
     </Layout>
   );
 }

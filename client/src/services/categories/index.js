@@ -4,8 +4,8 @@ import axiosInstance from '@services/apis';
 class Categories {
   static getAll = getAll;
 
-  findOne(id) {
-    return axiosInstance.get(`/api/v1/categories/${id}`);
+  async findOne(id) {
+    return await axiosInstance.get(`/api/v1/categories/${id}`);
   }
 }
 

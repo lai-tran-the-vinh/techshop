@@ -6,7 +6,13 @@ import { useAppContext } from '@/contexts';
 
 const { Option } = Select;
 
-function CommonInformation({ brands, product, categories, form }) {
+function CommonInformation({
+  brands,
+  product,
+  categories,
+  form,
+  onCategoryChange,
+}) {
   const { message } = useAppContext();
   const handleImageUpload = useCallback(async (files, uploadHandler) => {
     try {
@@ -47,7 +53,6 @@ function CommonInformation({ brands, product, categories, form }) {
       </div>
 
       <Row gutter={[10, 0]}>
-      
         <Col span={5}>
           <Form.Item name="name" label="Tên sản phẩm">
             <Input placeholder="Nhập tên sản phẩm" size="large" />
@@ -66,7 +71,11 @@ function CommonInformation({ brands, product, categories, form }) {
         </Col>
         <Col span={5}>
           <Form.Item name="category" label="Thể loại">
-            <Select placeholder="Chọn thể loại" size="large">
+            <Select
+              placeholder="Chọn thể loại"
+              size="large"
+              onChange={onCategoryChange}
+            >
               {categories.map((category) => (
                 <Option key={category._id} value={category._id}>
                   {category.name}

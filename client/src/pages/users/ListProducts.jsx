@@ -24,81 +24,53 @@ function ProductsList() {
   const [category, setCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBrand, setCurrentBrand] = useState('');
-
-  // Cải thiện logic lọc sản phẩm
+  const [productType, setProductType] = useState('phone');
   const filteredProducts = products.filter((product) => {
-    // Lọc theo thương hiệu
     if (currentBrand && currentBrand !== 'Tất cả') {
       if (product.brand.name !== currentBrand.name) {
         return false;
       }
     }
 
-    // Lọc theo giá
     let matchPrice = true;
     const realPrice =
       product?.variants?.[0]?.price -
       product?.variants?.[0]?.price * (product?.discount / 100);
-
-    // Lọc theo khoảng giá được chọn sẵn
     if (filter.price && Array.isArray(filter.price)) {
       const [minPrice, maxPrice] = filter.price;
       matchPrice = realPrice >= minPrice && realPrice <= maxPrice;
     }
-
-    // Lọc theo khoảng giá tùy chỉnh (slider)
     if (filter.priceRange && Array.isArray(filter.priceRange)) {
       const [minPrice, maxPrice] = filter.priceRange;
       matchPrice = realPrice >= minPrice && realPrice <= maxPrice;
     }
 
-    // Lọc theo RAM
-    let matchRam = true;
-    if (filter.ram) {
-      matchRam = product.variants?.some((v) =>
-        v.memory.ram?.toLowerCase().includes(filter.ram.label?.toLowerCase()),
-      );
-    }
+    const matchesFilter = (product, key, value) => {
+      const data =
+        product.variants?.[0]?.memory?.[key] || product?.attributes?.[key];
 
-    // Lọc theo dung lượng lưu trữ
-    let matchStorage = true;
-    if (filter.storage) {
-      matchStorage = product.variants?.some((v) => {
-        const storageValue = v.memory.storage?.toLowerCase();
-        const filterValue = filter.storage.label?.toLowerCase();
+      return data && data.toLowerCase().includes(value.label.toLowerCase());
+    };
 
-        // Xử lý các trường hợp đặc biệt
-        if (filterValue === '≤128 gb') {
-          // Lọc các sản phẩm có dung lượng <= 128GB
-          const storageNumber = parseInt(storageValue);
-          return storageNumber <= 128;
-        } else if (filterValue === '1 tb') {
-          // Chuyển đổi TB sang GB để so sánh
-          return (
-            storageValue.includes('1tb') ||
-            storageValue.includes('1 tb') ||
-            storageValue.includes('1024gb')
-          );
-        } else {
-          return storageValue?.includes(filterValue);
-        }
-      });
-    }
+    const keys = Object.keys(filter).filter(
+      (key) => filter[key] && key !== 'price' && key !== 'priceRange',
+    );
 
-    return matchPrice && matchRam && matchStorage;
+    const allOtherFiltersMatch = keys.every((key) => {
+      return matchesFilter(product, key, filter[key]);
+    });
+
+    return matchPrice && allOtherFiltersMatch;
   });
 
-  // Sắp xếp sản phẩm đã lọc
   const sortedAndFilteredProducts = [...filteredProducts].sort((a, b) => {
     if (sort === 1) {
-      // Giá tăng dần
       const priceA =
         a.variants[0].price - a.variants[0].price * (a.discount / 100);
       const priceB =
         b.variants[0].price - b.variants[0].price * (b.discount / 100);
       return priceA - priceB;
     } else if (sort === 2) {
-      // Giá giảm dần
       const priceA =
         a.variants[0].price - a.variants[0].price * (a.discount / 100);
       const priceB =
@@ -118,7 +90,7 @@ function ProductsList() {
           return acc;
         }, {}),
       );
-      console.log(uniqueBrands);
+
       setBrands(uniqueBrands);
 
       const allRams = products.flatMap(
@@ -181,12 +153,15 @@ function ProductsList() {
         storages={storages}
         setFilter={setFilter}
         title={category?.name}
+        categorieCurrent={category?.slug}
         setProducts={setProducts}
         currentPage={currentPage}
         currentBrand={currentBrand}
         setCurrentPage={setCurrentPage}
         setCurrentBrand={setCurrentBrand}
         filteredProducts={sortedAndFilteredProducts}
+        productType={productType}
+        setProductType={setProductType}
       />
     </div>
   );

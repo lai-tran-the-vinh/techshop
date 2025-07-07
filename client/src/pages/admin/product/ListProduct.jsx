@@ -68,6 +68,7 @@ function ListProduct() {
   const navigate = useNavigate();
   const _page = searchParams.get('_page') || 1;
   const _limit = searchParams.get('_limit') || 10;
+  const _category = searchParams.get('_category') || null;
 
   const [filters, setFilters] = useState({
     category: null,

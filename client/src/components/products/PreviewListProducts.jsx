@@ -1,50 +1,62 @@
 import CardProduct from './Card';
 import Slider from 'react-slick';
 import { useNavigate } from 'react-router-dom';
-import { Tag, Typography, Empty, Flex } from 'antd';
+import { Typography, Empty, Flex } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 function PreviewListProducts({ title, loading, products = [], category = {} }) {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const brands = [
+    'Tất cả',
+    ...new Set(products.map((product) => product.brand.name)),
+  ];
 
   const settings = {
     speed: 500,
+    infinite: true,
     slidesToShow: 5,
     slidesToScroll: 1,
-    nextArrow: <CustomNextArrow />,
-    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow isVisible={isHovered} />,
+    prevArrow: <CustomPrevArrow isVisible={isHovered} />,
   };
 
-  function CustomNextArrow(properties) {
+  function CustomNextArrow({ onClick, isVisible }) {
     return (
       <button
         type="button"
-        onClick={properties.onClick}
-        className="absolute -right-30 rounded-full! flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2 z-10 text-black! cursor-pointer shadow-lg p-6 transition-all text-xl!"
+        onClick={onClick}
+        className={`absolute -right-35 rounded-full! flex items-center justify-center hover:opacity-80 bg-white top-1/2 -translate-y-1/2 z-10 text-black! cursor-pointer shadow-lg p-8! transition-all text-lg! ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
       >
-        <RightOutlined />
+        <RightOutlined className="font-medium!" />
       </button>
     );
   }
 
-  function CustomPrevArrow(properties) {
+  function CustomPrevArrow({ onClick, isVisible }) {
     return (
       <button
         type="button"
-        onClick={properties.onClick}
-        className="absolute -left-30 rounded-full! flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2 z-10 text-black! cursor-pointer shadow-lg p-6 transition-all text-xl!"
+        onClick={onClick}
+        className={`absolute -left-35 rounded-full! flex items-center justify-center hover:opacity-80 bg-white top-1/2 -translate-y-1/2 z-10 text-black! cursor-pointer shadow-lg p-8! transition-all text-lg! ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
       >
-        <LeftOutlined />
+        <LeftOutlined className="font-medium!" />
       </button>
     );
   }
 
   return (
-    <div className="w-full xl:px-50 lg:px-30 md:px-20 mt-20">
-      <div className="flex items-center justify-between mt-10 mb-5">
+    <div className="w-full bg-white p-20 rounded-xl mt-20">
+      <div className="flex mb-10 items-center justify-between">
         <Typography.Title
           level={3}
-          className="font-roboto! text-primary! font-bold! mb-6!"
+          className="font-roboto! uppercase font-bold! ml-8! mb-6!"
         >
           {title}
         </Typography.Title>
@@ -54,7 +66,7 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
             const id = category._id;
             navigate(`/product/all/${id}`);
           }}
-          className="cursor-pointer font-medium text-primary"
+          className="cursor-pointer text-base mr-8 font-medium text-primary"
         >
           Xem tất cả
         </span>
@@ -74,11 +86,12 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
           </div>
         )}
 
-        {products.length > 0 && (
-          <Slider
-            {...settings}
-            className="flex! bg-white! items-center! justify-center! w-full! "
-          >
+        <div
+          className="w-full"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Slider {...settings} className="bg-white! w-full!">
             {products.map((product, index) => {
               return (
                 <div key={index} className="px-8">
@@ -91,7 +104,7 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
               );
             })}
           </Slider>
-        )}
+        </div>
       </Flex>
     </div>
   );

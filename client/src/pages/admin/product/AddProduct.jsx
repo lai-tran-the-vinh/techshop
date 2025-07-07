@@ -14,13 +14,13 @@ import Products from '@/services/products';
 import { useAppContext } from '@contexts';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Button, Form } from 'antd';
-
+import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
 function AddProduct() {
   const { message } = useAppContext();
   const navigate = useNavigate();
   const [form] = Form.useForm();
-
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [fieldsToShow, setFieldsToShow] = useState({});
   const [loading, setLoading] = useState(false);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -31,52 +31,18 @@ function AddProduct() {
     brand: '',
     discount: '',
     isActive: true,
-    specifications: {
-      weight: '',
-      battery: '',
-      processor: '',
-      dimensions: '',
-      displaySize: '',
-      displayType: '',
-      operatingSystem: '',
-    },
-    connectivity: {
-      wifi: '',
-      bluetooth: '',
-      cellular: '',
-      nfc: false,
-      gps: false,
-      ports: [],
-    },
-    camera: {
-      front: {
-        resolution: '',
-        features: [],
-        videoRecording: [],
-      },
-      rear: {
-        resolution: '',
-        features: [],
-        lensCount: '',
-        videoRecording: [],
-      },
-    },
+    attributes: {},
     variants: [
       {
         name: '',
         price: '',
-        color: {
-          name: '',
-          hex: '',
-        },
-        memory: {
-          ram: '',
-          storage: '',
-        },
+        color: { name: '', hex: '' },
+        memory: { ram: '', storage: '' },
         images: [],
       },
     ],
   });
+
   useEffect(() => {
     fetchInitialData();
   }, []);
@@ -98,44 +64,31 @@ function AddProduct() {
     }
   };
 
-  const removeEmptyFields = (obj) => {
-    const filtered = {};
-
-    Object.keys(obj).forEach((key) => {
-      const value = obj[key];
-      if (value !== null && value !== undefined) {
-        if (Array.isArray(value)) {
-          if (value.length > 0) {
-            if (value[0] instanceof File) {
-              filtered[key] = value;
-            } else {
-              filtered[key] = value
-                .map((item) =>
-                  typeof item === 'object' && !(item instanceof File)
-                    ? removeEmptyFields(item)
-                    : item,
-                )
-                .filter(Boolean);
-            }
-          }
-        } else if (typeof value === 'object' && !(value instanceof File)) {
-          const nestedObj = removeEmptyFields(value);
-          if (Object.values(nestedObj).length > 0) {
-            filtered[key] = nestedObj;
-          }
-        }
-      }
-    });
-
-    return filtered;
+  const onCategoryChange = (categoryId) => {
+    const foundCategory = categories.find((c) => c._id === categoryId);
+    setSelectedCategory(categoryId);
+    form.setFieldValue('category', categoryId);
+    if (foundCategory?.configFields) {
+      setFieldsToShow(foundCategory.configFields);
+    } else {
+      setFieldsToShow({});
+    }
   };
+
   const onSubmit = async () => {
     try {
       setProduct(form.getFieldsValue());
 
       message.loading({ content: 'Đang thêm sản phẩm', key: 'adding-product' });
 
-      const productToSubmit = product;
+      const productToSubmit = form.getFieldsValue();
+      productToSubmit.attributes = {
+        ...productToSubmit.attributes,
+        ...fieldsToShow.extraFields.reduce((acc, field) => {
+          acc[field.name] = form.getFieldValue([field.group, field.name]);
+          return acc;
+        }, {}),
+      };
 
       for (let i = 0; i < productToSubmit.variants.length; i++) {
         const variant = productToSubmit.variants[i];
@@ -164,6 +117,79 @@ function AddProduct() {
       });
     }
   };
+  const groupTitles = {
+    specifications: 'Thông số kỹ thuật',
+    connectivity: 'Kết nối',
+    'camera.front': 'Camera trước',
+    'camera.rear': 'Camera sau',
+  };
+  const renderExtraFields = (group) => {
+    const fields =
+      fieldsToShow.extraFields?.filter((f) => f.group === group) || [];
+
+    const chunks = [];
+    for (let i = 0; i < fields.length; i += 2) {
+      chunks.push(fields.slice(i, i + 2));
+    }
+
+    return (
+      <>
+        <div className="flex gap-4 items-center mb-10 relative">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-primary font-semibold tracking-wide uppercase letter-spacing-0.5 relative">
+              {groupTitles[group] || 'Thông tin bổ sung'}
+            </span>
+          </div>
+          <div className="flex-1 relative">
+            <div className="border-t border-r-300 opacity-60 text-primary"></div>
+          </div>
+        </div>
+        {chunks.map((pair, index) => (
+          <Row key={index} gutter={16}>
+            {pair.map((field) => (
+              <Col span={12} key={field.name}>
+                <Form.Item
+                  name={[group, field.name]}
+                  label={field.label}
+                  rules={
+                    field.required
+                      ? [
+                          {
+                            required: true,
+                            message: `${field.label} là bắt buộc`,
+                          },
+                        ]
+                      : []
+                  }
+                >
+                  {field.type === 'text' || field.type === 'number' ? (
+                    <Input
+                      type={field.type}
+                      placeholder={`Nhập thông tin ${field.label}`}
+                    />
+                  ) : field.type === 'select' ? (
+                    <Select
+                      options={(field.options || []).map((o) => ({
+                        label: o,
+                        value: o,
+                      }))}
+                    />
+                  ) : field.type === 'checkbox' ? (
+                    <Select
+                      options={[
+                        { label: 'Có', value: true },
+                        { label: 'Không', value: false },
+                      ]}
+                    />
+                  ) : null}
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+        ))}
+      </>
+    );
+  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6">
@@ -177,11 +203,23 @@ function AddProduct() {
         <CommonInformation
           brands={brands}
           categories={categories}
+          onCategoryChange={onCategoryChange}
           form={form}
         />
-        <Specifications form={form} />
-        <ConnectionInformation form={form} />
-        <CameraInformations form={form} />
+
+        {fieldsToShow.specifications && (
+          <>{renderExtraFields('specifications')}</>
+        )}
+
+        {fieldsToShow.camera && (
+          <>
+            {renderExtraFields('camera.front')}
+            {renderExtraFields('camera.rear')}
+          </>
+        )}
+
+        {fieldsToShow.connectivity && <>{renderExtraFields('connectivity')}</>}
+
         <Variants form={form} product={product} setProduct={setProduct} />
 
         <div className="px-4 py-4 sm:px-6 lg:px-8">

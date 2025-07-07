@@ -13,6 +13,7 @@ import {
   Tag,
   Flex,
   Modal,
+  Image,
 } from 'antd';
 import {
   DeleteOutlined,
@@ -91,6 +92,15 @@ const CategoryManagement = () => {
   );
 
   const columns = [
+    {
+      title: 'Logo',
+      dataIndex: 'logo',
+      render: (text) => (
+        <Image src={text} alt="Category Logo" style={{ width: 80 }} />
+      ),
+      key: 'logo',
+      width: 90,
+    },
     {
       title: 'Tên danh mục',
       dataIndex: 'name',

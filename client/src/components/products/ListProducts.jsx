@@ -15,15 +15,19 @@ import {
   Slider,
   Collapse,
   Input,
+  Tabs,
 } from 'antd';
 import { Card } from '@components/products';
 import { ReloadOutlined, FilterOutlined } from '@ant-design/icons';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { use, useEffect, useState } from 'react';
 import { callFetchBranches, callFetchBrands } from '@/services/apis';
+import Categories from '@/services/categories';
+import { PRODUCT_CONFIGS } from './productConfig';
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
+const { TabPane } = Tabs;
 
 function ListProducts(properties) {
   const {
@@ -38,42 +42,70 @@ function ListProducts(properties) {
     storages,
     setFilter,
     setProducts,
+    categorieCurrent,
     currentBrand,
     setCurrentBrand,
     filteredProducts,
+
+    setProductType,
   } = properties;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const _page = parseInt(searchParams.get('_page') || '1');
   const _limit = parseInt(searchParams.get('_limit') || '8');
+
   const [allBrands, setAllBrands] = useState([]);
 
-  //
-  useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const res = await callFetchBrands();
-        setAllBrands(res.data.data);
-        console.log(res.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const [activeFilters, setActiveFilters] = useState({});
 
+  const navigate = useNavigate();
+
+  const currentConfig =
+    PRODUCT_CONFIGS[categorieCurrent] || PRODUCT_CONFIGS['dien-thoai'];
+
+  const fetchBranches = async () => {
+    try {
+      const res = await callFetchBrands();
+      setAllBrands(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
     fetchBranches();
   }, []);
 
   const startIndex = (_page - 1) * _limit;
   const endIndex = startIndex + _limit;
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
   const handleBrandClick = (brand) => {
     if (brand === 'Tất cả') {
       setCurrentBrand('');
       return;
     }
     setCurrentBrand(brand);
+    setSearchParams({ _page: '1', _limit: _limit.toString() });
+  };
 
+  const handleProductTypeChange = (type) => {
+    setProductType(type);
+
+    setFilter({
+      price: null,
+      color: null,
+      ram: null,
+      storage: null,
+      priceRange: null,
+      os: null,
+      processor: null,
+      screenSize: null,
+      batteryCapacity: null,
+      connectivity: null,
+    });
+
+    setCurrentBrand('');
+    setSort(null);
+    setActiveFilters({});
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 
@@ -84,16 +116,20 @@ function ListProducts(properties) {
       ram: null,
       storage: null,
       priceRange: null,
+      os: null,
+      processor: null,
+      screenSize: null,
+      batteryCapacity: null,
+      connectivity: null,
     });
     setCurrentBrand('');
     setSort(null);
-
+    setActiveFilters({});
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 
   const handleSortChange = (value) => {
     setSort(value);
-
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 
@@ -103,7 +139,6 @@ function ListProducts(properties) {
       priceRange: value,
       price: null,
     }));
-
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 
@@ -114,22 +149,14 @@ function ListProducts(properties) {
     });
   };
 
-  const priceRanges = [
-    { label: 'Dưới 2 triệu', value: [0, 2000000] },
-    { label: 'Từ 2 - 4 triệu', value: [2000000, 4000000] },
-    { label: 'Từ 4 - 7 triệu', value: [4000000, 7000000] },
-    { label: 'Từ 7 - 13 triệu', value: [7000000, 13000000] },
-    { label: 'Từ 13 - 20 triệu', value: [13000000, 20000000] },
-    { label: 'Trên 20 triệu', value: [20000000, 100000000] },
-  ];
+  const handleFilterChange = (filterType, value, checked) => {
+    setFilter((prev) => ({
+      ...prev,
+      [filterType]: checked ? { label: value } : null,
+    }));
 
-  const operatingSystems = ['iOS', 'Android'];
-  const storageCapacities = ['≤128 GB', '256 GB', '512 GB', '1 TB'];
-  const connectivity = ['NFC', 'Bluetooth'];
-
-  const minPrice = 0;
-  const maxPrice = 50000000;
-  const defaultPriceRange = [0, 50000000];
+    setSearchParams({ _page: '1', _limit: _limit.toString() });
+  };
 
   const formatCurrency = (amount, locale = 'vi-VN', currency = 'VND') => {
     return new Intl.NumberFormat(locale, {
@@ -138,6 +165,29 @@ function ListProducts(properties) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
+  const renderFilterPanel = (key, title, options) => (
+    <Panel header={title} key={key}>
+      <div className="space-y-2">
+        {options.map((option, index) => {
+          const label = typeof option === 'object' ? option.label : option;
+          return (
+            <div key={index} className="flex items-center">
+              <Checkbox
+                checked={filter[key]?.label === option}
+                onChange={(e) =>
+                  handleFilterChange(key, option, e.target.checked)
+                }
+              >
+                {label}
+              </Checkbox>
+            </div>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -145,19 +195,20 @@ function ListProducts(properties) {
       </div>
     );
   }
-  console.log(brands);
+
   return (
     <div className="min-h-screen w-full">
       <div className="flex items-center justify-between mb-6">
         <Title level={3} className="mb-0! text-gray-800 font-extrabold!">
-          {title}
+          {currentConfig?.title}
         </Title>
       </div>
+
       <Row gutter={[10, 10]} className="mb-6">
         <Button
           size="large"
           type="default"
-          className="ml-10! h-[50px]! w-[150px] "
+          className="ml-10! h-[50px]! w-[150px]"
           onClick={() => handleBrandClick('Tất cả')}
         >
           Tất cả
@@ -169,13 +220,12 @@ function ListProducts(properties) {
               type="default"
               onClick={() => handleBrandClick(brand)}
               className={`
-          w-full h-[50px]! 
-          flex items-center justify-center 
-          transition-all duration-300 ease-in-out
-          hover:shadow-lg hover:scale-105
-          ${brand === currentBrand ? 'border-1! border-primary! ' : 'border border-gray-300'}
-         
-        `}
+                w-full h-[50px]! 
+                flex items-center justify-center 
+                transition-all duration-300 ease-in-out
+                hover:shadow-lg hover:scale-105
+                ${brand === currentBrand ? 'border-1! border-primary!' : 'border border-gray-300'}
+              `}
             >
               {brand?.logo ? (
                 <div className="flex items-center justify-center w-full h-full p-2">
@@ -194,6 +244,7 @@ function ListProducts(properties) {
           </Col>
         ))}
       </Row>
+
       <Row gutter={[10, 10]}>
         <Col xs={24} md={6} lg={6}>
           <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
@@ -213,28 +264,19 @@ function ListProducts(properties) {
             </div>
 
             <div className="mb-6">
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-2">
                 {brands.slice(0, 6).map((brand, index) => (
                   <Button
                     key={index}
                     size="small"
                     type={currentBrand === brand ? 'primary' : 'default'}
                     onClick={() => handleBrandClick(brand)}
-                    className="text-xs! p-18! rounded-[10px]!"
+                    className="text-xs! p-2! rounded-[10px]!"
                   >
                     {brand.name}
                   </Button>
                 ))}
               </div>
-              {brands.length > 6 && (
-                <Button
-                  type="link"
-                  size="small"
-                  className="p-0 mt-2 text-blue-500"
-                >
-                  Xem thêm
-                </Button>
-              )}
             </div>
 
             <Collapse defaultActiveKey={['price']} ghost>
@@ -260,7 +302,7 @@ function ListProducts(properties) {
                       <Text className="text-sm text-gray-600">Tất cả</Text>
                     </Checkbox>
                   </div>
-                  {priceRanges.map((range, index) => (
+                  {currentConfig.priceRanges.map((range, index) => (
                     <div key={index} className="flex items-center">
                       <Checkbox
                         checked={
@@ -290,7 +332,6 @@ function ListProducts(properties) {
                     </div>
                   ))}
                 </div>
-
                 <div className="mt-4 pt-4 border-t">
                   <Text className="text-sm text-gray-600 mb-2 block">
                     Hoặc nhập khoảng giá phù hợp:
@@ -298,10 +339,18 @@ function ListProducts(properties) {
                   <div className="mb-4!">
                     <Slider
                       range
-                      min={minPrice}
-                      max={maxPrice}
-                      defaultValue={defaultPriceRange}
-                      value={filter.priceRange || defaultPriceRange}
+                      min={currentConfig.minPrice}
+                      max={currentConfig.maxPrice}
+                      defaultValue={[
+                        currentConfig.minPrice,
+                        currentConfig.maxPrice,
+                      ]}
+                      value={
+                        filter.priceRange || [
+                          currentConfig.minPrice,
+                          currentConfig.maxPrice,
+                        ]
+                      }
                       step={100000}
                       onChange={handlePriceRangeChange}
                       tooltip={{
@@ -309,128 +358,100 @@ function ListProducts(properties) {
                       }}
                     />
                   </div>
-
-                  <div className="flex gap-2 items-center">
-                    <Input
-                      type="number"
-                      placeholder="0"
-                      value={filter.priceRange?.[0] || minPrice}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value) || 0;
-                        const currentRange =
-                          filter.priceRange || defaultPriceRange;
-                        handlePriceRangeChange([value, currentRange[1]]);
-                      }}
-                      className="flex-1 px-2 py-1 border rounded text-sm"
-                    />
-                    <span className="text-gray-400">~</span>
-                    <Input
-                      type="number"
-                      placeholder="50.000.000"
-                      value={formatCurrency(filter.priceRange?.[1] || maxPrice)}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value) || maxPrice;
-                        const currentRange =
-                          filter.priceRange || defaultPriceRange;
-                        handlePriceRangeChange([currentRange[0], value]);
-                      }}
-                      className="flex-1 px-2 py-1 border rounded text-sm"
-                    />
-                  </div>
-
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
                     <span>
-                      {formatCurrency(filter.priceRange?.[0] || minPrice)} vnđ
+                      {formatCurrency(
+                        filter.priceRange?.[0] || currentConfig.minPrice,
+                      )}{' '}
+                      vnđ
                     </span>
                     <span>
-                      {formatCurrency(filter.priceRange?.[1] || maxPrice)} vnđ
+                      {formatCurrency(
+                        filter.priceRange?.[1] || currentConfig.maxPrice,
+                      )}{' '}
+                      vnđ
                     </span>
                   </div>
                 </div>
               </Panel>
 
-              <Panel header="Hệ điều hành" key="os">
-                <div className="space-y-2">
-                  {operatingSystems.map((os, index) => (
-                    <div key={index} className="flex items-center">
-                      <Checkbox>{os}</Checkbox>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
+              {currentConfig.filters.operatingSystems &&
+                renderFilterPanel(
+                  'os',
+                  'Hệ điều hành',
+                  currentConfig.filters.operatingSystems,
+                )}
 
-              <Panel header="Dung lượng RAM" key="ram">
-                <div className="space-y-2">
-                  {rams.map((ram, index) => (
-                    <div key={index} className="flex items-center">
-                      <Checkbox
-                        checked={filter.ram?.label === ram}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilter((prev) => ({
-                              ...prev,
-                              ram: { label: ram },
-                            }));
-                          } else {
-                            setFilter((prev) => ({ ...prev, ram: null }));
-                          }
-                          setSearchParams({
-                            _page: '1',
-                            _limit: _limit.toString(),
-                          });
-                        }}
-                      >
-                        {ram}
-                      </Checkbox>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
+              {currentConfig.filters.ramCapacities &&
+                renderFilterPanel(
+                  'ram',
+                  'Dung lượng RAM',
+                  currentConfig.filters.ramCapacities,
+                )}
 
-              <Panel header="Dung lượng ROM" key="storage">
-                <div className="space-y-2">
-                  {storageCapacities.map((capacity, index) => (
-                    <div key={index} className="flex items-center">
-                      <Checkbox
-                        checked={filter.storage?.label === capacity}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilter((prev) => ({
-                              ...prev,
-                              storage: { label: capacity },
-                            }));
-                          } else {
-                            setFilter((prev) => ({ ...prev, storage: null }));
-                          }
-                          setSearchParams({
-                            _page: '1',
-                            _limit: _limit.toString(),
-                          });
-                        }}
-                      >
-                        {capacity}
-                      </Checkbox>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
+              {currentConfig.filters.storageCapacities &&
+                renderFilterPanel(
+                  'storage',
+                  'Dung lượng bộ nhớ',
+                  currentConfig.filters.storageCapacities,
+                )}
 
-              <Panel header="Kết nối" key="connectivity">
-                <div className="space-y-2">
-                  {connectivity.map((conn, index) => (
-                    <div key={index} className="flex items-center">
-                      <Checkbox>{conn}</Checkbox>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
+              {currentConfig.filters.processors &&
+                renderFilterPanel(
+                  'processor',
+                  'Bộ xử lý',
+                  currentConfig.filters.processors,
+                )}
+
+              {currentConfig.filters.screenSize &&
+                renderFilterPanel(
+                  'screenSize',
+                  'Kích thước màn hình',
+                  currentConfig.filters.screenSize,
+                )}
+
+              {currentConfig.filters.batteryCapacity &&
+                renderFilterPanel(
+                  'batteryCapacity',
+                  'Dung lượng pin',
+                  currentConfig.filters.batteryCapacity,
+                )}
+
+              {currentConfig.filters.batteryLife &&
+                renderFilterPanel(
+                  'batteryLife',
+                  'Thời lượng pin',
+                  currentConfig.filters.batteryLife,
+                )}
+
+              {currentConfig.filters.connectivity &&
+                renderFilterPanel(
+                  'connectivity',
+                  'Kết nối',
+                  currentConfig.filters.connectivity,
+                )}
+
+              {currentConfig.filters.graphicsCard &&
+                renderFilterPanel(
+                  'graphicsCard',
+                  'Card đồ họa',
+                  currentConfig.filters.graphicsCard,
+                )}
+
+              {currentConfig.filters.features &&
+                renderFilterPanel(
+                  'features',
+                  'Tính năng',
+                  currentConfig.filters.features,
+                )}
             </Collapse>
           </div>
         </Col>
 
+        {/* Danh sách sản phẩm */}
         <Col xs={24} md={18} lg={18}>
           <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <div className="flex justify-between items-center p-10">
+            <div className="flex justify-between items-center p-4">
               <Text className="text-sm text-gray-600">
                 Tìm thấy{' '}
                 <span className="font-semibold">{filteredProducts.length}</span>{' '}
@@ -439,9 +460,9 @@ function ListProducts(properties) {
               </Text>
 
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 b">
+                <div className="flex items-center gap-2">
                   <Button
-                    className=" p-15! border-none!"
+                    className="p-3! border-none!"
                     type={sort === null ? 'primary' : 'default'}
                     size="small"
                     onClick={() => handleSortChange(null)}
@@ -449,7 +470,7 @@ function ListProducts(properties) {
                     Nổi bật
                   </Button>
                   <Button
-                    className=" p-15! border-none!"
+                    className="p-3! border-none!"
                     type={sort === 1 ? 'primary' : 'default'}
                     size="small"
                     onClick={() => handleSortChange(1)}
@@ -457,7 +478,7 @@ function ListProducts(properties) {
                     Giá tăng dần
                   </Button>
                   <Button
-                    className=" p-15! border-none!"
+                    className="p-3! border-none!"
                     type={sort === 2 ? 'primary' : 'default'}
                     size="small"
                     onClick={() => handleSortChange(2)}

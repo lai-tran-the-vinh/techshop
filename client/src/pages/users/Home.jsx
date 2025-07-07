@@ -1,10 +1,11 @@
-import { Carousel, Flex, Image, Row, Spin, Typography } from 'antd';
+import { Carousel, Image, Spin, Typography, Flex } from 'antd';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
 import Categories from '@services/categories';
 import { PreviewListProducts } from '@components/products';
 
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ function Home() {
     'https://www.gizmochina.com/wp-content/uploads/2021/10/macbook-pro-2021-renders-3-1024x576.jpg?x70461',
   ]);
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   async function fetchCategories() {
     try {
@@ -27,7 +29,7 @@ function Home() {
     try {
       const products = await Products.getAll();
       setProducts(products.result);
-
+      console.log(products.result);
       setLoading(false);
     } catch (error) {
       console.error(error.message);
@@ -71,36 +73,9 @@ function Home() {
     );
   }
 
-  const categoryImages = [
-    {
-      name: 'Điện Thoại',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/phone_cate_c6a412f60a.png',
-    },
-    {
-      name: 'Máy tính',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/96x0/filters:format(webp):quality(75)/laptop_thumb_2_4df0fab60f.png',
-    },
-    {
-      name: 'Máy tính bảng',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/may_tinh_bang_cate_thumb_00e3b3eefa.png',
-    },
-    {
-      name: 'Tai nghe có dây',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/2024_5_20_638518110616919801_havit-fuxi-h3-thumb.jpg',
-    },
-    {
-      name: 'Chuột gaming',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/chuot_gaming_co_day_icore_gm06_2_bb288842b2.jpg',
-    },
-    {
-      name: 'Đồng Hồ',
-      url: 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/joystar_w10_xanh_1_b4c36dc80b.jpg',
-    },
-  ];
-
   return (
     <>
-      <div className="relative w-[60%] h-300 mt-20 mb-250 ">
+      <div className="relative w-[60%] h-300 mt-20 mb-200">
         <Carousel
           arrows
           autoplaySpeed={5000}
@@ -128,6 +103,10 @@ function Home() {
           return (
             <div
               key={index}
+              onClick={() => {
+                const id = category._id;
+                navigate(`/product/all/${id}`);
+              }}
               className="bg-white group cursor-pointer gap-8 flex w-200 p-12 rounded-xl"
             >
               <div className="w-[60%] flex justify-start">
@@ -139,11 +118,7 @@ function Home() {
                 <Image
                   preview={false}
                   className="group-hover:scale-105! transition-all!"
-                  src={
-                    categoryImages.find((image) => {
-                      return image.name === category.name;
-                    })?.url
-                  }
+                  src={category.logo || 'https://via.placeholder.com/150'}
                 ></Image>
               </div>
             </div>

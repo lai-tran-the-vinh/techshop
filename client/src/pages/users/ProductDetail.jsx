@@ -13,6 +13,7 @@ import {
   Flex,
   Drawer,
   Slider,
+  Tag,
 } from 'antd';
 import { BsShop, BsSignTurnRightFill, BsCartPlusFill } from 'react-icons/bs';
 import {
@@ -21,6 +22,9 @@ import {
   GiftOutlined,
   CreditCardOutlined,
   RightOutlined,
+  MobileOutlined,
+  LaptopOutlined,
+  TabletOutlined,
 } from '@ant-design/icons';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
@@ -44,6 +48,242 @@ import SliderProduct from '@/components/app/ImagesSlider';
 const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;
 
+// Cấu hình cho từng loại sản phẩm
+const PRODUCT_CONFIGS = {
+  laptop: {
+    icon: <LaptopOutlined />,
+    highlightSpecs: [
+      { key: 'processor', label: 'CPU', icon: '💻' },
+      { key: 'graphics', label: 'Card đồ họa', icon: '🎮' },
+      {
+        key: 'displaySize',
+        label: 'Kích thước màn hình',
+        icon: '📱',
+        unit: 'inch',
+      },
+      { key: 'ram', label: 'RAM', icon: '🔧' },
+      { key: 'storage', label: 'Bộ nhớ trong', icon: '💾' },
+      { key: 'operatingSystem', label: 'Hệ điều hành', icon: '🖥️' },
+    ],
+    variants: ['memory', 'color'],
+    memoryDisplay: (memory) => `${memory.storage} - ${memory.ram}`,
+  },
+  smartphone: {
+    icon: <MobileOutlined />,
+    highlightSpecs: [
+      { key: 'chipset', label: 'Chipset', icon: '🔬' },
+      { key: 'displaySize', label: 'Màn hình', icon: '📱', unit: 'inch' },
+      { key: 'camera', label: 'Camera chính', icon: '📷' },
+      { key: 'battery', label: 'Pin', icon: '🔋', unit: 'mAh' },
+      { key: 'operatingSystem', label: 'Hệ điều hành', icon: '📱' },
+      { key: 'connectivity', label: 'Kết nối', icon: '📶' },
+    ],
+    variants: ['memory', 'color'],
+    memoryDisplay: (memory) =>
+      `${memory.storage}${memory.ram ? ` - ${memory.ram}` : ''}`,
+  },
+  tablet: {
+    icon: <TabletOutlined />,
+    highlightSpecs: [
+      { key: 'processor', label: 'Processor', icon: '💻' },
+      { key: 'displaySize', label: 'Màn hình', icon: '📱', unit: 'inch' },
+      { key: 'camera', label: 'Camera', icon: '📷' },
+      { key: 'battery', label: 'Pin', icon: '🔋', unit: 'mAh' },
+      { key: 'operatingSystem', label: 'Hệ điều hành', icon: '📱' },
+      { key: 'connectivity', label: 'Kết nối', icon: '📶' },
+    ],
+    variants: ['memory', 'color'],
+    memoryDisplay: (memory) =>
+      `${memory.storage}${memory.ram ? ` - ${memory.ram}` : ''}`,
+  },
+  headphones: {
+    icon: <BsShop />,
+    highlightSpecs: [
+      { key: 'driverSize', label: 'Kích thước driver', icon: '🎵', unit: 'mm' },
+      { key: 'frequency', label: 'Tần số', icon: '🎶' },
+      { key: 'impedance', label: 'Trở kháng', icon: '⚡', unit: 'Ohm' },
+      { key: 'connectivity', label: 'Kết nối', icon: '📶' },
+      { key: 'battery', label: 'Pin', icon: '🔋', unit: 'giờ' },
+      { key: 'noiseCancel', label: 'Chống ồn', icon: '🔇' },
+    ],
+    variants: ['color'],
+    memoryDisplay: null,
+  },
+  // Có thể thêm các loại sản phẩm khác
+  mouse: {
+    icon: <BsShop />,
+    highlightSpecs: [
+      { key: 'dpi', label: 'DPI', icon: '🎯' },
+      { key: 'pollingRate', label: 'Tần số phản hồi', icon: '🕒' },
+      { key: 'switchType', label: 'Loại switch', icon: '🔘' },
+      { key: 'weight', label: 'Trọng lượng', icon: '⚖️', unit: 'g' },
+      { key: 'connectivity', label: 'Kết nối', icon: '📶' },
+    ],
+    variants: ['color'],
+    memoryDisplay: null,
+  },
+};
+
+// Component hiển thị thông số nổi bật
+const HighlightSpecs = ({ product, productType, onSpecsClick }) => {
+  const config = PRODUCT_CONFIGS[productType] || PRODUCT_CONFIGS.laptop;
+  const specs = config.highlightSpecs;
+
+  return (
+    <div className="mt-10 p-5 border border-gray-300 rounded-lg">
+      <Title level={4} className="mb-4 mt-10">
+        Thông số nổi bật
+      </Title>
+      <Row
+        gutter={16}
+        onClick={onSpecsClick}
+        style={{ cursor: 'pointer', padding: 20 }}
+      >
+        {specs.slice(0, 3).map((spec, index) => {
+          const value = getSpecValue(product.specifications, spec);
+          return (
+            <Col span={8} key={index}>
+              <div className="text-center p-3 bg-white rounded-lg border border-gray-300">
+                <div className="text-2xl mb-2">{spec.icon}</div>
+                <div className="font-medium">{spec.label}</div>
+                <div className="text-sm text-gray-600">{value || 'N/A'}</div>
+              </div>
+            </Col>
+          );
+        })}
+      </Row>
+    </div>
+  );
+};
+
+// Hàm lấy giá trị thông số
+const getSpecValue = (specifications, spec) => {
+  if (!specifications) return 'N/A';
+
+  const value = specifications[spec.key];
+  if (!value) return 'N/A';
+
+  if (spec.unit) {
+    return `${value} ${spec.unit}`;
+  }
+
+  return value;
+};
+
+// Component hiển thị variants linh hoạt
+const VariantSelector = ({
+  product,
+  productType,
+  selectedMemory,
+  selectedColor,
+  onMemoryChange,
+  onColorChange,
+}) => {
+  const config = PRODUCT_CONFIGS[productType] || PRODUCT_CONFIGS.laptop;
+  const hasMemoryVariants = config.variants.includes('memory');
+  const hasColorVariants = config.variants.includes('color');
+
+  return (
+    <>
+      {hasMemoryVariants && (
+        <div className="mb-6">
+          <Title level={5} className="mb-2">
+            Phiên bản
+          </Title>
+          <Row gutter={[12, 12]}>
+            {[
+              ...new Map(
+                product.variants.map((v) => [
+                  `${v.memory?.ram || ''}-${v.memory?.storage || ''}`,
+                  v,
+                ]),
+              ).values(),
+            ].map((variant, index) => {
+              const isSelected =
+                selectedMemory?.ram === variant.memory?.ram &&
+                selectedMemory?.storage === variant.memory?.storage;
+
+              return (
+                <Col xs={24} sm={12} md={8} key={`memory-${index}`}>
+                  <Button
+                    block
+                    style={{
+                      padding: '16px',
+                      borderRadius: 8,
+                      borderColor: isSelected ? '#1890ff' : '#d9d9d9',
+                    }}
+                    onClick={() => onMemoryChange(variant.memory)}
+                  >
+                    <Text strong>
+                      {config.memoryDisplay
+                        ? config.memoryDisplay(variant.memory)
+                        : variant.memory?.storage || 'Mặc định'}
+                    </Text>
+                  </Button>
+                </Col>
+              );
+            })}
+          </Row>
+        </div>
+      )}
+
+      {hasColorVariants && (
+        <div className="mb-6">
+          <Title level={5} className="mb-2">
+            Màu sắc
+          </Title>
+          <Row gutter={[12, 12]}>
+            {product.variants
+              .filter((variant) => {
+                if (!hasMemoryVariants) return true;
+                return (
+                  variant.memory?.ram === selectedMemory?.ram &&
+                  variant.memory?.storage === selectedMemory?.storage
+                );
+              })
+              .map((variant, index) => {
+                const isSelected = selectedColor === variant.color?.name;
+
+                return (
+                  <Col xs={24} sm={12} md={8} key={`color-${index}`}>
+                    <div
+                      className="flex items-center gap-3 p-3 rounded-lg cursor-pointer"
+                      style={{
+                        border: isSelected
+                          ? '2px solid #1890ff'
+                          : '1px solid #d1d5db',
+                      }}
+                      onClick={() => onColorChange(variant.color?.name)}
+                    >
+                      <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden">
+                        <Image
+                          preview={false}
+                          src={
+                            variant.images?.[0] ||
+                            'https://dummyimage.com/200x200/ccc/000&text=No+Image'
+                          }
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div>
+                        <Typography.Text strong className="block">
+                          {variant.color?.name || 'Mặc định'}
+                        </Typography.Text>
+                        <Typography.Text type="secondary">
+                          {formatCurrency(variant.price)}đ
+                        </Typography.Text>
+                      </div>
+                    </div>
+                  </Col>
+                );
+              })}
+          </Row>
+        </div>
+      )}
+    </>
+  );
+};
+
 function ProductDetail() {
   const { id } = useParams();
   const { user } = useAppContext();
@@ -51,7 +291,7 @@ function ProductDetail() {
   const [product, setProduct] = useState({});
   const [branchs, setBranchs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedColor, setSelectedColor] = useState({});
+  const [selectedColor, setSelectedColor] = useState('');
   const [selectedMemory, setSelectedMemory] = useState({});
   const [detailDrawerSpecsVisible, setDetailDrawerSpecsVisible] =
     useState(false);
@@ -60,6 +300,27 @@ function ProductDetail() {
   const { message, setShowLogin } = useAppContext();
   const [stats, setStats] = useState({});
   const navigate = useNavigate();
+
+  const getProductType = (product) => {
+    if (!product.category) return 'laptop';
+
+    const category = product.category.toLowerCase();
+    if (category.includes('laptop') || category.includes('máy tính'))
+      return 'laptop';
+    if (category.includes('phone') || category.includes('điện thoại'))
+      return 'smartphone';
+    if (category.includes('tablet') || category.includes('máy tính bảng'))
+      return 'tablet';
+    if (category.includes('headphone') || category.includes('tai nghe'))
+      return 'headphones';
+    if (category.includes('mouse') || category.includes('chuột'))
+      return 'mouse';
+
+    return 'laptop';
+  };
+
+  const productType = getProductType(product);
+  const productConfig = PRODUCT_CONFIGS[productType] || PRODUCT_CONFIGS.laptop;
 
   useEffect(() => {
     document.title = 'TechShop | Chi tiết sản phẩm';
@@ -71,8 +332,12 @@ function ProductDetail() {
       try {
         const res = await Products.get(id);
         setProduct(res);
-        setSelectedColor(res.variants[0].color.name);
-        setSelectedMemory(res.variants[0].memory);
+
+        if (res.variants && res.variants.length > 0) {
+          const firstVariant = res.variants[0];
+          setSelectedColor(firstVariant.color?.name || '');
+          setSelectedMemory(firstVariant.memory || {});
+        }
       } catch (error) {
         console.error('Đã có lỗi xảy ra:', error);
       } finally {
@@ -81,6 +346,7 @@ function ProductDetail() {
     };
     fetchProductDetail();
   }, [id]);
+
   const fetchStats = async () => {
     try {
       const res = await callFetchStats(id);
@@ -89,6 +355,7 @@ function ProductDetail() {
       console.error('Đã có lỗi xảy ra:', error);
     }
   };
+
   const fetchRecommentProducts = async () => {
     try {
       setLoading(true);
@@ -109,11 +376,11 @@ function ProductDetail() {
     try {
       const res = await callFetchBranches();
       setBranchs(res.data.data);
-      console.log(res.data.data);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchBranchs();
   }, []);
@@ -131,7 +398,6 @@ function ProductDetail() {
           content: 'Thêm sản phẩm vào giỏ hàng thành công',
           key: 'loading',
         });
-
         navigate('/cart');
       }
     } catch (error) {
@@ -139,12 +405,36 @@ function ProductDetail() {
       message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
     }
   };
-  const selectedVariant = product?.variants?.find(
-    (v) =>
-      v.memory?.ram === selectedMemory?.ram &&
-      v.memory?.storage === selectedMemory?.storage &&
-      v.color?.name === selectedColor,
-  );
+
+  const handleMemoryChange = (memory) => {
+    setSelectedMemory(memory);
+    const matchedVariants = product.variants.filter(
+      (v) =>
+        v.memory?.ram === memory?.ram && v.memory?.storage === memory?.storage,
+    );
+
+    if (matchedVariants.length > 0) {
+      const colorNames = matchedVariants.map((v) => v.color?.name);
+      if (!colorNames.includes(selectedColor)) {
+        setSelectedColor(matchedVariants[0].color?.name || '');
+      }
+    }
+  };
+
+  const handleColorChange = (colorName) => {
+    setSelectedColor(colorName);
+  };
+
+  const selectedVariant = product?.variants?.find((v) => {
+    const memoryMatch = productConfig.variants.includes('memory')
+      ? v.memory?.ram === selectedMemory?.ram &&
+        v.memory?.storage === selectedMemory?.storage
+      : true;
+    const colorMatch = productConfig.variants.includes('color')
+      ? v.color?.name === selectedColor
+      : true;
+    return memoryMatch && colorMatch;
+  });
 
   if (loading) {
     return (
@@ -153,10 +443,11 @@ function ProductDetail() {
       </div>
     );
   }
-  const allImages = selectedVariant?.images || [];
+
+  const allImages = selectedVariant?.images || product.images || [];
 
   return (
-    <div className=" min-h-screen rounded-[10px]">
+    <div className="min-h-screen rounded-[10px]">
       <div className="max-w-7xl mx-auto rounded-[10px]">
         <Row gutter={[10, 10]}>
           <Col span={14}>
@@ -164,46 +455,11 @@ function ProductDetail() {
               <div className="relative border border-gray-200 rounded-[15px]">
                 <SliderProduct images={allImages} />
               </div>
-              <div className="mt-10 p-5 border border-gray-300 rounded-lg">
-                <Title level={4} className="mb-4 mt-10">
-                  Thông số nổi bật
-                </Title>
-                <Row
-                  gutter={16}
-                  onClick={() => {
-                    setDetailDrawerSpecsVisible(true);
-                  }}
-                  style={{ cursor: 'pointer', padding: 20 }}
-                >
-                  <Col span={8}>
-                    <div className="text-center p-3 bg-white rounded-lg border border-gray-300">
-                      <div className="text-2xl mb-2">💻</div>
-                      <div className="font-medium">CPU</div>
-                      <div className="text-sm text-gray-600">
-                        {product.specifications.processor}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col span={8}>
-                    <div className="text-center p-3 bg-white rounded-lg border border-gray-300">
-                      <div className="text-2xl mb-2">🎮</div>
-                      <div className="font-medium">Card đồ họa</div>
-                      <div className="text-sm text-gray-600">
-                        Intel UHD Graphics
-                      </div>
-                    </div>
-                  </Col>
-                  <Col span={8}>
-                    <div className="text-center p-3 bg-white rounded-lg border border-gray-300">
-                      <div className="text-2xl mb-2">📱</div>
-                      <div className="font-medium">Kích thước màn hình</div>
-                      <div className="text-sm text-gray-600">
-                        {product.specifications.displaySize} inch
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+              <HighlightSpecs
+                product={product}
+                productType={productType}
+                onSpecsClick={() => setDetailDrawerSpecsVisible(true)}
+              />
             </Card>
           </Col>
 
@@ -232,118 +488,26 @@ function ProductDetail() {
                   </Button>
                 </div>
               </div>
-              <div className="mb-6">
-                <Title level={5} className="mb-2">
-                  Bộ nhớ
-                </Title>
-                <Row gutter={[12, 12]}>
-                  {[
-                    ...new Map(
-                      product.variants.map((v) => [
-                        `${v.memory.ram}-${v.memory.storage}`,
-                        v,
-                      ]),
-                    ).values(),
-                  ].map((variant, index) => {
-                    const isSelected =
-                      selectedMemory?.ram === variant.memory?.ram &&
-                      selectedMemory?.storage === variant.memory?.storage;
 
-                    return (
-                      <Col xs={24} sm={12} md={8} key={`memory-${index}`}>
-                        <Button
-                          block
-                          style={{
-                            padding: '16px',
-                            borderRadius: 8,
-
-                            borderColor: isSelected ? '#1890ff' : '#d9d9d9',
-                          }}
-                          onClick={() => {
-                            setSelectedMemory(variant.memory);
-                            const matchedVariants = product.variants.filter(
-                              (v) =>
-                                v.memory?.ram === variant.memory?.ram &&
-                                v.memory?.storage === variant.memory?.storage,
-                            );
-
-                            if (matchedVariants.length > 0) {
-                              const colorNames = matchedVariants.map(
-                                (v) => v.color.name,
-                              );
-                              if (!colorNames.includes(selectedColor)) {
-                                setSelectedColor(matchedVariants[0].color.name);
-                              }
-                            }
-                          }}
-                        >
-                          <Text strong>
-                            {variant.memory.storage} - {variant.memory.ram}
-                          </Text>
-                        </Button>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </div>
-              <div className="mb-6">
-                <Title level={5} className="mb-2">
-                  Màu sắc
-                </Title>
-                <Row gutter={[12, 12]}>
-                  {product.variants
-                    .filter(
-                      (variant) =>
-                        variant.memory?.ram === selectedMemory?.ram &&
-                        variant.memory?.storage === selectedMemory?.storage,
-                    )
-                    .map((variant, index) => {
-                      const isSelected = selectedColor === variant.color.name;
-
-                      return (
-                        <Col xs={24} sm={12} md={8} key={`memory-${index}`}>
-                          <div
-                            className="flex items-center gap-3 p-3 rounded-lg cursor-pointer"
-                            style={{
-                              border: isSelected
-                                ? '2px solid #1890ff'
-                                : '1px solid #d1d5db',
-                            }}
-                            onClick={() => setSelectedColor(variant.color.name)}
-                          >
-                            <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden">
-                              <Image
-                                preview={false}
-                                src={
-                                  variant.images?.[0] ||
-                                  'https://dummyimage.com/200x200/ccc/000&text=No+Image'
-                                }
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
-                            <div>
-                              <Typography.Text strong className="block">
-                                {variant.color.name}
-                              </Typography.Text>
-                              <Typography.Text type="secondary">
-                                {formatCurrency(variant.price)}đ
-                              </Typography.Text>
-                            </div>
-                          </div>
-                        </Col>
-                      );
-                    })}
-                </Row>
-              </div>
+              <VariantSelector
+                product={product}
+                productType={productType}
+                selectedMemory={selectedMemory}
+                selectedColor={selectedColor}
+                onMemoryChange={handleMemoryChange}
+                onColorChange={handleColorChange}
+              />
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-3 mb-2">
                   <Title level={2} className="text-red-600 mb-0">
-                    {`${formatCurrency(selectedVariant?.price)}đ`}
+                    {`${formatCurrency(selectedVariant?.price || product.price)}đ`}
                   </Title>
-                  <Text delete className="text-gray-500">
-                    {`${formatCurrency(selectedVariant?.compareAtPrice)}đ`}
-                  </Text>
+                  {selectedVariant?.compareAtPrice && (
+                    <Text delete className="text-gray-500">
+                      {`${formatCurrency(selectedVariant.compareAtPrice)}đ`}
+                    </Text>
+                  )}
                 </div>
               </div>
 
@@ -380,6 +544,7 @@ function ProductDetail() {
                   </Card>
                 </div>
               </div>
+
               <div className="space-y-3">
                 <Row gutter={[10, 10]}>
                   <Col span={12}>
@@ -387,7 +552,7 @@ function ProductDetail() {
                       type="primary"
                       size="large"
                       block
-                      className="bg-red-600! hover:bg-red-700! border-red-600!  font-semibold! hover:shadow-md! shadow-md!"
+                      className="bg-red-600! hover:bg-red-700! border-red-600! font-semibold! hover:shadow-md! shadow-md!"
                       icon={<ShoppingCartOutlined />}
                       onClick={async () => {
                         if (!user) {
@@ -398,7 +563,7 @@ function ProductDetail() {
                         await handleAddItemsToCart([
                           {
                             product: product._id,
-                            variant: selectedVariant._id,
+                            variant: selectedVariant?._id,
                             quantity: 1,
                           },
                         ]);
@@ -423,7 +588,7 @@ function ProductDetail() {
                         await handleAddItemsToCart([
                           {
                             product: product._id,
-                            variant: selectedVariant._id,
+                            variant: selectedVariant?._id,
                             quantity: 1,
                           },
                         ]);
@@ -443,7 +608,7 @@ function ProductDetail() {
                         <div className="flex items-center gap-3">
                           <BsShop className="text-gray-500! text-xl!" />
                           <span className="font-medium text-gray-900">
-                            Dang sách cửa hàng
+                            Danh sách cửa hàng
                           </span>
                         </div>
                         <RightOutlined className="text-gray-400" />
@@ -453,7 +618,7 @@ function ProductDetail() {
                 </Row>
               </div>
 
-              <div className="mt-6 pt-6 ">
+              <div className="mt-6 pt-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <CheckCircleOutlined className="text-green-500" />
@@ -519,7 +684,6 @@ function ProductDetail() {
               style={{
                 borderRadius: '8px',
                 padding: '12px',
-
                 cursor: 'pointer',
               }}
             >
@@ -536,7 +700,6 @@ function ProductDetail() {
                   flexDirection: 'column',
                   gap: '16px',
                 }}
-                onClick={() => {}}
               >
                 {recommnentProducts && recommnentProducts.length > 0 ? (
                   recommnentProducts.map((product) => (
@@ -547,17 +710,14 @@ function ProductDetail() {
                       >
                         <div className="flex items-center gap-12">
                           <div className="w-[100px] h-[100px] overflow-hidden">
-                            {product.variants[0].images.length > 0 ? (
+                            {product.variants?.[0]?.images?.length > 0 ? (
                               <Image
-                                src={
-                                  product.variants[0].images[0]
-                                    ? product.variants[0].images[0]
-                                    : ''
-                                }
+                                src={product.variants[0].images[0]}
                                 className="w-[100px] h-[100px] object-cover"
+                                preview={false}
                               />
                             ) : (
-                              <div className="w-[100px] h-[100px] flex items-center justify-center">
+                              <div className="w-[100px] h-[100px] flex items-center justify-center bg-gray-100">
                                 <span
                                   style={{
                                     color: '#9ca3af',
@@ -569,30 +729,16 @@ function ProductDetail() {
                               </div>
                             )}
                           </div>
-                          <div
-                            style={{
-                              flex: 1,
-                              minWidth: 0,
-                            }}
-                          >
+                          <div style={{ flex: 1, minWidth: 0 }}>
                             <Text strong ellipsis>
                               {product.name}
                             </Text>
                             <div className="flex items-center justify-between">
-                              <span className="text-red-500 font-semibold ">
-                                {product.variants[0].price
+                              <span className="text-red-500 font-semibold">
+                                {product.variants?.[0]?.price
                                   ? `${product.variants[0].price.toLocaleString('vi-VN')} đ`
                                   : 'Liên hệ'}
                               </span>
-                              {product.originalPrice &&
-                                product.originalPrice > product.price && (
-                                  <span>
-                                    {product.originalPrice.toLocaleString(
-                                      'vi-VN',
-                                    )}
-                                    ₫
-                                  </span>
-                                )}
                             </div>
                             <div>
                               <Rate
@@ -668,7 +814,7 @@ function ProductDetail() {
                     });
                   }}
                 >
-                  Xem chỉ đường
+                  Xem trên map
                 </Button>
               </Card>
             </Col>
@@ -678,5 +824,4 @@ function ProductDetail() {
     </div>
   );
 }
-
 export default ProductDetail;

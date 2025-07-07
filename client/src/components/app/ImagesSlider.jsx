@@ -18,14 +18,14 @@ const SliderProduct = ({ images = [] }) => {
 
   if (images.length === 0) {
     return (
-      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded-[15px]">
+      <div className=" h-[400px] w-[400px] flex items-center justify-center bg-gray-100 rounded-[15px]">
         <p className="text-gray-500">Không có ảnh</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto relative rounded-[15px] overflow-hidden">
+    <div className="w-full h-full max-w-4xl mx-auto relative rounded-[15px] overflow-hidden">
       <div className="overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"
