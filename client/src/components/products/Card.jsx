@@ -24,7 +24,7 @@ function CardProduct({ product = {}, className, loading = false }) {
             hoverable
             cover={
               <Image
-                preview={false}
+                preview={false} 
                 alt="iPhone 16 Pro Max"
                 className="object-fill! aspect-square! mx-auto! mt-20! w-[80%]!"
                 src={

@@ -24,7 +24,7 @@ import {
 } from '@ant-design/icons';
 import Products from '@services/products';
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { useAppContext } from '@contexts';
 import { Comments } from '@components/products';
@@ -59,7 +59,7 @@ function ProductDetail() {
   const [recommnentProducts, setRecommentProducts] = useState([]);
   const { message, setShowLogin } = useAppContext();
   const [stats, setStats] = useState({});
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = 'TechShop | Chi tiết sản phẩm';
@@ -131,9 +131,9 @@ function ProductDetail() {
           content: 'Thêm sản phẩm vào giỏ hàng thành công',
           key: 'loading',
         });
-        return;
+
+        navigate('/cart');
       }
-      throw new Error('Thêm sản phẩm vào giỏ hàng thất bại');
     } catch (error) {
       console.error('Error adding items to cart:', error);
       message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
@@ -162,50 +162,6 @@ function ProductDetail() {
           <Col span={14}>
             <Card className="h-full!">
               <div className="relative border border-gray-200 rounded-[15px]">
-                {/* <Carousel
-                  className="custom-carousel rounded-[15px]! max-h-[400px]! min-h-[450px]!"
-                  arrows
-                  dots
-                  slidesToShow={1}
-                  slidesToScroll={1}
-                  draggable
-                  infinite
-                  responsive={[
-                    {
-                      breakpoint: 1024,
-                      settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1,
-                        infinite: true,
-                      },
-                    },
-                  ]}
-                >
-                  {allImages.length === 0 ? (
-                    <div className="gallery-item">
-                      <Image
-                        className="item-image"
-                        width="100%"
-                        preview={false}
-                        height="auto"
-                        src="https://dummyimage.com/500x500/cccccc/000000&text=No+Product+Image"
-                      />
-                    </div>
-                  ) : (
-                    allImages.map((image, index) => (
-                      <div key={index} className="gallery-item">
-                        <Image
-                          className="object-contain! w-full! h-full! rounded-lg!"
-                          src={image}
-                          preview={false}
-                          width="100%"
-                          height="450px"
-                        />
-                      </div>
-                    ))
-                  )}
-                </Carousel> */}
-
                 <SliderProduct images={allImages} />
               </div>
               <div className="mt-10 p-5 border border-gray-300 rounded-lg">
@@ -446,7 +402,6 @@ function ProductDetail() {
                             quantity: 1,
                           },
                         ]);
-                        navigate('/cart');
                       }}
                     >
                       Mua ngay

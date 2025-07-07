@@ -47,6 +47,7 @@ function CommonInformation({ brands, product, categories, form }) {
       </div>
 
       <Row gutter={[10, 0]}>
+      
         <Col span={5}>
           <Form.Item name="name" label="Tên sản phẩm">
             <Input placeholder="Nhập tên sản phẩm" size="large" />

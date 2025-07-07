@@ -5,6 +5,8 @@ import 'antd/dist/reset.css'; // cần cho Ant Design v5
 import { AppProvider } from '@contexts';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ConfigProvider
@@ -20,7 +22,9 @@ createRoot(document.getElementById('root')).render(
             activeShadow: '0',
           },
           Select: {
-            // controlHeight: 40,
+            activeBorderColor: '#dc2626',
+            hoverBorderColor: '#dc2626',
+            activeShadow: '0',
           },
           Card: {
             padding: 0,
