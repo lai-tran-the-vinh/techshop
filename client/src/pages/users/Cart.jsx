@@ -140,7 +140,9 @@ function Cart() {
       dataIndex: 'price',
       key: 'price',
       align: 'center',
-      render: (_, item) => `${item?.variant?.price.toLocaleString()}₫`,
+      render: (_, item) => (
+        <Typography.Text className="text-primary! font-medium! text-base!">{`${item?.variant?.price.toLocaleString()}₫`}</Typography.Text>
+      ),
     },
     {
       title: 'Số lượng',
@@ -158,8 +160,12 @@ function Cart() {
       title: 'Thành tiền',
       key: 'total',
       align: 'center',
-      render: (_, item) =>
-        `${(item?.variant?.price * item.quantity).toLocaleString()}₫`,
+      render: (_, item) => {
+        console.log('Item:', item);
+        return (
+          <Typography.Text className="text-primary! font-medium! text-base!">{`${(item?.variant?.price * item.quantity - item?.variant?.price * item.quantity * (item.product.discount / 100)).toLocaleString()}₫`}</Typography.Text>
+        );
+      },
     },
     {
       title: 'Xóa',
@@ -266,7 +272,7 @@ function Cart() {
                 {total.toLocaleString()}đ
               </Typography.Text>
             </Flex>
-            <div className='absolute bottom-52 left-12 right-12'>
+            <div className="absolute bottom-52 left-12 right-12">
               <Divider className="my-0! mb-10!" />
               <Link to="/order">
                 <Button
