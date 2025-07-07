@@ -15,7 +15,7 @@ const { Title, Text, Link } = Typography;
 
 const FooterComponent = () => {
   return (
-    <Layout.Footer className=" py-12! w-full! bg-white!">
+    <Layout.Footer className=" py-12! w-full! bg-white! mt-20!">
       <div className="w-full mx-auto">
         <Row gutter={[32, 32]}>
           <Col xs={24} sm={12} md={6}>

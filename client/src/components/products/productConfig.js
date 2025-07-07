@@ -5,7 +5,7 @@ export const PRODUCT_CONFIGS = {
             operatingSystems: ['iOS', 'Android'],
             storageCapacities: ['32 GB', '64 GB', '128 GB', '256 GB', '512 GB', '1 TB'],
             ramCapacities: ['3 GB', '4 GB', '6 GB', '8 GB', '12 GB', '16 GB'],
-            connectivity: ['NFC', 'Bluetooth', '5G', '4G'],
+            // connectivity: ['NFC', 'Bluetooth', '5G', '4G'],
             screenSize: [
                 '5 inch', '6 inch', '6.1 inch', '6.5 inch', '7 inch', '7.6 inch'
             ],
@@ -151,8 +151,8 @@ export const PRODUCT_CONFIGS = {
             { label: 'Trên 5 triệu', value: [5000000, 10000000] },
         ],
     },
-    'tai-nghe-gaming': {
-        title: 'Tai nghe Gaming',
+    'tai-nghe-co-day': {
+        title: 'Tai nghe có dây',
         filters: {
             brands: ['Logitech', 'Razer', 'SteelSeries', 'Corsair', 'HyperX'],
             connectivity: ['Wired', 'Wireless', 'Bluetooth'],

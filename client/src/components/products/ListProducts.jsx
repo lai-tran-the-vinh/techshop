@@ -54,12 +54,6 @@ function ListProducts(properties) {
   const _page = parseInt(searchParams.get('_page') || '1');
   const _limit = parseInt(searchParams.get('_limit') || '8');
 
-  const [allBrands, setAllBrands] = useState([]);
-
-  const [activeFilters, setActiveFilters] = useState({});
-
-  const navigate = useNavigate();
-
   const currentConfig =
     PRODUCT_CONFIGS[categorieCurrent] || PRODUCT_CONFIGS['dien-thoai'];
 
@@ -124,7 +118,7 @@ function ListProducts(properties) {
     });
     setCurrentBrand('');
     setSort(null);
-    setActiveFilters({});
+
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 

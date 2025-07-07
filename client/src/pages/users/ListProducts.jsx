@@ -48,8 +48,10 @@ function ProductsList() {
     const matchesFilter = (product, key, value) => {
       const data =
         product.variants?.[0]?.memory?.[key] || product?.attributes?.[key];
-
-      return data && data.toLowerCase().includes(value.label.toLowerCase());
+      console.log('data', data);
+      return (
+        data && data?.toLowerCase().includes(value.label?.trim().toLowerCase())
+      );
     };
 
     const keys = Object.keys(filter).filter(
@@ -59,7 +61,7 @@ function ProductsList() {
     const allOtherFiltersMatch = keys.every((key) => {
       return matchesFilter(product, key, filter[key]);
     });
-
+    console.log('allOtherFiltersMatch', allOtherFiltersMatch);
     return matchPrice && allOtherFiltersMatch;
   });
 
