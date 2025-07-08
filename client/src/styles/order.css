@@ -1,0 +1,11 @@
+.ant-card-body {
+  padding: 16px !important;
+}
+
+.ant-card {
+  border-radius: 12px !important;
+}
+
+.ant-tag {
+  margin-right: 0 !important;
+}
