@@ -181,7 +181,7 @@ function Home() {
   }
 
   return (
-    <div className="w-full px-4 lg:px-8 xl:px-12">
+    <div className="w-full">
       <div className="w-full mb-8">
         <section className="flex justify-between items-center">
           <Row
@@ -189,10 +189,7 @@ function Home() {
             className="relative! w-full!   mx-auto! mt-8 lg:mt-20 mb-12 lg:mb-16"
           >
             <Col xs={0} sm={0} md={3} lg={4} xl={5}>
-              <Card
-                bordered={false}
-                className="h-full! sm:h-[200px] md:h-[300px] lg:h-[400px] bg-gray-100 flex justify-center items-center"
-              >
+              <Card className="h-full! sm:h-[200px] md:h-[300px] lg:h-[400px] bg-gray-100 flex justify-center items-center">
                 <Typography.Text className="text-gray-400">
                   Đây là cái menu dì dì đó để dô cho đở tróng
                 </Typography.Text>
@@ -261,17 +258,17 @@ function Home() {
           </Row>
         </section>
         <section className="w-full mb-8">
-          <Row gutter={[16, 16]} justify="center">
-            <Flex gap={12} wrap="wrap" justify="center">
-              {categories.map((category, index) => {
-                return (
+          <Flex wrap="wrap" justify="center">
+            {categories.map((category, index) => {
+              return (
+                <div className="px-8 w-1/6">
                   <div
                     key={index}
                     onClick={() => {
                       const id = category._id;
                       navigate(`/product/all/${id}`);
                     }}
-                    className="bg-white group cursor-pointer gap-8 flex w-170 p-16 rounded-xl hover:shadow-md transition-shadow"
+                    className="bg-white group cursor-pointer gap-8 flex w-full! p-16 rounded-xl hover:shadow-md transition-shadow"
                   >
                     <div className="w-[50%] flex justify-start">
                       <Typography.Text
@@ -289,10 +286,10 @@ function Home() {
                       />
                     </div>
                   </div>
-                );
-              })}
-            </Flex>
-          </Row>
+                </div>
+              );
+            })}
+          </Flex>
         </section>
 
         <section className="w-full">

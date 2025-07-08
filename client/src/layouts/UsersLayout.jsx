@@ -66,7 +66,7 @@ function UsersLayout() {
       {loading ? (
         <Spin />
       ) : (
-        <Layout.Content className="w-[90%] bg-[#f3f4f6]! mt-60 flex flex-col items-center rounded-[10px]">
+        <Layout.Content className="w-5/6! bg-[#f3f4f6]! mt-60 flex flex-col items-center rounded-[10px]">
           <Outlet />
           {showLogin && <Login />}
           {showSignup && <Signup />}

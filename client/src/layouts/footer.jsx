@@ -1,16 +1,20 @@
 import React from 'react';
 import { HeartFilled } from '@ant-design/icons';
-import { Row, Col, Typography, Space, Divider, Layout, Image } from 'antd';
+import { Row, Col, Typography, Flex, Divider, Layout, Image } from 'antd';
 
 const { Title, Text, Link } = Typography;
 
 const FooterComponent = () => {
   return (
-    <Layout.Footer className="py-12! flex justify-center w-full!  mt-20!">
+    <Layout.Footer className="py-12! bg-[#090D14]! flex justify-center w-full! mt-20!">
       <div className="w-5/6">
-      <Space className='border w-full!'>
-        <Typography.Text>Về hệ thống TechShop</Typography.Text>
-      </Space>
+        <Flex vertical className='border w-full! border-white! py-12!'>
+          <Typography.Text className='text-white! text-lg! font-bold!'>Về hệ thống TechShop</Typography.Text>
+          <Typography.Text className='text-white!'>
+            Chúng tôi cam kết mang đến những sản phẩm và dịch vụ chất lượng cao
+            nhất cho khách hàng với sự tận tâm và chuyên nghiệp.
+          </Typography.Text>
+        </Flex>
         <Divider className="border-gray-700 my-8" />
 
         {/* Copyright */}
