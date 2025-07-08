@@ -17,7 +17,6 @@ function Home() {
   const [promoBanners, setPromoBanners] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Fake data cho banner khi không có dữ liệu thật
   const fakeBanners = {
     main: [
       {
@@ -57,8 +56,6 @@ function Home() {
         title: 'Mua 1 tặng 1',
         description: 'Tai nghe & Loa bluetooth',
       },
-    ],
-    feature: [
       {
         id: 6,
         imageUrl:
@@ -66,6 +63,8 @@ function Home() {
         title: 'Trả góp 0%',
         description: 'Áp dụng cho tất cả sản phẩm',
       },
+    ],
+    feature: [
       {
         id: 7,
         imageUrl:
@@ -127,22 +126,15 @@ function Home() {
         (b) => b.position === 'HOME_FEATURE',
       );
 
-      // Sử dụng fake data nếu không có dữ liệu thật
       setMainBanners(mainBanners.length > 0 ? mainBanners : fakeBanners.main);
       setPromoBanners(
         promoBanners.length > 0 ? promoBanners : fakeBanners.promo,
       );
-      setFeatureBanners(
-        featureBanners.length > 0 ? featureBanners : fakeBanners.feature,
-      );
-
-      console.log('Banners:', mainBanners, promoBanners, featureBanners);
+      // setFeatureBanners(
+      //   featureBanners.length > 0 ? featureBanners : fakeBanners.feature,
+      // );
     } catch (error) {
       console.error('Lỗi khi fetch banner:', error.message);
-      // Sử dụng fake data khi có lỗi
-      setMainBanners(fakeBanners.main);
-      setPromoBanners(fakeBanners.promo);
-      setFeatureBanners(fakeBanners.feature);
     }
   }
 
@@ -191,73 +183,83 @@ function Home() {
   return (
     <div className="w-full px-4 lg:px-8 xl:px-12">
       <div className="w-full mb-8">
-        <Row
-          gutter={[16, 16]}
-          className="relative! w-full!  mx-auto! mt-8 lg:mt-20 mb-12 lg:mb-16"
-        >
-          <Col xs={0} sm={0} md={3} lg={4} xl={5}>
-            <Card
-              bordered={false}
-              className="h-full! sm:h-[300px] md:h-[400px] lg:h-[500px] bg-gray-100 flex justify-center items-center"
-            >
-              <Typography.Text className="text-gray-400">
-                Đây là cái menu dì dì đó để dô cho đở tróng
-              </Typography.Text>
-            </Card>
-          </Col>
-
-          <Col span={14} className="flex! justify-center! items-center! p-0!">
-            <Card
-              bordered={false}
-              className="w-full! h-full! p-0!"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <Carousel
-                arrows
-                autoplay
-                autoplaySpeed={5000}
-                className="rounded-md! overflow-hidden!"
-                nextArrow={<CustomNextArrow />}
-                prevArrow={<CustomPrevArrow />}
-                dotPosition="bottom"
-                dotStyle={{ background: '#ff5900' }}
-                activeDotStyle={{ background: '#ff5900' }}
+        <section className="flex justify-between items-center">
+          <Row
+            gutter={[16, 16]}
+            className="relative! w-full!   mx-auto! mt-8 lg:mt-20 mb-12 lg:mb-16"
+          >
+            <Col xs={0} sm={0} md={3} lg={4} xl={5}>
+              <Card
+                bordered={false}
+                className="h-full! sm:h-[200px] md:h-[300px] lg:h-[400px] bg-gray-100 flex justify-center items-center"
               >
-                {mainBanners.map((banner, index) => (
-                  <Image
-                    src={banner.imageUrl}
-                    preview={false}
-                    className="w-full! h-[200px]! sm:h-[200px]! md:h-[300px]! lg:h-[400px]! object-cover! rounded-md!"
-                  />
-                ))}
-              </Carousel>
-            </Card>
-          </Col>
+                <Typography.Text className="text-gray-400">
+                  Đây là cái menu dì dì đó để dô cho đở tróng
+                </Typography.Text>
+              </Card>
+            </Col>
 
-          <Col xs={0} sm={0} md={3} lg={4} xl={5}>
-            <Card
-              bordered={false}
-              className="h-full! flex! flex-col! justify-center! items-center!"
-            >
-              <Row>
+            <Col span={14} className="flex! justify-center! items-center! p-0!">
+              <div
+                bordered={false}
+                className="w-full! h-full! p-0!"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <Carousel
+                  arrows
+                  autoplay={{ dotDuration: true }}
+                  autoplaySpeed={5000}
+                  className="rounded-md! overflow-hidden! w-full! h-full! "
+                  nextArrow={<CustomNextArrow />}
+                  prevArrow={<CustomPrevArrow />}
+                  dotPosition="bottom"
+                  dotStyle={{ background: '#ff5900' }}
+                  activeDotStyle={{ background: '#ff5900' }}
+                >
+                  {mainBanners.map((banner, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-center items-center h-full w-full"
+                    >
+                      <Image
+                        src={banner.imageUrl}
+                        preview={false}
+                        className="w-full! h-full! object-cover! rounded-md!"
+                      />
+                    </div>
+                  ))}
+                </Carousel>
+              </div>
+            </Col>
+
+            <Col xs={0} sm={0} md={3} lg={4} xl={5}>
+              <Row className="flex!">
                 {promoBanners.map((banner, index) => (
                   <Col
                     key={index}
-                    span={24} // Mỗi Col chiếm toàn bộ chiều rộng có sẵn (24/24)
-                    className=" test flex! justify-center! items-center! mb-4" // Thêm margin dưới để tạo khoảng cách giữa các banner
+                    span={24}
+                    className=" flex! h-1/3! justify-center! items-center! mb-4!"
                   >
                     <Image
                       src={banner.imageUrl}
                       preview={false}
-                      className="w-full! h-full! object-cover! rounded-md!"
+                      className="object-cover! rounded-md!"
                     />
                   </Col>
                 ))}
               </Row>
-            </Card>
-          </Col>
-        </Row>
+            </Col>
+
+            <Col span={24}>
+              <Image
+                preview={false}
+                src="https://cdn2.cellphones.com.vn/insecure/rs:fill:1200:75/q:90/plain/https://dashboard.cellphones.com.vn/storage/Special-si-tu.gif"
+                className="w-full! rounded-[10px]"
+              />
+            </Col>
+          </Row>
+        </section>
         <section className="w-full mb-8">
           <Row gutter={[16, 16]} justify="center">
             <Flex gap={12} wrap="wrap" justify="center">
@@ -269,7 +271,7 @@ function Home() {
                       const id = category._id;
                       navigate(`/product/all/${id}`);
                     }}
-                    className="bg-white group cursor-pointer gap-8 flex w-200 p-16 rounded-xl hover:shadow-md transition-shadow"
+                    className="bg-white group cursor-pointer gap-8 flex w-170 p-16 rounded-xl hover:shadow-md transition-shadow"
                   >
                     <div className="w-[50%] flex justify-start">
                       <Typography.Text
@@ -293,7 +295,6 @@ function Home() {
           </Row>
         </section>
 
-        {/* Products by Category */}
         <section className="w-full">
           {categories.map((category, index) => {
             const filteredProducts = products.filter((product) => {
@@ -313,17 +314,6 @@ function Home() {
           })}
         </section>
       </div>
-
-      {/* Custom styles for carousel dots */}
-      <style jsx>{`
-        .custom-dots .slick-dots li button {
-          background: #ff5900 !important;
-          border-radius: 50% !important;
-        }
-        .custom-dots .slick-dots li.slick-active button {
-          background: #ff5900 !important;
-        }
-      `}</style>
     </div>
   );
 }
