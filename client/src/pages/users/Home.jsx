@@ -258,7 +258,7 @@ function Home() {
           </Row>
         </section>
         <section className="w-full mb-8">
-          <Flex wrap="wrap" justify="center">
+          <Flex wrap="wrap" justify="center" className='-mx-8!'>
             {categories.map((category, index) => {
               return (
                 <div className="px-8 w-1/6">
