@@ -243,7 +243,7 @@ function Home() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen ">
       <section className="w-full px-4 lg:px-8 xl:px-12 py-4 lg:py-8">
         <Row gutter={[16, 16]} className="w-full! mx-auto">
           <Col xs={0} sm={0} md={4} lg={4} xl={5}>
