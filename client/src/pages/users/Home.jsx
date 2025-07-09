@@ -345,22 +345,22 @@ function Home() {
         </Row>
       </section>
 
-      <section className="w-full bg-white p-20 rounded-xl mt-20">
+      <section className="w-full   mb-12 bg-[#ffffff] rounded-xl">
         <div className="flex mb-10 items-center justify-between">
           <Typography.Title
             level={3}
-            className="font-roboto! uppercase! font-extrabold! ml-8! mb-6! "
+            className="font-roboto! uppercase! font-extrabold!  m-10! text-primary! text-2xl"
           >
             Sản phẩm có thể phù hợp với bạn
           </Typography.Title>
 
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => navigate('/product/all')}
             className="text-base! mr-8! font-medium! text-white! px-15! py-15! bg-primary! rounded-3xl! hover:bg-primary/90! transition-all! duration-300!"
           >
             Khám phá ngay <ArrowRightOutlined />
-          </Button>
+          </Button> */}
         </div>
 
         {recommentProducts.length === 0 ? (
@@ -395,7 +395,7 @@ function Home() {
         )}
       </section>
 
-      <section className="w-full px-4 lg:px-8 xl:px-12 mb-8">
+      {/* <section className="w-full px-4 lg:px-8 xl:px-12 mb-8">
         <div className="max-w-7xl mx-auto">
           <Image
             preview={false}
@@ -404,7 +404,7 @@ function Home() {
             className="w-full rounded-lg shadow-sm"
           />
         </div>
-      </section>
+      </section> */}
       <section className="w-full px-4 lg:px-8 xl:px-12 mb-12">
         <div className="mx-auto">
           <Row gutter={[16, 16]} justify="center">

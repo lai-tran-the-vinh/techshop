@@ -16,8 +16,8 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
 
   const settings = {
     speed: 500,
-    infinite: products.length > 5, // chỉ infinite khi đủ sản phẩm
-    slidesToShow: Math.min(products.length, 5),
+    infinite: products.length > 6, // chỉ infinite khi đủ sản phẩm
+    slidesToShow: Math.min(products.length, 6),
     slidesToScroll: 1,
     nextArrow: <CustomNextArrow isVisible={isHovered} />,
     prevArrow: <CustomPrevArrow isVisible={isHovered} />,
@@ -90,14 +90,14 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Slider {...settings} className="bg-white! w-full!">
+          <Slider {...settings} className="bg-white! w-full! h-full!">
             {products.map((product, index) => {
               return (
-                <div key={index} className="px-8">
+                <div key={index} className="px-4 my-10">
                   <CardProduct
                     product={product}
                     loading={loading}
-                    className={products.length < 5 && 'w-1/5'}
+                    className={products.length < 6 && 'w-1/6'}
                   />
                 </div>
               );
