@@ -247,31 +247,8 @@ function Home() {
       <section className="w-full px-4 lg:px-8 xl:px-12 py-4 lg:py-8">
         <Row gutter={[16, 16]} className="w-full! mx-auto">
           <Col xs={0} sm={0} md={4} lg={4} xl={5}>
-            <Card
-              className="h-full bg-white shadow-sm border-0"
-              bodyStyle={{ padding: '16px' }}
-            >
-              <div className="space-y-3">
-                {/* {categories.slice(0, 8).map((category) => (
-                  <div
-                    key={category._id}
-                    onClick={() => navigate(`/product/all/${category._id}`)}
-                    className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"
-                  >
-                    <Image
-                      src={category.logo || 'https://via.placeholder.com/24'}
-                      alt={category.name}
-                      width={24}
-                      height={24}
-                      preview={false}
-                      className="rounded"
-                    />
-                    <Typography.Text className="text-sm text-gray-700">
-                      {category.name}
-                    </Typography.Text>
-                  </div>
-                ))} */}
-              </div>
+            <Card className="h-full bg-white shadow-sm border-0">
+              <div className="space-y-3"></div>
             </Card>
           </Col>
           <Col xs={24} sm={24} md={14} lg={14} xl={14}>
@@ -353,14 +330,6 @@ function Home() {
           >
             Sản phẩm có thể phù hợp với bạn
           </Typography.Title>
-
-          {/* <Button
-            type="primary"
-            onClick={() => navigate('/product/all')}
-            className="text-base! mr-8! font-medium! text-white! px-15! py-15! bg-primary! rounded-3xl! hover:bg-primary/90! transition-all! duration-300!"
-          >
-            Khám phá ngay <ArrowRightOutlined />
-          </Button> */}
         </div>
 
         {recommentProducts.length === 0 ? (
@@ -395,44 +364,38 @@ function Home() {
         )}
       </section>
 
-      {/* <section className="w-full px-4 lg:px-8 xl:px-12 mb-8">
-        <div className="max-w-7xl mx-auto">
-          <Image
-            preview={false}
-            src="https://cdn2.cellphones.com.vn/insecure/rs:fill:1200:75/q:90/plain/https://dashboard.cellphones.com.vn/storage/Special-si-tu.gif"
-            alt="Special promotion"
-            className="w-full rounded-lg shadow-sm"
-          />
-        </div>
-      </section> */}
-      <section className="w-full px-4 lg:px-8 xl:px-12 mb-12">
+      <section className="w-full mb-12">
         <div className="mx-auto">
-          <Row gutter={[16, 16]} justify="center">
-            <Flex gap={12} wrap="wrap" justify="center">
+          <Row justify="center">
+            <Flex wrap="wrap" justify="center" className="-mx-8!">
               {categories.map((category, index) => {
                 return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      const id = category._id;
-                      navigate(`/product/all/${id}`);
-                    }}
-                    className="bg-white group cursor-pointer gap-8 flex w-200 p-16 rounded-xl hover:shadow-md transition-shadow shadow-sm"
-                  >
-                    <div className="w-[50%] flex justify-start">
-                      <Typography.Text
-                        strong
-                        className="text-base! font-bold! w-[100%]!"
-                      >
-                        {category.name}
-                      </Typography.Text>
-                    </div>
-                    <div className="flex-1">
-                      <Image
-                        preview={false}
-                        className="group-hover:scale-130! transition-all! rounded-2xl"
-                        src={category.logo || 'https://via.placeholder.com/150'}
-                      />
+                  <div className={`px-8 w-1/${categories.length}`}>
+                    <div
+                      key={index}
+                      onClick={() => {
+                        const id = category._id;
+                        navigate(`/product/all/${id}`);
+                      }}
+                      className={`bg-white group cursor-pointer flex w-full! p-16 rounded-xl hover:shadow-md transition-shadow`}
+                    >
+                      <div className="w-[50%] flex justify-start">
+                        <Typography.Text
+                          strong
+                          className="text-base! font-bold! w-[100%]!"
+                        >
+                          {category.name}
+                        </Typography.Text>
+                      </div>
+                      <div className="flex-1">
+                        <Image
+                          preview={false}
+                          className="group-hover:scale-130! transition-all! rounded-2xl"
+                          src={
+                            category.logo || 'https://via.placeholder.com/150'
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
                 );
@@ -441,7 +404,7 @@ function Home() {
           </Row>
         </div>
       </section>
-      <section className="w-full px-4 lg:px-8 xl:px-12 pb-12">
+      <section className="w-full pb-12">
         <div className=" mx-auto space-y-12">
           {categories.map((category) => {
             const filteredProducts = products.filter(

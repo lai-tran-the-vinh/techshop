@@ -19,8 +19,3 @@
   /* --color-primary: #ee4d2d; */
   --color-primary: #dc2626;
 }
-
-/* Overide CSS */
-.ant-card-body {
-  padding: 12px !important; /* Sử dụng !important để đảm bảo ghi đè */
-}
