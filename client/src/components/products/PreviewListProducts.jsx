@@ -79,11 +79,11 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
       <button
         type="button"
         onClick={properties.onClick}
-        className={`absolute -left-4 sm:-left-6 lg:-left-8 xl:-left-12 h-[50px] w-[50px] sm:h-[60px] sm:w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-2xl p-4 sm:p-6 lg:p-7 transition-all text-base sm:text-lg ${
+        className={`absolute -left-4 sm:-left-6 lg:-left-8 xl:-left-19 h-[50px] w-[50px] sm:h-[60px] sm:w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-gray-200 drop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-2xl p-4 sm:p-6 lg:p-7 transition-all text-base sm:text-lg ${
           isHovered ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <LeftOutlined className="font-bold" />
+        <LeftOutlined className="font-bold!" />
       </button>
     );
   }
@@ -138,7 +138,7 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
                   <CardProduct
                     product={product}
                     loading={loading}
-                    className={products.length < 5 && `w-full`}
+                    className={products.length < 5 && `w-1/5 sm:w-1/3 lg:w-1/4`}
                   />
                 </div>
               );

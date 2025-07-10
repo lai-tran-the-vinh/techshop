@@ -13,20 +13,11 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {
-  Layout,
-  Typography,
-  Button,
-  Flex,
-  FloatButton,
-  Spin,
-  Grid,
-  Dropdown,
-} from 'antd';
+import { Layout, Typography, Button, Flex, Spin, Grid, Dropdown } from 'antd';
 import FooterComponent from './footer';
 const { useBreakpoint } = Grid;
 function Header() {
-  const { setShowLogin, setShowSignup } = useAppContext();
+  const { setShowLogin, setShowSignup, user, message } = useAppContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,20 +43,23 @@ function Header() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">
-          <div className="flex items-center rounded-full px-2 sm:px-4 py-2 bg-primary">
-            <Button
-              onClick={() => {
+          <Button
+            onClick={() => {
+              if (!user) {
+                setShowLogin(true);
+                message.warning('Vui lòng đăng nhập để mở giỏ hàng');
+              } else {
                 navigate('/cart');
-              }}
-              type="primary"
-              shape="circle"
-              size="large"
-              icon={<ShoppingCartOutlined />}
-              className="text-white!  hover:text-white! hover:bg-primary/80 !border-none p-10! "
-            >
-              <span className="hidden lg:inline ml-2 ">Giỏ hàng</span>
-            </Button>
-          </div>
+              }
+            }}
+            type="primary"
+            size="large"
+            icon={<ShoppingCartOutlined />}
+            className="text-white!  hover:bg-primary/80 rounded-3xl!  !border-none p-10! mr-5!  "
+          >
+            <span className="hidden lg:inline ml-2 ">Giỏ hàng</span>
+          </Button>
+
           {localStorage.getItem('access_token') ? (
             <UserInformation />
           ) : (

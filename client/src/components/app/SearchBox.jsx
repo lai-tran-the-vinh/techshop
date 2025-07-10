@@ -83,6 +83,7 @@ function SearchBox() {
 
   const handleTrendingClick = (term) => {
     setQuery(term);
+
     inputRef.current?.focus();
   };
 
@@ -199,7 +200,7 @@ function SearchBox() {
                         <button
                           key={index}
                           onClick={() => {
-                            navigate(`/search/${term.name}`);
+                            navigate(`/product/${term._id}`);
                             setShowResults(false);
                             setIsFocused(false);
                           }}

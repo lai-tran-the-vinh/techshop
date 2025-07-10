@@ -42,22 +42,20 @@ function CardProduct({ product = {}, className, loading = false }) {
   }
 
   return (
-    <Link to={`/product/${product._id}`} className="w-full! ">
+    <Link to={`/product/${product._id}`} >
       <Card
         cover={
-          <div className="overflow-hidden">
-            <Image
-              preview={false}
-              alt="Product Image"
-              className="object-fill! aspect-square! mx-auto! mt-20! w-[70%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
-              src={
-                product?.variants?.[0]?.images?.[0] ||
-                'https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg'
-              }
-            />
-          </div>
+          <Image
+            preview={false}
+            alt="Product Image"
+            className="object-fill! aspect-square! mx-auto! mt-20! min-h-full! w-[80%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
+            src={
+              product?.variants?.[0]?.images?.[0] ||
+              'https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg'
+            }
+          />
         }
-        className={`group ${className} rounded-xl! overflow-hidden! border-none! hover:shadow-sm!`}
+        className={`group ${className} rounded-xl!  overflow-hidden! border-none! hover:shadow-sm!`}
       >
         <Divider className="my-0! mb-10!" />
         <Typography.Title
