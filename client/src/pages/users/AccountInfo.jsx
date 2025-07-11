@@ -18,6 +18,7 @@ import {
   Typography,
 } from 'antd';
 import { useAppContext } from '@/contexts';
+import ProductService from '@services/products';
 import {
   UserOutlined,
   ShoppingOutlined,
@@ -27,7 +28,6 @@ import {
 } from '@ant-design/icons';
 import Address from '@services/address';
 import UserService from '@services/users';
-import { doc } from 'prettier';
 
 const AccountInfoPage = () => {
   const { user } = useAppContext();
@@ -48,6 +48,23 @@ const AccountInfoPage = () => {
   });
   const [activeOrderTab, setActiveOrderTab] = useState('all');
   const [tempAddress, setTempAddress] = useState('');
+  const [ordersToShow, setOrdersToShow] = useState(null);
+  const [orders, setOrders] = useState(null);
+
+  useEffect(() => {
+    if (orders) {
+      const ordersToShow = orders.map((order) => {
+        return {
+          id: order._id,
+          date: order.createdAt,
+          total: order.totalPrice,
+          items: '123',
+          status: order.status,
+        };
+      });
+      setOrdersToShow(ordersToShow);
+    }
+  }, [orders]);
 
   const fetchProvinces = async () => {
     try {
@@ -92,45 +109,58 @@ const AccountInfoPage = () => {
     }
   };
 
+  const getAllOrders = async () => {
+    try {
+      const productService = new ProductService();
+      const response = await productService.getAllOrder();
+      if (response.status === 200) {
+        setOrders(response.data.data);
+        return;
+      }
+      throw new Error('Không thể lấy danh sách đơn hàng.');
+    } catch (error) {
+      console.error('Lỗi:', error);
+    }
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
 
   useEffect(() => {
-    if (userInfo) {
-      console.log('User:', userInfo);
-    }
-
-    if (provinces) {
-      console.log('Provinces:', provinces);
-    }
-
-    if (districts) {
-      console.log('Districts:', districts);
-    }
-
-    if (wards) {
-      console.log('Wards:', wards);
-    }
-  }, [userInfo, provinces, districts, wards]);
-
-  useEffect(() => {
     document.title = 'Thông tin cá nhân';
     getUser();
+    getAllOrders();
     fetchProvinces();
   }, []);
 
   useEffect(() => {
     if (editingAddress) {
-      setSelectedProvince(editingAddress.addressDetail.split(', ')[0]);
-      setSelectedDistrict(editingAddress.addressDetail.split(', ')[1]);
+      const province = provinces.find(
+        (province) =>
+          editingAddress.addressDetail.split(', ')[0] === province.name,
+      );
+      setSelectedProvince(province);
     }
   }, [editingAddress]);
+
+  useEffect(() => {
+    if (orders) {
+      console.log(orders);
+    }
+  }, [orders]);
 
   useEffect(() => {
     if (selectedProvince) {
       fetchDistricts(selectedProvince.code);
     }
+
+    const district = districts.find(
+      (district) =>
+        editingAddress.addressDetail.split(', ')[1] === district.name,
+    );
+    // console.log(district);
+    setSelectedDistrict(district);
   }, [selectedProvince]);
 
   useEffect(() => {
@@ -156,45 +186,6 @@ const AccountInfoPage = () => {
       },
     ],
   });
-
-  // Dữ liệu mẫu cho đơn hàng
-  const [orders] = useState([
-    {
-      id: 'DH001',
-      date: '2024-01-15',
-      total: 500000,
-      status: 'completed',
-      items: 'Áo sơ mi, Quần jean',
-    },
-    {
-      id: 'DH002',
-      date: '2024-01-20',
-      total: 300000,
-      status: 'shipping',
-      items: 'Giày thể thao',
-    },
-    {
-      id: 'DH003',
-      date: '2024-01-25',
-      total: 750000,
-      status: 'processing',
-      items: 'Túi xách, Ví da',
-    },
-    {
-      id: 'DH004',
-      date: '2024-01-30',
-      total: 200000,
-      status: 'cancelled',
-      items: 'Nón kết',
-    },
-    {
-      id: 'DH005',
-      date: '2024-02-05',
-      total: 450000,
-      status: 'completed',
-      items: 'Áo khoác',
-    },
-  ]);
 
   const menuItems = [
     {
@@ -296,7 +287,7 @@ const AccountInfoPage = () => {
     const colors = {
       completed: 'green',
       shipping: 'blue',
-      processing: 'orange',
+      pending: 'orange',
       cancelled: 'red',
     };
     return colors[status] || 'default';
@@ -306,15 +297,15 @@ const AccountInfoPage = () => {
     const texts = {
       completed: 'Hoàn tất',
       shipping: 'Đang giao',
-      processing: 'Đang xử lý',
+      pending: 'PENDING',
       cancelled: 'Đã hủy',
     };
     return texts[status] || status;
   };
 
   const getFilteredOrders = () => {
-    if (activeOrderTab === 'all') return orders;
-    return orders.filter((order) => order.status === activeOrderTab);
+    if (activeOrderTab === 'all') return ordersToShow;
+    return ordersToShow.filter((order) => order.status === activeOrderTab);
   };
 
   const orderColumns = [
@@ -415,7 +406,6 @@ const AccountInfoPage = () => {
         <List
           dataSource={updateUserInfo.addresses}
           renderItem={(item) => {
-            console.log('Address:', item.addressDetail.split(', '));
             return (
               <List.Item
                 actions={[
@@ -471,38 +461,35 @@ const AccountInfoPage = () => {
             <Flex vertical>
               <label className="mb-4">Tỉnh/Thành phố</label>
               <Select
-                defaultValue={editingAddress?.addressDetail?.split(', ')[0]}
-                placeholder="Chọn Tỉnh/Thành phố"
-                onChange={(_, option) => {
-                  setSelectedProvince(option);
+                value={selectedProvince?.code}
+                placeholder="Chọn tỉnh/thành phố"
+                onChange={(code) => {
+                  console.log(code);
+                  const selected = provinces.find((p) => p.code === code);
+                  setSelectedProvince(selected);
                 }}
                 optionFilterProp="label"
-                options={provinces.map((province) => {
-                  return {
-                    label: province.name,
-                    value: province.name,
-                    code: province.code,
-                  };
-                })}
+                options={provinces.map((province) => ({
+                  label: province.name,
+                  value: province.code,
+                }))}
               />
             </Flex>
 
             <Flex vertical>
               <label className="mb-4">Quận/Huyện</label>
               <Select
-                defaultValue={editingAddress?.addressDetail?.split(', ')[1]}
-                placeholder="Chọn Quận/Huyện"
-                optionFilterProp="label"
-                onChange={(_, option) => {
-                  setSelectedDistrict(option);
+                value={selectedDistrict?.code}
+                placeholder="Chọn quận/huyện"
+                onChange={(code) => {
+                  const selected = districts.find((d) => d.code === code);
+                  setSelectedDistrict(selected);
                 }}
-                options={districts.map((district) => {
-                  return {
-                    label: district.name,
-                    value: district.name,
-                    code: district.code,
-                  };
-                })}
+                optionFilterProp="label"
+                options={districts.map((district) => ({
+                  label: district.name,
+                  value: district.code,
+                }))}
               />
             </Flex>
 
@@ -515,8 +502,7 @@ const AccountInfoPage = () => {
                 options={wards.map((ward) => {
                   return {
                     label: ward.name,
-                    value: ward.name,
-                    code: ward.code,
+                    value: ward.code,
                   };
                 })}
               />

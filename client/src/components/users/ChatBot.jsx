@@ -225,7 +225,7 @@ const ChatBot = () => {
         />
       )}
 
-      <style jsx>{`
+      <style>{`
         .typing-cursor {
           color: #3b82f6;
           font-weight: bold;
