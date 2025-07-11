@@ -79,40 +79,19 @@ function ListProducts(properties) {
     setSearchParams({ _page: '1', _limit: _limit.toString() });
   };
 
-  const handleProductTypeChange = (type) => {
-    setProductType(type);
-
-    setFilter({
-      price: null,
-      color: null,
-      ram: null,
-      storage: null,
-      priceRange: null,
-      os: null,
-      processor: null,
-      screenSize: null,
-      batteryCapacity: null,
-      connectivity: null,
-    });
-
-    setCurrentBrand('');
-    setSort(null);
-    setActiveFilters({});
-    setSearchParams({ _page: '1', _limit: _limit.toString() });
-  };
-
+ 
   const handleFilterReset = () => {
     setFilter({
-      price: null,
-      color: null,
-      ram: null,
-      storage: null,
-      priceRange: null,
-      os: null,
-      processor: null,
-      screenSize: null,
-      batteryCapacity: null,
-      connectivity: null,
+      // price: null,
+      // color: null,
+      // ram: null,
+      // storage: null,
+      // priceRange: null,
+      // os: null,
+      // processor: null,
+      // screenSize: null,
+      // batteryCapacity: null,
+      // connectivity: null,
     });
     setCurrentBrand('');
     setSort(null);
