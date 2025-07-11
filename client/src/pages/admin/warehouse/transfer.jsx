@@ -167,7 +167,7 @@ const WarehouseTransferManagement = () => {
         toBranchId: viewingTransfer.toBranchId._id, // cần cho importStock
       };
 
-      console.log('Update transfer data:', updateData);
+
 
       // Gọi API cập nhật, thêm user vào tham số nếu backend yêu cầu
       await Warehouse.updateTransfer(viewingTransfer._id, updateData, user);
