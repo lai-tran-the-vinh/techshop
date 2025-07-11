@@ -31,6 +31,10 @@ import {
   FileTextOutlined,
   SearchOutlined,
   SaveOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  ClockCircleOutlined,
+  CarOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import ModalSearchProduct from '@/components/admin/warehouse/modalSearchProduct';
@@ -38,6 +42,7 @@ import { useAppContext } from '@/contexts';
 import Branchs from '@/services/branches';
 import Warehouse from '@/services/warehouse';
 import Products from '@/services/products';
+import { User } from 'lucide-react';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -56,7 +61,7 @@ const WarehouseTransferManagement = () => {
   const [productSearchVisible, setProductSearchVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const { message } = useAppContext();
+  const { message, user } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
   const [rejectNote, setRejectNote] = useState('');
@@ -65,13 +70,6 @@ const WarehouseTransferManagement = () => {
 
   const [warehouses, setWarehouses] = useState([]);
   const [newStatus, setNewStatus] = useState(null);
-
-  const statusConfig = {
-    pending: { color: 'orange', text: 'Chờ duyệt' },
-    approved: { color: 'blue', text: 'Đã duyệt' },
-    completed: { color: 'green', text: 'Hoàn tất' },
-    rejected: { color: 'red', text: 'Từ chối' },
-  };
 
   const removeItem = (index) => {
     setItems(items.filter((_, i) => i !== index));
@@ -143,7 +141,6 @@ const WarehouseTransferManagement = () => {
     message.success('Xóa phiếu chuyển kho thành công');
   };
 
-  // Updated status update function
   const handleUpdateStatus = async () => {
     if (!viewingTransfer || !newStatus) {
       message.error('Vui lòng chọn trạng thái');
@@ -151,26 +148,45 @@ const WarehouseTransferManagement = () => {
     }
 
     setStatusLoading(true);
+
     try {
+      const normalizedItems = viewingTransfer.items.map((item) => ({
+        productId: item.productId._id,
+        variantId: item.variantId._id,
+        quantity: item.quantity,
+        unit: item.unit,
+      }));
+
       const updateData = {
         status: newStatus,
-        approvedBy: 'Admin User',
+        approvedBy: user.name,
         approvedDate: dayjs().format('YYYY-MM-DD'),
-        rejectNote: viewingTransfer.status === 'rejected' ? rejectNote : null,
+        rejectNote: newStatus === 'rejected' ? rejectNote : null,
+        items: normalizedItems,
+        fromBranchId: viewingTransfer.fromBranchId._id, // cần cho exportStock
+        toBranchId: viewingTransfer.toBranchId._id, // cần cho importStock
       };
 
-      await Warehouse.updateTransfer(viewingTransfer._id, updateData);
+      console.log('Update transfer data:', updateData);
 
+      // Gọi API cập nhật, thêm user vào tham số nếu backend yêu cầu
+      await Warehouse.updateTransfer(viewingTransfer._id, updateData, user);
+
+      // Cập nhật giao diện
       setTransfers(
         transfers.map((t) =>
           t._id === viewingTransfer._id ? { ...t, ...updateData } : t,
         ),
       );
-
-      setViewingTransfer({ ...viewingTransfer, ...updateData });
+      setViewingTransfer({
+        ...viewingTransfer,
+        status: updateData.status,
+        approvedBy: updateData.approvedBy,
+        approvedDate: updateData.approvedDate,
+        rejectNote: updateData.rejectNote,
+      });
 
       message.success('Cập nhật trạng thái thành công');
-
       fetchTransfers();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -253,8 +269,8 @@ const WarehouseTransferManagement = () => {
       };
 
       if (editingTransfer) {
-        await Warehouse.updateTransfer(editingTransfer._id, newTransfer);
-        message.success('Cập nhật phiếu chuyển kho thành công');
+        // await Warehouse.updateTransfer(editingTransfer._id, newTransfer);
+        // message.success('Cập nhật phiếu chuyển kho thành công');
       } else {
         await Warehouse.createTransfer(newTransfer);
         message.success('Tạo phiếu chuyển kho thành công');
@@ -325,10 +341,11 @@ const WarehouseTransferManagement = () => {
 
   const getStatusSteps = (status) => {
     const steps = [
-      { title: 'Tạo phiếu', description: 'Tạo phiếu chuyển kho' },
-      { title: 'Gửi yêu cầu', description: 'Chờ duyệt' },
-      { title: 'Duyệt phiếu', description: 'Phê duyệt' },
-      { title: 'Hoàn tất', description: 'Xác nhận nhận hàng' },
+      { title: 'Tạo phiếu' },
+      { title: 'Gửi yêu cầu' },
+      { title: 'Duyệt phiếu' },
+      { title: 'Vận chuyển' },
+      { title: 'Đã nhận' },
     ];
 
     let current = 0;
@@ -339,11 +356,13 @@ const WarehouseTransferManagement = () => {
       case 'approved':
         current = 2;
         break;
-      case 'completed':
+      case 'in_transit':
         current = 3;
         break;
-      case 'rejected':
-        current = 1;
+      case 'received':
+        current = 4;
+        break;
+      default:
         break;
     }
 
@@ -376,8 +395,12 @@ const WarehouseTransferManagement = () => {
       key: 'status',
       align: 'center',
       render: (status) => (
-        <Tag color={statusConfig[status]?.color}>
-          {statusConfig[status]?.text}
+        <Tag
+          color={statusConfig[status].color}
+          className="flex! flex-row! gap-5!"
+        >
+          <div>{statusConfig[status].icon}</div>
+          <div>{statusConfig[status].text}</div>
         </Tag>
       ),
     },
@@ -405,7 +428,9 @@ const WarehouseTransferManagement = () => {
             ghost
             size="small"
             icon={<EyeOutlined />}
-            onClick={() => handleViewTransfer(record)}
+            onClick={() => {
+              handleViewTransfer(record);
+            }}
           >
             Xem
           </Button>
@@ -413,22 +438,47 @@ const WarehouseTransferManagement = () => {
       ),
     },
   ];
+
   const allowedNextStatuses = {
     pending: ['pending', 'approved', 'rejected'],
-    approved: ['completed'],
-    completed: [],
+    approved: ['in_transit'],
+    in_transit: ['received'],
+    received: [],
     rejected: [],
   };
 
   const statusOptions = [
-    { value: 'pending', label: 'Chờ duyệt' },
-    { value: 'approved', label: 'Đã duyệt' },
-    { value: 'completed', label: 'Hoàn tất' },
+    { value: 'pending', label: 'Chờ xử lý' },
+    { value: 'in_transit', label: 'Đang được vận chuyển' },
+    { value: 'received', label: 'Đã nhận hàng' },
+    { value: 'approved', label: 'Phê duyệt' },
     { value: 'rejected', label: 'Từ chối' },
   ];
-
+  const statusConfig = {
+    pending: {
+      color: 'orange',
+      text: 'Chờ duyệt',
+      icon: <ClockCircleOutlined />,
+    },
+    in_transit: {
+      color: 'blue',
+      text: 'Đang vận chuyển',
+      icon: <CarOutlined />,
+    },
+    approved: {
+      color: 'blue',
+      text: 'Đã duyệt',
+      icon: <CheckCircleOutlined />,
+    },
+    received: {
+      color: 'green',
+      text: 'Hoàn tất',
+      icon: <CheckCircleOutlined />,
+    },
+    rejected: { color: 'red', text: 'Từ chối', icon: <CloseCircleOutlined /> },
+  };
   const availableOptions = statusOptions.filter((option) =>
-    allowedNextStatuses[viewingTransfer.status]?.includes(option.value),
+    allowedNextStatuses[viewingTransfer?.status]?.includes(option.value),
   );
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -532,11 +582,7 @@ const WarehouseTransferManagement = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                name="variantId"
-                label="Biến thể"
-                rules={[{ required: true, message: 'Vui lòng chọn biến thể' }]}
-              >
+              <Form.Item name="variantId" label="Biến thể">
                 <Select placeholder="Chọn biến thể" disabled={!selectedProduct}>
                   {selectedProduct?.variants?.map((variant) => (
                     <Option key={variant._id} value={variant._id}>
@@ -554,7 +600,6 @@ const WarehouseTransferManagement = () => {
                 name="quantity"
                 label="Số lượng"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập số lượng' },
                   {
                     type: 'number',
                     min: 1,
@@ -649,7 +694,6 @@ const WarehouseTransferManagement = () => {
         </Form>
       </Modal>
 
-      {/* View Transfer Modal */}
       <Modal
         title="Chi tiết phiếu chuyển kho"
         open={isViewModalVisible}
@@ -677,13 +721,17 @@ const WarehouseTransferManagement = () => {
             <Steps
               current={getStatusSteps(viewingTransfer.status).current}
               items={getStatusSteps(viewingTransfer.status).steps}
-              className="mb-6"
+              className="mb-10!"
             />
 
             <Descriptions bordered column={2}>
               <Descriptions.Item label="Trạng thái">
-                <Tag color={statusConfig[viewingTransfer.status].color}>
-                  {statusConfig[viewingTransfer.status].text}
+                <Tag
+                  color={statusConfig[viewingTransfer.status].color}
+                  className="flex! flex-row! gap-5!  w-[100px]!"
+                >
+                  <div>{statusConfig[viewingTransfer.status].icon}</div>
+                  <div>{statusConfig[viewingTransfer.status].text}</div>
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Từ kho">
@@ -708,7 +756,7 @@ const WarehouseTransferManagement = () => {
                   </Descriptions.Item>
                 </>
               )}
-              <Descriptions.Item label="Ghi chú" span={2}>
+              <Descriptions.Item label="Ghi chú" span={7}>
                 {viewingTransfer.note || 'Không có ghi chú'}
               </Descriptions.Item>
             </Descriptions>
@@ -721,8 +769,12 @@ const WarehouseTransferManagement = () => {
                   <Text strong>Trạng thái hiện tại:</Text>
                 </Col>
                 <Col span={16}>
-                  <Tag color={statusConfig[viewingTransfer.status].color}>
-                    {statusConfig[viewingTransfer.status].text}
+                  <Tag
+                    color={statusConfig[viewingTransfer.status].color}
+                    className="flex! flex-row! gap-5! w-[100px]!"
+                  >
+                    <div>{statusConfig[viewingTransfer.status].icon}</div>
+                    <div>{statusConfig[viewingTransfer.status].text}</div>
                   </Tag>
                 </Col>
               </Row>
@@ -733,10 +785,6 @@ const WarehouseTransferManagement = () => {
                 </Col>
                 <Col span={10}>
                   <Select
-                    disabled={
-                      viewingTransfer.status === 'approved' ||
-                      viewingTransfer.status === 'completed'
-                    }
                     style={{ width: '100%' }}
                     value={newStatus}
                     onChange={(value) => setNewStatus(value)}
@@ -744,10 +792,7 @@ const WarehouseTransferManagement = () => {
                   >
                     {availableOptions.map((option) => (
                       <Option
-                        disabled={
-                          option.value === 'pending' ||
-                          option.value === 'rejected'
-                        }
+                        disabled={option.value === 'pending'}
                         key={option.value}
                         value={option.value}
                       >

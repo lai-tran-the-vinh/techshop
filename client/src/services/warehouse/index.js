@@ -26,7 +26,7 @@ export default class Warehouse {
     }
 
     static updateTransfer = (_id, value) => {
-        
+        console.log(_id, value);
         return axiosInstance.patch(`/api/v1/inventories/transfer/${_id}`, {
             ...value,
         })
