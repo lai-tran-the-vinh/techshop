@@ -24,6 +24,7 @@ import { use, useEffect, useState } from 'react';
 import { callFetchBranches, callFetchBrands } from '@/services/apis';
 import Categories from '@/services/categories';
 import { PRODUCT_CONFIGS } from './productConfig';
+import { Filter, RotateCcw } from 'lucide-react';
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -50,8 +51,6 @@ function ListProducts(properties) {
   const _page = parseInt(searchParams.get('_page') || '1');
   const _limit = parseInt(searchParams.get('_limit') || '8');
 
-  // const currentConfig =
-  //   PRODUCT_CONFIGS[categorieCurrent] || PRODUCT_CONFIGS['dien-thoai'];
   const priceRange = [
     { label: 'Dưới 2 triệu', value: [0, 2000000] },
     { label: 'Từ 2 - 4 triệu', value: [2000000, 4000000] },
@@ -61,6 +60,7 @@ function ListProducts(properties) {
     { label: 'từ 20 - 30 triệu', value: [20000000, 30000000] },
     { label: 'Trên 30 triệu', value: [30000000, 100000000] },
   ];
+  const sliderPriceRange = { maxPrice: 100000000, minPrice: 0 };
   const fetchBranches = async () => {
     try {
       const res = await callFetchBrands();
@@ -209,19 +209,19 @@ function ListProducts(properties) {
       <Row gutter={[10, 10]}>
         <Col xs={24} md={8} lg={6} xl={5} xxl={4}>
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 sticky top-6">
-            <div className="flex items-center justify-between gap-2 my-6">
-              <Title level={5} className="mb-0! text-gray-800">
-                <FilterOutlined className="mr-2!" />
-                Bộ lọc tìm kiếm
-              </Title>
-              <Button
-                type="link"
-                size="small"
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Bộ lọc tìm kiếm
+                </h3>
+              </div>
+              <button
                 onClick={handleFilterReset}
-                className="ml-auto text-blue-500!"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               >
-                <ReloadOutlined /> Làm mới
-              </Button>
+                <RotateCcw className="w-13 h-13" />
+                Làm mới
+              </button>
             </div>
 
             <div className="mb-6">
@@ -232,7 +232,7 @@ function ListProducts(properties) {
                     size="small"
                     type={currentBrand === brand ? 'primary' : 'default'}
                     onClick={() => handleBrandClick(brand)}
-                    className="text-xs! p-2! rounded-[10px]!"
+                    className="text-[16px]! p-8! h-[40px]! rounded-[5px]!"
                   >
                     {brand.name}
                   </Button>
@@ -240,8 +240,12 @@ function ListProducts(properties) {
               </div>
             </div>
 
-            <Collapse defaultActiveKey={['price']} ghost>
-              <Panel header="Mức giá" key="price">
+            <Collapse defaultActiveKey={['price']} bordered={false}>
+              <Panel
+                header={'Giá'}
+                key="price"
+                className="p-0! bg-gray-50! rounded-xl!"
+              >
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <Checkbox
@@ -295,39 +299,42 @@ function ListProducts(properties) {
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 pt-4 border-t">
+                <div className="mt-4 pt-4 ">
                   <Text className="text-sm! text-gray-600! mb-2 block!">
                     Hoặc nhập khoảng giá phù hợp:
                   </Text>
                   <div className="mb-4!">
                     <Slider
                       range
-                      min={priceRange.minPrice}
-                      max={priceRange.maxPrice}
-                      defaultValue={[priceRange.minPrice, priceRange.maxPrice]}
+                      min={sliderPriceRange.minPrice}
+                      max={sliderPriceRange.maxPrice}
+                      defaultValue={[
+                        sliderPriceRange.minPrice,
+                        sliderPriceRange.maxPrice,
+                      ]}
                       value={
                         filter.priceRange || [
-                          priceRange.minPrice,
-                          priceRange.maxPrice,
+                          sliderPriceRange.minPrice,
+                          sliderPriceRange.maxPrice,
                         ]
                       }
                       step={100000}
                       onChange={handlePriceRangeChange}
                       tooltip={{
-                        formatter: (value) => formatCurrency(value) + ' ₫',
+                        formatter: (value) => formatCurrency(value) + ' vn₫',
                       }}
                     />
                   </div>
                   <div className="flex! justify-between! text-xs! text-gray-500! mt-2!">
                     <span>
                       {formatCurrency(
-                        filter.priceRange?.[0] || priceRange.minPrice,
+                        filter.priceRange?.[0] || sliderPriceRange.minPrice,
                       )}{' '}
                       vnđ
                     </span>
                     <span>
                       {formatCurrency(
-                        filter.priceRange?.[1] || priceRange.maxPrice,
+                        filter.priceRange?.[1] || sliderPriceRange.maxPrice,
                       )}{' '}
                       vnđ
                     </span>
@@ -338,7 +345,11 @@ function ListProducts(properties) {
               {categoryConfig?.configFields?.extraFields?.map(
                 (field) =>
                   dynamicOptions[field.name]?.length > 0 && (
-                    <Panel header={field.label} key={field.name}>
+                    <Panel
+                      header={field.label}
+                      key={field.name}
+                      className="p-0! bg-gray-50! rounded-xl! mb-4"
+                    >
                       {dynamicOptions[field.name].map((value, index) => (
                         <div key={value}>
                           <Checkbox
@@ -351,7 +362,11 @@ function ListProducts(properties) {
                               )
                             }
                           >
-                            {value}
+                            {typeof value === 'boolean'
+                              ? value
+                                ? 'Có'
+                                : 'Không'
+                              : value}
                           </Checkbox>
                         </div>
                       ))}
@@ -365,41 +380,44 @@ function ListProducts(properties) {
         <Col xs={24} md={16} lg={18} xl={19} xxl={20}>
           <div className="bg-white rounded-lg shadow-sm p-2 md:p-4 mb-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 md:p-4 gap-2">
-              <Text className="text-sm text-gray-600">
-                Tìm thấy{' '}
-                <span className="font-semibold">
-                  {filteredProducts.length}
-                </span>{' '}
-              </Text>
+              <Flex
+                justify="space-between"
+                align="center"
+                wrap="wrap"
+                className="w-full"
+                gap={16}
+              >
+                <Text className="text-gray-600">
+                  Tìm thấy{' '}
+                  <span className="font-semibold text-primary">
+                    {filteredProducts.length}
+                  </span>{' '}
+                  sản phẩm
+                </Text>
 
-              <div className="flex flex-wrap items-center gap-4 md:gap-4">
-                <div className="flex items-center gap-4 ">
+                <Space.Compact>
                   <Button
-                    className="p-3! border-none! rounded-xl!"
                     type={sort === null ? 'primary' : 'default'}
-                    size="small"
                     onClick={() => handleSortChange(null)}
+                    className="rounded-l-xl"
                   >
                     Nổi bật
                   </Button>
                   <Button
-                    className="p-3! border-none! rounded-xl!"
                     type={sort === 1 ? 'primary' : 'default'}
-                    size="small"
                     onClick={() => handleSortChange(1)}
                   >
                     Giá tăng dần
                   </Button>
                   <Button
-                    className="p-3! border-none! rounded-xl!"
                     type={sort === 2 ? 'primary' : 'default'}
-                    size="small"
                     onClick={() => handleSortChange(2)}
+                    className="rounded-r-xl"
                   >
                     Giá giảm dần
                   </Button>
-                </div>
-              </div>
+                </Space.Compact>
+              </Flex>
             </div>
           </div>
 

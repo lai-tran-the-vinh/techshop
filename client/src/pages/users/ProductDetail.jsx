@@ -159,6 +159,7 @@ function ProductDetail() {
         content: 'Đang thêm sản phẩm vào giỏ hàng...',
         key: 'loading',
       });
+
       const response = await cartServices.add(items);
       if (response.status === 201) {
         message.success({
@@ -520,6 +521,7 @@ function ProductDetail() {
                           {
                             product: product._id,
                             variant: selectedVariant._id,
+                            branch: selectBranchs,
                             quantity: 1,
                           },
                         ]);
@@ -555,6 +557,7 @@ function ProductDetail() {
                           {
                             product: product._id,
                             variant: selectedVariant?._id,
+                            branch: selectBranchs,
                             quantity: 1,
                           },
                         ]);

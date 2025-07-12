@@ -163,16 +163,10 @@ const WarehouseTransferManagement = () => {
         approvedDate: dayjs().format('YYYY-MM-DD'),
         rejectNote: newStatus === 'rejected' ? rejectNote : null,
         items: normalizedItems,
-        fromBranchId: viewingTransfer.fromBranchId._id, // cần cho exportStock
-        toBranchId: viewingTransfer.toBranchId._id, // cần cho importStock
+        fromBranchId: viewingTransfer.fromBranchId._id,
+        toBranchId: viewingTransfer.toBranchId._id,
       };
-
-
-
-      // Gọi API cập nhật, thêm user vào tham số nếu backend yêu cầu
       await Warehouse.updateTransfer(viewingTransfer._id, updateData, user);
-
-      // Cập nhật giao diện
       setTransfers(
         transfers.map((t) =>
           t._id === viewingTransfer._id ? { ...t, ...updateData } : t,
@@ -484,8 +478,7 @@ const WarehouseTransferManagement = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <Card>
         <div className="flex justify-between items-center mb-6">
-          <Title level={2} className="m-0">
-            <FileTextOutlined className="mr-2" />
+          <Title level={2} className="m-0!">
             Quản lý chuyển kho hàng hóa
           </Title>
           <Button
@@ -761,7 +754,6 @@ const WarehouseTransferManagement = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Status Update Section */}
             <Divider>Cập nhật trạng thái</Divider>
             <div className="mb-4">
               <Row gutter={16} align="middle">
@@ -888,7 +880,6 @@ const WarehouseTransferManagement = () => {
         )}
       </Modal>
 
-      {/* Product Search Modal */}
       <ModalSearchProduct
         productSearchVisible={isProductSearchVisible}
         setProductSearchVisible={setIsProductSearchVisible}

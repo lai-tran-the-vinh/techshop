@@ -169,7 +169,7 @@ function Order() {
           amount: response.data.data.totalPrice,
           description: `Thanh toán đơn hàng ${response.data.data._id}`,
         };
-        console.log('Order:', response.data.data);
+
         message.destroy();
         if (paymentMethod === 'Thanh toán khi nhận hàng') {
           message.success('Đặt hàng thành công');

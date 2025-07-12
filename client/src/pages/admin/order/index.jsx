@@ -43,6 +43,7 @@ import {
   Typography,
   Popconfirm,
   Empty,
+  Steps,
 } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -121,6 +122,7 @@ const OrderManagement = () => {
       const res = await callFetchOrders();
       setOrders(res.data.data);
       setFilteredOrders(res.data.data);
+      console.log(res.data.data);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
@@ -148,8 +150,10 @@ const OrderManagement = () => {
   useEffect(() => {
     let filtered = [...orders];
     if (filters.branch) {
-      filtered = filtered.filter(
-        (order) => order.branch._id === filters.branch,
+      filtered = filtered.filter((order) =>
+        order.items.some(
+          (item) => item.branch && item.branch._id === filters.branch,
+        ),
       );
     }
     if (filters.searchText) {
@@ -305,13 +309,13 @@ const OrderManagement = () => {
     setLoading(true);
 
     const orderData = {
-      branch: createOrderData.branch,
       phone: createOrderData.phone,
       items: createOrderData.items.map((item) => ({
         product: item.product,
         variant: item.variant,
         quantity: item.quantity,
         price: item.price,
+        branch: createOrderData.branch,
       })),
       paymentMethod: createOrderData.paymentMethod,
     };
@@ -376,7 +380,13 @@ const OrderManagement = () => {
       title: 'Chi nhánh',
       key: 'branch',
       width: 120,
-      render: (_, record) => <div>{record.branch.name || 'Không có'}</div>,
+      render: (_, record) => (
+        <div>
+          {record.items
+            .map((item) => item.branch.name || 'Không có')
+            .join(', ')}
+        </div>
+      ),
     },
     {
       title: 'Sản phẩm',
@@ -443,6 +453,8 @@ const OrderManagement = () => {
     try {
       setLoading(true);
       await callUpdateOrder(orderId, data);
+
+      reloadTable();
       message.success('Cập nhật đơn hàng thành công!');
       setLoading(false);
     } catch (error) {
@@ -455,7 +467,37 @@ const OrderManagement = () => {
     fetchBranches();
     fetchProducts();
   }, []);
+  const getStatusSteps = (status) => {
+    const steps = [
+      { title: 'Tạo đơn hàng' },
+      { title: 'Xử lý đơn hàng' },
+      { title: 'Xác nhận đơn hàng' },
+      { title: 'Vận chuyển' },
+      { title: 'Đã nhận' },
+    ];
+    let current = 0;
+    switch (status) {
+      case 'PENDING':
+        current = 1;
+        break;
+      case 'PROCESSING':
+        current = 2;
+        break;
+      case 'COMPLETED':
+        current = 3;
+        break;
+      case 'SHIPPING':
+        current = 4;
+        break;
+      case 'DELIVERED':
+        current = 5;
+        break;
+      default:
+        break;
+    }
 
+    return { steps, current };
+  };
   return (
     <div style={{ padding: '24px' }}>
       <Title level={2}>Quản lý đơn hàng</Title>
@@ -604,7 +646,7 @@ const OrderManagement = () => {
                 status: selectedOrder.status,
                 paymentStatus: selectedOrder.paymentStatus,
                 paymentMethod: selectedOrder.paymentMethod,
-                branch: selectedOrder.branch._id,
+                branch: selectedOrder.items[0].branch,
               });
 
               message.success('Cập nhật đơn hàng thành công!');
@@ -618,6 +660,11 @@ const OrderManagement = () => {
       >
         {selectedOrder && (
           <div>
+            <Steps
+              current={getStatusSteps(selectedOrder.status).current}
+              items={getStatusSteps(selectedOrder.status).steps}
+              className="mb-10!"
+            />
             <Descriptions bordered column={2}>
               <Descriptions.Item label="Mã đơn hàng" span={2}>
                 <Text code copyable={{ text: selectedOrder._id }}>
@@ -636,7 +683,9 @@ const OrderManagement = () => {
                 {selectedOrder.phone}
               </Descriptions.Item>
               <Descriptions.Item label="Chi nhánh">
-                {selectedOrder?.branch?.name}
+                {selectedOrder?.items
+                  .map((item) => item.branch.name)
+                  .join(', ')}
               </Descriptions.Item>
               <Descriptions.Item label="Phương thức thanh toán" span={2}>
                 <Select
