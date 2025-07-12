@@ -214,6 +214,8 @@ const AccountInfoPage = () => {
   };
 
   const getFilteredOrders = () => {
+    if (!ordersToShow) return [];
+
     if (activeOrderTab === 'all') return ordersToShow;
 
     const statusMap = {
