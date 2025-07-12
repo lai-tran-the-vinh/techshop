@@ -285,19 +285,19 @@ const AccountInfoPage = () => {
 
   const getStatusColor = (status) => {
     const colors = {
-      completed: 'green',
-      shipping: 'blue',
-      pending: 'orange',
-      cancelled: 'red',
+      PENDING: 'orange',
+      SHIPPING: 'blue',
+      DELIVERED: 'green',
+      CANCELLED: 'red',
     };
-    return colors[status] || 'default';
+    return colors[status] || 'gray';
   };
 
   const getStatusText = (status) => {
     const texts = {
       completed: 'Hoàn tất',
       shipping: 'Đang giao',
-      pending: 'PENDING',
+      pending: 'Đang xử lý',
       cancelled: 'Đã hủy',
     };
     return texts[status] || status;
@@ -305,7 +305,17 @@ const AccountInfoPage = () => {
 
   const getFilteredOrders = () => {
     if (activeOrderTab === 'all') return ordersToShow;
-    return ordersToShow.filter((order) => order.status === activeOrderTab);
+
+    const statusMap = {
+      processing: 'PENDING',
+      shipping: 'SHIPPING',
+      completed: 'DELIVERED',
+      cancelled: 'CANCELLED',
+    };
+
+    return ordersToShow.filter(
+      (order) => order.status === statusMap[activeOrderTab],
+    );
   };
 
   const orderColumns = [
