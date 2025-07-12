@@ -47,6 +47,10 @@ class UserService {
       password: password,
     });
   }
+
+  static loginWithGoogle() {
+    return axiosInstance.get('/api/v1/auth/google');
+  }
 }
 
 export default UserService;

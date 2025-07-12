@@ -24,6 +24,7 @@ import BannerManagement from '@/pages/admin/banner';
 import PermissionsManagement from '@/pages/admin/permission/permission';
 import WarehouseTransferManagement from '@/pages/admin/warehouse/transfer';
 import ForgotPasswordPage from '@/pages/app/forgotPassword';
+import GoogleSuccess from '@/pages/app/googleSucces';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'oauth-success',
+        element: <GoogleSuccess />,
       },
       {
         path: 'order',
