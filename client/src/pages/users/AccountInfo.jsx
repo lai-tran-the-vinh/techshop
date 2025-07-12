@@ -620,37 +620,13 @@ const AccountInfoPage = () => {
 
   return (
     <div className="w-full  p-24 min-h-screen">
-      <div
-        style={{
-          display: 'flex',
-          gap: '24px',
-          maxWidth: '1200px',
-          margin: '0 auto',
-        }}
-      >
+      <div className="flex gap-24 max-w-1200 my-0 mx-auto">
         {/* Khối bên trái */}
         <div className="bg-[#f3f4f6]" style={{ flex: '0 0 300px' }}>
           <Card className="p-12!" style={{ marginBottom: '16px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '16px',
-              }}
-            >
-              <div
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  backgroundColor: '#ff6b35',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: '12px',
-                }}
-              >
-                <UserOutlined style={{ fontSize: '24px', color: '#fff' }} />
+            <div className="flex items-center mb-16">
+              <div className="w-48 h-48 bg-[#ff6b35] rounded-full flex items-center justify-center mr-12">
+                <UserOutlined className="text-2xl! text-white!" />
               </div>
               <div>
                 <div style={{ fontWeight: 'bold', fontSize: '16px' }}>
