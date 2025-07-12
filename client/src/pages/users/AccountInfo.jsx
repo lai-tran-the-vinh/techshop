@@ -42,12 +42,7 @@ const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [updateUserInfo, setUpdateUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tempPersonalInfo, setTempPersonalInfo] = useState({
-    fullName: '',
-    phone: '',
-  });
   const [activeOrderTab, setActiveOrderTab] = useState('all');
-  const [tempAddress, setTempAddress] = useState('');
   const [ordersToShow, setOrdersToShow] = useState(null);
   const [orders, setOrders] = useState(null);
 
@@ -128,72 +123,11 @@ const AccountInfoPage = () => {
   }, []);
 
   useEffect(() => {
-    if (editingAddress) {
-      console.log(JSON.stringify(editingAddress));
-    }
-  }, [editingAddress]);
-
-  useEffect(() => {
     document.title = 'Thông tin cá nhân';
     getUser();
     getAllOrders();
     fetchProvinces();
   }, []);
-
-  // useEffect(() => {
-  //   if (orders) {
-  //     console.log(orders);
-  //   }
-  // }, [orders]);
-
-  const [selectedWard, setSelectedWard] = useState(null);
-
-  useEffect(() => {
-    if (editingAddress && provinces.length > 0) {
-      const [cityName, districtName, wardName] = editingAddress.addressDetail
-        .split(', ')
-        .reverse();
-
-      const foundProvince = provinces.find((p) => p.name === cityName.trim());
-      if (foundProvince) {
-        setSelectedProvince(foundProvince);
-        fetchDistricts(foundProvince.code).then((districtsData) => {
-          const foundDistrict = districtsData.find(
-            (d) => d.name === districtName.trim(),
-          );
-          setDistricts(districtsData);
-          if (foundDistrict) {
-            setSelectedDistrict(foundDistrict);
-            fetchWards(foundDistrict.code).then((wardsData) => {
-              setWards(wardsData);
-              const foundWard = wardsData.find(
-                (w) => w.name === wardName.trim(),
-              );
-              setSelectedWard(foundWard);
-            });
-          }
-        });
-      }
-    }
-  }, [editingAddress, provinces]);
-
-  // Dữ liệu mẫu cho thông tin cá nhân
-  const [personalInfo, setPersonalInfo] = useState({
-    fullName: 'Nguyễn Văn A',
-    phone: '0987654321',
-    addresses: [
-      {
-        id: 1,
-        address: '123 Đường ABC, Phường XYZ, Quận 1, TP.HCM',
-        isDefault: true,
-      },
-      {
-        id: 2,
-        address: '456 Đường DEF, Phường GHI, Quận 2, TP.HCM',
-        isDefault: false,
-      },
-    ],
-  });
 
   const menuItems = [
     {
@@ -211,50 +145,6 @@ const AccountInfoPage = () => {
   const handleMenuClick = (e) => {
     setSelectedMenu(e.key);
   };
-
-  const handlePersonalInfoSubmit = () => {
-    if (!tempPersonalInfo.fullName.trim()) {
-      message.error('Vui lòng nhập họ tên!');
-      return;
-    }
-    if (!tempPersonalInfo.phone.trim()) {
-      message.error('Vui lòng nhập số điện thoại!');
-      return;
-    }
-    if (!/^[0-9]{10,11}$/.test(tempPersonalInfo.phone)) {
-      message.error('Số điện thoại không hợp lệ!');
-      return;
-    }
-
-    setPersonalInfo((prev) => ({
-      ...prev,
-      fullName: tempPersonalInfo.fullName,
-      phone: tempPersonalInfo.phone,
-    }));
-    message.success('Cập nhật thông tin thành công!');
-  };
-
-  const handleDeleteAddress = (addressId) => {
-    setPersonalInfo((prev) => ({
-      ...prev,
-      addresses: prev.addresses.filter((addr) => addr.id !== addressId),
-    }));
-    message.success('Xóa địa chỉ thành công!');
-  };
-
-  const handleEditAddress = (address) => {
-    setEditingAddress(address);
-    setTempAddress(address.address);
-    setIsAddressModalVisible(true);
-  };
-
-  // Khởi tạo tempPersonalInfo với dữ liệu ban đầu
-  React.useEffect(() => {
-    setTempPersonalInfo({
-      fullName: personalInfo.fullName,
-      phone: personalInfo.phone,
-    });
-  }, [personalInfo.fullName, personalInfo.phone]);
 
   const getStatusColor = (status) => {
     const colors = {
@@ -366,7 +256,7 @@ const AccountInfoPage = () => {
       <Button
         className="ml-auto! h-40!"
         type="primary"
-        onClick={handlePersonalInfoSubmit}
+        onClick={() => {}}
         style={{ marginBottom: '24px' }}
       >
         Cập nhật thông tin
@@ -395,7 +285,7 @@ const AccountInfoPage = () => {
                   <Button
                     type="text"
                     icon={<EditOutlined />}
-                    onClick={() => handleEditAddress(item)}
+                    onClick={() => setIsAddressModalVisible(true)}
                   >
                     Sửa
                   </Button>,
@@ -443,66 +333,22 @@ const AccountInfoPage = () => {
           <Flex gap={8} vertical>
             <Flex vertical>
               <label className="mb-4">Tỉnh/Thành phố</label>
-              <Select
-                value={selectedProvince?.code}
-                options={provinces.map((p) => ({
-                  label: p.name,
-                  value: p.code,
-                }))}
-                onChange={(code) => {
-                  const province = provinces.find((p) => p.code === code);
-                  setSelectedProvince(province);
-                  setSelectedDistrict(null);
-                  setSelectedWard(null);
-                  setDistricts([]);
-                  setWards([]);
-                  fetchDistricts(code); // <-- GỌI API LẤY HUYỆN
-                }}
-              />
+              <Select />
             </Flex>
 
             <Flex vertical>
               <label className="mb-4">Quận/Huyện</label>
-              <Select
-                value={selectedDistrict?.code}
-                options={districts.map((d) => ({
-                  label: d.name,
-                  value: d.code,
-                }))}
-                onChange={(code) => {
-                  const district = districts.find((d) => d.code === code);
-                  setSelectedDistrict(district);
-                  setSelectedWard(null);
-                  setWards([]);
-                  fetchWards(code); // <-- GỌI API LẤY PHƯỜNG/XÃ
-                }}
-              />
+              <Select />
             </Flex>
 
             <Flex vertical>
               <label className="mb-4">Xã/Phường</label>
-              <Select
-                value={selectedWard?.code}
-                options={wards.map((w) => ({ label: w.name, value: w.code }))}
-                onChange={(code) => {
-                  const ward = wards.find((w) => w.code === code);
-                  setSelectedWard(ward);
-                }}
-              />
+              <Select />
             </Flex>
           </Flex>
           <Flex vertical className="mt-8!">
             <label className="mb-4">Địa chỉ chi tiết</label>
-            <Input.TextArea
-              className="min-h-70!"
-              value={editingAddress?.specificAddress}
-              onChange={(event) => {
-                setEditingAddress((prev) => ({
-                  ...prev,
-                  specificAddress: event.target.value,
-                }));
-              }}
-            ></Input.TextArea>
+            <Input.TextArea className="min-h-70!"></Input.TextArea>
           </Flex>
         </div>
 
