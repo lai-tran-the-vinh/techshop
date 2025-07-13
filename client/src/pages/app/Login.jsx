@@ -10,14 +10,23 @@ import {
   EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import { useAppContext } from '@contexts';
+import UserService from '@/services/users';
 
 const { Title, Link, Text } = Typography;
 
 function Login() {
   const [user, setUser] = useState({ email: '', password: '' });
-  const { setShowLogin, setShowSignup, message } = useAppContext();
+  const { setShowLogin, setShowSignup, message, setShowForgotPassword } =
+    useAppContext();
   const { handleLogin } = useLogin(message);
-
+  const handleLoginWithGoogle = async () => {
+    try {
+      window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/v1/auth/google`;
+    } catch (error) {
+      message.error('Đăng ký bằng google thất bại!');
+      console.log(error);
+    }
+  };
   return (
     <Modal
       open={true}
@@ -150,6 +159,10 @@ function Login() {
                 fontWeight: 500,
                 color: '#e53935',
               }}
+              onClick={() => {
+                setShowForgotPassword(true);
+                setShowLogin(false);
+              }}
             >
               Quên mật khẩu?
             </Link>
@@ -204,6 +217,7 @@ function Login() {
               color: '#e53935',
               backgroundColor: '#fff',
             }}
+            onClick={() => handleLoginWithGoogle()}
           >
             Đăng nhập với Google
           </Button>

@@ -3,7 +3,7 @@ import { SearchIcon, TrendingUpIcon, ClockIcon, XIcon } from 'lucide-react';
 import { List, Typography } from 'antd';
 import Products from '@/services/products';
 import { useNavigate } from 'react-router-dom';
-import Recomment from '@/services/recomment';
+import Recomment from '@/services/recommend';
 import { useAppContext } from '@/contexts';
 import { set } from 'react-hook-form';
 import { formatCurrency } from '@/helpers';
@@ -186,7 +186,7 @@ function SearchBox() {
         </div>
 
         {showResults && (
-          <div className="absolute top-full mt-6 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100  overflow-hidden z-50 animate-in slide-in-from-top-2 duration-300">
+          <div className="absolute top-full mt-6 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100  overflow-hidden min-h-1/4 z-50 animate-in slide-in-from-top-2 duration-300">
             {!query.trim() && (
               <div className="p-6">
                 {recommentProducts.length > 0 && (
@@ -196,7 +196,7 @@ function SearchBox() {
                       Sản phẩm gợi ý cho bạn
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {recommentProducts.map((term, index) => (
+                      {recommentProducts.slice(0, 3).map((term, index) => (
                         <button
                           key={index}
                           onClick={() => {
@@ -250,7 +250,7 @@ function SearchBox() {
                 <div className="text-sm text-gray-500 mb-4 px-2">
                   Đang tìm kiếm...
                 </div>
-                {[...Array(3)].map((_, i) => (
+                {[...Array(6)].map((_, i) => (
                   <SkeletonItem key={i} />
                 ))}
               </div>

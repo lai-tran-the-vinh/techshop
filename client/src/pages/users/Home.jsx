@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { callFetchBanners } from '@/services/apis';
 import { DotDuration } from 'antd/es/carousel/style';
 import { useAppContext } from '@/contexts';
-import Recomment from '@/services/recomment';
+import Recomment from '@/services/recommend';
 import CardProduct from '@/components/products/Card';
 
 function Home() {
@@ -153,7 +153,7 @@ function Home() {
         setLoading(false);
         console.error('Error fetching recommendations:', error);
       }
-    }
+    };
 
     fetchRecommendationsByUser();
   }, [user]);
@@ -205,7 +205,7 @@ function Home() {
   if (loading) {
     return (
       <div className="w-full h-[calc(100vh-60px)] flex justify-center items-center">
-        <Spin size="large" tip="Đang tải..." delay={1000} />
+        <Spin size="large" tip="Đang tải..." delay={1000} fullscreen />
       </div>
     );
   }
@@ -310,7 +310,7 @@ function Home() {
               </Row>
             </>
           ) : (
-            <Skeleton count={6}  className='w-full! h-full! '/>
+            <Skeleton count={6} className="w-full! h-full! " />
           )}
         </section>
       ) : (

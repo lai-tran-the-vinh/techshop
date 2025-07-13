@@ -37,6 +37,24 @@ class UserService {
       ...value,
     });
   }
+
+  static forgotPassword(email) {
+
+    return axiosInstance.post('/api/v1/auth/forgot-password', {
+      email: email,
+    });
+  }
+
+  static resetPassword(token, password) {
+    return axiosInstance.post('/api/v1/auth/reset-password', {
+      token: token,
+      password: password,
+    });
+  }
+
+  static loginWithGoogle() {
+    return axiosInstance.get('/api/v1/auth/google');
+  }
 }
 
 export default UserService;
