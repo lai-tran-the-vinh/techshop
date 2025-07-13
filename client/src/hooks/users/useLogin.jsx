@@ -11,28 +11,35 @@ function useLogin(message) {
     document.title = 'TechShop | Đăng nhập';
   }, []);
 
-  function handleLogin(value) {
+  async function handleLogin(value) {
     const usersService = new Users();
-    message.loading('Đang đăng nhập');
+    message.loading({ content: 'Đăng nhập...', key: 'login' });
 
-    usersService
-      .login(value)
-      .then((response) => {
-  
-        if (response.status === 201) {
-          const accessToken = response.data.data.access_token;
-          localStorage.setItem('access_token', accessToken);
-          if (response.data.data.role === 'admin') {
-            message.success('Đăng nhập thành công');
-            navigate('/admin/dashboard');
-          }
-          window.location.reload();
+    try {
+      const res = await usersService.login(value);
+
+      if (res.data.data.access_token) {
+        message.success({ content: 'Đăng nhập thành công', key: 'login' });
+        localStorage.setItem('access_token', res.data.data.access_token);
+        setShowLogin(false);
+        window.location.reload();
+        if (response.data.data.role === 'admin') {
+          message.success('Đăng nhập thành công');
+          navigate('/admin/dashboard');
         }
-      })
-      .catch((error) => {
-        
-        message.error(`Lỗi: ${error.message}`);
+      } else {
+        message.error({
+          content: `Đăng nhập không thành công do sai tài khoản/mật khẩu!!`,
+          key: 'login',
+        });
+      }
+    } catch (error) {
+      console.log('Lỗi khi đăng nhập:', error);
+      message.error({
+        content: `${error.response.data.statusCode}: Lỗi máy chủ hoặc thông tin không chính xác`,
+        key: 'login',
       });
+    }
   }
 
   return { handleLogin };

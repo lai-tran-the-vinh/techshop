@@ -4,11 +4,16 @@ const token = localStorage.getItem('access_token');
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
+
   },
 });
+export const callFreshToken = () => {
+  return axiosInstance.get(`/api/v1/auth/refresh`);
+};
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -20,16 +25,21 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        localStorage.removeItem("access_token");
-        const res = await callFreshToken();
-        if (res.data && res.data.data && res.data.data.access_token) {
-          // Lưu access token mới vào localStorage
-          localStorage.setItem("access_token", res.data.data.access_token);
-          // Cập nhật lại header Authorization cho request ban đầu
-          originalRequest.headers["Authorization"] = `Bearer ${res.data.data.access_token}`;
-          // Gọi lại request ban đầu với access token mới
-          return axiosInstance(originalRequest);
+        const token = localStorage.removeItem("access_token");
+        if (token) {
+          localStorage.removeItem("access_token");
+          const res = await callFreshToken();
+          if (res.data && res.data.data && res.data.data.access_token) {
+            // Lưu access token mới vào localStorage
+            localStorage.setItem("access_token", res.data.data.access_token);
+            // Cập nhật lại header Authorization cho request ban đầu
+            originalRequest.headers["Authorization"] = `Bearer ${res.data.data.access_token}`;
+            // Gọi lại request ban đầu với access token mới
+            return axiosInstance(originalRequest);
+          }
         }
+
+
       } catch (refreshError) {
         if (refreshError.response &&
           (refreshError.response.status === 401)) {
@@ -61,9 +71,7 @@ export const callFetchAccount = () => {
   return axiosInstance.get(`/api/v1/auth/account`);
 };
 
-export const callFreshToken = () => {
-  return axiosInstance.get(`/api/v1/auth/refresh`);
-};
+
 
 export const callLogout = () => {
   return axiosInstance.get(`/api/v1/auth/logout`);

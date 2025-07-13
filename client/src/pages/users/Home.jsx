@@ -80,7 +80,6 @@ function Home() {
 
   const fetchProducts = async () => {
     try {
-      setLoading(true);
       const response = await Products.getAll();
       setProducts(response.result || []);
     } catch (error) {
@@ -142,23 +141,18 @@ function Home() {
           setLoading(false);
           console.error('Error fetching recommendations:', error);
         }
-      }
-    };
-    const fetchRecommendationsProducts = async () => {
-      try {
-        const res = await Recomment.getRecommendations();
+      } else {
+        const res = await Recomment.getRecommendationsPopular();
         setRecommentProducts(res);
+
         setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.error('Error fetching recommendations:', error);
       }
     };
-
     fetchRecommendationsByUser();
   }, [user]);
 
   useEffect(() => {
+    document.title = 'Trang chủ';
     const initializeData = async () => {
       await Promise.all([fetchCategories(), fetchProducts(), fetchBanners()]);
     };
@@ -166,11 +160,6 @@ function Home() {
     initializeData();
   }, []);
 
-  useEffect(() => {
-    document.title = 'Trang chủ';
-  }, []);
-
-  // Custom carousel arrows
   const CustomNextArrow = ({ onClick }) => (
     <button
       type="button"
@@ -290,7 +279,7 @@ function Home() {
               </div>
 
               <Row className="w-full mx-auto ">
-                {recommentProducts.map((product, index) => (
+                {recommentProducts?.map((product, index) => (
                   <Col
                     key={index}
                     xs={24}
