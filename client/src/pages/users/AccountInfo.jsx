@@ -157,6 +157,35 @@ const AccountInfoPage = () => {
     }
   };
 
+  const handleSetDefaultAddress = async (index) => {
+    try {
+      const userService = new UserService();
+      message.loading('Đang cập nhật địa chỉ mặc định...');
+
+      const updatedAddresses = updateUserInfo.addresses.map((addr, i) => ({
+        ...addr,
+        default: i === index, // Địa chỉ được chọn sẽ là mặc định
+      }));
+
+      const updatedUser = {
+        ...updateUserInfo,
+        addresses: updatedAddresses,
+      };
+
+      const response = await userService.update(updatedUser);
+      if (response.status === 200) {
+        await getUser();
+        message.destroy();
+      } else {
+        throw new Error('Lỗi khi cập nhật');
+      }
+    } catch (error) {
+      message.destroy();
+      message.error('Không thể đặt làm mặc định');
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
@@ -370,6 +399,7 @@ const AccountInfoPage = () => {
           renderItem={(item, index) => {
             return (
               <List.Item
+                className="flex! items-center!"
                 actions={[
                   <Button
                     type="text"
@@ -401,6 +431,14 @@ const AccountInfoPage = () => {
                         </Button>,
                       ]
                     : []),
+
+                  <Button
+                    type="text"
+                    disabled={item.default}
+                    onClick={() => handleSetDefaultAddress(index)}
+                  >
+                    Đặt làm mặc định
+                  </Button>,
                 ]}
               >
                 <List.Item.Meta
