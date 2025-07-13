@@ -2,7 +2,11 @@ import { UsersLayout, AdminLayout } from '@layouts';
 import { Cart, ListProducts, Order, AccountInfo } from '@pages/users';
 import BranchManagement from '@/pages/admin/branch';
 import Dashboard from '@/pages/admin/dashboard/Dashboard';
-import { Home, ProductDetail, SearchProductResult } from '@/pages/users';
+import {
+  Home,
+  ProductDetail,
+  SearchProductResult,
+} from '@/pages/users';
 import { AddProduct, EditProduct, ListProduct } from '@/pages/admin/product';
 import { createBrowserRouter } from 'react-router-dom';
 import WarehouseManagement from '@/pages/admin/warehouse';
@@ -38,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: 'oauth-success',
         element: <GoogleSuccess />,
+      },
+      {
+        path: 'account-info',
+        element: <AccountInfo />,
       },
       {
         path: 'order',
