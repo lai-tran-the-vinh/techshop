@@ -386,8 +386,20 @@ const AccountInfoPage = () => {
             type="primary"
             className="my-10! h-40!"
             icon={<PlusOutlined />}
-            onClick={() => {
-              message.warning('Chưa làm xong ní ơi');
+            onClick={async () => {
+              setEditingAddress({
+                specificAddress: '',
+                addressDetail: '',
+                default: false,
+                isDeleted: false,
+                deletedAt: null,
+              });
+              setEditingAddressIndex(null); // báo đây là "thêm mới" chứ không phải sửa
+              await fetchProvinces();
+              setSelectedProvince(null);
+              setSelectedDistrict(null);
+              setSelectedWard(null);
+              setIsAddressModalVisible(true);
             }}
           >
             Thêm địa chỉ
@@ -549,18 +561,39 @@ const AccountInfoPage = () => {
             type="primary"
             className="h-40! min-w-100!"
             onClick={async () => {
-              const newAddressDetail = `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`;
-              const newSpecificAddress = editingAddress.specificAddress;
-              const updatedAddress = {
-                ...editingAddress,
-                addressDetail: newAddressDetail,
-                specificAddress: newSpecificAddress,
+              if (
+                !selectedProvince ||
+                !selectedDistrict ||
+                !selectedWard ||
+                !editingAddress?.specificAddress
+              ) {
+                return message.warning(
+                  'Vui lòng điền đầy đủ thông tin địa chỉ',
+                );
+              }
+
+              const newAddress = {
+                specificAddress: editingAddress.specificAddress,
+                addressDetail: `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`,
+                default: updateUserInfo.addresses.length === 0, // Nếu là địa chỉ đầu tiên thì đặt làm mặc định
+                isDeleted: false,
+                deletedAt: null,
               };
 
               let updateUser;
               setUpdateUserInfo((prev) => {
-                const updatedAddresses = [...prev.addresses];
-                updatedAddresses[editingAddressIndex] = updatedAddress;
+                let updatedAddresses;
+                if (editingAddressIndex !== null) {
+                  // Trường hợp sửa địa chỉ
+                  updatedAddresses = [...prev.addresses];
+                  updatedAddresses[editingAddressIndex] = {
+                    ...updatedAddresses[editingAddressIndex],
+                    ...newAddress,
+                  };
+                } else {
+                  // Trường hợp thêm mới địa chỉ
+                  updatedAddresses = [...prev.addresses, newAddress];
+                }
 
                 updateUser = {
                   ...prev,
