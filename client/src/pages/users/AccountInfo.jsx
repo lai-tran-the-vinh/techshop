@@ -125,7 +125,7 @@ const AccountInfoPage = () => {
       message.loading('Đang xóa địa chỉ');
 
       const updatedAddresses = updateUserInfo.addresses.filter(
-        (addr) => addr.id !== addressId,
+        (_, index) => index !== addressId,
       );
 
       const updatedUser = {
@@ -136,9 +136,9 @@ const AccountInfoPage = () => {
       const response = await userService.update(updatedUser);
 
       if (response.status === 200) {
+        await getUser();
         message.destroy();
         message.success('Xóa địa chỉ thành công');
-        await getUser();
       } else {
         throw new Error('Xóa thất bại');
       }
@@ -359,7 +359,7 @@ const AccountInfoPage = () => {
       >
         <List
           dataSource={updateUserInfo.addresses}
-          renderItem={(item) => {
+          renderItem={(item, index) => {
             return (
               <List.Item
                 actions={[
@@ -385,7 +385,7 @@ const AccountInfoPage = () => {
                           icon={<DeleteOutlined />}
                           onClick={() => {
                             // message.warning('Chưa làm xong luôn');
-                            handleDeleteAddress(item.id);
+                            handleDeleteAddress(index);
                           }}
                         >
                           Xóa
