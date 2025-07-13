@@ -34,8 +34,11 @@ const AccountInfoPage = () => {
   const [editingAddressIndex, setEditingAddressIndex] = useState(null);
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedWard, setSelectedWard] = useState([]);
+  const [deleteAddressIndex, setDeleteAddressIndex] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [districts, setDistricts] = useState([]);
+  const [isDeleteAddressModalOpen, setIsDeleteAddressModalOpen] =
+    useState(false);
   const [selectedMenu, setSelectedMenu] = useState('personal');
   const [isAddressModalVisible, setIsAddressModalVisible] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -435,7 +438,8 @@ const AccountInfoPage = () => {
                           danger
                           icon={<DeleteOutlined />}
                           onClick={() => {
-                            handleDeleteAddress(index);
+                            setIsDeleteAddressModalOpen(true);
+                            setDeleteAddressIndex(index);
                           }}
                         >
                           Xóa
@@ -471,7 +475,41 @@ const AccountInfoPage = () => {
       </Card>
 
       <Modal
-        title={editingAddress ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ mới'}
+        title="Xóa địa chỉ"
+        open={isDeleteAddressModalOpen}
+        onCancel={() => {
+          setIsDeleteAddressModalOpen(false);
+        }}
+        footer={null}
+      >
+        <Typography.Text>Bạn có chắc chắn muốn xóa địa chỉ?</Typography.Text>
+        <Flex gap={8} justify="end">
+          <Button
+            className="h-40! min-w-100!"
+            onClick={() => {
+              setIsDeleteAddressModalOpen(false);
+            }}
+          >
+            Hủy
+          </Button>
+
+          <Button
+            type="primary"
+            className="h-40! min-w-100!"
+            onClick={async () => {
+              await handleDeleteAddress(deleteAddressIndex);
+              setIsDeleteAddressModalOpen(false);
+            }}
+          >
+            Xóa
+          </Button>
+        </Flex>
+      </Modal>
+
+      <Modal
+        title={
+          editingAddressIndex !== null ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ mới'
+        }
         open={isAddressModalVisible}
         onCancel={() => {
           setIsAddressModalVisible(false);
@@ -606,7 +644,7 @@ const AccountInfoPage = () => {
               await updateAddress(updateUser);
             }}
           >
-            {editingAddress ? 'Cập nhật' : 'Thêm'}
+            {editingAddressIndex !== null ? 'Cập nhật' : 'Thêm'}
           </Button>
         </Flex>
       </Modal>
