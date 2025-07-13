@@ -507,39 +507,6 @@ const AccountInfoPage = () => {
           >
             Hủy
           </Button>
-          {/* <Button
-            type="primary"
-            className="h-40! min-w-100!"
-            onClick={async () => {
-              const newAddressDetail = `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`;
-              const newSpecificAddress = editingAddress.specificAddress;
-              const updatedAddress = {
-                ...editingAddress,
-                addressDetail: newAddressDetail,
-                specificAddress: newSpecificAddress,
-              };
-              let updateUser;
-              setUpdateUserInfo((prev) => {
-                const updatedAddresses = prev.addresses.map((addr) => {
-                  if (addr.id === editingAddress.id) {
-                    return updatedAddress;
-                  }
-                  return addr;
-                });
-
-                updateUser = {
-                  ...prev,
-                  addresses: updatedAddresses,
-                };
-
-                return updateUser;
-              });
-
-              await updateAddress(updateUser);
-            }}
-          >
-            {editingAddress ? 'Cập nhật' : 'Thêm'}
-          </Button> */}
 
           <Button
             type="primary"
