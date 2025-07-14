@@ -299,7 +299,7 @@ function Home() {
               </Row>
             </>
           ) : (
-            <Skeleton count={6} className="w-full! h-full! " />
+            <Skeleton count={6} className="w-full! h-full!  " />
           )}
         </section>
       ) : (

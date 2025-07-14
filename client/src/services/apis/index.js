@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const token = localStorage.removeItem("access_token");
+        const token = localStorage.getItem("access_token");
         if (token) {
           localStorage.removeItem("access_token");
           const res = await callFreshToken();
