@@ -213,7 +213,6 @@ function ProductDetail() {
 
   const allImages = [...variantImages, ...galleryImages];
 
-  console.log(allImages);
   const currentStock = branchStocks[selectBranchs];
 
   if (loading) {

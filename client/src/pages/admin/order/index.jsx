@@ -122,7 +122,6 @@ const OrderManagement = () => {
       const res = await callFetchOrders();
       setOrders(res.data.data);
       setFilteredOrders(res.data.data);
-      console.log(res.data.data);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
@@ -134,6 +133,7 @@ const OrderManagement = () => {
     try {
       const res = await callFetchProducts();
       setProducts(res.data.data.result);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch products:', error);
     }
@@ -142,6 +142,7 @@ const OrderManagement = () => {
     try {
       const res = await callFetchBranches();
       setBranches(res.data.data);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch branches:', error);
     }
@@ -174,15 +175,23 @@ const OrderManagement = () => {
       });
     }
 
+    if (filters.status) {
+      filtered = filtered.filter((order) =>
+        order.status.toLowerCase().includes(filters.status.toLowerCase()),
+      );
+    }
+
     setFilteredOrders(filtered);
   }, [orders, filters]);
 
   const getStatistics = () => {
     const totalOrders = orders.length;
-    const totalRevenue = orders.reduce(
-      (sum, order) => sum + order.totalPrice,
-      0,
-    );
+    const totalRevenue = orders
+      .filter(
+        (order) =>
+          order.status === 'DELIVERED' && order.paymentStatus === 'COMPLETED',
+      )
+      .reduce((sum, order) => sum + order.totalPrice, 0);
     const pendingOrders = orders.filter(
       (order) => order.status === 'PENDING',
     ).length;
@@ -552,11 +561,26 @@ const OrderManagement = () => {
               }
             />
           </Col>
-
-          <Col span={5}>
+          <Col span={4}>
+            <Select
+              placeholder="Trạng thái"
+              style={{ width: '100%', height: '80%' }}
+              value={filters.status}
+              onChange={(value) => setFilters({ ...filters, status: value })}
+              allowClear
+            >
+              <Option value="">All</Option>
+              {statusOptions.map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={4}>
             <Select
               placeholder="Chi nhánh"
-              style={{ width: '100%' }}
+              style={{ width: '100%', height: '80%' }}
               value={filters.branch}
               onChange={(value) => setFilters({ ...filters, branch: value })}
               allowClear
@@ -569,7 +593,7 @@ const OrderManagement = () => {
               ))}
             </Select>
           </Col>
-          <Col span={5}>
+          <Col span={4}>
             <RangePicker
               style={{ width: '100%' }}
               placeholder={['Từ ngày', 'Đến ngày']}
@@ -577,7 +601,7 @@ const OrderManagement = () => {
               onChange={(dates) => setFilters({ ...filters, dateRange: dates })}
             />
           </Col>
-          <Col span={3}>
+          <Col span={2}>
             <Button
               icon={<ReloadOutlined />}
               onClick={() =>
@@ -594,7 +618,7 @@ const OrderManagement = () => {
               Làm mới
             </Button>
           </Col>
-          <Col span={5}>
+          <Col span={4}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
