@@ -11,6 +11,7 @@ import {
   List,
   Modal,
   Tabs,
+  Steps,
   Tag,
   Table,
   Typography,
@@ -53,16 +54,6 @@ const AccountInfoPage = () => {
   const [orders, setOrders] = useState(null);
   const [isOrderDetailModalOpen, setIsOrderDetailModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const statusOptions = [
-    { value: 'PENDING', label: 'Chờ xử lý', color: 'orange' },
-    { value: 'PROCESSING', label: 'Đang xử lý', color: 'cyan' },
-    { value: 'CONFIRMED', label: 'Đã xác nhận', color: 'blue' },
-    { value: 'SHIPPING', label: 'Đang giao hàng', color: 'purple' },
-    { value: 'DELIVERED', label: 'Đã giao hàng', color: 'green' },
-    { value: 'CANCELLED', label: 'Đã hủy', color: 'red' },
-    { value: 'RETURNED', label: 'Đã trả hàng', color: 'gray' },
-  ];
 
   useEffect(() => {
     if (orders) {
@@ -210,6 +201,39 @@ const AccountInfoPage = () => {
     }
   };
 
+  const getStatusSteps = (status) => {
+    const steps = [
+      { title: 'Chờ xử lý' },
+      { title: 'Đang xử lý' },
+      { title: 'Đã xác nhận' },
+      { title: 'Đang vận chuyển' },
+      { title: 'Đã giao hàng' },
+    ];
+
+    let current;
+    switch (status) {
+      case 'PENDING':
+        current = 0;
+        break;
+      case 'PROCESSING':
+        current = 1;
+        break;
+      case 'CONFIRMED':
+        current = 2;
+        break;
+      case 'SHIPPING':
+        current = 3;
+        break;
+      case 'DELIVERED':
+        current = 4;
+        break;
+      default:
+        break;
+    }
+
+    return { steps, current };
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
@@ -314,10 +338,13 @@ const AccountInfoPage = () => {
     if (activeOrderTab === 'all') return ordersToShow;
 
     const statusMap = {
-      processing: 'PENDING',
+      pending: 'PENDING',
+      processing: 'PROCESSING',
+      confirmed: 'CONFIRMED',
       shipping: 'SHIPPING',
-      completed: 'DELIVERED',
+      delivered: 'DELIVERED',
       cancelled: 'CANCELLED',
+      returned: 'RETURNED',
     };
 
     return ordersToShow.filter(
@@ -787,8 +814,32 @@ const AccountInfoPage = () => {
               ),
             },
             {
+              key: 'pending',
+              label: 'Chờ xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
               key: 'processing',
               label: 'Đang xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'confirmed',
+              label: 'Đã xác nhận',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -811,8 +862,8 @@ const AccountInfoPage = () => {
               ),
             },
             {
-              key: 'completed',
-              label: 'Hoàn tất',
+              key: 'delivered',
+              label: 'Đã giao hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -825,6 +876,18 @@ const AccountInfoPage = () => {
             {
               key: 'cancelled',
               label: 'Đã hủy',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'returned',
+              label: 'Đã trả hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -884,6 +947,7 @@ const AccountInfoPage = () => {
             />
 
             <Modal
+            className='w-[70%]!'
               title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
               open={isOrderDetailModalOpen}
               onCancel={() => {
@@ -895,6 +959,10 @@ const AccountInfoPage = () => {
             >
               {selectedOrder && (
                 <Flex vertical gap={20}>
+                  <Steps
+                    current={getStatusSteps(selectedOrder.status).current}
+                    items={getStatusSteps(selectedOrder.status).steps}
+                  />
                   <Table
                     bordered
                     showHeader={false}
@@ -908,12 +976,6 @@ const AccountInfoPage = () => {
                       ['Số điện thoại', orderData?.phone],
                       ['Chi nhánh', orderData?.items?.[0]?.branch?.name],
                       ['Phương thức thanh toán', orderData?.paymentMethod],
-                      [
-                        'Trạng thái đơn hàng',
-                        <Tag color={getStatusColor(selectedOrder.status)}>
-                          {selectedOrder.status}
-                        </Tag>,
-                      ],
                       ['Địa chỉ giao hàng', orderData?.shippingAddress],
                       [
                         'Ngày tạo',
