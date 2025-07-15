@@ -86,9 +86,9 @@ function Header() {
               trigger={['hover']}
               className="text-white flex justify-center items-center bg-[rgb(126,22,28)]! h-[44px] rounded-full  w-full"
             >
-              <Text className="text-white! font-medium! text-2xl tracking-wider  ">
+              <Text className="text-white! text-base! flex! items-center!">
                 <BsList className="mr-5 font-bold text-2xl" />
-                Cửa Hàng
+                Cửa hàng
               </Text>
             </Dropdown>
           </div>
