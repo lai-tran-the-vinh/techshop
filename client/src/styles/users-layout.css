@@ -1,5 +1,5 @@
 /* Tùy chỉnh phần menu dropdown của Dropdown */
-.ant-dropdown-menu {
+.custom-dropdown-menu {
   background-color: #f3f4f6 !important;
   padding: 12px 4px !important;
 }

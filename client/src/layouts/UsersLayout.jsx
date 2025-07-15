@@ -87,7 +87,7 @@ function Header() {
         <div className="flex items-center gap-4 sm:gap-15 w-3/5 mr-[100px]">
           <div className="hidden md:flex cursor-pointer w-[20%]">
             <Dropdown
-              menu={{ items }}
+              menu={{ items, className: 'custom-dropdown-menu' }}
               trigger={['hover']}
               className="text-white flex justify-center items-center bg-[rgb(126,22,28)]! h-[44px] rounded-full  w-full"
             >
