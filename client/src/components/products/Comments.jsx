@@ -8,6 +8,7 @@ import {
   Typography,
   Rate,
   Tag,
+  Flex,
 } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -24,6 +25,7 @@ import {
   callReplyReview,
 } from '@/services/apis';
 import { useAppContext } from '@/contexts';
+import { BsDot } from 'react-icons/bs';
 
 const { TextArea } = Input;
 const { Text, Title } = Typography;
@@ -157,31 +159,28 @@ function Comments({ className, product, loading: initialLoading }) {
 
   return (
     <div className={className}>
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            <div className="flex! items-center gap-3!">
-              <div className="flex! items-center space-x-4">
-                <h3 className="text-xl! font-bold text-gray-800">
-                  {loading ? (
-                    <Skeleton width={200} height={24} />
-                  ) : (
-                    'Bình luận và đánh giá'
-                  )}
-                </h3>
-                <p className="text-sm! text-gray-600">
-                  {loading ? <Skeleton width={100} /> : `${total} bình luận`}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <Flex align="center" gap={8}>
+          <Typography.Title
+            level={3}
+            className="text-xl! font-bold! text-gray-800"
+          >
+            {loading ? (
+              <Skeleton width={200} height={24} />
+            ) : (
+              'Bình luận và đánh giá'
+            )}
+          </Typography.Title>
+          <Typography.Text className="text-sm! text-gray-600!">
+            {loading ? <Skeleton width={100} /> : `${total} bình luận`}
+          </Typography.Text>
+        </Flex>
 
-        <div className="p-6 bg-gray-50 border-b border-gray-100">
-          <div className="flex items-start gap-4">
+        <div className="p-6">
+          <div className="flex items-start gap-8">
             <Avatar
               src={user?.avatar}
-              size={48}
+              size={40}
               className="border-2 border-white shadow-md"
               icon={<AiOutlineUser />}
             />
@@ -195,27 +194,29 @@ function Comments({ className, product, loading: initialLoading }) {
                     maxLength={1000}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm này..."
-                    rows={4}
+                    rows={6}
                     autoSize={{ minRows: 2, maxRows: 4 }}
-                    className="w-full border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full min-h-100! border-gray-200 rounded-md! focus:border-transparent"
                   />
                   <div className="flex items-center justify-between mt-8">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-gray-600">Đánh giá:</span>
+                    <div className="flex items-center gap-8">
+                      <Typography.Text className="text-base! font-medium!">
+                        Đánh giá:
+                      </Typography.Text>
                       <Rate
                         value={rating}
                         allowHalf
                         onChange={(value) => {
                           setRating(value === 0 ? 1 : value);
                         }}
-                        className="text-yellow-400"
+                        className=""
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-8">
                       <Button
                         onClick={() => setComment('')}
                         disabled={submitting}
-                        className="border-gray-300 text-gray-600 hover:border-gray-400"
+                        className="min-w-100! rounded-md! h-40!"
                       >
                         Hủy
                       </Button>
@@ -224,7 +225,7 @@ function Comments({ className, product, loading: initialLoading }) {
                         onClick={handleSubmitComment}
                         loading={submitting}
                         disabled={!comment.trim()}
-                        className="bg-blue-500 hover:bg-blue-600 border-blue-500 px-6"
+                        className="min-w-100! rounded-md! h-40!"
                       >
                         Gửi bình luận
                       </Button>
@@ -265,54 +266,53 @@ function Comments({ className, product, loading: initialLoading }) {
               </p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="mt-30">
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-white border border-gray-100 rounded-lg p-5 "
+                  className="bg-white flex items-start p-6 gap-8"
                 >
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-8 mb-4">
                     <Avatar
                       src={review.userId?.avatar}
-                      size={48}
-                      className="border-2! border-gray-200!"
+                      size={40}
                       icon={<AiOutlineUser />}
                     />
+                  </div>
+                  <div className="mb-4 text-gray-700 w-full leading-relaxed rounded-lg">
                     <div className="flex-1!">
-                      <div className="flex! items-center! gap-2! mb-1!">
+                      <div className="flex! items-center! gap-8! mb-1!">
                         <Text className="font-semibold! text-gray-800!">
                           {review.userId?.name || 'Người dùng'}
                         </Text>
-                      </div>
-                      <div className="flex! items-center! gap-3! text-sm! text-gray-500!">
-                        <span className="flex items-center gap-1">
-                          <AiOutlineClockCircle />
+                        <div className="flex! items-center! gap-3! text-sm! text-gray-500!">
+                          <Rate
+                            disabled
+                            defaultValue={review.rating}
+                            size="small"
+                            className="text-yellow-400 text-sm!"
+                          />
+                        </div>
+                        <BsDot />
+                        <Typography.Text className="flex! items-center! text-xs!">
                           {formatTime(review.createdAt)}
-                        </span>
-                        <Rate
-                          disabled
-                          defaultValue={review.rating}
-                          size="small"
-                          className="text-yellow-400"
-                        />
+                        </Typography.Text>
                       </div>
                     </div>
-                  </div>
-                  <div className="mb-4 text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg">
                     {review.content}
-                  </div>
-                  <div className="flex! items-center! gap-4! text-sm! text-gray-500! mb-4!">
-                    <button className="flex! items-center! gap-2! hover:text-blue-500! transition-colors! px-3! py-1! rounded-full! hover:bg-blue-50!">
-                      <AiOutlineLike />
-                      Thích
-                    </button>
-                    <button
-                      onClick={() => toggleReplyInput(review._id)}
-                      className="flex! items-center! gap-2! hover:text-blue-500! transition-colors! px-3! py-1! rounded-full! hover:bg-blue-50!"
-                    >
-                      <AiOutlineRollback />
-                      Trả lời
-                    </button>
+                    <div className="flex! items-center! gap-8! mt-4 text-sm! text-gray-500! mb-4!">
+                      <button className="flex! items-center! gap-2! transition-colors! cursor-pointer! text-black! px-8! py-4! rounded-full! border border-gray-300!">
+                        <AiOutlineLike />
+                        Thích
+                      </button>
+                      <button
+                        onClick={() => toggleReplyInput(review._id)}
+                        className="flex! items-center! gap-2! transition-colors! px-8! cursor-pointer! text-black! py-4! rounded-full! border border-gray-300"
+                      >
+                        <AiOutlineRollback />
+                        Trả lời
+                      </button>
+                    </div>
                   </div>
                   {review.replies && review.replies.length > 0 && (
                     <div className="ml-8! space-y-3! mb-4!">
