@@ -348,7 +348,7 @@ function Home() {
                     <div className="flex-1">
                       <Image
                         preview={false}
-                        className="group-hover:scale-130! transition-all! rounded-2xl"
+                        className="group-hover:scale-105! transition-all! rounded-2xl"
                         src={category.logo || 'https://via.placeholder.com/150'}
                       />
                     </div>
