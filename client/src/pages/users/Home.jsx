@@ -293,7 +293,9 @@ function Home() {
               </Row>
             </>
           ) : (
-            <Skeleton count={6} className="w-full! h-full!  " />
+            <div className="w-full min-h-300 flex items-center justify-center">
+              <Spin />
+            </div>
           )}
         </section>
       ) : (
