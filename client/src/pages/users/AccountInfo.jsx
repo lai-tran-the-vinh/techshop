@@ -11,6 +11,7 @@ import {
   List,
   Modal,
   Tabs,
+  Steps,
   Tag,
   Table,
   Typography,
@@ -53,16 +54,6 @@ const AccountInfoPage = () => {
   const [orders, setOrders] = useState(null);
   const [isOrderDetailModalOpen, setIsOrderDetailModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const statusOptions = [
-    { value: 'PENDING', label: 'Chờ xử lý', color: 'orange' },
-    { value: 'PROCESSING', label: 'Đang xử lý', color: 'cyan' },
-    { value: 'CONFIRMED', label: 'Đã xác nhận', color: 'blue' },
-    { value: 'SHIPPING', label: 'Đang giao hàng', color: 'purple' },
-    { value: 'DELIVERED', label: 'Đã giao hàng', color: 'green' },
-    { value: 'CANCELLED', label: 'Đã hủy', color: 'red' },
-    { value: 'RETURNED', label: 'Đã trả hàng', color: 'gray' },
-  ];
 
   useEffect(() => {
     if (orders) {
@@ -210,6 +201,39 @@ const AccountInfoPage = () => {
     }
   };
 
+  const getStatusSteps = (status) => {
+    const steps = [
+      { title: 'Chờ xử lý' },
+      { title: 'Đang xử lý' },
+      { title: 'Đã xác nhận' },
+      { title: 'Đang vận chuyển' },
+      { title: 'Đã giao hàng' },
+    ];
+
+    let current;
+    switch (status) {
+      case 'PENDING':
+        current = 0;
+        break;
+      case 'PROCESSING':
+        current = 1;
+        break;
+      case 'CONFIRMED':
+        current = 2;
+        break;
+      case 'SHIPPING':
+        current = 3;
+        break;
+      case 'DELIVERED':
+        current = 4;
+        break;
+      default:
+        break;
+    }
+
+    return { steps, current };
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
@@ -314,10 +338,13 @@ const AccountInfoPage = () => {
     if (activeOrderTab === 'all') return ordersToShow;
 
     const statusMap = {
-      processing: 'PENDING',
+      pending: 'PENDING',
+      processing: 'PROCESSING',
+      confirmed: 'CONFIRMED',
       shipping: 'SHIPPING',
-      completed: 'DELIVERED',
+      delivered: 'DELIVERED',
       cancelled: 'CANCELLED',
+      returned: 'RETURNED',
     };
 
     return ordersToShow.filter(
@@ -572,6 +599,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Tỉnh/Thành phố</label>
               <Select
                 value={selectedProvince?.code}
+                placeholder="Chọn Tỉnh/Thành phố"
                 options={provinces.map((province) => {
                   return { label: province.name, value: province.code };
                 })}
@@ -590,6 +618,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Quận/Huyện</label>
               <Select
                 value={selectedDistrict?.code}
+                placeholder="Chọn Quận/Huyện"
                 options={districts.map((district) => {
                   return { label: district.name, value: district.code };
                 })}
@@ -606,6 +635,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Xã/Phường</label>
               <Select
                 value={selectedWard?.code}
+                placeholder="Chọn Xã/Phường"
                 options={wards.map((ward) => {
                   return { label: ward.name, value: ward.code };
                 })}
@@ -619,6 +649,7 @@ const AccountInfoPage = () => {
           <Flex vertical className="mt-8!">
             <label className="mb-4">Địa chỉ chi tiết</label>
             <Input.TextArea
+              placeholder="Nhập địa chỉ chi tiết"
               value={editingAddress?.specificAddress || ''}
               onChange={(event) => {
                 setEditingAddress((prev) => {
@@ -644,7 +675,7 @@ const AccountInfoPage = () => {
             Hủy
           </Button>
 
-          <Button
+          {/* <Button
             type="primary"
             className="h-40! min-w-100!"
             onClick={async () => {
@@ -694,6 +725,68 @@ const AccountInfoPage = () => {
             }}
           >
             {editingAddressIndex !== null ? 'Cập nhật' : 'Thêm'}
+          </Button> */}
+
+          <Button
+            type="primary"
+            className="h-40! min-w-100!"
+            onClick={async () => {
+              if (
+                !selectedProvince ||
+                !selectedDistrict ||
+                !selectedWard ||
+                !editingAddress?.specificAddress
+              ) {
+                return message.warning(
+                  'Vui lòng điền đầy đủ thông tin địa chỉ',
+                );
+              }
+
+              const newAddress = {
+                specificAddress: editingAddress.specificAddress,
+                addressDetail: `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`,
+                default: false, // tạm để false, lát set lại
+                isDeleted: false,
+                deletedAt: null,
+              };
+
+              let updatedAddresses = [...updateUserInfo.addresses];
+
+              if (editingAddressIndex !== null) {
+                // Cập nhật địa chỉ
+                updatedAddresses[editingAddressIndex] = {
+                  ...updatedAddresses[editingAddressIndex],
+                  ...newAddress,
+                };
+              } else {
+                // Thêm mới địa chỉ
+                updatedAddresses.push(newAddress);
+              }
+
+              // Luôn gán địa chỉ đầu tiên là mặc định nếu không có địa chỉ mặc định nào
+              const hasDefault = updatedAddresses.some((addr) => addr.default);
+              if (!hasDefault) {
+                updatedAddresses[0].default = true;
+              }
+
+              // Đảm bảo chỉ có 1 địa chỉ mặc định duy nhất
+              const defaultIndex = updatedAddresses.findIndex(
+                (addr) => addr.default,
+              );
+              updatedAddresses = updatedAddresses.map((addr, idx) => ({
+                ...addr,
+                default: idx === defaultIndex,
+              }));
+
+              const updateUser = {
+                ...updateUserInfo,
+                addresses: updatedAddresses,
+              };
+
+              await updateAddress(updateUser);
+            }}
+          >
+            {editingAddressIndex !== null ? 'Cập nhật' : 'Thêm'}
           </Button>
         </Flex>
       </Modal>
@@ -721,8 +814,32 @@ const AccountInfoPage = () => {
               ),
             },
             {
+              key: 'pending',
+              label: 'Chờ xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
               key: 'processing',
               label: 'Đang xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'confirmed',
+              label: 'Đã xác nhận',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -745,8 +862,8 @@ const AccountInfoPage = () => {
               ),
             },
             {
-              key: 'completed',
-              label: 'Hoàn tất',
+              key: 'delivered',
+              label: 'Đã giao hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -759,6 +876,18 @@ const AccountInfoPage = () => {
             {
               key: 'cancelled',
               label: 'Đã hủy',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'returned',
+              label: 'Đã trả hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -818,6 +947,7 @@ const AccountInfoPage = () => {
             />
 
             <Modal
+            className='w-[70%]!'
               title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
               open={isOrderDetailModalOpen}
               onCancel={() => {
@@ -829,6 +959,10 @@ const AccountInfoPage = () => {
             >
               {selectedOrder && (
                 <Flex vertical gap={20}>
+                  <Steps
+                    current={getStatusSteps(selectedOrder.status).current}
+                    items={getStatusSteps(selectedOrder.status).steps}
+                  />
                   <Table
                     bordered
                     showHeader={false}
@@ -842,12 +976,6 @@ const AccountInfoPage = () => {
                       ['Số điện thoại', orderData?.phone],
                       ['Chi nhánh', orderData?.items?.[0]?.branch?.name],
                       ['Phương thức thanh toán', orderData?.paymentMethod],
-                      [
-                        'Trạng thái đơn hàng',
-                        <Tag color={getStatusColor(selectedOrder.status)}>
-                          {selectedOrder.status}
-                        </Tag>,
-                      ],
                       ['Địa chỉ giao hàng', orderData?.shippingAddress],
                       [
                         'Ngày tạo',
