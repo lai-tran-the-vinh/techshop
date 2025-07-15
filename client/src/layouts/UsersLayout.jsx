@@ -5,23 +5,70 @@ import { Login, Signup } from '@pages/app';
 import { ChatBot } from '@components/users';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { UserInformation } from '@components/users';
-import { BsCartFill } from 'react-icons/bs';
-import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Typography, Button, Flex, Spin, Grid, Dropdown } from 'antd';
+import { BsCartFill, BsList, BsSignTurnRightFill } from 'react-icons/bs';
+import {
+  Layout,
+  Typography,
+  Button,
+  Flex,
+  Spin,
+  Grid,
+  Dropdown,
+  Card,
+} from 'antd';
 import FooterComponent from './footer';
 import ForgotPasswordModal from '@/pages/app/forgotPassword';
+import Branchs from '@/services/branches';
 function Header() {
   const { setShowLogin, setShowSignup, user, message, setShowForgotPassword } =
     useAppContext();
   const navigate = useNavigate();
-
+  const [allBrands, setAllBrands] = useState([]);
+  const Text = Typography;
   useEffect(() => {
     document.title = 'TechShop | Mua sắm thả ga';
+
+    fetchBranchs();
   }, []);
+
+  const fetchBranchs = async () => {
+    try {
+      const res = await Branchs.getAll();
+      setAllBrands(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  ///Địa chỉ chi nhánh
+  const items = allBrands.map((branch, index) => ({
+    key: index.toString(),
+    label: (
+      <Card title={branch.name} className="p-2 sm:p-4">
+        <Text strong className="block text-sm sm:text-base mb-2">
+          {branch.address}
+        </Text>
+        <Button
+          icon={<BsSignTurnRightFill />}
+          className="flex items-center justify-center py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+          onClick={() => {
+            navigator.geolocation.getCurrentPosition((position) => {
+              const origin = `${position.coords.latitude},${position.coords.longitude}`;
+              const destination = '16.163951015563573,107.69555685335028';
+              const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+              window.open(url, '_blank');
+            });
+          }}
+        >
+          Xem chỉ đường
+        </Button>
+      </Card>
+    ),
+  }));
 
   return (
     <Layout.Header className="print:hidden! font-roboto! px-4! w-full! fixed! top-0! left-0! right-0! z-10! p-10! bg-primary! flex! items-center! justify-center! border-b! border-gray-200!  sm:h-20">
-      <div className="w-[90%]  flex items-center justify-between gap-4">
+      <div className="w-5/6  flex items-center justify-between gap-4">
         <div className="flex-shrink-0">
           <Link to="/">
             <Typography.Title
@@ -32,12 +79,25 @@ function Header() {
             </Typography.Title>
           </Link>
         </div>
-
-        <div className="hidden md:flex items-center flex-1 max-w-lg ">
-          <SearchBox />
+        <div className="flex items-center gap-4 sm:gap-15 w-3/5">
+          <div className="hidden md:flex  w-[20%]">
+            <Dropdown
+              menu={{ items }}
+              trigger={['hover']}
+              className="text-white flex justify-center items-center bg-[rgb(126,22,28)]! h-[44px] rounded-full  w-full"
+            >
+              <Text className="text-white! font-medium! text-2xl tracking-wider  ">
+                <BsList className="mr-5 font-bold text-2xl" />
+                Cửa Hàng
+              </Text>
+            </Dropdown>
+          </div>
+          <div className="hidden md:flex items-center flex-1 max-w-lg w-2/3 ">
+            <SearchBox />
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-4 sm:gap-15">
           {localStorage.getItem('access_token') ? (
             <UserInformation />
           ) : (
@@ -107,14 +167,14 @@ function Header() {
             type="primary"
             size="large"
             icon={<BsCartFill />}
-            className="text-white!  bg-black! hover:bg-primary/80 rounded-3xl!  !border-none p-10! mr-5!  "
+            className="text-white! bg-black! hover:bg-primary/80 sm:w-full! w-[44px]! h-[44px]!  rounded-full!  border-none "
           >
             <span className="hidden lg:inline ml-2 ">Giỏ hàng</span>
           </Button>
         </div>
       </div>
 
-      <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 px-4 py-3">
+      <div className="md:hidden  absolute top-full left-0 right-0 bg-primary border-b border-gray-200 px-[30px] py-3">
         <SearchBox />
       </div>
     </Layout.Header>
