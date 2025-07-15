@@ -187,8 +187,9 @@ function Home() {
   );
 
   const handleBannerClick = (banner) => {
-    if (banner.link) {
-      navigate(banner.link);
+    console.log(banner);
+    if (banner.linkTo) {
+      window.location.href = banner.linkTo;
     }
   };
   if (loading) {
@@ -203,13 +204,7 @@ function Home() {
     <div className="w-full min-h-screen ">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
-          <Col xs={0} sm={0} md={3} lg={3} xl={4}>
-            <Card className="h-full bg-white  border-0">
-              <div className="space-y-3"></div>
-            </Card>
-          </Col>
-
-          <Col xs={24} sm={24} md={14} lg={14} xl={15}>
+          <Col xs={24} sm={24} md={14} lg={14} xl={19}>
             <div
               className="relative rounded-lg overflow-hidden"
               onMouseEnter={() => setIsHovered(true)}
