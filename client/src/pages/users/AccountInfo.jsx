@@ -11,11 +11,14 @@ import {
   List,
   Modal,
   Tabs,
+  Steps,
   Tag,
   Table,
   Typography,
 } from 'antd';
 import { useAppContext } from '@/contexts';
+import '@styles/account-info.css';
+import dayjs from 'dayjs';
 import ProductService from '@services/products';
 import {
   UserOutlined,
@@ -23,6 +26,7 @@ import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from '@ant-design/icons';
 import Address from '@services/address';
 import UserService from '@services/users';
@@ -48,6 +52,8 @@ const AccountInfoPage = () => {
   const [activeOrderTab, setActiveOrderTab] = useState('all');
   const [ordersToShow, setOrdersToShow] = useState(null);
   const [orders, setOrders] = useState(null);
+  const [isOrderDetailModalOpen, setIsOrderDetailModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     if (orders) {
@@ -56,11 +62,17 @@ const AccountInfoPage = () => {
           id: order._id,
           date: order.createdAt,
           total: order.totalPrice,
-          items: '123',
+          items: order.items,
           status: order.status,
         };
       });
       setOrdersToShow(ordersToShow);
+    }
+  }, [orders]);
+
+  useEffect(() => {
+    if (orders) {
+      console.log(orders);
     }
   }, [orders]);
 
@@ -189,6 +201,39 @@ const AccountInfoPage = () => {
     }
   };
 
+  const getStatusSteps = (status) => {
+    const steps = [
+      { title: 'Chờ xử lý' },
+      { title: 'Đang xử lý' },
+      { title: 'Đã xác nhận' },
+      { title: 'Đang vận chuyển' },
+      { title: 'Đã giao hàng' },
+    ];
+
+    let current;
+    switch (status) {
+      case 'PENDING':
+        current = 0;
+        break;
+      case 'PROCESSING':
+        current = 1;
+        break;
+      case 'CONFIRMED':
+        current = 2;
+        break;
+      case 'SHIPPING':
+        current = 3;
+        break;
+      case 'DELIVERED':
+        current = 4;
+        break;
+      default:
+        break;
+    }
+
+    return { steps, current };
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
@@ -264,19 +309,25 @@ const AccountInfoPage = () => {
   const getStatusColor = (status) => {
     const colors = {
       PENDING: 'orange',
-      SHIPPING: 'blue',
+      PROCESSING: 'cyan',
+      CONFIRMED: 'blue',
+      SHIPPING: 'purple',
       DELIVERED: 'green',
       CANCELLED: 'red',
+      RETURNED: 'gray',
     };
     return colors[status] || 'gray';
   };
 
   const getStatusText = (status) => {
     const texts = {
-      completed: 'Hoàn tất',
-      shipping: 'Đang giao',
-      pending: 'Đang xử lý',
-      cancelled: 'Đã hủy',
+      PROCESSING: 'Đang xử lý',
+      CONFIRMED: 'Đã xác nhận',
+      DELIVERED: 'Đã giao',
+      SHIPPING: 'Đang giao',
+      PENDING: 'Chờ xử lý',
+      CANCELLED: 'Đã hủy',
+      RETURNED: 'Đã trả hàng',
     };
     return texts[status] || status;
   };
@@ -287,10 +338,13 @@ const AccountInfoPage = () => {
     if (activeOrderTab === 'all') return ordersToShow;
 
     const statusMap = {
-      processing: 'PENDING',
+      pending: 'PENDING',
+      processing: 'PROCESSING',
+      confirmed: 'CONFIRMED',
       shipping: 'SHIPPING',
-      completed: 'DELIVERED',
+      delivered: 'DELIVERED',
       cancelled: 'CANCELLED',
+      returned: 'RETURNED',
     };
 
     return ordersToShow.filter(
@@ -308,11 +362,17 @@ const AccountInfoPage = () => {
       title: 'Ngày đặt',
       dataIndex: 'date',
       key: 'date',
+      render: (_, record) => {
+        return dayjs(record.date).format('HH:mm:ss DD/MM/YYYY');
+      },
     },
     {
       title: 'Sản phẩm',
       dataIndex: 'items',
       key: 'items',
+      render: (item) => {
+        return item[0].product.name;
+      },
     },
     {
       title: 'Tổng tiền',
@@ -324,9 +384,25 @@ const AccountInfoPage = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => (
-        <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>
+      render: (status) => {
+        console.log(status);
+        return (
+          <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>
+        );
+      },
+    },
+    {
+      title: 'Hành động',
+      key: 'action',
+      render: (_, record) => (
+        <EyeOutlined
+          onClick={() => {
+            setSelectedOrder(record);
+            setIsOrderDetailModalOpen(true);
+          }}
+        />
       ),
+      align: 'center',
     },
   ];
 
@@ -523,6 +599,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Tỉnh/Thành phố</label>
               <Select
                 value={selectedProvince?.code}
+                placeholder="Chọn Tỉnh/Thành phố"
                 options={provinces.map((province) => {
                   return { label: province.name, value: province.code };
                 })}
@@ -541,6 +618,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Quận/Huyện</label>
               <Select
                 value={selectedDistrict?.code}
+                placeholder="Chọn Quận/Huyện"
                 options={districts.map((district) => {
                   return { label: district.name, value: district.code };
                 })}
@@ -557,6 +635,7 @@ const AccountInfoPage = () => {
               <label className="mb-4">Xã/Phường</label>
               <Select
                 value={selectedWard?.code}
+                placeholder="Chọn Xã/Phường"
                 options={wards.map((ward) => {
                   return { label: ward.name, value: ward.code };
                 })}
@@ -570,6 +649,7 @@ const AccountInfoPage = () => {
           <Flex vertical className="mt-8!">
             <label className="mb-4">Địa chỉ chi tiết</label>
             <Input.TextArea
+              placeholder="Nhập địa chỉ chi tiết"
               value={editingAddress?.specificAddress || ''}
               onChange={(event) => {
                 setEditingAddress((prev) => {
@@ -595,7 +675,7 @@ const AccountInfoPage = () => {
             Hủy
           </Button>
 
-          <Button
+          {/* <Button
             type="primary"
             className="h-40! min-w-100!"
             onClick={async () => {
@@ -645,6 +725,68 @@ const AccountInfoPage = () => {
             }}
           >
             {editingAddressIndex !== null ? 'Cập nhật' : 'Thêm'}
+          </Button> */}
+
+          <Button
+            type="primary"
+            className="h-40! min-w-100!"
+            onClick={async () => {
+              if (
+                !selectedProvince ||
+                !selectedDistrict ||
+                !selectedWard ||
+                !editingAddress?.specificAddress
+              ) {
+                return message.warning(
+                  'Vui lòng điền đầy đủ thông tin địa chỉ',
+                );
+              }
+
+              const newAddress = {
+                specificAddress: editingAddress.specificAddress,
+                addressDetail: `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`,
+                default: false, // tạm để false, lát set lại
+                isDeleted: false,
+                deletedAt: null,
+              };
+
+              let updatedAddresses = [...updateUserInfo.addresses];
+
+              if (editingAddressIndex !== null) {
+                // Cập nhật địa chỉ
+                updatedAddresses[editingAddressIndex] = {
+                  ...updatedAddresses[editingAddressIndex],
+                  ...newAddress,
+                };
+              } else {
+                // Thêm mới địa chỉ
+                updatedAddresses.push(newAddress);
+              }
+
+              // Luôn gán địa chỉ đầu tiên là mặc định nếu không có địa chỉ mặc định nào
+              const hasDefault = updatedAddresses.some((addr) => addr.default);
+              if (!hasDefault) {
+                updatedAddresses[0].default = true;
+              }
+
+              // Đảm bảo chỉ có 1 địa chỉ mặc định duy nhất
+              const defaultIndex = updatedAddresses.findIndex(
+                (addr) => addr.default,
+              );
+              updatedAddresses = updatedAddresses.map((addr, idx) => ({
+                ...addr,
+                default: idx === defaultIndex,
+              }));
+
+              const updateUser = {
+                ...updateUserInfo,
+                addresses: updatedAddresses,
+              };
+
+              await updateAddress(updateUser);
+            }}
+          >
+            {editingAddressIndex !== null ? 'Cập nhật' : 'Thêm'}
           </Button>
         </Flex>
       </Modal>
@@ -672,8 +814,32 @@ const AccountInfoPage = () => {
               ),
             },
             {
+              key: 'pending',
+              label: 'Chờ xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
               key: 'processing',
               label: 'Đang xử lý',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'confirmed',
+              label: 'Đã xác nhận',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -696,8 +862,8 @@ const AccountInfoPage = () => {
               ),
             },
             {
-              key: 'completed',
-              label: 'Hoàn tất',
+              key: 'delivered',
+              label: 'Đã giao hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -710,6 +876,18 @@ const AccountInfoPage = () => {
             {
               key: 'cancelled',
               label: 'Đã hủy',
+              children: (
+                <Table
+                  dataSource={getFilteredOrders()}
+                  columns={orderColumns}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
+              ),
+            },
+            {
+              key: 'returned',
+              label: 'Đã trả hàng',
               children: (
                 <Table
                   dataSource={getFilteredOrders()}
@@ -732,6 +910,8 @@ const AccountInfoPage = () => {
       </div>
     );
   }
+
+  const orderData = orders?.find((o) => o._id === selectedOrder?.id);
 
   return (
     <div className="w-full  p-24 min-h-screen">
@@ -765,6 +945,136 @@ const AccountInfoPage = () => {
               style={{ border: 'none' }}
               items={menuItems}
             />
+
+            <Modal
+            className='w-[70%]!'
+              title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
+              open={isOrderDetailModalOpen}
+              onCancel={() => {
+                setIsOrderDetailModalOpen(false);
+                setSelectedOrder(null);
+              }}
+              footer={null}
+              width={800}
+            >
+              {selectedOrder && (
+                <Flex vertical gap={20}>
+                  <Steps
+                    current={getStatusSteps(selectedOrder.status).current}
+                    items={getStatusSteps(selectedOrder.status).steps}
+                  />
+                  <Table
+                    bordered
+                    showHeader={false}
+                    pagination={false}
+                    dataSource={[
+                      ['Mã đơn hàng', selectedOrder.id],
+                      [
+                        'Khách hàng',
+                        `${orderData?.createdBy?.name} (${orderData?.createdBy?.email})`,
+                      ],
+                      ['Số điện thoại', orderData?.phone],
+                      ['Chi nhánh', orderData?.items?.[0]?.branch?.name],
+                      ['Phương thức thanh toán', orderData?.paymentMethod],
+                      ['Địa chỉ giao hàng', orderData?.shippingAddress],
+                      [
+                        'Ngày tạo',
+                        new Date(orderData?.createdAt).toLocaleString(),
+                      ],
+                      [
+                        'Cập nhật lần cuối',
+                        new Date(orderData?.updatedAt).toLocaleString(),
+                      ],
+                    ]}
+                    columns={[
+                      {
+                        dataIndex: 0,
+                        key: 'label',
+                        width: 200,
+                        render: (text) => <strong>{text}</strong>,
+                      },
+                      {
+                        dataIndex: 1,
+                        key: 'value',
+                      },
+                    ]}
+                  />
+
+                  <div>
+                    <Typography.Title level={5} className="mb-10!">
+                      Danh sách sản phẩm
+                    </Typography.Title>
+                    <Table
+                      bordered
+                      dataSource={
+                        orders.find((o) => o._id === selectedOrder.id)?.items ||
+                        []
+                      }
+                      pagination={false}
+                      rowKey="_id"
+                      columns={[
+                        {
+                          title: 'Sản phẩm',
+                          dataIndex: 'product',
+                          key: 'product',
+                          render: (product, record) => {
+                            return (
+                              <>
+                                <div>{product.name}</div>
+                                <div className="text-xs text-gray-500">
+                                  {record.variant.name}
+                                </div>
+                              </>
+                            );
+                          },
+                        },
+                        {
+                          title: 'Số lượng',
+                          dataIndex: 'quantity',
+                          key: 'quantity',
+                          align: 'center',
+                        },
+                        {
+                          title: 'Giảm giá',
+                          dataIndex: 'discount',
+                          key: 'discount',
+                          align: 'center',
+                          render: (_, record) => {
+                            console.log(record);
+                          },
+                        },
+                        {
+                          title: 'Đơn giá',
+                          dataIndex: 'price',
+                          key: 'price',
+                          render: (price) => (
+                            <Typography.Text strong className="text-primary!">
+                              {`${price.toLocaleString()}đ`}
+                            </Typography.Text>
+                          ),
+                          align: 'right',
+                        },
+                        {
+                          title: 'Thành tiền',
+                          key: 'total',
+                          render: (_, record) => (
+                            <Typography.Text
+                              strong
+                              className="text-primary!"
+                            >{`${(record.price * record.quantity).toLocaleString()}đ`}</Typography.Text>
+                          ),
+                          align: 'right',
+                        },
+                      ]}
+                    />
+                  </div>
+                  <Typography.Text className="flex! justify-end! mt-4! text-base! text-primary! font-semibold!">
+                    Tổng cộng:&nbsp;
+                    {selectedOrder.total.toLocaleString()}đ
+                  </Typography.Text>
+                </Flex>
+              )}
+            </Modal>
           </Card>
         </div>
 
