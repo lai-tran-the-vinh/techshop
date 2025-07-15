@@ -79,7 +79,7 @@ function Header() {
             </Typography.Title>
           </Link>
         </div>
-        <div className="flex items-center gap-4 sm:gap-15 w-3/5">
+        <div className="flex items-center gap-4 sm:gap-15 w-3/5 mr-[100px]">
           <div className="hidden md:flex  w-[20%]">
             <Dropdown
               menu={{ items }}
