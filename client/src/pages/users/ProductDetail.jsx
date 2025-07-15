@@ -20,7 +20,10 @@ import {
   BsSignTurnRightFill,
   BsCartPlusFill,
   BsFillGeoAltFill,
+  BsFillGiftFill,
+  BsCheckCircleFill,
 } from 'react-icons/bs';
+import '@styles/product-detail.css';
 import { BsFillTelephoneFill } from 'react-icons/bs';
 import {
   ShoppingCartOutlined,
@@ -232,18 +235,21 @@ function ProductDetail() {
       <div className="mx-auto rounded-[10px]">
         <Row gutter={[10, 10]}>
           <Col xl={14} lg={14} md={24} sm={24} xs={24}>
-            <Card className="h-full">
-              <div className="relative h-auto sm:h-[80%]">
+            <div className="h-full bg-white rounded-xl p-20 flex! flex-col!">
+              <div className="relative h-[60%] sm:h-[80%]">
                 <SliderProduct images={allImages} />
               </div>
-              <div className="p-2 sm:p-4">
+              <div className="sm:p-4 flex-1">
                 {branchs.length > 0 && (
-                  <div className="space-y-4">
-                    <Title level={5} className="mb-3 text-base sm:text-lg">
+                  <div className="">
+                    <Text
+                      level={5}
+                      className="text-primary! text-lg! font-medium! sm:text-lg"
+                    >
                       Danh sách cửa hàng
-                    </Title>
+                    </Text>
 
-                    <div className="grid grid-cols-1 gap-10">
+                    <div className="grid grid-cols-1 gap-10 mt-10">
                       {branchs.map((branch) => {
                         const inStock = branchStocks[branch._id];
                         return (
@@ -254,7 +260,7 @@ function ProductDetail() {
                               console.log('branch._id', branch._id);
                               setSelectBranchs(branch._id);
                             }}
-                            className="hover:shadow-none! cursor-default! transition-shadow"
+                            className="hover:shadow-none! rounded-md! border-gray-300! cursor-default! transition-shadow"
                           >
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
@@ -295,7 +301,7 @@ function ProductDetail() {
                                     Còn hàng
                                   </Text>
                                 ) : (
-                                  <Text className="text-xs! sm:text-sm! font-medium! text-red-600!">
+                                  <Text className="text-xs! sm:text-sm! font-medium! bg-primary! rounded-full! text-white! px-8! py-4!">
                                     Hết hàng
                                   </Text>
                                 )}
@@ -308,7 +314,7 @@ function ProductDetail() {
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           </Col>
 
           <Col xl={10} lg={10} md={24} sm={24} xs={24}>
@@ -332,7 +338,7 @@ function ProductDetail() {
                   <Button
                     type="link"
                     size="small"
-                    className="p-0 text-xs sm:text-sm"
+                    className="p-0 text-xs text-primary! sm:text-sm"
                     onClick={() => setDetailDrawerSpecsVisible(true)}
                   >
                     Thông số kỹ thuật
@@ -341,13 +347,13 @@ function ProductDetail() {
               </div>
               <div className="mb-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-10 sm:gap-3 mb-2">
-                  <Title
-                    level={2}
-                    className="text-2xl! sm:text-2xl! mr-6!"
-                  >
+                  <Title level={2} className="text-2xl! sm:text-2xl! mr-6!">
                     {`${formatCurrency(selectedVariant?.price)}đ`}
                   </Title>
-                  <Text delete className="text-gray-500! text-base! sm:text-base!">
+                  <Text
+                    delete
+                    className="text-gray-500! text-base! sm:text-base!"
+                  >
                     {`${formatCurrency(product?.variants?.[0]?.price - (product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100)))}đ`}
                   </Text>
                 </div>
@@ -377,7 +383,7 @@ function ProductDetail() {
                         selectedMemory?.storage === variant.memory?.storage;
 
                       return (
-                        <Col span={12} key={`memory-${index}`}>
+                        <Col span={6} key={`memory-${index}`}>
                           <Button
                             block
                             className={`py-10! sm:py-4! px-8! sm:px-4! rounded-md! h-40! text-xs! sm:text-sm! ${
@@ -452,7 +458,7 @@ function ProductDetail() {
                         <Col span={12} key={`color-${index}`}>
                           <div
                             className={
-                              'flex items-center gap-4 py-10 sm:py-4 px-8 sm:px-4 rounded-lg text-xs bg-white! rounded-md! sm:text-sm cursor-pointer hover:bg-gray-50 ' +
+                              'flex items-center gap-4 py-10 sm:py-4 px-8 sm:px-4 text-xs bg-white! rounded-md! sm:text-sm cursor-pointer hover:bg-gray-50 ' +
                               (isSelected
                                 ? 'border border-primary bg-blue-50'
                                 : 'border border-gray-200')
@@ -506,45 +512,62 @@ function ProductDetail() {
                 </Row>
               </div>
 
-              <div className="mb-6">
-                <Text className="block! mt-10! mb-5! font-medium! text-base!">
-                  Chọn 1 trong các khuyến mãi sau:
-                </Text>
-                <div className="flex flex-col gap-10">
-                  <Card size="small" className="border-red-200 bg-red-50">
-                    <div className="flex items-center gap-2">
-                      <GiftOutlined className="text-red-500 flex-shrink-0" />
-                      <div>
-                        <Text
-                          strong
-                          className="text-red-600 text-xs sm:text-sm"
-                        >
-                          Khuyến mãi 1
-                        </Text>
-                        <div className="text-xs sm:text-sm">
-                          Giảm ngay 2,500,000đ áp dụng đến 31/07
-                        </div>
-                      </div>
+              <div className="my-20 flex flex-col gap-10">
+                <div className="border border-gray-300 rounded-md">
+                  <div className="h-35 bg-[#f3f4f6] border-b rounded-t-md flex items-center border-b-gray-300">
+                    <Typography.Text className="ml-10! font-medium!">
+                      Danh sách khuyến mãi
+                    </Typography.Text>
+                  </div>
+                  <div className="p-10">
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsFillGiftFill className="text-primary!" />
+                      <Typography.Text>
+                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
+                        triệu{' '}
+                      </Typography.Text>
                     </div>
-                  </Card>
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsFillGiftFill className="text-primary!" />
+                      <Typography.Text>
+                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
+                        triệu{' '}
+                      </Typography.Text>
+                    </div>
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsFillGiftFill className="text-primary!" />
+                      <Typography.Text>
+                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
+                        triệu{' '}
+                      </Typography.Text>
+                    </div>
+                  </div>
+                </div>
 
-                  <Card size="small" className="border-blue-200 bg-blue-50">
-                    <div className="flex items-center gap-2">
-                      <CreditCardOutlined className="text-blue-500 flex-shrink-0" />
-                      <div>
-                        <Text
-                          strong
-                          className="text-blue-600 text-xs sm:text-sm"
-                        >
-                          Khuyến mãi 2
-                        </Text>
-                        <div className="text-xs sm:text-sm">
-                          Giảm ngay 1,700,000đ
-                        </div>
-                        <div className="text-xs sm:text-sm">Trả góp 0%</div>
-                      </div>
+                <div className="border border-gray-300 rounded-md">
+                  <div className="h-35 bg-[#f3f4f6] border-b rounded-t-md flex items-center border-b-gray-300">
+                    <Typography.Text className="ml-10! font-medium!">
+                      Chính sách bảo hành
+                    </Typography.Text>
+                  </div>
+                  <div className="p-10">
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsCheckCircleFill className="text-primary!" />
+                      <Typography.Text>
+                        Bảo hành chính hãng 24 tháng
+                      </Typography.Text>
                     </div>
-                  </Card>
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsCheckCircleFill className="text-primary!" />
+                      <Typography.Text>
+                        Miễn phí giao hàng toàn quốc
+                      </Typography.Text>
+                    </div>
+                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                      <BsCheckCircleFill className="text-primary!" />
+                      <Typography.Text>Đổi trả trong 7 ngày</Typography.Text>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -556,7 +579,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock}
-                      className="bg-red-600 hover:bg-red-700 border-red-600 font-semibold hover:shadow-md shadow-md h-auto py-2 sm:py-3 text-xs sm:text-sm"
+                      className="bg-red-600 hover:bg-red-700 border-red-600 font-semibold hover:shadow-md shadow-md h-40! rounded-md! py-2 sm:py-3 text-xs sm:text-sm"
                       icon={<ShoppingCartOutlined />}
                       onClick={async () => {
                         if (!user) {
@@ -590,7 +613,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock}
-                      className=" py-2! sm:py-3! text-xs! sm:text-sm!"
+                      className=" py-2! sm:py-3! rounded-md! text-xs! h-40! sm:text-sm!"
                       icon={<BsCartPlusFill />}
                       onClick={async () => {
                         if (!user) {
@@ -624,22 +647,22 @@ function ProductDetail() {
                       <span className="sm:hidden!">Thêm vào giỏ</span>
                     </Button>
                   </Col>
-                  {!currentStock && (
+                  {/* {!currentStock && (
                     <Col span={24}>
-                      <Text className="text-red-500! text-sm! sm:text-base! text-center! font-medium!">
+                      <Text className="text-primary! text-sm! sm:text-base! text-center! font-medium!">
                         Sản phẩm đang tạm hết hàng ở khu vực này. Vui lòng chọn
                         khu vực khác!
                       </Text>
                     </Col>
-                  )}
+                  )} */}
                   <Col span={24}>
                     <Card
-                      className="shadow"
+                      className="shadow-none! rounded-md! hover:border-gray-300! cursor-pointer! mt-10!"
                       style={{ borderRadius: 8 }}
                       onClick={() => setDrawerAddessVisible(true)}
                     >
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-8">
                           <BsShop className="text-gray-500! text-xl!" />
                           <span className="font-medium text-gray-900">
                             Danh sách cửa hàng
@@ -651,37 +674,14 @@ function ProductDetail() {
                   </Col>
                 </Row>
               </div>
-
-              <div className="mt-6 pt-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircleOutlined className="text-green-500 flex-shrink-0" />
-                    <Text className="text-xs sm:text-sm">
-                      Bảo hành chính hãng 24 tháng
-                    </Text>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircleOutlined className="text-green-500 flex-shrink-0" />
-                    <Text className="text-xs sm:text-sm">
-                      Miễn phí giao hàng toàn quốc
-                    </Text>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircleOutlined className="text-green-500 flex-shrink-0" />
-                    <Text className="text-xs sm:text-sm">
-                      Đổi trả trong 7 ngày
-                    </Text>
-                  </div>
-                </div>
-              </div>
             </Card>
           </Col>
         </Row>
 
         <Row gutter={[10, 10]} className="mt-6 sm:mt-8 lg:mt-10">
           <Col lg={14} md={24} sm={24} xs={24}>
-            <Card>
-              <Tabs defaultActiveKey="description" size="small">
+            <Card className='px-10!'>
+              <Tabs defaultActiveKey="description" size="middle">
                 <TabPane tab="Mô tả sản phẩm" key="description">
                   <div className="w-full overflow-hidden">
                     <ProductDescription product={product} loading={loading} />
@@ -710,17 +710,17 @@ function ProductDetail() {
               <Title level={3} className="mb-4 text-lg sm:text-xl">
                 Sản phẩm liên quan
               </Title>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-10">
                 {recommnentProducts && recommnentProducts.length > 0 ? (
                   recommnentProducts.map((product) => (
                     <Link key={product._id} to={`/product/${product._id}`}>
-                      <div className="shadow p-3 border border-gray-200 rounded-lg cursor-pointer hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 overflow-hidden flex-shrink-0">
+                      <div className="p-10 border border-gray-200 rounded-md cursor-pointer hover:border-gray-300 transition-shadow">
+                        <div className="flex items-center gap-10 sm:gap-4">
+                          <div className="w-50 h-50 sm:w-20 sm:h-20 lg:w-50 lg:h-50 overflow-hidden flex-shrink-0">
                             {product.variants?.[0]?.images?.length > 0 ? (
                               <Image
                                 src={product.variants[0].images[0]}
-                                className="w-full h-full object-cover"
+                                className="w-full! h-full! object-cover"
                                 preview={false}
                               />
                             ) : (
@@ -786,18 +786,20 @@ function ProductDetail() {
         placement="right"
         onClose={() => setDrawerAddessVisible(false)}
         width={window.innerWidth > 768 ? 600 : '90%'}
-        className="bg-gray-50"
+        className=""
       >
         <Row gutter={[10, 10]}>
           {branchs.map((branch) => (
             <Col span={24} key={branch.id}>
-              <Card title={branch.name} className="p-2 sm:p-4">
-                <Text strong className="block text-sm sm:text-base mb-2">
+              <Card className="sm:p-4 flex! gap-8!">
+                <Title level={5} className='mb-4!'>{branch.name}</Title>
+                <Text className="block! text-sm! sm:text-base mb-8!">
                   {branch.address}
                 </Text>
                 <Button
                   icon={<BsSignTurnRightFill />}
-                  className="flex items-center justify-center py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+                  type='primary'
+                  className="flex! items-center! justify-center! py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto shadow-none! rounded-full! border-none! text-white font-medium!"
                   onClick={() => {
                     navigator.geolocation.getCurrentPosition((position) => {
                       const origin = `${position.coords.latitude},${position.coords.longitude}`;

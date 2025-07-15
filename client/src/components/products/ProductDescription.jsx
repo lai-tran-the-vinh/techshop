@@ -5,6 +5,8 @@ import 'react-loading-skeleton/dist/skeleton.css';
 function ProductDescription({ className, product, loading }) {
   const descriptionRef = useRef(null);
 
+  console.log(product.description);
+
   return (
     <div className={className}>
       <span className="font-bold text-primary text-xl uppercase">
@@ -16,11 +18,15 @@ function ProductDescription({ className, product, loading }) {
           'Mô tả sản phẩm'
         )}
       </span>
-      <p
-        ref={descriptionRef}
-        dangerouslySetInnerHTML={{ __html: product.description }}
-        className="text-justify text-lg leading-24 my-10"
-      />
+      {product.description ? (
+        <p
+          ref={descriptionRef}
+          dangerouslySetInnerHTML={{ __html: product.description }}
+          className="text-justify text-lg leading-24 my-10"
+        />
+      ) : (
+        <p>Sản phẩm không có mô tả</p>
+      )}
     </div>
   );
 }

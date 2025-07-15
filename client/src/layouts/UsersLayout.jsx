@@ -17,6 +17,7 @@ import {
   Card,
 } from 'antd';
 import FooterComponent from './footer';
+import '@styles/users-layout.css';
 import ForgotPasswordModal from '@/pages/app/forgotPassword';
 import Branchs from '@/services/branches';
 function Header() {
@@ -44,13 +45,17 @@ function Header() {
   const items = allBrands.map((branch, index) => ({
     key: index.toString(),
     label: (
-      <Card title={branch.name} className="p-2 sm:p-4">
-        <Text strong className="block text-sm sm:text-base mb-2">
+      <Card className="sm:p-4 flex! gap-8! border-none!">
+        <Typography.Title level={5} className="mb-4!">
+          {branch.name}
+        </Typography.Title>
+        <Text className="block! text-sm! sm:text-base mb-8!">
           {branch.address}
         </Text>
         <Button
           icon={<BsSignTurnRightFill />}
-          className="flex items-center justify-center py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+          type="primary"
+          className="flex! items-center! justify-center! py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto shadow-none! rounded-full! border-none! text-white font-medium!"
           onClick={() => {
             navigator.geolocation.getCurrentPosition((position) => {
               const origin = `${position.coords.latitude},${position.coords.longitude}`;
