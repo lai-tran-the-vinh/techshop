@@ -1,19 +1,24 @@
 import React from 'react';
+import '@styles/product-specification.css';
 import { Descriptions, Typography } from 'antd';
 
 const { Title } = Typography;
 
 const renderDescriptions = (title, data) => (
-  <div className="mb-6">
-    <Title level={4}>{title}</Title>
-    <Descriptions column={1} bordered size="small">
+  <div className="mb-8">
+    <Typography.Text className='text-lg! font-semibold!'>
+      {title}
+    </Typography.Text>
+    <Descriptions
+      column={1}
+      size="middle"
+      bordered
+      className="custom-description border-none! mt-10! mb-30!"
+      labelStyle={{ width: 220, fontWeight: 500 }}
+      contentStyle={{ fontSize: 14 }}
+    >
       {data.map((item) => (
-        <Descriptions.Item
-          label={item.label}
-          key={item.label}
-          labelStyle={{ width: 200, fontWeight: 'bold' }}
-          className="text-base font-medium"
-        >
+        <Descriptions.Item label={item.label} key={item.label} className='bg-white! border-none!'>
           {item.value}
         </Descriptions.Item>
       ))}
@@ -70,7 +75,7 @@ const ProductSpecification = ({ product }) => {
         key: field.name,
         label: field.label,
       };
-      
+
       if (field.type === 'checkbox') {
         fieldConfig.transform = (value) => (value ? 'Có' : 'Không');
       }
@@ -80,7 +85,6 @@ const ProductSpecification = ({ product }) => {
 
     return fieldGroups;
   };
-
 
   const fieldGroups = createFieldGroups();
   const generateGroupData = (groupConfig) => {

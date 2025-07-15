@@ -1,0 +1,9 @@
+/* Đổi màu nền chỉ phần nội dung */
+.ant-drawer-body {
+  background-color: #f3f4f6; /* màu nền mong muốn */
+}
+
+/* Nếu muốn header trắng chẳng hạn */
+.ant-drawer-header {
+  background-color: white;
+}
