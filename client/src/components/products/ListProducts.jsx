@@ -22,13 +22,11 @@ import { ReloadOutlined, FilterOutlined } from '@ant-design/icons';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { use, useEffect, useState } from 'react';
 import { callFetchBranches, callFetchBrands } from '@/services/apis';
-import Categories from '@/services/categories';
-import { PRODUCT_CONFIGS } from './productConfig';
+
 import { Filter, RotateCcw } from 'lucide-react';
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
-const { TabPane } = Tabs;
 
 function ListProducts(properties) {
   const {
@@ -39,12 +37,11 @@ function ListProducts(properties) {
     loading,
     setFilter,
     products,
-    categorieCurrent,
+    title,
     currentBrand,
     setCurrentBrand,
     filteredProducts,
     categoryConfig,
-    setProductType,
   } = properties;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,6 +58,7 @@ function ListProducts(properties) {
     { label: 'Trên 30 triệu', value: [30000000, 100000000] },
   ];
   const sliderPriceRange = { maxPrice: 100000000, minPrice: 0 };
+
   const fetchBranches = async () => {
     try {
       const res = await callFetchBrands();
@@ -69,6 +67,7 @@ function ListProducts(properties) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchBranches();
   }, []);
@@ -76,6 +75,7 @@ function ListProducts(properties) {
   const startIndex = (_page - 1) * _limit;
   const endIndex = startIndex + _limit;
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
   const handleBrandClick = (brand) => {
     if (brand === 'Tất cả') {
       setCurrentBrand('');
@@ -138,6 +138,14 @@ function ListProducts(properties) {
       </div>
     );
   }
+
+  // Kiểm tra xem có sản phẩm nào có memory không
+  const hasMemoryProducts = products.some((product) =>
+    product?.variants?.some(
+      (variant) => variant?.memory?.ram || variant?.memory?.storage,
+    ),
+  );
+
   const getDynamicOptions = () => {
     const options = {};
     categoryConfig?.configFields?.extraFields?.forEach((field) => {
@@ -152,14 +160,49 @@ function ListProducts(properties) {
     });
     return options;
   };
+  console.log(products);
+
+  const getMemoryOptions = () => {
+    const ramOptions = new Set();
+    const storageOptions = new Set();
+
+    products.forEach((product) => {
+      if (product.variants && Array.isArray(product.variants)) {
+        product.variants.forEach((variant) => {
+          const ram = variant.memory?.ram;
+          if (ram) {
+            ramOptions.add(ram);
+          }
+
+          const storage = variant.memory?.storage;
+          if (storage) {
+            storageOptions.add(storage);
+          }
+        });
+      }
+    });
+    return {
+      ram: Array.from(ramOptions)
+        .filter(Boolean) // Loại bỏ null/undefined
+        .sort((a, b) => parseFloat(a) - parseFloat(b)),
+      storage: Array.from(storageOptions)
+        .filter(Boolean) // Loại bỏ null/undefined
+        .sort((a, b) => parseFloat(a) - parseFloat(b)),
+    };
+  };
 
   const dynamicOptions = getDynamicOptions();
+  const memoryOptions = hasMemoryProducts
+    ? getMemoryOptions()
+    : { ram: [], storage: [] };
+
+  console.log('memoryOptions', memoryOptions);
 
   return (
     <div className="min-h-screen w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
         <Title level={3} className="mb-0! text-gray-800 font-extrabold!">
-          {categorieCurrent?.name}
+          {title?.name}
         </Title>
       </div>
 
@@ -342,6 +385,100 @@ function ListProducts(properties) {
                 </div>
               </Panel>
 
+              {/* Bộ lọc RAM - chỉ hiển thị khi có sản phẩm có memory */}
+              {hasMemoryProducts && memoryOptions.ram.length > 0 && (
+                <Panel
+                  header="RAM"
+                  key="ram"
+                  className="p-0! bg-gray-50! rounded-xl! mb-4"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <Checkbox
+                        checked={filter.ram === null}
+                        onChange={() => {
+                          setFilter((prev) => ({
+                            ...prev,
+                            ram: null,
+                          }));
+                          setSearchParams({
+                            _page: '1',
+                            _limit: _limit.toString(),
+                          });
+                        }}
+                      >
+                        <Text className="text-sm! text-gray-600!">Tất cả</Text>
+                      </Checkbox>
+                    </div>
+                    {memoryOptions.ram.map((ramValue, index) => (
+                      <div key={index} className="flex items-center">
+                        <Checkbox
+                          checked={filter.ram?.label === ramValue}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              'ram',
+                              ramValue,
+                              e.target.checked,
+                            )
+                          }
+                        >
+                          <Text className="text-sm! text-gray-600!">
+                            {ramValue}
+                          </Text>
+                        </Checkbox>
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+              )}
+
+              {hasMemoryProducts && memoryOptions.storage.length > 0 && (
+                <Panel
+                  header="Dung lượng"
+                  key="storage"
+                  className="p-0! bg-gray-50! rounded-xl! mb-4"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <Checkbox
+                        checked={filter.storage === null}
+                        onChange={() => {
+                          setFilter((prev) => ({
+                            ...prev,
+                            storage: null,
+                          }));
+                          setSearchParams({
+                            _page: '1',
+                            _limit: _limit.toString(),
+                          });
+                        }}
+                      >
+                        <Text className="text-sm! text-gray-600!">Tất cả</Text>
+                      </Checkbox>
+                    </div>
+                    {memoryOptions.storage.map((storageValue, index) => (
+                      <div key={index} className="flex items-center">
+                        <Checkbox
+                          checked={filter.storage?.label === storageValue}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              'storage',
+                              storageValue,
+                              e.target.checked,
+                            )
+                          }
+                        >
+                          <Text className="text-sm! text-gray-600!">
+                            {storageValue}
+                          </Text>
+                        </Checkbox>
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+              )}
+
+              {/* Các bộ lọc động khác */}
               {categoryConfig?.configFields?.extraFields?.map(
                 (field) =>
                   dynamicOptions[field.name]?.length > 0 && (

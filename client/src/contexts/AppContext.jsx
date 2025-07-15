@@ -35,7 +35,6 @@ function AppProvider({ children }) {
         setLoading(true);
         const response = await callFetchAccount();
         setLoading(false);
-        console.log(response);
         if (response.data) {
           setUser(response.data.data.user);
           setLoading(false);

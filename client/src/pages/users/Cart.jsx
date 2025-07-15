@@ -305,9 +305,7 @@ function Cart() {
           Giỏ hàng của bạn
         </Title>
         <Text className="text-gray-600">
-          {cartItems.length > 0
-            ? `${cartItems.length} sản phẩm`
-            : 'Giỏ hàng trống'}
+          {cartItems.length > 0 ? `${cartItems.length} sản phẩm` : null}
         </Text>
       </div>
 

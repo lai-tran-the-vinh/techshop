@@ -115,6 +115,9 @@ const AccountInfoPage = () => {
         setLoading(false);
         return;
       }
+      if (response.status === 401 || response.status === 403) {
+        window.location.reload();
+      }
       throw new Error('Lỗi khi lấy thông tin người dùng.');
     } catch (error) {
       console.error('Lỗi khi lấy thông tin người dùng:', error);
@@ -947,7 +950,7 @@ const AccountInfoPage = () => {
             />
 
             <Modal
-            className='w-[70%]!'
+              className="w-[70%]!"
               title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
               open={isOrderDetailModalOpen}
               onCancel={() => {
