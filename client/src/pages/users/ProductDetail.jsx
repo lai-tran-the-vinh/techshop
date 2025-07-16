@@ -680,7 +680,7 @@ function ProductDetail() {
 
         <Row gutter={[10, 10]} className="mt-6 sm:mt-8 lg:mt-10">
           <Col lg={14} md={24} sm={24} xs={24}>
-            <Card className='px-10!'>
+            <Card className="px-10!">
               <Tabs defaultActiveKey="description" size="middle">
                 <TabPane tab="Mô tả sản phẩm" key="description">
                   <div className="w-full overflow-hidden">
@@ -772,6 +772,7 @@ function ProductDetail() {
       </div>
 
       <Drawer
+        title="Thông số kỹ thuật"
         open={detailDrawerSpecsVisible}
         placement="left"
         width={window.innerWidth > 768 ? 600 : '90%'}
@@ -786,19 +787,21 @@ function ProductDetail() {
         placement="right"
         onClose={() => setDrawerAddessVisible(false)}
         width={window.innerWidth > 768 ? 600 : '90%'}
-        className=""
+        className="custom-drawer-body"
       >
         <Row gutter={[10, 10]}>
           {branchs.map((branch) => (
             <Col span={24} key={branch.id}>
               <Card className="sm:p-4 flex! gap-8!">
-                <Title level={5} className='mb-4!'>{branch.name}</Title>
+                <Title level={5} className="mb-4!">
+                  {branch.name}
+                </Title>
                 <Text className="block! text-sm! sm:text-base mb-8!">
                   {branch.address}
                 </Text>
                 <Button
                   icon={<BsSignTurnRightFill />}
-                  type='primary'
+                  type="primary"
                   className="flex! items-center! justify-center! py-2 sm:py-4 px-4 sm:px-6 w-full sm:w-auto shadow-none! rounded-full! border-none! text-white font-medium!"
                   onClick={() => {
                     navigator.geolocation.getCurrentPosition((position) => {
