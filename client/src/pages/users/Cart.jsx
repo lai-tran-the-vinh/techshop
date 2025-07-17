@@ -294,7 +294,6 @@ function Cart() {
       <div className="min-h-[calc(100vh-200px)] flex justify-center items-center">
         <div className="text-center">
           <Spin size="large" />
-          <div className="mt-4 text-gray-500">Đang tải giỏ hàng...</div>
         </div>
       </div>
     );
@@ -343,7 +342,7 @@ function Cart() {
         </Card>
       ) : (
         <Row gutter={[10, 10]} className="w-full!">
-          <Col span={18}>
+          <Col span={17}>
             <Card className="shadow-none!">
               <div className="flex justify-between items-center mb-6">
                 <Flex
@@ -353,13 +352,13 @@ function Cart() {
                 >
                   <Flex className="mb-10!" align="center" gap={8}>
                     <Title
-                      level={2}
+                      level={3}
                       className="text-gray-900! flex! items-center! mb-0! gap-3!"
                     >
                       <div>
                         <svg
-                          width="35"
-                          height="35"
+                          width="30"
+                          height="30"
                           viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="black"
@@ -419,7 +418,7 @@ function Cart() {
             </Card>
           </Col>
 
-          <Col span={6}>
+          <Col span={7}>
             <Card className=" sticky ">
               <div className="mb-6">
                 <Title level={4} className="text-gray-900 font-semibold mb-0">
@@ -428,38 +427,37 @@ function Cart() {
               </div>
 
               <div className="space-y-4">
-                <Flex justify="space-between" align="center">
-                  <Text className="text-gray-600">Tạm tính</Text>
-                  <Text className="text-lg font-medium">
+                <Flex justify="space-between" align="center" className="mb-6!">
+                  <Text className="text-gray-600! text-sm!">Tạm tính</Text>
+                  <Text className="text-lg! font-medium!">
                     {total.toLocaleString()}₫
                   </Text>
                 </Flex>
-
-                <Flex justify="space-between" align="center">
-                  <Text className="text-gray-600">Phí vận chuyển</Text>
-                  <Text className="text-green-600 font-medium">
+                <Divider className="my-0!" />
+                <Flex justify="space-between" align="center" className="my-6!">
+                  <Text className="text-gray-600!">Phí vận chuyển</Text>
+                  <Text className="font-medium! text-lg!">
                     {shippingFee?.toLocaleString()
                       ? shippingFee?.toLocaleString()
                       : 'Miễn phí'}
                   </Text>
                 </Flex>
 
-                <Divider className="my-4" />
+                <Divider className="my-0!" />
 
-                <Flex justify="space-between" align="center">
-                  <Text className="text-lg font-medium">Tổng cộng</Text>
-                  <Text className="text-xl font-bold text-blue-600">
+                <Flex justify="space-between" align="center" className="my-6!">
+                  <Text className="text-sm! font-medium!">Tổng cộng</Text>
+                  <Text className="text-lg! font-medium!">
                     {total.toLocaleString()}₫
                   </Text>
                 </Flex>
 
-                <div className="pt-4">
+                <div className="mt-20">
                   <Link to="/order">
                     <Button
                       type="primary"
                       size="large"
-                      icon={<CreditCardOutlined />}
-                      className="w-full rounded-lg h-12 font-medium"
+                      className="w-full rounded-md! h-12 font-medium!"
                       disabled={cartItems.length === 0}
                     >
                       Tiến hành thanh toán
@@ -467,9 +465,9 @@ function Cart() {
                   </Link>
                 </div>
 
-                <div className="text-center pt-2">
+                <div className="text-center mt-10">
                   <Link to="/">
-                    <Button type="link" className="text-blue-600">
+                    <Button type="link" className="text-primary!">
                       ← Tiếp tục mua sắm
                     </Button>
                   </Link>
