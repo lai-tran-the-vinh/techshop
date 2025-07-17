@@ -59,6 +59,11 @@ function Cart() {
     getCart();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = 'TechShop | Giỏ hàng';
+  }, []);
+
   const updateQuantity = (id, value) => {
     if (value < 1) return;
     setCartItems((prev) =>
@@ -251,6 +256,7 @@ function Cart() {
       },
     },
     {
+      title: 'Xóa',
       key: 'action',
       align: 'center',
       width: '5%',
@@ -340,16 +346,33 @@ function Cart() {
           <Col span={18}>
             <Card className="shadow-none!">
               <div className="flex justify-between items-center mb-6">
-                <Flex align="center" justify="space-between">
-                  <Flex className="mb-8!" align="center">
+                <Flex
+                  align="center"
+                  justify="space-between"
+                  className="w-full!"
+                >
+                  <Flex className="mb-10!" align="center" gap={8}>
                     <Title
                       level={2}
-                      className="text-gray-900 font-bold flex items-center gap-3 mb-2"
+                      className="text-gray-900! flex! items-center! mb-0! gap-3!"
                     >
-                      <ShoppingCartOutlined />
+                      <div>
+                        <svg
+                          width="35"
+                          height="35"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="black"
+                        >
+                          <path
+                            d="M2.5 4.25C2.5 3.83579 2.83579 3.5 3.25 3.5H3.80826C4.75873 3.5 5.32782 4.13899 5.65325 4.73299C5.87016 5.12894 6.02708 5.58818 6.14982 6.00395C6.18306 6.00134 6.21674 6 6.2508 6H18.7481C19.5783 6 20.1778 6.79442 19.9502 7.5928L18.1224 14.0019C17.7856 15.1832 16.7062 15.9978 15.4779 15.9978H9.52977C8.29128 15.9978 7.2056 15.1699 6.87783 13.9756L6.11734 11.2045L4.85874 6.95578L4.8567 6.94834C4.701 6.38051 4.55487 5.85005 4.33773 5.4537C4.12686 5.0688 3.95877 5 3.80826 5H3.25C2.83579 5 2.5 4.66421 2.5 4.25ZM9 21C10.1046 21 11 20.1046 11 19C11 17.8954 10.1046 17 9 17C7.89543 17 7 17.8954 7 19C7 20.1046 7.89543 21 9 21ZM16 21C17.1046 21 18 20.1046 18 19C18 17.8954 17.1046 17 16 17C14.8954 17 14 17.8954 14 19C14 20.1046 14.8954 21 16 21Z"
+                            fill="inherit"
+                          ></path>
+                        </svg>
+                      </div>
                       Giỏ hàng của bạn
                     </Title>
-                    <Text className="text-gray-600! block!">
+                    <Text className="text-gray-600! mt-4! flex! items-center!">
                       {cartItems.length > 0
                         ? `${cartItems.length} sản phẩm`
                         : null}
@@ -397,7 +420,7 @@ function Cart() {
           </Col>
 
           <Col span={6}>
-            <Card className="shadow-sm sticky ">
+            <Card className=" sticky ">
               <div className="mb-6">
                 <Title level={4} className="text-gray-900 font-semibold mb-0">
                   Tóm tắt đơn hàng
