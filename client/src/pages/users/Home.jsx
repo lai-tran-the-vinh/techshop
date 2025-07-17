@@ -360,7 +360,9 @@ function Home() {
         <div className=" mx-auto space-y-12">
           {categories?.map((category) => {
             const filteredProducts = products.filter(
-              (product) => product.category?.name === category.name,
+              (product) =>
+                product.category?.name === category.name &&
+                product.isActive === true,
             );
 
             if (filteredProducts.length === 0) return null;
