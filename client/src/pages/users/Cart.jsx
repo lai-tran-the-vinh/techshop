@@ -321,7 +321,7 @@ function Cart() {
       </Modal>
 
       {cartItems.length === 0 ? (
-        <Flex justify='space-between' className="bg-white rounded-xl p-30!">
+        <Flex justify="space-between" className="bg-white rounded-xl p-30!">
           <Flex vertical gap={20}>
             <Title level={1} className="font-medium! mb-0!">
               Chưa có sản phẩm nào trong giỏ hàng
@@ -329,9 +329,11 @@ function Cart() {
             <Text className="text-[#6b7280]! text-base!">
               Cùng mua sắm hàng ngàn sản phẩm tại TechShop nhé!
             </Text>
-            <Button type="primary" className="rounded-full! h-40! w-150!">
-              Mua hàng
-            </Button>
+            <Link to="/">
+              <Button type="primary" className="rounded-full! h-40! w-150!">
+                Mua hàng
+              </Button>
+            </Link>
           </Flex>
           <Image
             width={300}
