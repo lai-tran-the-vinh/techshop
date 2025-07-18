@@ -48,7 +48,7 @@ import CartServices from '@/services/carts';
 import SliderProduct from '@/components/app/ImagesSlider';
 import Recomment from '@/services/recommend';
 import Inventory from '@/services/inventories';
-import { set } from 'react-hook-form';
+import { PreviewListProducts } from '@components/products';
 
 const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;
@@ -348,7 +348,7 @@ function ProductDetail() {
               <div className="mb-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-10 sm:gap-3 mb-2">
                   <Title level={2} className="text-2xl! sm:text-2xl! mr-6!">
-                    {`${formatCurrency(product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100))}đ`}
+                    {`${formatCurrency(selectedVariant?.price - selectedVariant?.price * (product?.discount / 100))}đ`}
                   </Title>
                   <Text
                     delete
@@ -690,94 +690,25 @@ function ProductDetail() {
               <ProductSpecification product={product} />
             </Card>
           </Col>
-          <Col lg={14} md={24} sm={24} xs={24}>
-            <Card className="px-10!">
-              <Tabs defaultActiveKey="description" size="middle">
-                <TabPane tab="Mô tả sản phẩm" key="description">
-                  <div className="w-full overflow-hidden">
-                    <ProductDescription product={product} loading={loading} />
-                  </div>
-                </TabPane>
-                <TabPane tab="Thông số kỹ thuật" key="specifications">
-                  <div className="w-full overflow-hidden">
-                    <ProductSpecification product={product} />
-                  </div>
-                </TabPane>
-                <TabPane tab="Đánh giá" key="reviews">
-                  <div className="w-full overflow-hidden">
-                    <Comments
-                      product={product}
-                      loading={loading}
-                      comment={comment}
-                      setComment={setComment}
-                    />
-                  </div>
-                </TabPane>
-              </Tabs>
-            </Card>
+
+          <Col lg={24} md={24} sm={24} xs={24}>
+            {recommnentProducts && recommnentProducts.length > 0 && (
+              <PreviewListProducts
+                viewAll={false}
+                title='Sản phẩm liên quan'
+                products={recommnentProducts}
+              />
+            )}
           </Col>
-          <Col lg={10} md={24} sm={24} xs={24}>
-            <Card className="recomment-product">
-              <Title level={3} className="mb-4 text-lg sm:text-xl">
-                Sản phẩm liên quan
-              </Title>
-              <div className="flex flex-col gap-10">
-                {recommnentProducts && recommnentProducts.length > 0 ? (
-                  recommnentProducts.map((product) => (
-                    <Link key={product._id} to={`/product/${product._id}`}>
-                      <div className="p-10 border border-gray-200 rounded-md cursor-pointer hover:border-gray-300 transition-shadow">
-                        <div className="flex items-center gap-10 sm:gap-4">
-                          <div className="w-50 h-50 sm:w-20 sm:h-20 lg:w-50 lg:h-50 overflow-hidden flex-shrink-0">
-                            {product.variants?.[0]?.images?.length > 0 ? (
-                              <Image
-                                src={product.variants[0].images[0]}
-                                className="w-full! h-full! object-cover"
-                                preview={false}
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <span className="text-gray-400 text-xs">
-                                  No Image
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <Text
-                              strong
-                              className="block text-sm sm:text-base line-clamp-2"
-                            >
-                              {product.name}
-                            </Text>
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-red-500 font-semibold text-sm sm:text-base">
-                                {product.variants?.[0]?.price
-                                  ? `${product.variants[0].price.toLocaleString('vi-VN')} đ`
-                                  : 'Liên hệ'}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Rate
-                                disabled
-                                defaultValue={product.rating || 0}
-                                className="text-xs"
-                              />
-                              <span className="text-gray-500 text-xs">
-                                ({product.reviewCount || 0})
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-center text-gray-500 py-8">
-                    Đang tải sản phẩm liên quan...
-                  </div>
-                )}
-              </div>
-            </Card>
+        </Row>
+        <Row gutter={[10, 10]} className="mt-6 sm:mt-8 lg:mt-10">
+          <Col lg={24}>
+            <Comments
+              product={product}
+              loading={loading}
+              comment={comment}
+              setComment={setComment}
+            />
           </Col>
         </Row>
       </div>

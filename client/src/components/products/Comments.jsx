@@ -160,7 +160,7 @@ function Comments({ className, product, loading: initialLoading }) {
 
   return (
     <div className={className}>
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white p-20 rounded-xl overflow-hidden">
         <Flex align="center" gap={8}>
           <Typography.Title
             level={3}
