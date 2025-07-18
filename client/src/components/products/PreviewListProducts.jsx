@@ -5,7 +5,13 @@ import { Typography, Empty, Flex } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
-function PreviewListProducts({ title, loading, products = [], category = {} }) {
+function PreviewListProducts({
+  title,
+  loading,
+  products = [],
+  category = {},
+  viewAll = true,
+}) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -92,21 +98,23 @@ function PreviewListProducts({ title, loading, products = [], category = {} }) {
     <div className="w-full bg-white p-4 sm:p-8 lg:p-12 xl:p-20 rounded-xl mt-8 sm:mt-12 lg:mt-16 xl:mt-20">
       <div className="flex mb-6 sm:mb-8 lg:mb-10 items-center justify-between">
         <Typography.Title
-          level={3}
-          className="font-inter! uppercase! font-bold! text-primary! ml-2! sm:ml-4! lg:ml-8! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
+          level={2}
+          className="font-inter! ml-2! sm:ml-4! lg:ml-8! mb-0!"
         >
           {title}
         </Typography.Title>
 
-        <span
-          onClick={() => {
-            const id = category._id;
-            navigate(`/product/all/${id}`);
-          }}
-          className="cursor-pointer text-sm sm:text-base mr-2 sm:mr-4 lg:mr-8 font-medium text-primary hover:underline"
-        >
-          Xem tất cả
-        </span>
+        {viewAll && (
+          <span
+            onClick={() => {
+              const id = category._id;
+              navigate(`/product/all/${id}`);
+            }}
+            className="cursor-pointer text-sm sm:text-base mr-2 sm:mr-4 lg:mr-8 font-medium text-primary hover:underline"
+          >
+            Xem tất cả
+          </span>
+        )}
       </div>
 
       <Flex justify="center">
