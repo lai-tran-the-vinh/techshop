@@ -260,56 +260,38 @@ function Home() {
           </Col>
         </Row>
       </section>
-      {!loading ? (
+      {!loading && recommentProducts.length > 0 && (
         <section className="w-full xl:p-20 mb-12 bg-[#ffffff] rounded-xl">
-          {recommentProducts.length > 0 ? (
-            <>
-              <div className="flex mb-10 items-center justify-between">
-                <Typography.Title
-                  level={3}
-                  className="font-inter! uppercase! font-bold! text-primary! ml-2! sm:ml-4! lg:ml-8! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
-                >
-                  Sản phẩm có thể phù hợp với bạn
-                </Typography.Title>
-              </div>
-
-              <Row className="w-full mx-auto" gutter={[10]}>
-                {recommentProducts?.map((product, index) => (
-                  <Col
-                    key={index}
-                    xs={24}
-                    sm={12}
-                    md={8}
-                    lg={8}
-                    xl={4}
-                    className="mb-6"
-                  >
-                    <CardProduct
-                      product={product}
-                      loading={loading}
-                      className="w-full transform transition-all duration-300 hover:shadow-xl"
-                    />
-                  </Col>
-                ))}
-              </Row>
-            </>
-          ) : (
-            <div className="w-full min-h-300 flex items-center justify-center">
-              <Spin />
+          <>
+            <div className="flex mb-10 items-center justify-between">
+              <Typography.Title
+                level={3}
+                className="font-inter! uppercase! font-bold! text-primary! ml-2! sm:ml-4! lg:ml-8! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
+              >
+                Sản phẩm có thể phù hợp với bạn
+              </Typography.Title>
             </div>
-          )}
-        </section>
-      ) : (
-        <section className="w-full mb-12 bg-[#ffffff] rounded-xl">
-          <div className="flex mb-10 items-center justify-between">
-            <Typography.Title
-              level={3}
-              className="font-inter! uppercase! font-extrabold!  m-10! text-primary! text-2xl"
-            >
-              Sản phẩm có thể phù hợp với baise
-            </Typography.Title>
-          </div>
-          <Empty />
+
+            <Row className="w-full mx-auto" gutter={[10]}>
+              {recommentProducts?.map((product, index) => (
+                <Col
+                  key={index}
+                  xs={24}
+                  sm={12}
+                  md={8}
+                  lg={8}
+                  xl={4}
+                  className="mb-6"
+                >
+                  <CardProduct
+                    product={product}
+                    loading={loading}
+                    className="w-full transform transition-all duration-300 hover:shadow-xl"
+                  />
+                </Col>
+              ))}
+            </Row>
+          </>
         </section>
       )}
 
