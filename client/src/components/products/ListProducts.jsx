@@ -132,13 +132,13 @@ function ListProducts(properties) {
     }).format(amount);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       <Spin size="large" />
+  //     </div>
+  //   );
+  // }
 
   // Kiểm tra xem có sản phẩm nào có memory không
   const hasMemoryProducts = products.some((product) =>
@@ -196,8 +196,12 @@ function ListProducts(properties) {
     ? getMemoryOptions()
     : { ram: [], storage: [] };
 
-  console.log('memoryOptions', memoryOptions);
-
+  const uniqueRams = Array.from(
+    new Set(memoryOptions.ram.map((r) => r.toLowerCase())),
+  );
+  const uniqueStorages = Array.from(
+    new Set(memoryOptions.storage.map((s) => s.toLowerCase())),
+  );
   return (
     <div className="min-h-screen w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
@@ -410,24 +414,30 @@ function ListProducts(properties) {
                         <Text className="text-sm! text-gray-600!">Tất cả</Text>
                       </Checkbox>
                     </div>
-                    {memoryOptions.ram.map((ramValue, index) => (
-                      <div key={index} className="flex items-center">
-                        <Checkbox
-                          checked={filter.ram?.label === ramValue}
-                          onChange={(e) =>
-                            handleFilterChange(
-                              'ram',
-                              ramValue,
-                              e.target.checked,
-                            )
-                          }
-                        >
-                          <Text className="text-sm! text-gray-600!">
-                            {ramValue}
-                          </Text>
-                        </Checkbox>
-                      </div>
-                    ))}
+                    {uniqueRams.map((ramValue, index) => {
+                      const lowerRam = ramValue.toLowerCase(); // chuyển thành in thường
+
+                      return (
+                        <div key={index} className="flex items-center">
+                          <Checkbox
+                            checked={
+                              filter.ram?.label.toLowerCase() === lowerRam
+                            }
+                            onChange={(e) =>
+                              handleFilterChange(
+                                'ram',
+                                ramValue,
+                                e.target.checked,
+                              )
+                            }
+                          >
+                            <Text className="text-sm! text-gray-600!">
+                              {ramValue.toUpperCase()}
+                            </Text>
+                          </Checkbox>
+                        </div>
+                      );
+                    })}
                   </div>
                 </Panel>
               )}
@@ -456,7 +466,7 @@ function ListProducts(properties) {
                         <Text className="text-sm! text-gray-600!">Tất cả</Text>
                       </Checkbox>
                     </div>
-                    {memoryOptions.storage.map((storageValue, index) => (
+                    {uniqueStorages.map((storageValue, index) => (
                       <div key={index} className="flex items-center">
                         <Checkbox
                           checked={filter.storage?.label === storageValue}
@@ -469,7 +479,7 @@ function ListProducts(properties) {
                           }
                         >
                           <Text className="text-sm! text-gray-600!">
-                            {storageValue}
+                            {storageValue.toUpperCase()}
                           </Text>
                         </Checkbox>
                       </div>
