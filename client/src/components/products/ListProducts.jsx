@@ -25,6 +25,13 @@ import { callFetchBranches, callFetchBrands } from '@/services/apis';
 
 import { Filter, RotateCcw } from 'lucide-react';
 import CardProduct from './Card';
+import {
+  BsFilter,
+  BsFilterCircleFill,
+  BsFilterRight,
+  BsFilterSquare,
+  BsFilterSquareFill,
+} from 'react-icons/bs';
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -254,13 +261,17 @@ function ListProducts(properties) {
       </Row>
 
       <Row gutter={[10, 10]}>
-        <Col xs={24} md={8} lg={6} xl={5} xxl={4}>
+        <Col xs={24} md={24} lg={8} xl={5}>
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 sticky top-6">
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold text-gray-800">
+              <div className="flex items-center  gap-5">
+                <BsFilter className="w-16! h-16!" />
+                <Text
+                  level={3}
+                  className="text-lg! font-semibold! text-gray-800!"
+                >
                   Bộ lọc tìm kiếm
-                </h3>
+                </Text>
               </div>
               <button
                 onClick={handleFilterReset}
@@ -287,13 +298,21 @@ function ListProducts(properties) {
               </div>
             </div>
 
-            <Collapse defaultActiveKey={['price']} bordered={false}>
+            <Collapse
+              defaultActiveKey={['price']}
+              bordered={false}
+              className="bg-white!"
+            >
               <Panel
-                header={'Giá'}
+                header={
+                  <span className="text-gray-900 font-medium text-base">
+                    Giá
+                  </span>
+                }
                 key="price"
-                className="p-0! bg-gray-50! rounded-xl!"
+                className="!p-0 !bg-transparent !border-0 !rounded-none"
               >
-                <div className="space-y-2">
+                <div className="px-6 pb-6 space-y-4">
                   <div className="flex items-center">
                     <Checkbox
                       checked={
@@ -311,11 +330,14 @@ function ListProducts(properties) {
                         });
                       }}
                     >
-                      <Text className="text-sm! text-gray-600!">Tất cả</Text>
+                      <Text className="text-gray-600 text-sm font-normal">
+                        Tất cả
+                      </Text>
                     </Checkbox>
                   </div>
+
                   {priceRange.map((range, index) => (
-                    <div key={index} className="flex! items-center">
+                    <div key={index} className="flex items-center">
                       <Checkbox
                         checked={
                           JSON.stringify(filter.price) ===
@@ -332,71 +354,77 @@ function ListProducts(properties) {
                                 : range.value,
                             priceRange: null,
                           }));
-
                           setSearchParams({
                             _page: '1',
                             _limit: _limit.toString(),
                           });
                         }}
+                        className="hover:!border-blue-500 focus:!border-blue-500"
                       >
-                        <Text className="text-sm! text-gray-600!">
+                        <Text className="text-gray-600 text-sm font-normal">
                           {range.label}
                         </Text>
                       </Checkbox>
                     </div>
                   ))}
-                </div>
-                <div className="mt-4 pt-4 ">
-                  <Text className="text-sm! text-gray-600! mb-2 block!">
-                    Hoặc nhập khoảng giá phù hợp:
-                  </Text>
-                  <div className="mb-4!">
-                    <Slider
-                      range
-                      min={sliderPriceRange.minPrice}
-                      max={sliderPriceRange.maxPrice}
-                      defaultValue={[
-                        sliderPriceRange.minPrice,
-                        sliderPriceRange.maxPrice,
-                      ]}
-                      value={
-                        filter.priceRange || [
+
+                  <div className="pt-4 border-t border-gray-100">
+                    <Text className="text-gray-700 text-sm font-medium mb-4 block">
+                      Hoặc nhập khoảng giá phù hợp:
+                    </Text>
+                    <div className="mb-4">
+                      <Slider
+                        range
+                        min={sliderPriceRange.minPrice}
+                        max={sliderPriceRange.maxPrice}
+                        defaultValue={[
                           sliderPriceRange.minPrice,
                           sliderPriceRange.maxPrice,
-                        ]
-                      }
-                      step={100000}
-                      onChange={handlePriceRangeChange}
-                      tooltip={{
-                        formatter: (value) => formatCurrency(value) + ' vn₫',
-                      }}
-                    />
-                  </div>
-                  <div className="flex! justify-between! text-xs! text-gray-500! mt-2!">
-                    <span>
-                      {formatCurrency(
-                        filter.priceRange?.[0] || sliderPriceRange.minPrice,
-                      )}{' '}
-                      vnđ
-                    </span>
-                    <span>
-                      {formatCurrency(
-                        filter.priceRange?.[1] || sliderPriceRange.maxPrice,
-                      )}{' '}
-                      vnđ
-                    </span>
+                        ]}
+                        value={
+                          filter.priceRange || [
+                            sliderPriceRange.minPrice,
+                            sliderPriceRange.maxPrice,
+                          ]
+                        }
+                        step={100000}
+                        onChange={handlePriceRangeChange}
+                        tooltip={{
+                          formatter: (value) => formatCurrency(value) + ' vnđ',
+                        }}
+                        className="!mb-0"
+                      />
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-3">
+                      <span className="bg-gray-50 px-2 py-1 rounded-md">
+                        {formatCurrency(
+                          filter.priceRange?.[0] || sliderPriceRange.minPrice,
+                        )}{' '}
+                        vnđ
+                      </span>
+                      <span className="bg-gray-50 px-2 py-1 rounded-md">
+                        {formatCurrency(
+                          filter.priceRange?.[1] || sliderPriceRange.maxPrice,
+                        )}{' '}
+                        vnđ
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Panel>
 
-              {/* Bộ lọc RAM - chỉ hiển thị khi có sản phẩm có memory */}
+              {/* Bộ lọc RAM */}
               {hasMemoryProducts && memoryOptions.ram.length > 0 && (
                 <Panel
-                  header="RAM"
+                  header={
+                    <span className="text-gray-900 font-medium text-base">
+                      RAM
+                    </span>
+                  }
                   key="ram"
-                  className="p-0! bg-gray-50! rounded-xl! mb-4"
+                  className="!p-0 !bg-transparent !border-0 !rounded-none !mt-2"
                 >
-                  <div className="space-y-2">
+                  <div className="px-6 pb-6 space-y-4">
                     <div className="flex items-center">
                       <Checkbox
                         checked={filter.ram === null}
@@ -410,13 +438,16 @@ function ListProducts(properties) {
                             _limit: _limit.toString(),
                           });
                         }}
+                        className="hover:!border-blue-500 focus:!border-blue-500"
                       >
-                        <Text className="text-sm! text-gray-600!">Tất cả</Text>
+                        <Text className="text-gray-600 text-sm font-normal">
+                          Tất cả
+                        </Text>
                       </Checkbox>
                     </div>
-                    {uniqueRams.map((ramValue, index) => {
-                      const lowerRam = ramValue.toLowerCase(); // chuyển thành in thường
 
+                    {uniqueRams.map((ramValue, index) => {
+                      const lowerRam = ramValue.toLowerCase();
                       return (
                         <div key={index} className="flex items-center">
                           <Checkbox
@@ -430,8 +461,9 @@ function ListProducts(properties) {
                                 e.target.checked,
                               )
                             }
+                            className="hover:!border-blue-500 focus:!border-blue-500"
                           >
-                            <Text className="text-sm! text-gray-600!">
+                            <Text className="text-gray-600 text-sm font-normal">
                               {ramValue.toUpperCase()}
                             </Text>
                           </Checkbox>
@@ -442,13 +474,18 @@ function ListProducts(properties) {
                 </Panel>
               )}
 
+              {/* Bộ lọc Storage */}
               {hasMemoryProducts && memoryOptions.storage.length > 0 && (
                 <Panel
-                  header="Dung lượng"
+                  header={
+                    <span className="text-gray-900 font-medium text-base">
+                      Dung lượng
+                    </span>
+                  }
                   key="storage"
-                  className="p-0! bg-gray-50! rounded-xl! mb-4"
+                  className="!p-0 !bg-transparent !border-0 !rounded-none !mt-2"
                 >
-                  <div className="space-y-2">
+                  <div className="px-6 pb-6 space-y-4">
                     <div className="flex items-center">
                       <Checkbox
                         checked={filter.storage === null}
@@ -463,9 +500,12 @@ function ListProducts(properties) {
                           });
                         }}
                       >
-                        <Text className="text-sm! text-gray-600!">Tất cả</Text>
+                        <Text className="text-gray-600! text-sm! font-normal!">
+                          Tất cả
+                        </Text>
                       </Checkbox>
                     </div>
+
                     {uniqueStorages.map((storageValue, index) => (
                       <div key={index} className="flex items-center">
                         <Checkbox
@@ -478,7 +518,7 @@ function ListProducts(properties) {
                             )
                           }
                         >
-                          <Text className="text-sm! text-gray-600!">
+                          <Text className="text-gray-600! text-sm! font-normal!">
                             {storageValue.toUpperCase()}
                           </Text>
                         </Checkbox>
@@ -487,38 +527,45 @@ function ListProducts(properties) {
                   </div>
                 </Panel>
               )}
-
-              {/* Các bộ lọc động khác */}
               {categoryConfig?.configFields?.extraFields
                 ?.filter((field) => field.filterable)
                 ?.map(
                   (field) =>
                     dynamicOptions[field.name]?.length > 0 && (
                       <Panel
-                        header={field.label}
+                        header={
+                          <span className="text-gray-900 font-medium text-base">
+                            {field.label}
+                          </span>
+                        }
                         key={field.name}
-                        className="p-0! bg-gray-50! rounded-xl! mb-4"
+                        className="!p-0 !bg-transparent !border-0 !rounded-none !mt-2"
                       >
-                        {dynamicOptions[field.name].map((value, index) => (
-                          <div key={value}>
-                            <Checkbox
-                              checked={filter[field.name]?.label === value}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  field.name,
-                                  value,
-                                  e.target.checked,
-                                )
-                              }
-                            >
-                              {typeof value === 'boolean'
-                                ? value
-                                  ? 'Có'
-                                  : 'Không'
-                                : value}
-                            </Checkbox>
-                          </div>
-                        ))}
+                        <div className="px-6 pb-6 space-y-4">
+                          {dynamicOptions[field.name].map((value, index) => (
+                            <div key={value} className="flex items-center">
+                              <Checkbox
+                                checked={filter[field.name]?.label === value}
+                                onChange={(e) =>
+                                  handleFilterChange(
+                                    field.name,
+                                    value,
+                                    e.target.checked,
+                                  )
+                                }
+                                className="hover:!border-blue-500 focus:!border-blue-500"
+                              >
+                                <Text className="text-gray-600 text-sm font-normal">
+                                  {typeof value === 'boolean'
+                                    ? value
+                                      ? 'Có'
+                                      : 'Không'
+                                    : value}
+                                </Text>
+                              </Checkbox>
+                            </div>
+                          ))}
+                        </div>
                       </Panel>
                     ),
                 )}
@@ -526,7 +573,7 @@ function ListProducts(properties) {
           </div>
         </Col>
 
-        <Col xs={24} md={16} lg={18} xl={19} xxl={20}>
+        <Col xs={24} md={24}  lg={16} xl={19}>
           <div className="bg-white rounded-lg shadow-sm p-2 md:p-4 mb-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 md:p-4 gap-2">
               <Flex

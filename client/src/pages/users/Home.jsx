@@ -40,35 +40,6 @@ function Home() {
   const [recommentProducts, setRecommentProducts] = useState([]);
   const { user } = useAppContext();
 
-  const fallbackBanners = {
-    promo: [
-      {
-        id: 4,
-        imageUrl:
-          'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600&h=300&fit=crop',
-        title: 'Giảm giá 50%',
-        description: 'Accessories & Phụ kiện',
-        link: '/promotions/accessories',
-      },
-      {
-        id: 5,
-        imageUrl:
-          'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=600&h=300&fit=crop',
-        title: 'Mua 1 tặng 1',
-        description: 'Tai nghe & Loa bluetooth',
-        link: '/promotions/audio',
-      },
-      {
-        id: 6,
-        imageUrl:
-          'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=300&fit=crop',
-        title: 'Trả góp 0%',
-        description: 'Áp dụng cho tất cả sản phẩm',
-        link: '/promotions/installment',
-      },
-    ],
-  };
-
   const fetchCategories = async () => {
     try {
       const categories = await Categories.getAll();
@@ -113,21 +84,15 @@ function Home() {
         (b) => b.position === 'HOME_FEATURE',
       );
 
-      setMainBanners(
-        mainBanners.length > 0 ? mainBanners : fallbackBanners.main,
-      );
+      setMainBanners(mainBanners);
 
-      setPromoBanners(
-        promoBanners.length > 0 ? promoBanners : fallbackBanners.promo,
-      );
-      setFeatureBanners(
-        featureBanners.length > 0 ? featureBanners : fallbackBanners.feature,
-      );
+      setPromoBanners(promoBanners);
+      setFeatureBanners(featureBanners);
     } catch (error) {
       console.error('Error fetching banners:', error.message);
-      setMainBanners(fallbackBanners.main);
-      setPromoBanners(fallbackBanners.promo);
-      setFeatureBanners(fallbackBanners.feature);
+      setMainBanners([]);
+      setPromoBanners([]);
+      setFeatureBanners([]);
     }
   };
   useEffect(() => {
@@ -205,7 +170,7 @@ function Home() {
     <div className="w-full min-h-screen ">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
-          <Col xs={24} sm={24} md={14} lg={14} xl={19}>
+          <Col xs={24} md={24} lg={18} xl={19}>
             <div
               className="relative rounded-lg overflow-hidden"
               onMouseEnter={() => setIsHovered(true)}
@@ -225,7 +190,7 @@ function Home() {
                 {mainBanners.map((banner, index) => (
                   <div
                     key={index}
-                    className="relative h-[180px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[500px]  cursor-pointer"
+                    className="relative h-[180px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px]   cursor-pointer"
                     onClick={() => handleBannerClick(banner)}
                   >
                     <img
@@ -239,7 +204,7 @@ function Home() {
             </div>
           </Col>
 
-          <Col xs={0} sm={0} md={6} lg={6} xl={5} className="p-0! ">
+          <Col xs={0} md={0} lg={6} xl={5} className="p-0! ">
             <div className="flex flex-col h-full gap-6">
               {promoBanners.slice(0, 3).map((banner, index) => (
                 <div
@@ -278,9 +243,8 @@ function Home() {
                   key={index}
                   xs={24}
                   sm={12}
-                  md={8}
-                  lg={8}
-                  xl={4}
+                  xl={8}
+                  xxl={4}
                   className="mb-6"
                 >
                   <CardProduct
