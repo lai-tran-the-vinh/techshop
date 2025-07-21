@@ -24,13 +24,14 @@ import {
   Typography,
   Upload,
   message as antMessage,
+  notification,
 } from 'antd';
 import { InboxOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Dragger } = Upload;
 
 function AddProduct() {
-  const { message } = useAppContext();
+  const { message, notification } = useAppContext();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -77,7 +78,11 @@ function AddProduct() {
       setBrands(fetchedBrands);
     } catch (error) {
       console.error(error);
-      message.error('Lỗi khi tải dữ liệu');
+      notification.error({
+        message: 'Lỗi tải dữ liệu danh sách thuật hành',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
     } finally {
       setLoading(false);
     }
@@ -98,12 +103,18 @@ function AddProduct() {
   const beforeUpload = (file) => {
     const isImage = file.type.startsWith('image/');
     if (!isImage) {
-      antMessage.error('Chỉ có thể upload file hình ảnh!');
+      notification.warrning({
+        message: 'Chỉ có thể upload file hình ảnh!',
+        duration: 4.5,
+      });
       return false;
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      antMessage.error('Kích thước file phải nhỏ hơn 5MB!');
+      notification.warrning({
+        message: 'Kích thước file phải nhỏ hơn 5MB!',
+        duration: 4.5,
+      });
       return false;
     }
     return false; // Prevent auto upload

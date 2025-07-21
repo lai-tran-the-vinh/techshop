@@ -43,6 +43,7 @@ import { callFetchInventories } from '@/services/apis';
 import useMessage from '@/hooks/useMessage';
 import { data } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { useAppContext } from '@/contexts';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -53,7 +54,7 @@ const WarehouseManagement = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('all');
   const [filteredData, setFilteredData] = useState([]);
-  const { success, error, warning, contextHolder } = useMessage();
+  const { message, notification } = useAppContext();
   const [showOutOfStockOnly, setShowOutOfStockOnly] = useState(false);
 
   const fetchInventory = async () => {
@@ -61,25 +62,25 @@ const WarehouseManagement = () => {
       const res = await callFetchInventories();
       setWarehouses(res.data.data);
       setFilteredData(res.data.data);
-      success('Lấy danh sách tồn kho');
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: 'Lỗi tải dữ liệu kho',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
       console.error('Failed to fetch inventory:', error);
     }
   };
 
   useEffect(() => {
-    try {
-      fetchInventory();
-    } catch (error) {
-      console.error('Failed to fetch inventory:', error);
-    } finally {
-      setLoading(false);
-    }
+    fetchInventory();
   }, []);
 
   useEffect(() => {
     let filtered = warehouses;
-    console.log(filtered);
+
     if (searchText) {
       filtered = filtered.filter(
         (item) =>
@@ -317,7 +318,15 @@ const WarehouseManagement = () => {
   const outOfStockProducts = warehouses.flatMap((warehouse) =>
     warehouse.variants.filter((variant) => variant.stock === 0),
   );
-
+  useEffect(() => {
+    if (outOfStockProducts.length > 0) {
+      notification.warning({
+        message: `${outOfStockProducts.length} sản phẩm hết hàng`,
+        description: `Sản phẩm hết hàng: ${outOfStockProducts.map((item) => item.variantId.name).join(', ')}`,
+        duration: 3,
+      });
+    }
+  }, [outOfStockProducts.length]);
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '50px' }}>

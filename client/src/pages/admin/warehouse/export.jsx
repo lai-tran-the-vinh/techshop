@@ -17,28 +17,18 @@ import {
   DatePicker,
   Upload,
   Tooltip,
-  Statistic,
   Badge,
   Popconfirm,
-  Alert,
   Spin,
-  Drawer,
-  Descriptions,
 } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
-  SaveOutlined,
-  FileExcelOutlined,
-  InboxOutlined,
   ProductOutlined,
   ShopOutlined,
   UserOutlined,
   CalendarOutlined,
-  DollarOutlined,
-  EditOutlined,
   EyeOutlined,
-  PrinterOutlined,
   UploadOutlined,
   ReloadOutlined,
   SearchOutlined,
@@ -68,9 +58,8 @@ const WarehouseOutbound = () => {
     searchText: '',
     dateRange: null,
   });
-  const { message } = useAppContext();
+  const { message, notification } = useAppContext();
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState([]);
   const [branches, setBranches] = useState([]);
   const [inventories, setInventories] = useState([]);
   const [outboundItems, setOutboundItems] = useState([]);
@@ -81,10 +70,7 @@ const WarehouseOutbound = () => {
   const [previewData, setPreviewData] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
   const [detailDrawerVisible, setDetailDrawerVisible] = useState(false);
-  const [productSearchVisible, setProductSearchVisible] = useState(false);
   const [selectedOutboundDetail, setSelectedOutboundDetail] = useState(null);
-  const [productSearchText, setProductSearchText] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [detailLoading, setDetailLoading] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
 
@@ -93,10 +79,13 @@ const WarehouseOutbound = () => {
     try {
       const response = await callFetchInventories();
       setInventories(response.data.data);
-      message.success('Lấy danh sách tồn kho thành công');
     } catch (err) {
       console.error('Error fetching inventories:', err);
-      message.error('Không thể tải danh sách tồn kho');
+      notification.error({
+        message: 'Lỗi tải dữ liệu kho',
+        description: `Lỗi: ${err.response.data.message}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -106,7 +95,11 @@ const WarehouseOutbound = () => {
       setBranches(response.data.data);
     } catch (err) {
       console.error('Error fetching branches:', err);
-      message.error('Không thể tải danh sách chi nhánh');
+      notification.error({
+        message: 'Lỗi tải dữ liệu chi nhánh',
+        description: `Lỗi: ${err.response.data.message}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -116,7 +109,11 @@ const WarehouseOutbound = () => {
       setOutboundHistory(response.data.data);
     } catch (error) {
       console.error('Error fetching outbound history:', error);
-      message.error('Không thể tải lịch sử xuất kho');
+      notification.error({
+        message: 'Lỗi tải dữ liệu lịch sử xuất kho',
+        description: `Lỗi: ${error.response.data.message}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -124,11 +121,16 @@ const WarehouseOutbound = () => {
     setDetailLoading(true);
     try {
       const response = await callFetchDetailOutbound(OutboundId);
+
       setSelectedOutboundDetail(response.data.data);
       setDetailDrawerVisible(true);
     } catch (error) {
       console.error('Error fetching outbound detail:', error);
-      message.error('Không thể tải chi tiết phiếu xuất');
+      notification.error({
+        message: 'Lỗi tải dữ liệu chi tiết phiếu xuất',
+        description: `Lỗi: ${error.response.data.message}`,
+        duration: 4.5,
+      });
     } finally {
       setDetailLoading(false);
     }
@@ -199,14 +201,19 @@ const WarehouseOutbound = () => {
         const variantInfo = getVariantInfo(values.variantId);
 
         if (!variantInfo) {
-          error('Không tìm thấy thông tin variant');
+          notification.error({
+            message: 'Không tìm thấy sản phẩm với biến thể này',
+            duration: 4.5,
+          });
           return;
         }
 
         if (!checkStockAvailability(values.variantId, values.quantity)) {
-          message.warning(
-            `Số lượng tồn kho không đủ. Tồn kho hiện tại: ${variantInfo.stock}`,
-          );
+          notification.warning({
+            message: `Tổng số lượng biến thể ${variantInfo.name} vượt quá số lượng tồn kho.`,
+            description: `Tồn kho hiện tại: ${variantInfo.stock}, số lượng đã chọn: ${values.quantity}, vui lòng kiểm tra lại số lượng của biến thể!!!`,
+            duration: 4.5,
+          });
           return;
         }
 
@@ -217,12 +224,13 @@ const WarehouseOutbound = () => {
         );
 
         if (existingItem) {
-          // Kiểm tra tổng số lượng sau khi cộng thêm
           const totalQuantity = existingItem.quantity + values.quantity;
           if (!checkStockAvailability(values.variantId, totalQuantity)) {
-            message.warning(
-              `Tổng số lượng vượt quá tồn kho. Tồn kho hiện tại: ${variantInfo.stock}, Đã chọn: ${existingItem.quantity}`,
-            );
+            notification.warning({
+              message: `Tổng số lượng biến thể ${variantInfo.name} vụt quá số lượng tồn kho.`,
+              description: `Tồn kho hiện tại: ${variantInfo.stock}, số lượng cơ sở: ${totalQuantity}, vui zoekt kiểm tra số lượng của biến thể!!!`,
+              duration: 4.5,
+            });
 
             return;
           }
@@ -269,7 +277,11 @@ const WarehouseOutbound = () => {
         setSelectedInventory(null);
       })
       .catch((errorInfo) => {
-        message.error('Vui lòng điền đầy đủ thông tin');
+        notification.error({
+          message: 'Vui lòng kiểm tra lại thông tin',
+          description: errorInfo.errorFields[0].errors[0],
+          duration: 4.5,
+        });
       });
   };
 
@@ -283,9 +295,11 @@ const WarehouseOutbound = () => {
     if (!item) return;
 
     if (!checkStockAvailability(item.variantId, quantity)) {
-      message.warning(
-        `Số lượng vượt quá tồn kho. Tồn kho hiện tại: ${item.availableStock}`,
-      );
+      notification.warning({
+        message: `Tổng số lượng biến thể ${item.variantName} vượt quá số lượng tồn kho.`,
+        description: `Tồn kho hiện tại: ${item.availableStock}, số lượng cơ sở: ${quantity}, vui lòng kiểm tra số lượng của biến thể!!!`,
+        duration: 4.5,
+      });
       return;
     }
 
@@ -337,7 +351,9 @@ const WarehouseOutbound = () => {
       .validateFields(['branchId'])
       .then((values) => {
         if (outboundItems.length === 0) {
-          message.error('Vui lòng thêm ít nhất một sản phẩm');
+          notification.warning({
+            message: 'Vui lòng chọn sản phẩm trên danh sách',
+          });
           return;
         }
 
@@ -392,7 +408,11 @@ const WarehouseOutbound = () => {
       setIsModalVisible(false);
       await Promise.all([fetchInventories(), fetchOutboundHistory()]); // Refresh cả inventory và history
     } catch (error) {
-      message.error(error.message || 'Có lỗi xảy ra khi xuất kho');
+      notification.error({
+        message: 'Lỗi xây ra khi xuat kho',
+        description: `Lỗi: ${error.response.data.message}`,
+        duration: 4.5,
+      });
     } finally {
       setLoading(false);
     }
@@ -623,24 +643,7 @@ const WarehouseOutbound = () => {
     >
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={14}>
-          <Card
-            style={{ boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)' }}
-            title="Tạo phiếu xuất kho"
-            extra={
-              <Space>
-                <Upload
-                  name="file"
-                  maxCount={1}
-                  accept=".xlsx"
-                  showUploadList={false}
-                  onChange={() => console.log('Export Excel')}
-                  disabled={loading}
-                >
-                  <Button icon={<UploadOutlined />}>Export Excel</Button>
-                </Upload>
-              </Space>
-            }
-          >
+          <Card title="Tạo phiếu xuất kho">
             <Form form={form} layout="vertical">
               <Row gutter={16}>
                 <Col span={24}>
@@ -948,8 +951,7 @@ const WarehouseOutbound = () => {
       <InboundDetailDrawer
         open={detailDrawerVisible}
         onClose={() => setDetailDrawerVisible(false)}
-        selectedoutboundDetail={selectedOutboundDetail}
-        title="Chi tiết phiếu xuất"
+        selectedInboundDetail={selectedOutboundDetail}
       />
 
       <InboundConfirmModal

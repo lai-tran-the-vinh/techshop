@@ -1,6 +1,6 @@
 import useMessage from '@/hooks/useMessage';
 import { callFetchAccount, callLogin, callLogout } from '@/services/apis';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import { useContext, createContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
@@ -18,10 +18,14 @@ function AppProvider({ children }) {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [sideBarSelectedTab, setSideBarSelectedTab] = useState();
   const [messageApi, contextHolder] = message.useMessage();
+  const [notificationApi, notificationContextHolder] =
+    notification.useNotification();
 
   const contextValue = {
     message: messageApi,
+    notification: notificationApi,
     contextHolder,
+    notificationContextHolder,
   };
   useEffect(() => {
     const verifyToken = async () => {
@@ -102,6 +106,7 @@ function AppProvider({ children }) {
   return (
     <AppContext.Provider value={data}>
       {contextHolder}
+      {notificationContextHolder}
       {children}
     </AppContext.Provider>
   );

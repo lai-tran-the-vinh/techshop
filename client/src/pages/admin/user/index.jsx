@@ -100,7 +100,6 @@ const UserManagement = () => {
       setUsers(response.data.data);
     } catch (error) {
       console.error('Error fetching users:', error);
-      message.error('Tải danh sách người dùng thất bại');
     } finally {
       setLoading(false);
     }
@@ -111,7 +110,6 @@ const UserManagement = () => {
       const response = await callFetchRoles();
       setRoles(response.data.data);
     } catch (error) {
-      message.error('Tải danh sách quyền thất bại');
       console.error('Error fetching roles:', error);
     }
   };
@@ -121,7 +119,6 @@ const UserManagement = () => {
       const response = await callFetchBranches();
       setBranches(response.data.data);
     } catch (error) {
-      message.error('Tải danh sách chi nhánh thất bại');
       console.error('Error fetching branches:', error);
     }
   };
@@ -226,7 +223,6 @@ const UserManagement = () => {
       message.success('Dữ liệu tải lại thành công!');
     } catch (error) {
       console.error('Failed to reload data:', error);
-      message.error('Tải lại dữ liệu thất bại');
     } finally {
       setLoading(false);
     }

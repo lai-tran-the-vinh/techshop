@@ -14,14 +14,13 @@ import {
   Tag,
   Progress,
   Avatar,
+  Segmented,
 } from 'antd';
 import {
   UserOutlined,
   BarChartOutlined,
   PieChartOutlined,
   LineChartOutlined,
-  ShoppingCartOutlined,
-  DollarOutlined,
   TrophyOutlined,
   EyeOutlined,
   ArrowUpOutlined,
@@ -68,15 +67,34 @@ const CHART_COLORS = [
 ];
 
 const Dashboard = () => {
-  const [currentStats, setCurrentStats] = useState(null);
-  const [comparisonData, setComparisonData] = useState(null);
-  const [historicalData, setHistoricalData] = useState([]);
+  const [allStats, setAllStats] = useState({
+    daily: null,
+    weekly: null,
+    monthly: null,
+    yearly: null,
+  });
+  const [allComparison, setAllComparison] = useState({
+    daily: null,
+    weekly: null,
+    monthly: null,
+    yearly: null,
+  });
+  const [allHistorical, setAllHistorical] = useState({
+    daily: [],
+    weekly: [],
+    monthly: [],
+    yearly: [],
+  });
+
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState(null);
+  const currentStats = allStats[selectedPeriod];
+  const comparisonData = allComparison[selectedPeriod];
+  const historicalData = allHistorical[selectedPeriod];
 
-  const fetchStats = async (period, date) => {
+  const fetchStats = async (period) => {
     try {
       const response = await axiosInstance.get(
         `/api/v1/dashboard/stats/${period}/current`,
@@ -84,8 +102,8 @@ const Dashboard = () => {
       );
       return response.data?.data || {};
     } catch (error) {
-      console.error('Error fetching stats:', error);
-      throw new Error('Không thể tải dữ liệu thống kê');
+      console.error(`Error fetching ${period} stats:`, error);
+      return null;
     }
   };
 
@@ -98,7 +116,7 @@ const Dashboard = () => {
       );
       return response.data?.data || {};
     } catch (error) {
-      console.error('Error fetching comparison data:', error);
+      console.error(`Error fetching ${period} comparison data:`, error);
       return null;
     }
   };
@@ -111,36 +129,57 @@ const Dashboard = () => {
       );
       return response.data?.data || [];
     } catch (error) {
-      console.error('Error fetching historical data:', error);
+      console.error(`Error fetching ${period} historical data:`, error);
       return [];
     }
   };
-
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const loadAllDashboardData = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const [current, historical, comparison] = await Promise.all([
-          fetchStats(selectedPeriod),
-          fetchHistoricalData(selectedPeriod),
-          fetchStatsWithComparison(selectedPeriod, dateRange?.[0]),
-        ]);
+        const periods = ['daily', 'weekly', 'monthly', 'yearly'];
 
-        setCurrentStats(current);
-        setHistoricalData(historical);
-        setComparisonData(comparison);
+        const statsPromises = periods.map((period) => fetchStats(period));
+        const comparisonPromises = periods.map((period) =>
+          fetchStatsWithComparison(period, dateRange?.[0]),
+        );
+        const historicalPromises = periods.map((period) =>
+          fetchHistoricalData(period),
+        );
+
+        const [statsResults, comparisonResults, historicalResults] =
+          await Promise.all([
+            Promise.all(statsPromises),
+            Promise.all(comparisonPromises),
+            Promise.all(historicalPromises),
+          ]);
+
+        const newAllStats = {};
+        const newAllComparison = {};
+        const newAllHistorical = {};
+
+        periods.forEach((period, index) => {
+          newAllStats[period] = statsResults[index];
+          newAllComparison[period] = comparisonResults[index];
+          newAllHistorical[period] = historicalResults[index];
+        });
+
+        setAllStats(newAllStats);
+        setAllComparison(newAllComparison);
+        setAllHistorical(newAllHistorical);
       } catch (err) {
         console.error('Dashboard error:', err);
+        
         setError(err.message || 'Đã xảy ra lỗi khi tải dữ liệu');
       } finally {
         setLoading(false);
       }
     };
 
-    loadDashboardData();
-  }, [selectedPeriod, dateRange]);
+    loadAllDashboardData();
+  }, [dateRange]);
 
   const handlePeriodChange = (value) => {
     setSelectedPeriod(value);
@@ -171,6 +210,8 @@ const Dashboard = () => {
   };
 
   const chartData = useMemo(() => {
+    if (!historicalData || historicalData.length === 0) return [];
+
     return historicalData
       .slice()
       .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -192,15 +233,15 @@ const Dashboard = () => {
   }, [historicalData, selectedPeriod]);
 
   const paymentMethodData = useMemo(() => {
-    return (
-      currentStats?.paymentMethods?.map((method, index) => ({
-        name: method.method,
-        value: method.amount,
-        count: method.count,
-        percentage: method.percentage,
-        color: CHART_COLORS[index % CHART_COLORS.length],
-      })) || []
-    );
+    if (!currentStats?.paymentMethods) return [];
+
+    return currentStats.paymentMethods.map((method, index) => ({
+      name: method.method,
+      value: method.amount,
+      count: method.count,
+      percentage: method.percentage,
+      color: CHART_COLORS[index % CHART_COLORS.length],
+    }));
   }, [currentStats]);
 
   const topProductsColumns = [
@@ -333,6 +374,19 @@ const Dashboard = () => {
     );
   }
 
+  if (!currentStats) {
+    return (
+      <div style={{ padding: '20px' }}>
+        <Alert
+          message="Chưa có dữ liệu"
+          description={`Dữ liệu cho ${selectedPeriod} chưa được tải`}
+          type="warning"
+          showIcon
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Card style={{ marginBottom: '10px' }}>
@@ -343,22 +397,30 @@ const Dashboard = () => {
             </Title>
             <Text style={{ fontSize: '16px' }}>
               Tổng quan hiệu suất kinh doanh{' '}
-              {dayjs(currentStats.date).format('DD/MM/YYYY')}
+              {currentStats?.date &&
+                dayjs(currentStats.date).format('DD/MM/YYYY')}
             </Text>
           </Col>
           <Col>
             <Space size="middle">
-              <Select
+              <Segmented
                 value={selectedPeriod}
                 onChange={handlePeriodChange}
-                style={{ width: 140, borderRadius: '8px' }}
-                size="large"
-              >
-                <Option value="daily">Hôm nay</Option>
-                <Option value="weekly">Tuần này</Option>
-                <Option value="monthly">Tháng này</Option>
-                <Option value="yearly">Năm này</Option>
-              </Select>
+                options={[
+                  { label: 'Hôm nay', value: 'daily' },
+                  { label: 'Tuần này', value: 'weekly' },
+                  { label: 'Tháng này', value: 'monthly' },
+                  { label: 'Năm nay', value: 'yearly' },
+                ]}
+                
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                }}
+              />
             </Space>
           </Col>
         </Row>
@@ -421,17 +483,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card
-          // style={{
-          //   borderRadius: '16px',
-          //   border: 'none',
-          //   boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-          //   background: '#fff',
-          //   position: 'relative',
-          //   overflow: 'hidden',
-          // }}
-          // bodyStyle={{ padding: '24px' }}
-          >
+          <Card>
             <Statistic
               title={
                 <Text
@@ -457,16 +509,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card
-          // style={{
-          //   borderRadius: '16px',
-          //   border: 'none',
-          //   boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-          //   background: '#fff',
-          //   position: 'relative',
-          //   overflow: 'hidden',
-          // }}
-          >
+          <Card>
             <Statistic
               title={
                 <Text

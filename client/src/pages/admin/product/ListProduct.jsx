@@ -50,7 +50,6 @@ import { ExpandedRowRender } from '@/components/admin/product/ExpandRowRender';
 
 const { Text } = Typography;
 const { Option } = Select;
-const searchParams = new URLSearchParams(window.location.search);
 
 function ListProduct() {
   const [open, setOpen] = useState(false);
@@ -65,7 +64,7 @@ function ListProduct() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState('');
-  const { message } = useAppContext();
+  const { message, notification } = useAppContext();
   const navigate = useNavigate();
   const _page = searchParams.get('_page') || 1;
   const _limit = searchParams.get('_limit') || 10;
@@ -82,10 +81,13 @@ function ListProduct() {
       setLoading(false);
       setTotal(fetchedProducts.meta.total);
       setProducts(fetchedProducts.result);
-      message.success('Lấy danh sách sản phẩm thành công');
     } catch (error) {
       console.error('Failed to fetch products:', error.message);
-      error('Lấy danh sách sản phẩm thất bại');
+      notification.error({
+        message: 'Lỗi tải dữ liệu sản phẩm',
+        description: `Lỗi: ${error.message}`,
+        duration: 4.5,
+      })
       setLoading(false);
     }
   };
@@ -95,6 +97,11 @@ function ListProduct() {
       const response = await callFetchCategories();
       setCategories(response.data.data);
     } catch (error) {
+      notification.error({
+        message: 'Lỗi tải dữ liệu danh sách danh mục',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      })
       console.error('Error fetching categories:', error);
       throw error;
     }
@@ -105,6 +112,11 @@ function ListProduct() {
       const response = await callFetchBrands();
       setBrands(response.data.data);
     } catch (error) {
+      notification.error({
+        message: 'Lỗi tải dữ liệu danh sách thuật hành',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      })
       console.error('Error fetching brands:', error);
       throw error;
     }

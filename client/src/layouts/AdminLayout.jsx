@@ -174,7 +174,7 @@ function AdminLayout() {
         },
       },
       {
-        key: 'permission',
+        key: 'permissions',
         label: 'Phân quyền',
         icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
         children: [

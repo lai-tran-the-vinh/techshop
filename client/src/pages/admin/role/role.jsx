@@ -558,9 +558,9 @@ const RoleManagement = () => {
             {dataInit ? 'Cập nhật' : 'Tạo mới'}
           </Button>,
         ]}
-        width={900}
+        width={600}
         OnClose
-        style={{ top: 20 }}
+        style={{ top: 20, overflowY: 'auto', maxHeight: '90vh' }}
       >
         <Form
           form={form}
@@ -568,8 +568,8 @@ const RoleManagement = () => {
           onFinish={handleSubmit}
           autoComplete="off"
         >
-          <Row gutter={16}>
-            <Col span={12}>
+          <Row gutter={10}>
+            <Col span={24}>
               <Form.Item
                 label="Tên quyền"
                 name="name"
@@ -586,7 +586,7 @@ const RoleManagement = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={24}>
               <Form.Item
                 label="Mô tả"
                 name="description"
@@ -676,7 +676,6 @@ const RoleManagement = () => {
                   // });
                   // const permissionsArray = Array.from(permissionsSet);
                   // form.setFieldValue('permissions', permissionsArray);
-                  console.log(form.getFieldValue('permissions'));
                 }}
               >
                 <Flex vertical gap={18} className="mt-18! w-full!">
@@ -694,17 +693,19 @@ const RoleManagement = () => {
                             </Text>
                           ),
                           children: (
-                            <Row gutter={[12, 12]}>
+                            <Row gutter={[10, 10]}>
                               {groupedPermissions[moduleKey].map(
                                 (permission) => (
-                                  <Col span={8} key={permission._id}>
+                                  <Col span={12} key={permission._id}>
                                     <Checkbox
                                       value={permission._id}
                                       style={{
-                                        padding: '10px 12px',
+                                        padding: '30px 12px',
                                         border: '1px dashed #ccc',
                                         borderRadius: 6,
                                         width: '100%',
+                                        fontSize: '19px',
+                                        fontWeight: '600',
                                         display: 'flex',
                                         alignItems: 'center',
                                       }}

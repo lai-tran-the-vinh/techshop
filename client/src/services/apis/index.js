@@ -1,16 +1,24 @@
 import axios from 'axios';
 
-const token = localStorage.getItem('access_token');
-
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-
   },
 });
+
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 export const callFreshToken = () => {
   return axiosInstance.get(`/api/v1/auth/refresh`);
 };
@@ -38,7 +46,7 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(originalRequest);
           }
         }
-        
+
 
       } catch (refreshError) {
         if (refreshError.response &&

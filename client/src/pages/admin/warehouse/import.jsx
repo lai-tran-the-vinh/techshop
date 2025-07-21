@@ -72,7 +72,7 @@ const WarehouseInbound = () => {
     searchText: '',
     dateRange: null,
   });
-  const { message } = useAppContext();
+  const { message, notification } = useAppContext();
   const { RangePicker } = DatePicker;
 
   const fetchProducts = async () => {
@@ -83,7 +83,11 @@ const WarehouseInbound = () => {
       setFilteredProducts(productsData);
     } catch (error) {
       console.error('Error fetching products:', error);
-      message.error('Không thể tải danh sách sản phẩm');
+      notification.error({
+        message: 'Lỗi tải dữ liệu sản phẩm',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -93,7 +97,11 @@ const WarehouseInbound = () => {
       setBranches(response.data.data);
     } catch (error) {
       console.error('Error fetching branches:', error);
-      message.error('Không thể tải danh sách chi nhánh');
+      notification.error({
+        message: 'Lỗi tải dữ liệu chi nhánh',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -103,7 +111,11 @@ const WarehouseInbound = () => {
       setInboundHistory(response.data.data);
     } catch (error) {
       console.error('Error fetching inbound history:', error);
-      message.error('Không thể tải lịch sử nhập kho');
+      notification.error({
+        message: 'Lỗi tải dữ liệu lịch sử xuất kho',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
     }
   };
 
@@ -130,14 +142,13 @@ const WarehouseInbound = () => {
         fetchInboundHistory(),
       ]);
     } catch (error) {
-      message.error('Có lỗi xảy ra khi tải dữ liệu');
+      console.error('Error loading data:', error);
     } finally {
       setPageLoading(false);
     }
   };
 
   useEffect(() => {
-    message.success('Nhập kho');
     loadAllData();
   }, []);
 
@@ -232,7 +243,7 @@ const WarehouseInbound = () => {
 
   const handleRemoveItem = (id) => {
     setInboundItems(inboundItems.filter((item) => item.id !== id));
-    message.success('Đã xóa sản phẩm khỏi danh sách');
+    notification.success({ message: 'Xóa sản phẩm trong danh sách nhập kho' });
   };
 
   const handleUpdateQuantity = (id, quantity) => {
@@ -258,7 +269,9 @@ const WarehouseInbound = () => {
       .validateFields(['branchId'])
       .then((values) => {
         if (inboundItems.length === 0) {
-          message.error('Vui lòng thêm ít nhất một sản phẩm');
+          notification.warning({
+            message: 'Vui lòng chọn sản phẩm trên danh sách',
+          });
           return;
         }
 
@@ -276,7 +289,7 @@ const WarehouseInbound = () => {
         setIsModalVisible(true);
       })
       .catch(() => {
-        message.error('Vui lòng chọn chi nhánh');
+        notification.warning({ message: 'Vui lòng chọn chi nhánh' });
       });
   };
 
@@ -310,7 +323,12 @@ const WarehouseInbound = () => {
       setIsModalVisible(false);
       await fetchInboundHistory();
     } catch (error) {
-      message.error(error.message || 'Có lỗi xảy ra khi nhập kho');
+      console.error('Error importing inventory:', error);
+      notification.error({
+        message: 'Lỗi nhập kho',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
     } finally {
       setLoading(false);
     }
@@ -535,22 +553,8 @@ const WarehouseInbound = () => {
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={14}>
           <Card
-            style={{ boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)' }}
+            
             title="Tạo phiếu nhập kho"
-            extra={
-              <Space>
-                <Upload
-                  name="file"
-                  maxCount={1}
-                  accept=".xlsx"
-                  showUploadList={false}
-                  onChange={() => console.log('Import Excel')}
-                  disabled={loading}
-                >
-                  <Button icon={<UploadOutlined />}>Import Excel</Button>
-                </Upload>
-              </Space>
-            }
           >
             <InboundForm
               form={form}

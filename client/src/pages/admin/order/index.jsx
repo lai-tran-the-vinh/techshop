@@ -46,6 +46,7 @@ import {
   Steps,
 } from 'antd';
 import { useEffect, useState } from 'react';
+import { BsCartCheck } from 'react-icons/bs';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -60,7 +61,7 @@ const OrderManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { message } = useAppContext();
+  const { message, notification } = useAppContext();
   const [filters, setFilters] = useState({
     branch: '',
     searchText: '',
@@ -98,6 +99,7 @@ const OrderManagement = () => {
       ),
     },
   ];
+
   const fetchOrders = async () => {
     try {
       const res = await callFetchOrders();
@@ -106,6 +108,11 @@ const OrderManagement = () => {
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
+      notification.error({
+        message: 'Lỗi tải dữ liệu đơn hàng',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
       setLoading(false);
     }
   };
@@ -116,15 +123,28 @@ const OrderManagement = () => {
       setProducts(res.data.data.result);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: 'Lỗi tải dữ liệu sản phẩm',
+        description: `Lỗi: ${error}s`,
+        duration: 4.5,
+      });
       console.error('Failed to fetch products:', error);
     }
   };
+
   const fetchBranches = async () => {
     try {
       const res = await callFetchBranches();
       setBranches(res.data.data);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: 'Lỗi tải dữ liệu chi nhánh',
+        description: `Lỗi: ${error}`,
+        duration: 4.5,
+      });
       console.error('Failed to fetch branches:', error);
     }
   };
@@ -199,7 +219,12 @@ const OrderManagement = () => {
 
   const addProductToCart = () => {
     if (!selectedProduct || !selectedVariant || quantity <= 0) {
-      message.error('Vui lòng chọn đầy đủ thông tin sản phẩm');
+      notification.warning({
+        message: 'Thông tin chưa đầy đủ',
+        description:
+          'Vui lòng chọn sản phẩm, phân loại và nhập số lượng hợp lệ trước khi thêm vào giỏ hàng.',
+        duration: 4,
+      });
       return;
     }
 
@@ -220,7 +245,7 @@ const OrderManagement = () => {
         variant: selectedVariant._id,
         variantName: selectedVariant.name,
         quantity: quantity,
-        price: selectedVariant.salePrice || selectedVariant.price, // Lấy giá bán
+        price: selectedVariant.salePrice || selectedVariant.price,
       };
       newItems = [...createOrderData.items, newItem];
     }
@@ -234,7 +259,7 @@ const OrderManagement = () => {
     setSelectedVariant(null);
     setQuantity(1);
 
-    message.success('Đã thêm sản phẩm vào đơn hàng');
+    message.success('Sản phẩm đã được thêm vào đơn hàng thành công');
   };
 
   const removeProductFromCart = (index) => {
@@ -274,17 +299,33 @@ const OrderManagement = () => {
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
+      notification.error({
+        message: 'Lỗi làm mới dữ liệu',
+        description:
+          'Không thể tải lại danh sách đơn hàng. Vui lòng thử lại sau.',
+        duration: 4,
+      });
     }
   };
 
   const handleCreateOrderSubmit = async () => {
     if (!createOrderData.phone) {
-      message.error('Vui lòng nhập số điện thoại khách hàng');
+      notification.warning({
+        message: 'Thiếu thông tin bắt buộc',
+        description:
+          'Vui lòng nhập số điện thoại khách hàng để tiếp tục tạo đơn hàng.',
+        duration: 4,
+      });
       return;
     }
 
     if (createOrderData.items.length === 0) {
-      message.error('Vui lòng thêm ít nhất một sản phẩm');
+      notification.warning({
+        message: 'Giỏ hàng trống',
+        description:
+          'Vui lòng thêm ít nhất một sản phẩm vào đơn hàng trước khi tạo.',
+        duration: 4,
+      });
       return;
     }
 
@@ -293,7 +334,12 @@ const OrderManagement = () => {
         (item) => item.quantity <= 0 || item.price <= 0,
       )
     ) {
-      message.error('Vui lòng kiểm tra lại số lượng và giá sản phẩm');
+      notification.error({
+        message: 'Dữ liệu không hợp lệ',
+        description:
+          'Phát hiện sản phẩm có số lượng hoặc giá không hợp lệ. Vui lòng kiểm tra lại.',
+        duration: 4.5,
+      });
       return;
     }
 
@@ -310,6 +356,7 @@ const OrderManagement = () => {
       })),
       paymentMethod: createOrderData.paymentMethod,
     };
+
     try {
       await callCreateOrder(orderData);
       setIsCreateModalVisible(false);
@@ -320,21 +367,33 @@ const OrderManagement = () => {
         branch: user?.branch,
       });
 
-      message.success('Tạo đơn hàng thành công!');
+      notification.success({
+        message: 'Tạo đơn hàng thành công',
+        description: `Đơn hàng đã được tạo thành công với tổng giá trị ${formatCurrency(calculateTotal())}.`,
+        duration: 4.5,
+      });
 
       reloadTable();
       setLoading(false);
     } catch (err) {
-      if (err.response.status === 404) {
-        message.error(
-          'Số lượng tồn kho hiện tại của sản phẩm không đủ, vui lòng kiểm tra lại kho hàng!',
-        );
+      if (err.response?.status === 404) {
+        notification.error({
+          message: 'Không đủ hàng trong kho',
+          description:
+            'Một hoặc nhiều sản phẩm trong đơn hàng không đủ số lượng tồn kho. Vui lòng kiểm tra lại và điều chỉnh số lượng.',
+          duration: 5,
+        });
         setLoading(false);
         return;
       } else {
-        message.error(err.response.data.message);
+        notification.error({
+          message: 'Lỗi tạo đơn hàng',
+          description:
+            err.response?.data?.message ||
+            'Đã xảy ra lỗi không xác định khi tạo đơn hàng. Vui lòng thử lại.',
+          duration: 5,
+        });
       }
-      message.error(err.response.data.message);
       console.error(err);
       setLoading(false);
       return;
@@ -445,11 +504,23 @@ const OrderManagement = () => {
       setLoading(true);
       await callUpdateOrder(orderId, data);
       reloadTable();
-      message.success('Cập nhật đơn hàng thành công!');
+
+      notification.success({
+        message: 'Cập nhật đơn hàng thành công',
+        description: 'Thông tin đơn hàng đã được cập nhật và lưu vào hệ thống.',
+        duration: 4,
+      });
 
       setLoading(false);
     } catch (error) {
       console.error('Failed to update order:', error);
+      notification.error({
+        message: 'Lỗi cập nhật đơn hàng',
+        description:
+          'Không thể cập nhật thông tin đơn hàng. Vui lòng kiểm tra kết nối mạng và thử lại.',
+        duration: 4.5,
+      });
+      setLoading(false);
     }
   };
 
@@ -458,6 +529,7 @@ const OrderManagement = () => {
     fetchBranches();
     fetchProducts();
   }, []);
+
   const statusOptions = [
     { value: 'PENDING', label: 'Chờ xử lý', color: 'orange' },
     { value: 'PROCESSING', label: 'Đang xử lý', color: 'cyan' },
@@ -475,6 +547,7 @@ const OrderManagement = () => {
     { value: 'CANCELLED', label: 'Đã hủy', color: 'gray' },
     { value: 'REFUNDED', label: 'Đã hoàn tiền', color: 'blue' },
   ];
+
   const getStatusSteps = (status) => {
     const steps = [
       { title: 'Tạo đơn hàng' },
@@ -507,9 +580,20 @@ const OrderManagement = () => {
 
     return { steps, current };
   };
+
   return (
     <div style={{ padding: '24px' }}>
-      <Title level={2}>Quản lý đơn hàng</Title>
+      <Col>
+        <Title
+          level={3}
+          style={{ margin: 0, display: 'flex', alignItems: 'center' }}
+        >
+          <BsCartCheck /> Quản lý đơn hàng
+        </Title>
+        <p style={{ margin: '8px 0 0 0', color: '#666' }}>
+          Quản lý các đơn hàng và thêm đơn hàng mới
+        </p>
+      </Col>
 
       <Row gutter={16} style={{ marginBottom: '10px' }}>
         <Col span={6}>

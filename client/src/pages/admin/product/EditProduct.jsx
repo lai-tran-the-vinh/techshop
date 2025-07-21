@@ -14,12 +14,10 @@ import {
 import { InboxOutlined, DeleteOutlined } from '@ant-design/icons';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
 import Files from '@services/files';
 import Brands from '@services/brands';
 import Categories from '@services/categories';
 import { useAppContext } from '@contexts';
-
 import { CommonInformation, Variants } from '@pages/admin/product';
 import {
   callDeleteFile,
@@ -32,11 +30,15 @@ const { Dragger } = Upload;
 function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { message, setToastLoading, setLoadingSuccess, setLoadingError } =
-    useAppContext();
+  const {
+    message,
+    notification,
+    setToastLoading,
+    setLoadingSuccess,
+    setLoadingError,
+  } = useAppContext();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
   const [brands, setBrands] = useState([]);
@@ -107,11 +109,12 @@ function EditProduct() {
           attributes: fetchedProduct.attributes || {},
           variants: fetchedProduct.variants || [],
         });
-
-        message.success('Đã tải thông tin sản phẩm');
       } catch (err) {
         console.error(err);
-        message.error('Không thể tải thông tin sản phẩm');
+        notification.error({
+          message: 'Không thể tải sản phẩm',
+          description: `Lỗi: ${err.message}`,
+        });
         setLoadingError(true);
       } finally {
         setLoading(false);
@@ -136,12 +139,18 @@ function EditProduct() {
   const beforeUpload = (file) => {
     const isImage = file.type.startsWith('image/');
     if (!isImage) {
-      antMessage.error('Chỉ có thể upload file hình ảnh!');
+      notification.warrning({
+        message: 'Chỉ có thể upload file hình ảnh!',
+        duration: 4.5,
+      });
       return false;
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      antMessage.error('Kích thước file phải nhỏ hơn 5MB!');
+      notification.warrning({
+        message: 'Kích thước file phải nhỏ hơn 5MB!',
+        duration: 4.5,
+      });
       return false;
     }
     return false; // Prevent auto upload
@@ -372,11 +381,21 @@ function EditProduct() {
       navigate('/admin/product');
     } catch (errInfo) {
       console.error('Đã có lỗi xảy ra khi cập nhật sản phẩm:', errInfo);
-      message.error({ content: 'Cập nhật sản phẩm thất bại!', key: 'update' });
+      notification.error({
+        message: 'Đã có lỗi xảy ra khi cập nhật sản phẩm. Vui lí kiểm tra.',
+        description: errInfo.message,
+        duration: 4.5,
+        key: 'update',
+      });
       setToastLoading(false);
       setLoadingError(true);
       if (errInfo.errorFields) {
-        message.error('Vui lòng kiểm tra lại các trường bị lỗi.');
+        notification.error({
+          message: 'Lỗi cập nhật sản phẩm',
+          description: errInfo.message,
+          duration: 4.5,
+          key: 'update',
+        });
       }
     }
   };
