@@ -923,7 +923,7 @@ const AccountInfoPage = () => {
               items={menuItems}
             />
             <Button
-              type="primary"
+              type="default"
               onClick={logout}
               icon={<LogoutOutlined />}
               className="w-full! h-40! mt-10! font-medium!"
