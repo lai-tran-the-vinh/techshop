@@ -1,4 +1,4 @@
-import useMessage from '@/hooks/useMessage';
+import { useNavigate } from 'react-router-dom';
 import { callFetchAccount, callLogin, callLogout } from '@/services/apis';
 import { message, notification } from 'antd';
 import { useContext, createContext, useState, useEffect } from 'react';
@@ -57,6 +57,7 @@ function AppProvider({ children }) {
       localStorage.removeItem('access_token');
       setUser(null);
       message.success('Đăng xuất thành công!');
+      window.location.href = '/'
     } catch (error) {
       message.error('Đăng xuất thất bại');
       localStorage.removeItem('access_token');
