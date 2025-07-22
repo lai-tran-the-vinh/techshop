@@ -94,13 +94,13 @@ function AppProvider({ children }) {
     setLoading,
     setShowLogin,
     setShowSignup,
-    setShowForgotPassword,
     setLoadingError,
     isAuthenticated,
     setToastLoading,
     setLoadingSuccess,
     setCurrentCategory,
     setSideBarSelectedTab,
+    setShowForgotPassword,
   };
 
   return (
