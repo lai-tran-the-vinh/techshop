@@ -172,27 +172,13 @@ function Login() {
             <Button
               block
               htmlType="submit"
-              style={{
-                height: 48,
-                borderRadius: 8,
-                fontSize: 16,
-                fontWeight: 600,
-                backgroundColor: '#e53935',
-                color: '#fff',
-                border: 'none',
-              }}
+              className="h-48! rounded-lg! test-base! font-semibold! bg-[#e53935]! text-white! border-none!"
             >
               Đăng nhập
             </Button>
           </Form.Item>
 
-          <Divider
-            plain
-            style={{
-              margin: '20px 0',
-              borderColor: '#e0e0e0',
-            }}
-          >
+          <Divider plain className="my-20! mx-0! border border-[#e0e0e0]!">
             <span
               style={{
                 color: '#8c8c8c',
