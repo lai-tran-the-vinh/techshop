@@ -337,7 +337,9 @@ const WarehouseManagement = () => {
       </div>
     );
   }
-
+  const uniqueBranchNames = Array.from(
+    new Set(warehouses.map((warehouse) => warehouse.branch.name)),
+  );
   return (
     <div
       style={{
@@ -352,7 +354,7 @@ const WarehouseManagement = () => {
             <SettingOutlined className="mr-2" />
             Quản lý kho hàng
           </Title>
-          <Text type="secondary">{/* Quản lý  */}</Text>
+          <Text type="secondary">Quản lý kho: {uniqueBranchNames.join(', ')} </Text>
         </div>
       </div>
       <Row gutter={[16, 16]} style={{ marginBottom: '10px' }}>

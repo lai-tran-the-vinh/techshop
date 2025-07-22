@@ -53,11 +53,6 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, message, permissions } = useAppContext();
-  const canReadProduct = hasPermission(
-    permissions,
-    Subjects.Product,
-    Actions.Read,
-  );
 
   const navItems = useMemo(
     () => [
@@ -71,7 +66,7 @@ function AdminLayout() {
         },
       },
       { type: 'divider' },
-      canReadProduct && {
+      hasPermission(permissions, Subjects.Product, Actions.Read) && {
         key: 'product',
         label: 'Sản phẩm',
         icon: <ProductOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -84,7 +79,7 @@ function AdminLayout() {
               setDrawerVisible(false);
             },
           },
-          {
+          hasPermission(permissions, Subjects.Product, Actions.Create) && {
             key: 'addproduct',
             label: 'Thêm sản phẩm',
             onClick: () => {
@@ -94,7 +89,7 @@ function AdminLayout() {
           },
         ],
       },
-      {
+      hasPermission(permissions, Subjects.Inventory, Actions.Read) && {
         key: 'inventory',
         label: 'Kho hàng',
         icon: <ContainerOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -107,7 +102,7 @@ function AdminLayout() {
               setDrawerVisible(false);
             },
           },
-          {
+          hasPermission(permissions, Subjects.Inventory, Actions.Create) && {
             key: 'importinventory',
             label: 'Nhập hàng',
             onClick: () => {
@@ -115,7 +110,7 @@ function AdminLayout() {
               setDrawerVisible(false);
             },
           },
-          {
+          hasPermission(permissions, Subjects.Inventory, Actions.Create) && {
             key: 'exportinventory',
             label: 'Xuất hàng',
             onClick: () => {
@@ -123,7 +118,7 @@ function AdminLayout() {
               setDrawerVisible(false);
             },
           },
-          {
+          hasPermission(permissions, Subjects.Transfer, Actions.Create) && {
             key: 'transferinventory',
             label: 'Chuyển kho',
             onClick: () => {
@@ -133,7 +128,7 @@ function AdminLayout() {
           },
         ],
       },
-      {
+      hasPermission(permissions, Subjects.Order, Actions.Read) && {
         key: 'order',
         label: 'Đơn hàng',
         icon: <ShoppingOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -143,7 +138,7 @@ function AdminLayout() {
         },
       },
       { type: 'divider' },
-      {
+      hasPermission(permissions, Subjects.Branch, Actions.Read) && {
         key: 'branch',
         label: 'Chi nhánh',
         icon: <BranchesOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -152,7 +147,7 @@ function AdminLayout() {
           setDrawerVisible(false);
         },
       },
-      {
+      hasPermission(permissions, Subjects.Category, Actions.Read) && {
         key: 'category',
         label: 'Danh mục',
         icon: <ShoppingOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -161,7 +156,7 @@ function AdminLayout() {
           setDrawerVisible(false);
         },
       },
-      {
+      hasPermission(permissions, Subjects.Brand, Actions.Read) && {
         key: 'brand',
         label: 'Thương hiệu',
         icon: <TagsOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -171,7 +166,7 @@ function AdminLayout() {
         },
       },
       { type: 'divider' },
-      {
+      hasPermission(permissions, Subjects.User, Actions.Read) && {
         key: 'user',
         label: 'Người dùng',
         icon: <UserOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -180,39 +175,40 @@ function AdminLayout() {
           setDrawerVisible(false);
         },
       },
-      {
-        key: 'permissions',
-        label: 'Phân quyền',
-        icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-        children: [
-          {
-            key: 'role',
-            label: 'Vai trò',
-            onClick: () => {
-              navigate('/admin/authorization/role/management');
-              setDrawerVisible(false);
+      hasPermission(permissions, Subjects.Role, Actions.Read) ||
+        (user.role === 'admin' && {
+          key: 'permissions',
+          label: 'Phân quyền',
+          icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+          children: [
+            {
+              key: 'role',
+              label: 'Vai trò',
+              onClick: () => {
+                navigate('/admin/authorization/role/management');
+                setDrawerVisible(false);
+              },
             },
-          },
-          {
-            key: 'permission',
-            label: 'Phân quyền hạn',
-            onClick: () => {
-              navigate('/admin/authorization/permission/management');
-              setDrawerVisible(false);
+            {
+              key: 'permission',
+              label: 'Phân quyền hạn',
+              onClick: () => {
+                navigate('/admin/authorization/permission/management');
+                setDrawerVisible(false);
+              },
             },
-          },
-          {
-            key: 'user-role',
-            label: 'Vai trò người dùng',
-            onClick: () => {
-              navigate('/admin/authorization/roleuser/management');
-              setDrawerVisible(false);
+            {
+              key: 'user-role',
+              label: 'Vai trò người dùng',
+              onClick: () => {
+                navigate('/admin/authorization/roleuser/management');
+                setDrawerVisible(false);
+              },
             },
-          },
-        ],
-      },
+          ],
+        }),
       { type: 'divider' },
-      {
+      hasPermission(permissions, Subjects.Benefit, Actions.Read) && {
         key: 'policy',
         label: 'Chính sách ',
         icon: <SafetyOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
@@ -235,7 +231,7 @@ function AdminLayout() {
           },
         ],
       },
-      {
+      hasPermission(permissions, Subjects.Banner, Actions.Read) && {
         key: 'banner',
         label: 'Banner',
         icon: <SlidersOutlined style={{ color: '#dc2626', fontSize: 15 }} />,

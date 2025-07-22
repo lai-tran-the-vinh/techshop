@@ -191,7 +191,7 @@ const PermissionsManagement = () => {
                 ? 'blue'
                 : text === 'delete'
                   ? 'red'
-                  : text === 'view'
+                  : text === 'read'
                     ? 'purple'
                     : 'default'
           }
@@ -336,13 +336,16 @@ const PermissionsManagement = () => {
     { label: 'Payment', value: 'payment' },
     { label: 'Promotion', value: 'promotion' },
     { label: 'Branch', value: 'branch' },
+    { label: 'Brand', value: 'brand' },
+    { label: 'Transfer', value: 'transfer' },
+    { label: 'Benefit', value: 'benefit' },
   ];
 
   const actionOptions = [
-    { label: 'View', value: 'view' },
-    { label: 'Create', value: 'create' },
-    { label: 'Update', value: 'update' },
-    { label: 'Delete', value: 'delete' },
+    { label: 'Xem', value: 'read' },
+    { label: 'Tạo', value: 'create' },
+    { label: 'Cập Nhật', value: 'update' },
+    { label: 'Xóa', value: 'delete' },
   ];
 
   const statusOptions = [
@@ -644,7 +647,7 @@ const PermissionsManagement = () => {
                       ? 'blue'
                       : selectedPermission.action === 'delete'
                         ? 'red'
-                        : selectedPermission.action === 'view'
+                        : selectedPermission.action === 'read'
                           ? 'purple'
                           : 'default'
                 }
@@ -734,16 +737,9 @@ const PermissionsManagement = () => {
                     required: true,
                     message: 'Vui lòng nhập tên quyền!',
                   },
-                  {
-                    pattern: /^[a-z_]+$/,
-                    message: 'Chỉ được sử dụng chữ thường và dấu gạch dưới!',
-                  },
                 ]}
               >
-                <Input
-                  placeholder="Ví dụ: view_user, edit_product"
-                  style={{ fontFamily: 'monospace' }}
-                />
+                <Input placeholder="Nhập tên quyền" />
               </Form.Item>
             </Col>
           </Row>
