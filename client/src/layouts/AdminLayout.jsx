@@ -176,62 +176,65 @@ function AdminLayout() {
           setDrawerVisible(false);
         },
       },
-      hasPermission(permissions, Subjects.Role, Actions.Read) ||
-        (user.role === 'admin' && {
-          key: 'permissions',
-          label: 'Phân quyền',
-          icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-          children: [
-            {
-              key: 'role',
-              label: 'Vai trò',
-              onClick: () => {
-                navigate('/admin/authorization/role/management');
-                setDrawerVisible(false);
-              },
-            },
-            {
-              key: 'permission',
-              label: 'Phân quyền hạn',
-              onClick: () => {
-                navigate('/admin/authorization/permission/management');
-                setDrawerVisible(false);
-              },
-            },
-            {
-              key: 'user-role',
-              label: 'Vai trò người dùng',
-              onClick: () => {
-                navigate('/admin/authorization/roleuser/management');
-                setDrawerVisible(false);
-              },
-            },
-          ],
-        }),
-      { type: 'divider' },
-      hasPermission(permissions, Subjects.Benefit, Actions.Read) && {
-        key: 'policy',
-        label: 'Chính sách ',
-        icon: <SafetyOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+      {
+        key: 'permissions',
+        label: 'Phân quyền',
+        icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
         children: [
           {
-            key: 'warranty',
-            label: 'Chính sách bảo hành',
+            key: 'role',
+            label: 'Vai trò',
             onClick: () => {
-              navigate('/admin/policy/warranty/management');
+              navigate('/admin/authorization/role/management');
               setDrawerVisible(false);
             },
           },
           {
-            key: 'promotion',
-            label: 'Khuyến mãi',
+            key: 'permission',
+            label: 'Phân quyền hạn',
             onClick: () => {
-              navigate('/admin/policy/promotion/management');
+              navigate('/admin/authorization/permission/management');
+              setDrawerVisible(false);
+            },
+          },
+          {
+            key: 'user-role',
+            label: 'Vai trò người dùng',
+            onClick: () => {
+              navigate('/admin/authorization/roleuser/management');
               setDrawerVisible(false);
             },
           },
         ],
       },
+
+      hasPermission(permissions, Subjects.Benefit, Actions.Read) &&
+        ({
+          type: 'divider',
+        },
+        {
+          key: 'policy',
+          label: 'Chính sách ',
+          icon: <SafetyOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+          children: [
+            {
+              key: 'warranty',
+              label: 'Chính sách bảo hành',
+              onClick: () => {
+                navigate('/admin/policy/warranty/management');
+                setDrawerVisible(false);
+              },
+            },
+            {
+              key: 'promotion',
+              label: 'Khuyến mãi',
+              onClick: () => {
+                navigate('/admin/policy/promotion/management');
+                setDrawerVisible(false);
+              },
+            },
+          ],
+        }),
       hasPermission(permissions, Subjects.Banner, Actions.Read) && {
         key: 'banner',
         label: 'Banner',
@@ -278,68 +281,67 @@ function AdminLayout() {
   };
 
   const SidebarContent = () => (
-    <>
+    <div className="h-full flex flex-col">
       <div
-        className={`${collapsed && !isMobile ? '0' : '24px'} text-center flex justify-center items-center ${collapsed && !isMobile ? 'none' : '#FEFEFE'} ${collapsed && !isMobile ? 'my-16 mx-8' : 'my-16'}`}
+        className={`
+        text-center flex justify-center items-center
+        ${collapsed && !isMobile ? 'my-4 mx-2' : 'my-[16px] mx-6'}
+      `}
       >
         {collapsed && !isMobile ? (
           <Tooltip title="Admin User" placement="right">
             {user?.avatar ? (
-              <Avatar src={user?.avatar} size={48}></Avatar>
+              <Avatar src={user?.avatar} size={48} />
             ) : (
               <AvatarDefault width={48} height={48} />
             )}
           </Tooltip>
         ) : (
-          <Space direction="vertical" size={8} style={{ width: '100%' }}>
-            <Flex justify="center">
+          <div className="w-full space-y-2">
+            <div className="flex justify-center">
               {user?.avatar ? (
-                <Avatar src={user?.avatar} size={48}></Avatar>
+                <Avatar src={user?.avatar} size={48} />
               ) : (
                 <AvatarDefault width={48} height={48} />
               )}
-            </Flex>
-            <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 16,
-                  display: 'block',
-                  color: '#0F172A',
-                }}
-              >
-                {user?.name}
-              </Text>
-              <Text
-                type="secondary"
-                style={{
-                  fontSize: 12,
-                  color: '#475569',
-                }}
-              >
-                {user?.email}
-              </Text>
             </div>
-          </Space>
+            <div className="text-center">
+              <div className="text-slate-900 font-semibold text-base block">
+                {user?.name}
+              </div>
+              <div className="text-slate-500 text-xs">{user?.email}</div>
+            </div>
+          </div>
         )}
       </div>
-      <div style={{ padding: collapsed && !isMobile ? '0 8px' : '0 16px' }}>
+      <div
+        className={`
+        flex-1 overflow-y-auto
+        ${collapsed && !isMobile ? 'px-2' : 'px-4'}
+      `}
+      >
         <Menu
           mode="inline"
           items={navItems}
-          style={{
-            border: 'none',
-            background: 'transparent',
-            fontSize: 14,
-          }}
+          className="border-none bg-transparent text-sm"
           theme="light"
         />
       </div>
-    </>
+      <div className="p-4 mt-auto">
+        <Button
+          type="default"
+          className="w-full!  border-primary! text-primary! hover:bg-primary! hover:text-white! hover:shadow-xl! rounded-lg!"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+        >
+          {collapsed && !isMobile ? null : 'Đăng xuất'}
+        </Button>
+      </div>
+    </div>
   );
 
   return (
-    <Layout className="w-full">
+    <Layout className="w-full ">
       <Header
         className="font-inter!"
         style={{
@@ -412,7 +414,7 @@ function AdminLayout() {
               background: 'rgb(255, 255, 255)',
               borderRight: `1px solid #E2E8F0`,
               transition: 'all 0.3s ease',
-              // boxShadow: '2px 0 8px rgba(0, 0, 0, 0.06)',
+
               zIndex: 1000,
             }}
           >
@@ -420,7 +422,6 @@ function AdminLayout() {
               style={{
                 height: '100%',
                 overflow: 'auto',
-                paddingBottom: '20px',
               }}
             >
               <SidebarContent />
@@ -464,8 +465,8 @@ function AdminLayout() {
           <Content
             style={{
               // margin: isMobile ? '16px' : '24px',
-              padding: isMobile ? '16px' : '32px',
-              background: 'rgb(255, 255, 255)',
+              padding: isMobile ? '5x' : '10px',
+              background: '#f5f5f5',
               // borderRadius: 10,
               // boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
               minHeight: 'calc(100vh - 64px - 48px)', // Tính toán chính xác

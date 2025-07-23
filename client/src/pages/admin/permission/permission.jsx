@@ -332,7 +332,6 @@ const PermissionsManagement = () => {
     { label: 'Permission', value: 'permission' },
     { label: 'Inventory', value: 'inventory' },
     { label: 'Banner', value: 'banner' },
-    { label: 'Cart', value: 'cart' },
     { label: 'Payment', value: 'payment' },
     { label: 'Promotion', value: 'promotion' },
     { label: 'Branch', value: 'branch' },
@@ -422,6 +421,7 @@ const PermissionsManagement = () => {
           </Col>
           <Col xs={24} sm={12} md={4}>
             <Select
+              showSearch
               placeholder="Mô đun"
               value={filters.module}
               onChange={(value) => setFilters({ ...filters, module: value })}
@@ -578,9 +578,6 @@ const PermissionsManagement = () => {
           pagination={{
             defaultPageSize: 10,
             showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} của ${total} quyền`,
           }}
           locale={{
             emptyText: (
@@ -775,7 +772,7 @@ const PermissionsManagement = () => {
                   },
                 ]}
               >
-                <Select placeholder="Chọn mô-đun">
+                <Select showSearch placeholder="Chọn mô-đun">
                   {moduleOptions.map((option) => (
                     <Select.Option key={option.value} value={option.value}>
                       {option.label}

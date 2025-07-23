@@ -356,7 +356,7 @@ const WarehouseManagement = () => {
       <div className="mb-5">
         <div>
           <Title level={2} className="mb-20! flex! items-center! gap-8!">
-            {/* <FaWarehouse className="mr-2" /> */}
+            <FaWarehouse className="mr-2" />
             Quản lý kho hàng
           </Title>
           <Text type="secondary">Quản lý kho: {uniqueBranchNames.join(', ')} </Text>
