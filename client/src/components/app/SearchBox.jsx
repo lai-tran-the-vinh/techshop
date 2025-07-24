@@ -30,6 +30,7 @@ function SearchBox() {
     const saved = localStorage.getItem('recentSearches');
     return saved ? JSON.parse(saved) : [];
   });
+
   async function fetchSearchResult() {
     try {
       setLoading(true);
