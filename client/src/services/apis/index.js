@@ -47,13 +47,9 @@ axiosInstance.interceptors.response.use(
           }
         }
       } catch (refreshError) {
-        console.log(refreshError);
 
         // Nếu token refresh thất bại, yêu cầu người dùng đăng nhập lại
         if (refreshError.response && refreshError.response.status === 401) {
-          // Clear localStorage trước khi redirect để tránh loop
-          localStorage.clear();
-          callLogout();
           window.location.href = "/";
         }
 
