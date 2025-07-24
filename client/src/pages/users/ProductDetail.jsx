@@ -49,6 +49,8 @@ import SliderProduct from '@/components/app/ImagesSlider';
 import Recomment from '@/services/recommend';
 import Inventory from '@/services/inventories';
 import { PreviewListProducts } from '@components/products';
+import PromotionService from '@/services/promotions';
+import WarrantyService from '@/services/warranties';
 
 const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;
@@ -56,6 +58,8 @@ const { TabPane } = Tabs;
 function ProductDetail() {
   const { id } = useParams();
   const { user } = useAppContext();
+  const [promotions, setPromotions] = useState(null);
+  const [warranties, setWarranties] = useState(null);
   const [comment, setComment] = useState('');
   const [product, setProduct] = useState({});
   const [branchs, setBranchs] = useState([]);
@@ -77,7 +81,6 @@ function ProductDetail() {
     try {
       const res = await Products.get(id);
       setProduct(res);
-      console.log(res);
       setSelectedColor(res.variants[0].color?.name);
       setSelectedMemory(res.variants[0].memory);
     } catch (error) {
@@ -93,11 +96,24 @@ function ProductDetail() {
 
   useEffect(() => {
     document.title = 'TechShop | Chi tiết sản phẩm';
-
     fetchProductDetail();
+    fetchPromotions();
+    fetchWarranties();
     fetchBranchs();
     fetchStats();
   }, []);
+
+  const fetchWarranties = async () => {
+    try {
+      const response = await WarrantyService.getAll();
+      if (response.status === 200) {
+        const warranties = response.data.data;
+        setWarranties(warranties);
+      }
+    } catch (error) {
+      console.error('Lỗi:', error.message);
+    }
+  };
 
   const fetchStats = async () => {
     try {
@@ -118,6 +134,19 @@ function ProductDetail() {
       setLoading(false);
     }
   };
+
+  const fetchPromotions = async () => {
+    try {
+      const response = await PromotionService.getAll();
+      if (response.status === 200) {
+        const promotions = response.data.data;
+        setPromotions(promotions);
+      }
+    } catch (error) {
+      console.error('Lỗi:', error.message);
+    }
+  };
+
   const fetchBranchs = async () => {
     try {
       const res = await callFetchBranches();
@@ -521,27 +550,17 @@ function ProductDetail() {
                     </Typography.Text>
                   </div>
                   <div className="p-10">
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsFillGiftFill className="text-primary!" />
-                      <Typography.Text>
-                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
-                        triệu{' '}
-                      </Typography.Text>
-                    </div>
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsFillGiftFill className="text-primary!" />
-                      <Typography.Text>
-                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
-                        triệu{' '}
-                      </Typography.Text>
-                    </div>
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsFillGiftFill className="text-primary!" />
-                      <Typography.Text>
-                        Giảm 5% mua camera cho đơn hàng Điện thoại/ Tablet từ 1
-                        triệu{' '}
-                      </Typography.Text>
-                    </div>
+                    {promotions.map((promotion, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!"
+                        >
+                          <BsFillGiftFill className="text-primary!" />
+                          <Typography.Text>{promotion?.title}</Typography.Text>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -552,22 +571,14 @@ function ProductDetail() {
                     </Typography.Text>
                   </div>
                   <div className="p-10">
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsCheckCircleFill className="text-primary!" />
-                      <Typography.Text>
-                        Bảo hành chính hãng 24 tháng
-                      </Typography.Text>
-                    </div>
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsCheckCircleFill className="text-primary!" />
-                      <Typography.Text>
-                        Miễn phí giao hàng toàn quốc
-                      </Typography.Text>
-                    </div>
-                    <div className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
-                      <BsCheckCircleFill className="text-primary!" />
-                      <Typography.Text>Đổi trả trong 7 ngày</Typography.Text>
-                    </div>
+                    {warranties.map((warranty, index) => {
+                      return (
+                        <div key={index} className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!">
+                          <BsCheckCircleFill className="text-primary!" />
+                          <Typography.Text>{warranty?.name}</Typography.Text>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
