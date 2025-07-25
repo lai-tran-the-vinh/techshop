@@ -79,17 +79,15 @@ const AccountInfoPage = () => {
       const selectedOrderDiscount = orders.find(
         (order) => order._id === selectedOrder.id,
       )?.appliedPromotions[0];
+      if (!selectedOrderDiscount) {
+        setDiscount('0%');
+        return;
+      }
       if (selectedOrderDiscount?.valueType === 'percent') {
         setDiscount(`${selectedOrderDiscount?.value}%`);
       } else {
         setDiscount(`${selectedOrderDiscount?.value}VNĐ`);
       }
-    }
-  }, [selectedOrder]);
-
-  useEffect(() => {
-    if (selectedOrder) {
-      console.log('Selected order items:', selectedOrder.items);
     }
   }, [selectedOrder]);
 
@@ -364,21 +362,24 @@ const AccountInfoPage = () => {
     {
       title: 'Thành tiền',
       key: 'total',
-      render: (_, record) => {
+      render: (total, record) => {
         let discountPercent = null;
         let discountMoney = null;
+
         if (discount?.includes('%')) {
           discountPercent = discount?.slice(0, discount?.length - 1);
         }
+
         if (discount?.includes('VNĐ')) {
           discountMoney = discount?.slice(0, discount?.length - 3);
-          console.log(discountMoney);
         }
+
         return (
-          <Typography.Text
-            strong
-            className="text-primary!"
-          >{`${(record.price * record.quantity).toLocaleString()}đ`}</Typography.Text>
+          <Typography.Text strong className="text-primary!">
+            {discountPercent
+              ? `${(record.price * record.quantity - record.price * record.quantity * (parseInt(discountPercent) / 100)).toLocaleString()}đ`
+              : `${(record.price * record.quantity - parseFloat(discountMoney)).toLocaleString()}đ`}
+          </Typography.Text>
         );
       },
       align: 'right',
