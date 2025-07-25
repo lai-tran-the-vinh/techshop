@@ -208,7 +208,6 @@ function ProductDetail() {
           content: 'Thêm sản phẩm vào giỏ hàng thành công',
           key: 'loading',
         });
-        navigate('/cart');
       }
     } catch (error) {
       console.error('Error adding items to cart:', error);
