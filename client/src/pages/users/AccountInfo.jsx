@@ -1086,7 +1086,7 @@ const AccountInfoPage = () => {
               {selectedOrder && orderData && (
                 <div className="order-detail-content">
                   {/* Trạng thái đơn hàng */}
-                  <Card className="mb-4" size="small">
+                  <Card className=" mb-10!" size="small">
                     <div className="flex items-center justify-between mb-4">
                       <Typography.Title level={5} className="m-0">
                         Trạng thái đơn hàng
@@ -1105,8 +1105,7 @@ const AccountInfoPage = () => {
                     />
                   </Card>
 
-                  {/* Thông tin đơn hàng */}
-                  <Row gutter={16} className="mb-4">
+                  <Row gutter={10} className="mb-4">
                     <Col span={12}>
                       <Card title="Thông tin đơn hàng" size="small">
                         <div className="space-y-3">
@@ -1178,7 +1177,7 @@ const AccountInfoPage = () => {
                   <Card
                     title="Danh sách sản phẩm"
                     size="small"
-                    className="mb-4"
+                    className="mb-6!"
                   >
                     <Table
                       bordered
