@@ -383,24 +383,20 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                               className="text-yellow-400! text-sm!"
                             />
                           </div>
+                          <BsDot />
+                          <div className="flex! items-center! gap-8! mt-4 text-sm! text-gray-500! mb-4!">
+                            <button
+                              onClick={() => toggleReplyInput(review._id)}
+                              className="flex! hover:underline! items-center! gap-2! transition-colors! px-8! cursor-pointer! text-black! py-4! rounded-full!"
+                            >
+                              Trả lời
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <Typography.Text className="text-sm! text-black!">
                         {review.content}
                       </Typography.Text>
-                      <div className="flex! items-center! gap-8! mt-4 text-sm! text-gray-500! mb-4!">
-                        <button className="flex! items-center! gap-2! transition-colors! cursor-pointer! text-black! px-8! py-4! rounded-full! border border-gray-300!">
-                          <AiOutlineLike />
-                          Thích
-                        </button>
-                        <button
-                          onClick={() => toggleReplyInput(review._id)}
-                          className="flex! items-center! gap-2! transition-colors! px-8! cursor-pointer! text-black! py-4! rounded-full! border border-gray-300"
-                        >
-                          <AiOutlineRollback />
-                          Trả lời
-                        </button>
-                      </div>
                     </div>
                     {review.replies && review.replies.length > 0 && (
                       <div className="-ml-30 mt-20 bg-gray-50 p-20 rounded-md w-full mb-4! flex flex-col gap-20">
