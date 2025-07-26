@@ -10,6 +10,7 @@ class Products {
   static search = search;
   static get = getProductDetail;
 
+
   order(order) {
     return axiosInstance.post('api/v1/orders', { ...order });
   }
@@ -26,6 +27,14 @@ class Products {
     return axiosInstance.post('/api/v1/payment/create-payment', {
       ...paymentInformation,
     });
+  }
+
+  static cancelOrder(orderId) {
+    return axiosInstance.patch(`/api/v1/orders/cancel/${orderId}`);
+  }
+
+  static refundOrder(orderId) {
+    return axiosInstance.patch(`/api/v1/orders/refund/${orderId}`);
   }
 
 

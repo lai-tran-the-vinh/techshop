@@ -15,6 +15,9 @@ import {
   Tag,
   Table,
   Typography,
+  Row,
+  Col,
+  Divider,
 } from 'antd';
 import Products from '@/services/products';
 import { useAppContext } from '@/contexts';
@@ -29,10 +32,15 @@ import {
   DeleteOutlined,
   EyeOutlined,
   LogoutOutlined,
+  ShopOutlined,
+  PhoneOutlined,
+  EnvironmentOutlined,
+  CalendarOutlined,
 } from '@ant-design/icons';
 import Address from '@services/address';
 import UserService from '@services/users';
 import { callLogout } from '@/services/apis';
+import Order from './Order';
 
 const AccountInfoPage = () => {
   const { user, message, logout } = useAppContext();
@@ -447,6 +455,52 @@ const AccountInfoPage = () => {
     return ordersToShow.filter(
       (order) => order.status === statusMap[activeOrderTab],
     );
+  };
+
+  const handleCancel = async () => {
+    try {
+      message.loading('Đang hủy đơn hàng...');
+
+      const response = await Products.cancelOrder(selectedOrder.id);
+
+      message.destroy();
+
+      if (response.status === 200) {
+        await getAllOrders();
+        setSelectedOrder(null);
+        setIsOrderDetailModalOpen(false);
+        message.success('Đã hủy đơn hàng thành công');
+      } else {
+        throw new Error('Không thể hủy đơn hàng');
+      }
+    } catch (error) {
+      message.destroy();
+      console.error('Lỗi khi hủy đơn hàng:', error);
+      message.error('Không thể hủy đơn hàng. Vui lòng thử lại sau.');
+    }
+  };
+
+  const handleReturn = async () => {
+    try {
+      message.loading('Đang xử lý yêu cầu trả hàng...');
+
+      const response = await Products.refundOrder(selectedOrder.id);
+
+      message.destroy();
+
+      if (response.status === 200) {
+        await getAllOrders();
+        setSelectedOrder(null);
+        setIsOrderDetailModalOpen(false);
+        message.success('Yêu cầu trả hàng đã được gửi thành công');
+      } else {
+        throw new Error('Không thể tạo yêu cầu trả hàng');
+      }
+    } catch (error) {
+      message.destroy();
+      console.error('Lỗi khi tạo yêu cầu trả hàng:', error);
+      message.error('Không thể tạo yêu cầu trả hàng. Vui lòng thử lại sau.');
+    }
   };
 
   const orderColumns = [
@@ -964,6 +1018,11 @@ const AccountInfoPage = () => {
   }
 
   const orderData = orders?.find((o) => o._id === selectedOrder?.id);
+  const paymentStatus = {
+    PENDING: 'Chờ xử lý',
+    COMPLETED: 'Đã hoàn thành',
+    CANCELLED: 'Đã hủy',
+  };
 
   return (
     <div className="w-full mt-24 min-h-screen">
@@ -1006,86 +1065,159 @@ const AccountInfoPage = () => {
               Đăng xuất
             </Button>
 
+            {/* Modal Chi tiết đơn hàng đã được cải thiện */}
             <Modal
-              className="w-[70%]!"
-              title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
+              className="order-detail-modal"
+              title={
+                <div className="flex items-center gap-2">
+                  <ShoppingOutlined className="text-primary" />
+                  <span>Chi tiết đơn hàng #{selectedOrder?.id}</span>
+                </div>
+              }
               open={isOrderDetailModalOpen}
               onCancel={() => {
                 setIsOrderDetailModalOpen(false);
                 setSelectedOrder(null);
               }}
               footer={null}
-              width={800}
+              width={900}
+              style={{ top: 20 }}
             >
-              {selectedOrder && (
-                <Flex vertical gap={20}>
-                  <Steps
-                    current={getStatusSteps(selectedOrder.status).current}
-                    items={getStatusSteps(selectedOrder.status).steps}
-                  />
-                  <Table
-                    bordered
-                    showHeader={false}
-                    pagination={false}
-                    dataSource={[
-                      ['Mã đơn hàng', selectedOrder.id],
-                      [
-                        'Khách hàng',
-                        `${orderData?.createdBy?.name} (${orderData?.createdBy?.email})`,
-                      ],
-                      ['Số điện thoại', orderData?.phone],
-                      ['Chi nhánh', orderData?.items?.[0]?.branch?.name],
-                      ['Phương thức thanh toán', orderData?.paymentMethod],
-                      ['Địa chỉ giao hàng', orderData?.shippingAddress],
-                      [
-                        'Ngày tạo',
-                        new Date(orderData?.createdAt).toLocaleString(),
-                      ],
-                      [
-                        'Cập nhật lần cuối',
-                        new Date(orderData?.updatedAt).toLocaleString(),
-                      ],
-                    ]}
-                    columns={[
-                      {
-                        dataIndex: 0,
-                        key: 'label',
-                        width: 200,
-                        render: (text) => <strong>{text}</strong>,
-                      },
-                      {
-                        dataIndex: 1,
-                        key: 'value',
-                      },
-                    ]}
-                  />
+              {selectedOrder && orderData && (
+                <div className="order-detail-content">
+                  {/* Trạng thái đơn hàng */}
+                  <Card className="mb-4" size="small">
+                    <div className="flex items-center justify-between mb-4">
+                      <Typography.Title level={5} className="m-0">
+                        Trạng thái đơn hàng
+                      </Typography.Title>
+                      <Tag
+                        color={getStatusColor(selectedOrder.status)}
+                        className="text-sm px-3 py-1"
+                      >
+                        {getStatusText(selectedOrder.status)}
+                      </Tag>
+                    </div>
+                    <Steps
+                      current={getStatusSteps(selectedOrder.status).current}
+                      items={getStatusSteps(selectedOrder.status).steps}
+                      size="small"
+                    />
+                  </Card>
 
-                  <div>
-                    <Typography.Title level={5} className="mb-10!">
-                      Danh sách sản phẩm
-                    </Typography.Title>
+                  {/* Thông tin đơn hàng */}
+                  <Row gutter={16} className="mb-4">
+                    <Col span={12}>
+                      <Card title="Thông tin đơn hàng" size="small">
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Mã đơn hàng:</span>
+                            <span className="font-medium">
+                              #{selectedOrder.id}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Ngày đặt:</span>
+                            <span className="font-medium">
+                              {dayjs(orderData.createdAt).format(
+                                'HH:mm:ss DD/MM/YYYY',
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">
+                              Phương thức thanh toán:
+                            </span>
+                            <span className="font-medium capitalize">
+                              {orderData.paymentMethod}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">
+                              Trạng thái thanh toán:
+                            </span>
+                            <Tag
+                              color={
+                                orderData.paymentStatus === 'COMPLETED'
+                                  ? 'green'
+                                  : 'orange'
+                              }
+                            >
+                              {paymentStatus[orderData.paymentStatus]}
+                            </Tag>
+                          </div>
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col span={12}>
+                      <Card title="Thông tin khách hàng" size="small">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <UserOutlined className="text-gray-400" />
+                            <span>{orderData.createdBy?.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <PhoneOutlined className="text-gray-400" />
+                            <span>{orderData.phone}</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <EnvironmentOutlined className="text-gray-400 mt-1" />
+                            <span className="flex-1">
+                              {orderData.shippingAddress}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <ShopOutlined className="text-gray-400" />
+                            <span>{orderData.items?.[0]?.branch?.name}</span>
+                          </div>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+
+                  <Card
+                    title="Danh sách sản phẩm"
+                    size="small"
+                    className="mb-4"
+                  >
                     <Table
                       bordered
                       dataSource={selectedOrder?.items}
                       pagination={false}
                       rowKey="_id"
                       columns={listProductsColumn}
+                      size="small"
                     />
-                  </div>
-                  <Flex
-                    className=""
-                    align="center"
-                    justify={
-                      orderData?.paymentMethod === 'momo'
-                        ? 'space-between'
-                        : 'end'
-                    }
-                  >
-                    <Typography.Text className="flex! justify-end! mt-4! text-base! text-primary! font-semibold!">
-                      Tổng cộng:&nbsp;
-                      {selectedOrder.total.toLocaleString()}đ
-                    </Typography.Text>
+
+                    <Divider />
+
+                    <div className="flex justify-end">
+                      <div className="text-right">
+                        <div className="text-lg font-semibold text-primary">
+                          Tổng cộng: {selectedOrder.total.toLocaleString()}đ
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Các nút hành động */}
+                  <div className="flex justify-end gap-3">
+                    {orderData?.status === 'PENDING' &&
+                      orderData?.status !== 'CANCELLED' && (
+                        <Button type="primary" danger onClick={handleCancel}>
+                          Hủy đơn hàng
+                        </Button>
+                      )}
+
+                    {orderData?.status === 'DELIVERED' &&
+                      orderData?.paymentStatus === 'COMPLETED' && (
+                        <Button type="primary" onClick={handleReturn}>
+                          Yêu cầu trả hàng
+                        </Button>
+                      )}
+
                     {orderData?.paymentMethod === 'momo' &&
+                      orderData?.status !== 'DELIVERED' &&
                       orderData?.paymentStatus !== 'COMPLETED' && (
                         <Button
                           type="primary"
@@ -1095,22 +1227,19 @@ const AccountInfoPage = () => {
                               amount: orderData?.totalPrice,
                               description: `Thanh toán đơn hàng ${orderData?._id}`,
                             };
-
                             handlePayment(paymentInformation);
                           }}
-                          className="rounded-md! h-40!"
                         >
-                          Thanh toán
+                          Thanh toán ngay
                         </Button>
                       )}
-                  </Flex>
-                </Flex>
+                  </div>
+                </div>
               )}
             </Modal>
           </Card>
         </div>
 
-        {/* Khối bên phải */}
         <div style={{ flex: 1 }}>
           {selectedMenu === 'personal' && renderPersonalInfo()}
           {selectedMenu === 'orders' && renderOrderList()}
