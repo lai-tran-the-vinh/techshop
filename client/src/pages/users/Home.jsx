@@ -238,15 +238,18 @@ function Home() {
             </div>
 
             <Flex className="w-full mx-auto">
-              {recommentProducts?.map((product, index) => (
-                <div key={index} className="w-1/5 px-8">
-                  <CardProduct
-                    product={product}
-                    loading={loading}
-                    className="transform transition-all duration-300"
-                  />
-                </div>
-              ))}
+              {recommentProducts?.map((product, index) => {
+                if (index > 4) return;
+                return (
+                  <div key={index} className="w-1/5 px-8">
+                    <CardProduct
+                      product={product}
+                      loading={loading}
+                      className="transform transition-all duration-300"
+                    />
+                  </div>
+                );
+              })}
             </Flex>
           </>
         </section>
