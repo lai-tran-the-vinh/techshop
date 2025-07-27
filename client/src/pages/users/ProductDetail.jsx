@@ -77,7 +77,6 @@ function ProductDetail() {
   const [stats, setStats] = useState({});
   const navigate = useNavigate();
 
-  
   const [showAllPromotions, setShowAllPromotions] = useState(false);
   const [showAllWarranties, setShowAllWarranties] = useState(false);
   const ITEMS_TO_SHOW = 4; // Số lượng items hiển thị ban đầu
@@ -214,6 +213,20 @@ function ProductDetail() {
       message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
     }
   };
+
+  const handleBuy = async (items) => {
+    const cartServices = new CartServices();
+    try {
+      const response = await cartServices.add(items);
+      if (response.status === 201) {
+        navigate('/order');
+      }
+    } catch (error) {
+      console.error('Error adding items to cart:', error);
+      message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
+    }
+  };
+
   const selectedVariant = product?.variants?.find(
     (v) =>
       v.memory?.ram === selectedMemory?.ram &&
@@ -651,7 +664,7 @@ function ProductDetail() {
                           return;
                         }
 
-                        await handleAddItemsToCart([
+                        await handleBuy([
                           {
                             product: product._id,
                             variant: selectedVariant._id,
