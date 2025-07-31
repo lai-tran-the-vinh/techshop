@@ -105,9 +105,10 @@ export const callUpdateUser = (value) => {
   });
 };
 export const callUpdateRoleUser = (value) => {
+  console.log('sca', value);
   return axiosInstance.patch(`/api/v1/users/${value.userId}`, {
     role: value.roleId,
-    brand: value.brand
+    branch: value.branchId
 
   });
 }
@@ -263,7 +264,7 @@ export const callCreateOrder = (value) => {
   });
 };
 
-export const  callUpdateOrder = (id, value) => {
+export const callUpdateOrder = (id, value) => {
   return axiosInstance.patch(`/api/v1/orders/${id}`, {
     ...value,
   });

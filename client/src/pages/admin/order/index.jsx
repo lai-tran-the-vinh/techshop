@@ -55,9 +55,6 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-
-
-
 const STATUS_OPTIONS = [
   { value: 'PENDING', label: 'Chờ xử lý', color: 'orange' },
   { value: 'PROCESSING', label: 'Đang xử lý', color: 'cyan' },
@@ -75,8 +72,6 @@ const PAYMENT_STATUS_OPTIONS = [
   { value: 'CANCELLED', label: 'Đã hủy', color: 'gray' },
   { value: 'REFUNDED', label: 'Đã hoàn tiền', color: 'blue' },
 ];
-
-
 
 const useOrderData = () => {
   const [orders, setOrders] = useState([]);
@@ -219,45 +214,110 @@ const useOrderFilters = (orders) => {
 };
 
 // Components
-const OrderStatistics = ({ orders }) => {
+const OrderStatistics = ({ orders, filters, branches }) => {
   const stats = useMemo(() => {
-    const totalOrders = orders.length;
-    const totalRevenue = orders.reduce(
-      (sum, order) => sum + order.totalPrice,
-      0,
-    );
-    const pendingOrders = orders.filter(
-      (order) => order.status === 'PENDING',
-    ).length;
-    const unpaidOrders = orders.filter(
-      (order) => order.paymentStatus === 'PENDING',
-    ).length;
+    // Lọc đơn hàng không bị hủy - KHÔNG áp dụng bộ lọc trạng thái ở đây
+    const validOrders = orders.filter((order) => order.status !== 'CANCELLED');
 
-    return { totalOrders, totalRevenue, pendingOrders, unpaidOrders };
-  }, [orders]);
+    let totalOrders, totalRevenue, pendingOrders, unpaidOrders;
+
+    if (filters.branch) {
+      // Nếu có bộ lọc chi nhánh, chỉ tính các đơn hàng có sản phẩm từ chi nhánh đó
+      const branchOrders = validOrders.filter((order) =>
+        order.items.some(
+          (item) => item.branch && item.branch._id === filters.branch,
+        ),
+      );
+
+      totalOrders = branchOrders.length;
+      totalRevenue = branchOrders.reduce(
+        (sum, order) => sum + order.totalPrice,
+        0,
+      );
+      pendingOrders = branchOrders.filter(
+        (order) => order.status === 'PENDING',
+      ).length;
+      unpaidOrders = branchOrders.filter(
+        (order) => order.paymentStatus === 'PENDING',
+      ).length;
+    } else {
+      // Nếu không có bộ lọc chi nhánh, tính tất cả đơn hàng
+      totalOrders = validOrders.length;
+      totalRevenue = validOrders.reduce(
+        (sum, order) => sum + order.totalPrice,
+        0,
+      );
+      pendingOrders = validOrders.filter(
+        (order) => order.status === 'PENDING',
+      ).length;
+      unpaidOrders = validOrders.filter(
+        (order) => order.paymentStatus === 'PENDING',
+      ).length;
+    }
+
+    // Tính doanh thu riêng theo chi nhánh nếu có bộ lọc chi nhánh
+    let branchRevenue = null;
+    let branchName = '';
+
+    if (filters.branch) {
+      const selectedBranch = branches.find((b) => b._id === filters.branch);
+      branchName = selectedBranch?.name || '';
+
+      // Tính tổng doanh thu từ các item thuộc chi nhánh được chọn
+      branchRevenue = validOrders.reduce((sum, order) => {
+        const branchItemsValue = order.items
+          .filter((item) => item.branch && item.branch._id === filters.branch)
+          .reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
+
+        return sum + branchItemsValue;
+      }, 0);
+    }
+
+    return {
+      totalOrders,
+      totalRevenue,
+      pendingOrders,
+      unpaidOrders,
+      branchRevenue,
+      branchName,
+    };
+  }, [orders, filters.branch, branches]);
 
   return (
     <Row gutter={10} style={{ marginBottom: '10px' }}>
-      <Col span={6}>
+      <Col span={filters.branch ? 5 : 6}>
         <Card>
           <Statistic
-            title="Tổng đơn hàng"
+            title={filters.branch ? 'Đơn hàng (Chi nhánh)' : 'Tổng đơn hàng'}
             value={stats.totalOrders}
             prefix={<ShoppingCartOutlined />}
           />
         </Card>
       </Col>
-      <Col span={6}>
+      <Col span={filters.branch ? 5 : 6}>
         <Card>
           <Statistic
-            title="Tổng doanh thu"
+            title={filters.branch ? 'Doanh thu (Chi nhánh)' : 'Tổng doanh thu'}
             value={stats.totalRevenue}
             formatter={(value) => formatCurrency(value)}
             prefix={<DollarOutlined />}
           />
         </Card>
       </Col>
-      <Col span={6}>
+      {filters.branch && stats.branchRevenue !== null && (
+        <Col span={5}>
+          <Card>
+            <Statistic
+              title={`Doanh thu ${stats.branchName}`}
+              value={stats.branchRevenue}
+              formatter={(value) => formatCurrency(value)}
+              prefix={<EnvironmentOutlined />}
+              valueStyle={{ color: '#52c41a' }}
+            />
+          </Card>
+        </Col>
+      )}
+      <Col span={filters.branch ? 5 : 6}>
         <Card>
           <Statistic
             title="Đơn chờ xử lý"
@@ -267,7 +327,7 @@ const OrderStatistics = ({ orders }) => {
           />
         </Card>
       </Col>
-      <Col span={6}>
+      <Col span={filters.branch ? 4 : 6}>
         <Card>
           <Statistic
             title="Chưa thanh toán"
@@ -355,9 +415,6 @@ const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
     </Row>
   </Card>
 );
-
-
-
 
 // Main Component
 const OrderManagement = () => {
@@ -650,7 +707,7 @@ const OrderManagement = () => {
         </p>
       </Col>
 
-      <OrderStatistics orders={orders} />
+      <OrderStatistics orders={orders} filters={filters} branches={branches} />
 
       <OrderFilters
         filters={filters}

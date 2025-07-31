@@ -26,6 +26,8 @@ class Recomment {
         const response = await axiosInstance.get(`/api/v1/recommend/featured/${id}`);
         return response.data.data;
     }
+
+
 }
 
 export default Recomment
