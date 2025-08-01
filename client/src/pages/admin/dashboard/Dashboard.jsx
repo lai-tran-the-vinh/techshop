@@ -49,6 +49,7 @@ import dayjs from 'dayjs';
 
 import axiosInstance from '@/services/apis';
 import { formatCurrency } from '@/helpers';
+import Branchs from '@/services/branches';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -65,7 +66,20 @@ const CHART_COLORS = [
   '#fa709a',
   '#fee140',
 ];
-
+const BRANCH_COLORS = [
+  '#1890ff',
+  '#52c41a',
+  '#faad14',
+  '#f5222d',
+  '#722ed1',
+  '#13c2c2',
+  '#eb2f96',
+  '#fa541c',
+  '#2f54eb',
+  '#a0d911',
+  '#fadb14',
+  '#f759ab',
+];
 const Dashboard = () => {
   const [allStats, setAllStats] = useState({
     daily: null,
@@ -86,13 +100,27 @@ const Dashboard = () => {
     yearly: [],
   });
 
+  const [allBranchData, setAllBranchData] = useState({
+    daily: [],
+    weekly: [],
+    monthly: [],
+    yearly: [],
+  });
+
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState(null);
+  const [branch, setBranch] = useState(null);
   const currentStats = allStats[selectedPeriod];
   const comparisonData = allComparison[selectedPeriod];
   const historicalData = allHistorical[selectedPeriod];
+  const currentBranchData = allBranchData[selectedPeriod];
+  console.log('currentBranchData', currentBranchData);
+
+  useEffect(() => {
+    document.title = 'Dashboard';
+  }, []);
 
   const fetchStats = async (period) => {
     try {
@@ -100,7 +128,6 @@ const Dashboard = () => {
         `/api/v1/dashboard/stats/${period}/current`,
         { timeout: 3000 },
       );
-      console.log(response.data.data);
       return response.data?.data || {};
     } catch (error) {
       console.error(`Error fetching ${period} stats:`, error);
@@ -134,7 +161,17 @@ const Dashboard = () => {
       return [];
     }
   };
+  const fetchBranch = async () => {
+    try {
+      const response = await Branchs.getAll();
+      setBranch(response.data.data);
+    } catch (error) {
+      console.error(`Error fetching branches:`, error);
+      return [];
+    }
+  };
   useEffect(() => {
+    fetchBranch();
     const loadAllDashboardData = async () => {
       setLoading(true);
       setError(null);
@@ -160,9 +197,11 @@ const Dashboard = () => {
         const newAllStats = {};
         const newAllComparison = {};
         const newAllHistorical = {};
+        const newAllBranchData = {};
 
         periods.forEach((period, index) => {
           newAllStats[period] = statsResults[index];
+          newAllBranchData[period] = historicalResults[index];
           newAllComparison[period] = comparisonResults[index];
           newAllHistorical[period] = historicalResults[index];
         });
@@ -170,6 +209,7 @@ const Dashboard = () => {
         setAllStats(newAllStats);
         setAllComparison(newAllComparison);
         setAllHistorical(newAllHistorical);
+        setAllBranchData(newAllBranchData);
       } catch (err) {
         console.error('Dashboard error:', err);
 
@@ -207,6 +247,183 @@ const Dashboard = () => {
           vs kỳ trước
         </Text>
       </Space>
+    );
+  };
+  const BranchOverview = () => {
+    const [selectedBranch, setSelectedBranch] = useState(branch?.[0]?._id);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    const branchStats = currentBranchData || [];
+
+    const filteredBranchStats = useMemo(() => {
+      // Chuyển branchStats sang array để xử lý dễ hơn
+      let data = Object.values(branchStats);
+
+      data = data.filter((b) =>
+        b?.branchOverview?.branchStats?.some(
+          (bs) => bs.branchId === selectedBranch,
+        ),
+      );
+
+      return data;
+    }, [branchStats, selectedBranch, selectedDate]);
+
+    console.log('filteredBranchStats', filteredBranchStats);
+    const branchChartData = useMemo(() => {
+      return filteredBranchStats?.flatMap((branch, index) => {
+        const formattedDate = dayjs(branch.date).format(
+          selectedPeriod === 'daily' || selectedPeriod === 'weekly'
+            ? 'DD/MM'
+            : selectedPeriod === 'monthly'
+              ? 'MM/YYYY'
+              : 'YYYY',
+        );
+
+        // Nếu chọn tất cả chi nhánh → map từng branchStats ra chart data
+        // if (selectedBranch === 'all') {
+        //   return branch.branchOverview?.branchStats.map((bs, bsIndex) => ({
+        //     branchId: bs.branchId,
+        //     branchName: bs.branchName,
+        //     totalRevenueBranch: bs.totalRevenue,
+        //     totalOrdersBranch: bs.totalOrders,
+        //     date: formattedDate,
+        //     color: BRANCH_COLORS[(index + bsIndex) % BRANCH_COLORS.length],
+        //   }));
+        // }
+
+        const branchData = branch.branchOverview?.branchStats.find(
+          (bs) => bs.branchId === selectedBranch,
+        );
+
+        return {
+          branchId: selectedBranch,
+          branchName: branchData?.branchName,
+          totalRevenueBranch: branchData?.totalRevenue,
+          totalOrdersBranch: branchData?.totalOrders,
+          date: formattedDate,
+          color: BRANCH_COLORS[index % BRANCH_COLORS.length],
+        };
+      });
+    }, [filteredBranchStats, selectedBranch, selectedPeriod]);
+
+    const pieChartData = useMemo(() => {
+      if (!filteredBranchStats) return [];
+
+      const branchMap = {};
+
+      filteredBranchStats.forEach((day) => {
+        day.branchOverview?.branchStats.forEach((branch) => {
+          const id = branch.branchId;
+          if (!branchMap[id]) {
+            branchMap[id] = {
+              branchId: id,
+              branchName: branch.branchName,
+              totalRevenue: 0,
+            };
+          }
+          branchMap[id].totalRevenue += branch.totalRevenue; // cộng dồn doanh thu
+        });
+      });
+
+      return Object.values(branchMap);
+    }, [filteredBranchStats]);
+    if (!branchStats || branchStats.length === 0) {
+      return <Empty description="Chưa có dữ liệu chi nhánh" />;
+    }
+    console.log('branchChartData', branchChartData);
+    console.log('pieChartData', pieChartData);
+    return (
+      <div>
+        <Row gutter={[10, 10]}>
+          <Col xs={24} lg={16}>
+            <Card
+              title={
+                <Space
+                  size="middle"
+                  className="w-full! flex! justify-between py-10!"
+                >
+                  <Typography.Text className="text-lg!" strong>
+                    Doanh thu theo chi nhánh
+                  </Typography.Text>
+                  <Select
+                    size="middle"
+                    style={{ width: 300 }}
+                    value={selectedBranch}
+                    onChange={(value) => setSelectedBranch(value)}
+                  >
+                    {branch.map((branch, index) => (
+                      <Option key={branch._id} value={branch._id}>
+                        {branch.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Space>
+              }
+            >
+              <ResponsiveContainer width="100%" height={400}>
+                <ComposedChart
+                  data={branchChartData}
+                  margin={{ top: 5, right: 20, bottom: 60, left: 30 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f2f5" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+
+                  <Legend />
+                  <Area
+                    dataKey="totalRevenueBranch"
+                    fill="#82ca9d"
+                    stroke="#82ca9d"
+                    name="Doanh thu"
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+
+          <Col xs={24} lg={8}>
+            <Card
+              title={
+                <Space size="middle" className="w-full! py-17!">
+                  Doanh thu theo chi nhánh
+                </Space>
+              }
+            >
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    dataKey="totalRevenue"
+                    nameKey="branchName"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={BRANCH_COLORS[index % BRANCH_COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+        </Row>
+
+        {/* Table */}
+        {/* <Card style={{ marginTop: '24px' }} title="Chi tiết chi nhánh">
+          <Table
+            dataSource={filteredBranchStats}
+            columns={branchColumns}
+            rowKey={(record) => record.branchId}
+            pagination={{ pageSize: 10 }}
+          />
+        </Card> */}
+      </div>
     );
   };
 
@@ -405,7 +622,7 @@ const Dashboard = () => {
                 style={{
                   backgroundColor: '#f5f5f5',
                   borderRadius: '8px',
-                  height: '32px', 
+                  height: '32px',
                   fontSize: '14px',
                   fontWeight: '500',
                 }}
@@ -712,7 +929,7 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
-
+      <BranchOverview />
       <Row gutter={[10]}>
         <Col xs={24} lg={12}>
           <Card

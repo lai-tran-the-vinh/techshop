@@ -214,7 +214,7 @@ function Home() {
                     <img
                       src={banner.imageUrl}
                       alt={banner.title}
-                      className="w-full! h-full! object-cover "
+                      className="w-full! h-full! object-fit! cursor-pointer"
                     />
                   </div>
                 </div>

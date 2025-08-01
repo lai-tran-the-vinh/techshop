@@ -19,6 +19,8 @@ import {
   Avatar,
   Descriptions,
   Divider,
+  Switch,
+  Badge,
 } from 'antd';
 import {
   UserOutlined,
@@ -30,6 +32,8 @@ import {
   MailOutlined,
   SafetyOutlined,
   SettingOutlined,
+  PlusOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons';
 import {
   callFetchUsers,
@@ -48,9 +52,12 @@ const { Option } = Select;
 
 const UserRoleManagement = () => {
   const [form] = Form.useForm();
+  const [addUserForm] = Form.useForm();
   const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]); // Tất cả người dùng
   const [roles, setRoles] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openAddUserModal, setOpenAddUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -59,6 +66,7 @@ const UserRoleManagement = () => {
   const [branches, setBranches] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewUser, setPreviewUser] = useState(null);
+
   const [filters, setFilters] = useState({
     role: '',
   });
@@ -66,6 +74,7 @@ const UserRoleManagement = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchAllUsers();
     fetchRoles();
     fetchBranches();
   }, []);
@@ -81,6 +90,20 @@ const UserRoleManagement = () => {
       setLoading(false);
     }
   };
+
+  // Fetch tất cả người dùng (bao gồm cả những người chưa có quyền)
+  const fetchAllUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await callFetchUsers(); // API để lấy tất cả user
+      setAllUsers(response.data.data);
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchBranches = async () => {
     setLoading(true);
     try {
@@ -105,7 +128,7 @@ const UserRoleManagement = () => {
   const reloadTable = async () => {
     setLoading(true);
     try {
-      await Promise.all([fetchUsers(), fetchRoles()]);
+      await Promise.all([fetchUsers(), fetchAllUsers(), fetchRoles()]);
     } catch (error) {
       console.error('Failed to reload data:', error);
     } finally {
@@ -120,27 +143,31 @@ const UserRoleManagement = () => {
       form.setFieldsValue({
         userId: selectedUser._id,
         roleId: selectedUser.role?._id,
-        branch: selectedUser.branch._id,
+        branch: selectedUser.branch?._id,
       });
     } else {
       form.resetFields();
     }
   }, [selectedUser, form]);
 
-  const filteredUsers = users.filter((user) => {
-    // Chỉ lấy user có role là nhân viên cửa hàng
-    const staff = user.role?.permissions.length > 0;
+  // Lọc người dùng dựa trên toggle và filter
+  const getFilteredUsers = () => {
+    const sourceUsers = users;
 
-    const matchRole =
-      !filters.role || filters.role === '' || user.role?._id === filters.role;
-    const search = searchText.toLowerCase();
-    const matchSearch =
-      user.name?.toLowerCase().includes(search) ||
-      user.email?.toLowerCase().includes(search) ||
-      user.role?.name?.toLowerCase().includes(search);
+    return sourceUsers.filter((user) => {
+      const matchRole =
+        !filters.role || filters.role === '' || user.role?._id === filters.role;
+      const search = searchText.toLowerCase();
+      const matchSearch =
+        user.name?.toLowerCase().includes(search) ||
+        user.email?.toLowerCase().includes(search) ||
+        user.role?.name?.toLowerCase().includes(search);
 
-    return matchRole && matchSearch;
-  });
+      return matchRole && matchSearch;
+    });
+  };
+
+  const filteredUsers = getFilteredUsers();
 
   const columns = [
     {
@@ -177,18 +204,14 @@ const UserRoleManagement = () => {
       dataIndex: 'role',
       key: 'role',
       align: 'center',
-      render: (role) => (
-        <Tag icon={<TeamOutlined />}>{role?.name || 'chưa có role'}</Tag>
-      ),
+      render: (role) => <Text>{role?.name || 'Chưa có vai trò'}</Text>,
     },
     {
       title: 'Cửa hàng',
       dataIndex: 'branch',
       key: 'branch',
       align: 'center',
-      render: (branch) => (
-        <Tag icon={<TeamOutlined />}>{branch?.name || 'chưa có role'}</Tag>
-      ),
+      render: (branch) => <Text>{branch?.name || 'Chưa có cửa hàng'}</Text>,
     },
     {
       title: 'Số quyền',
@@ -196,23 +219,26 @@ const UserRoleManagement = () => {
       key: 'permissions',
       align: 'center',
       render: (permission) => {
+        const permissionCount = permission?.permissions?.length || 0;
         return (
-          <Tag icon={<SafetyOutlined />}>
-            {permission?.permissions
-              ? permission?.permissions.length
-              : 'Không có quyền nào'}
-          </Tag>
+          <Text>
+            {permissionCount > 0
+              ? `${permissionCount} quyền`
+              : 'Không có quyền'}
+          </Text>
         );
       },
+      sorter: (a, b) => a.role.permissions.length - b.role.permissions.length,
     },
     {
       title: 'Trạng thái',
       key: 'isActive',
       align: 'center',
       render: (record) => (
-        <Tag color={record.isActive ? 'green' : 'red'}>
-          {record.isActive ? 'Hoa­t động' : 'Ngưng hoạt động'}
-        </Tag>
+        <Badge
+          color={record?.isActive ? 'green' : 'red'}
+          text={record?.isActive ? 'Hoạt động' : 'Khóa'}
+        />
       ),
     },
     {
@@ -240,7 +266,7 @@ const UserRoleManagement = () => {
               setOpenModal(true);
             }}
           >
-            Gán Role
+            {record.role?.permissions?.length > 0 ? 'Sửa Role' : 'Cấp quyền'}
           </Button>
         </Space>
       ),
@@ -255,13 +281,6 @@ const UserRoleManagement = () => {
         roleId: values.roleId,
         branchId: values.branch,
       });
-      setUsers(
-        users.map((user) =>
-          user?._id === values?.userId
-            ? { ...user, roleId: values.roleId }
-            : user,
-        ),
-      );
 
       message.success('Gán vai trò cho người dùng thành công');
       reloadTable();
@@ -274,38 +293,45 @@ const UserRoleManagement = () => {
     }
   };
 
+  useEffect(() => {
+    document.title = 'Quản lý vai trò người dùng';
+  }, []);
+
+  const handleAddUser = async (values) => {
+    setLoading(true);
+    try {
+      await callUpdateRoleUser({
+        userId: values.userId,
+        roleId: values.roleId,
+        branchId: values.branch,
+      });
+
+      message.success('Thêm người dùng và gán vai trò thành công');
+      reloadTable();
+      handleCancelAddUser();
+    } catch (error) {
+      console.error('Failed to add user:', error);
+      message.error('Thêm người dùng thất bại');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCancel = () => {
     form.resetFields();
     setOpenModal(false);
     setSelectedUser(null);
   };
 
-  const handleBulkAssignRole = async (roleId) => {
-    if (selectedRowKeys.length === 0) {
-      warning('Vui lòng chọn ít nhất một user');
-      return;
-    }
-    setLoading(true);
-    try {
-      await Promise.all(
-        selectedRowKeys.map((userId) => callUpdateRoleUser({ userId, roleId })),
-      );
+  const handleCancelAddUser = () => {
+    addUserForm.resetFields();
+    setOpenAddUserModal(false);
+  };
 
-      setUsers(
-        users.map((user) =>
-          selectedRowKeys.includes(user._id) ? { ...user, roleId } : user,
-        ),
-      );
-
-      success(`Đã gán role cho ${selectedRowKeys.length} user thành công`);
-      setSelectedRowKeys([]);
-      setSelectedRows([]);
-    } catch (error) {
-      console.error('Failed to bulk assign roles:', error);
-      error('Gán role hàng loạt thất bại');
-    } finally {
-      setLoading(false);
-    }
+  // Lấy danh sách user chưa có trong hệ thống quyền
+  const getUsersWithoutPermissions = () => {
+    const usersWithPermissions = users.map((u) => u._id);
+    return allUsers.filter((user) => !usersWithPermissions.includes(user._id));
   };
 
   return (
@@ -321,19 +347,19 @@ const UserRoleManagement = () => {
           <Col>
             <Title level={4} style={{ margin: 0 }}>
               <TeamOutlined style={{ marginRight: 8 }} />
-              Gán vai trò cho người dùng
+              Quản lý vai trò người dùng
             </Title>
             <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý phân quyền cho từng người dùng. Tổng cộng:{' '}
-              <strong>{users.length}</strong> Người dùng
+              Quản lý phân quyền cho từng người dùng.
             </p>
           </Col>
         </Row>
 
         <Row
+          gutter={10}
           justify="space-between"
           align="middle"
-          style={{ marginBottom: 16 }}
+          style={{ marginBottom: 14 }}
         >
           <Col xs={24} sm={12} md={6}>
             <Input
@@ -344,11 +370,12 @@ const UserRoleManagement = () => {
               allowClear
               style={{
                 borderRadius: 8,
+                height: '40px',
                 border: `1px solid #CBD5E1`,
               }}
             />
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={4}>
             <Select
               placeholder="Vai trò"
               style={{ width: '100%' }}
@@ -357,7 +384,7 @@ const UserRoleManagement = () => {
               allowClear
             >
               <Option value="" key="all">
-                All
+                Tất cả
               </Option>
               {roles.map((role) => (
                 <Option key={role._id} value={role._id}>
@@ -366,8 +393,19 @@ const UserRoleManagement = () => {
               ))}
             </Select>
           </Col>
-          <Col xs={24} sm={12} md={12}>
+          <Col xs={24} sm={12} md={14}>
             <Flex gap={8} wrap="wrap" justify="end">
+              <Button
+                type="primary"
+                icon={<UserAddOutlined />}
+                onClick={() => setOpenAddUserModal(true)}
+                style={{
+                  borderRadius: 8,
+                  fontWeight: 500,
+                }}
+              >
+                Thêm từ người dùng
+              </Button>
               <Button
                 icon={<ReloadOutlined />}
                 onClick={reloadTable}
@@ -448,37 +486,34 @@ const UserRoleManagement = () => {
               <Descriptions.Item label="Vai trò hiện tại">
                 {previewUser.role ? (
                   <div>
-                    <Tag color="blue" style={{ marginBottom: 4 }}>
-                      {previewUser.role.name
-                        ? previewUser.role.name
-                        : 'Chưa có vai trò'}
-                    </Tag>
+                    <Text>{previewUser.role.name || 'Chưa có vai trò'}</Text>
                   </div>
                 ) : (
-                  <Tag color="red">Không có role</Tag>
+                  <Text>Không có role</Text>
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item label="Cửa hàng">
+                {previewUser.branch ? (
+                  <Text color="green">{previewUser.branch.name}</Text>
+                ) : (
+                  <Text color="default">Chưa có cửa hàng</Text>
                 )}
               </Descriptions.Item>
               <Descriptions.Item label="Số quyền">
-                <Tag
-                  color={
-                    previewUser?.role?.permissions?.length > 0
-                      ? 'green'
-                      : 'default'
-                  }
-                >
-                  {previewUser?.role?.permissions?.length
-                    ? previewUser.role.permissions.length
-                    : 'Không có quyền'}{' '}
-                  quyền
-                </Tag>
+                <Text>{previewUser?.role?.permissions?.length || 0} quyền</Text>
               </Descriptions.Item>
               <Descriptions.Item label="Trạng thái">
-                <Tag color="green">Hoạt động</Tag>
+                <Badge
+                  status={previewUser.isActive ? 'success' : 'default'}
+                  text={previewUser.isActive ? 'Hoạt động' : 'Ngưng hoạt động'}
+                />
               </Descriptions.Item>
             </Descriptions>
           </div>
         )}
       </Modal>
+
+      {/* Modal gán role cho user hiện có */}
       <Modal
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -502,7 +537,6 @@ const UserRoleManagement = () => {
           </Button>,
         ]}
         width={600}
-        OnClose
       >
         <Form
           form={form}
@@ -553,7 +587,8 @@ const UserRoleManagement = () => {
               </div>
             </div>
           )}
-          <Form.Item name="branch">
+
+          <Form.Item name="branch" label="Cửa hàng">
             <Select placeholder="Chọn cửa hàng">
               {branches?.map((branch, index) => (
                 <Select.Option key={index} value={branch._id}>
@@ -569,7 +604,7 @@ const UserRoleManagement = () => {
             </span>
           </Divider>
 
-          <Form.Item name="roleId" label="Vai trò">
+          <Form.Item name="roleId" label="Vai trò">
             <Select
               placeholder="Chọn role cho user"
               size="large"
@@ -587,6 +622,163 @@ const UserRoleManagement = () => {
                       }}
                     >
                       <SafetyOutlined style={{ color: '#1890ff' }} />
+                      <Text strong>{role.name}</Text>
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        color: '#666',
+                        marginTop: '4px',
+                      }}
+                    >
+                      {role.description}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        color: '#999',
+                        marginTop: '2px',
+                      }}
+                    >
+                      {role.permissions?.length || 0} quyền
+                    </div>
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Modal thêm user từ danh sách tất cả user */}
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <UserAddOutlined style={{ color: '#52c41a' }} />
+            <span>Thêm người dùng từ hệ thống</span>
+          </div>
+        }
+        open={openAddUserModal}
+        onCancel={handleCancelAddUser}
+        footer={[
+          <Button key="cancel" onClick={handleCancelAddUser}>
+            Hủy
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={() => addUserForm.submit()}
+          >
+            Thêm và gán vai trò
+          </Button>,
+        ]}
+        width={600}
+      >
+        <Form
+          form={addUserForm}
+          layout="vertical"
+          onFinish={handleAddUser}
+          autoComplete="off"
+        >
+          <Divider orientation="left">
+            <span style={{ color: '#666', fontWeight: 500 }}>
+              Chọn người dùng
+            </span>
+          </Divider>
+
+          <Form.Item
+            name="userId"
+            label="Người dùng"
+            rules={[{ required: true, message: 'Vui lòng chọn người dùng' }]}
+          >
+            <Select
+              placeholder="Chọn người dùng để thêm vào hệ thống"
+              size="large"
+              style={{ borderRadius: 8 }}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.props.children[1].props.children[0].props.children
+                  .toLowerCase()
+                  .includes(input.toLowerCase()) ||
+                option.children.props.children[1].props.children[1].props.children[1]
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            >
+              {getUsersWithoutPermissions().map((user) => (
+                <Option key={user._id} value={user._id}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                    }}
+                  >
+                    <Avatar
+                      size={32}
+                      icon={<UserOutlined />}
+                      src={user?.avatar}
+                      style={{ backgroundColor: '#1890ff' }}
+                    >
+                      {user.name?.charAt(0)?.toUpperCase()}
+                    </Avatar>
+                    <div>
+                      <div>
+                        <Text strong>{user.name}</Text>
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#666' }}>
+                        {user.email}
+                      </div>
+                    </div>
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="branch"
+            label="Cửa hàng"
+            rules={[{ required: true, message: 'Vui lòng chọn cửa hàng' }]}
+          >
+            <Select placeholder="Chọn cửa hàng">
+              {branches?.map((branch, index) => (
+                <Select.Option key={index} value={branch._id}>
+                  {branch?.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Divider orientation="left">
+            <span style={{ color: '#52c41a', fontWeight: 600 }}>
+              Gán vai trò
+            </span>
+          </Divider>
+
+          <Form.Item
+            name="roleId"
+            label="Vai trò"
+            rules={[{ required: true, message: 'Vui lòng chọn vai trò' }]}
+          >
+            <Select
+              placeholder="Chọn role cho user"
+              size="large"
+              style={{ borderRadius: 8 }}
+            >
+              {roles.map((role) => (
+                <Option key={role._id} value={role._id}>
+                  <div style={{ padding: '8px 0' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      <SafetyOutlined style={{ color: '#52c41a' }} />
                       <Text strong>{role.name}</Text>
                     </div>
                     <div

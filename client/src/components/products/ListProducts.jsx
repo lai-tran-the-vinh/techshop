@@ -12,6 +12,7 @@ import {
   Slider,
   Collapse,
   Segmented,
+  Spin,
 } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -126,13 +127,13 @@ function ListProducts(properties) {
     }).format(amount);
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <Spin size="large" />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   // Kiểm tra xem có sản phẩm nào có memory không
   const hasMemoryProducts = products.some((product) =>
