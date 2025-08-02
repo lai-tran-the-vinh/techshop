@@ -170,7 +170,7 @@ function ProductsList() {
         brands={brands}
         filter={filter}
         setSort={setSort}
-        loading={loading}
+        // loading={loading}
         products={products}
         storages={storages}
         setFilter={setFilter}
