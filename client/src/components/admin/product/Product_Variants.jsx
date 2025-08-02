@@ -59,7 +59,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
           ram: '',
           storage: '',
         },
-        imagesMain: '', // Theo schema - single string, không phải array
+
         weight: 0,
         isActive: true,
       };
@@ -83,7 +83,6 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
 
     updatedVariants[variantIndex] = {
       ...updatedVariants[variantIndex],
-      imagesMain: imageToKeep,
     };
 
     form.setFieldsValue({ variants: updatedVariants });
@@ -143,14 +142,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
         currentImages.splice(imageIndex, 1);
         updatedVariants[variantIndex].color[colorIndex].images = currentImages;
       }
-    } else {
-      // Handle main image removal (single string)
-      const currentImage = updatedVariants[variantIndex].imagesMain;
-      if (typeof currentImage === 'string' && currentImage) {
-        setImagesToDelete((prev) => [...prev, currentImage]);
-      }
-      updatedVariants[variantIndex].imagesMain = '';
-    }
+    } 
 
     form.setFieldsValue({ variants: updatedVariants });
     return true;
@@ -385,48 +377,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                         </Select>
                       </Form.Item>
                     </Col>
-                  </Row>
-
-                  {/* Main Image - Single according to schema */}
-                  <Row>
-                    <Col span={24}>
-                      <Form.Item
-                        {...restField}
-                        label="Hình ảnh chính của biến thể"
-                        name={[name, 'imagesMain']}
-                      >
-                        <Dragger
-                          name="files"
-                          accept="image/*"
-                          listType="picture"
-                          maxCount={1} // Only one image allowed
-                          onPreview={handlePreview}
-                          onRemove={(file) => handleImageRemove(file, index)}
-                          beforeUpload={(file) => {
-                            if (!file.type.startsWith('image/')) {
-                              message.error('Chỉ hỗ trợ hình ảnh!');
-                              return Upload.LIST_IGNORE;
-                            }
-                            return false;
-                          }}
-                          fileList={createFileList(variant.imagesMain, index)}
-                          onChange={(event) =>
-                            handleVariantImageChange(event, index)
-                          }
-                        >
-                          <div
-                            className="flex flex-col items-center justify-center"
-                            style={{ height: '120px' }}
-                          >
-                            <UploadOutlined className="text-4xl text-gray-400 mb-2" />
-                            <span className="text-gray-600">
-                              Kéo hoặc chọn 1 ảnh chính
-                            </span>
-                          </div>
-                        </Dragger>
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                  </Row>  
 
                   {/* Colors Section */}
                   <div className="mt-6">
@@ -605,7 +556,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                       ram: '',
                       storage: '',
                     },
-                    imagesMain: '',
+                   
                   })
                 }
                 icon={<PlusOutlined />}

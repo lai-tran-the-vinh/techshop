@@ -59,7 +59,7 @@ function AddProduct() {
           },
         ],
         memory: { ram: '', storage: '' },
-        imagesMain: '', // Single string according to schema
+
         weight: 0,
         isActive: true,
       },
@@ -175,12 +175,6 @@ function AddProduct() {
       if (productToSubmit.variants && productToSubmit.variants.length > 0) {
         for (let i = 0; i < productToSubmit.variants.length; i++) {
           const variant = productToSubmit.variants[i];
-
-          // Upload main variant image (single image)
-          if (variant.imagesMain && variant.imagesMain instanceof File) {
-            const mainImageUrl = await Files.upload(variant.imagesMain);
-            productToSubmit.variants[i].imagesMain = mainImageUrl;
-          }
 
           // Upload color-specific images
           if (variant.color && variant.color.length > 0) {

@@ -334,12 +334,6 @@ function EditProduct() {
         for (let i = 0; i < productToSubmit.variants.length; i++) {
           const variant = productToSubmit.variants[i];
 
-          // Upload main variant image (single image)
-          if (variant.imagesMain && variant.imagesMain instanceof File) {
-            const mainImageUrl = await Files.upload(variant.imagesMain);
-            productToSubmit.variants[i].imagesMain = mainImageUrl;
-          }
-
           // Upload color-specific images
           if (variant.color && variant.color.length > 0) {
             for (let j = 0; j < variant.color.length; j++) {
@@ -362,7 +356,7 @@ function EditProduct() {
           }
         }
       }
-      console.log('productToSubmit', productToSubmit);
+
       await callUpdateProduct(productToSubmit);
       message.success({
         content: 'Cập nhật sản phẩm thành công!',
