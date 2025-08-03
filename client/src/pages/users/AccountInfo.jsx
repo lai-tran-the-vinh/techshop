@@ -133,8 +133,7 @@ const AccountInfoPage = () => {
 
   const getUser = async () => {
     try {
-      const userService = new UserService();
-      const response = await userService.get(user._id);
+      const response = await UserService.get(user._id);
       if (response.status === 200) {
         setUserInfo(response.data.data);
         setUpdateUserInfo(response.data.data);
@@ -180,7 +179,6 @@ const AccountInfoPage = () => {
 
   const handleDeleteAddress = async (addressId) => {
     try {
-      const userService = new UserService();
       message.loading('Đang xóa địa chỉ');
 
       const isDefault = updateUserInfo.addresses[addressId].default;
@@ -199,7 +197,7 @@ const AccountInfoPage = () => {
         addresses: updatedAddresses,
       };
 
-      const response = await userService.update(updatedUser);
+      const response = await UserService.update(updatedUser);
 
       if (response.status === 200) {
         await getUser();
@@ -217,7 +215,6 @@ const AccountInfoPage = () => {
 
   const handleSetDefaultAddress = async (index) => {
     try {
-      const userService = new UserService();
       message.loading('Đang cập nhật địa chỉ mặc định...');
 
       const updatedAddresses = updateUserInfo.addresses.map((addr, i) => ({
@@ -230,7 +227,7 @@ const AccountInfoPage = () => {
         addresses: updatedAddresses,
       };
 
-      const response = await userService.update(updatedUser);
+      const response = await UserService.update(updatedUser);
       if (response.status === 200) {
         await getUser();
         message.destroy();
@@ -307,8 +304,7 @@ const AccountInfoPage = () => {
   const updateAddress = async (updateUser) => {
     try {
       message.loading('Đang cập nhật');
-      const userService = new UserService();
-      const response = await userService.update(updateUser);
+      const response = await UserService.update(updateUser);
       if (response.status === 200) {
         await getUser();
         message.destroy();

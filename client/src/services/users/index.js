@@ -8,7 +8,7 @@ class UserService {
     });
   }
 
-  get(id) {
+  static get(id) {
     return axiosInstance.get(`/api/v1/users/${id}`);
   }
 
@@ -40,8 +40,9 @@ class UserService {
     return axiosInstance.delete(`/api/v1/users/${id}`);
   }
 
-  static update(id, user) {
-    return axiosInstance.patch(`/api/v1/users/${id}`, user);
+  static update(user) {
+    console.log(user);
+    return axiosInstance.patch(`/api/v1/users/${user._id}`, user);
   }
 
   updateRole(value) {
