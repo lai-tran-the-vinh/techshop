@@ -59,9 +59,6 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
           ram: '',
           storage: '',
         },
-
-        weight: 0,
-        isActive: true,
       };
       // FIX: Phải wrap trong array
       form?.setFieldsValue({ variants: [defaultVariant] });
@@ -142,7 +139,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
         currentImages.splice(imageIndex, 1);
         updatedVariants[variantIndex].color[colorIndex].images = currentImages;
       }
-    } 
+    }
 
     form.setFieldsValue({ variants: updatedVariants });
     return true;
@@ -377,7 +374,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                         </Select>
                       </Form.Item>
                     </Col>
-                  </Row>  
+                  </Row>
 
                   {/* Colors Section */}
                   <div className="mt-6">
@@ -543,8 +540,6 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                   add({
                     name: '',
                     price: 0,
-                    weight: 0,
-                    isActive: true,
                     color: [
                       {
                         colorName: '',
@@ -556,7 +551,6 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                       ram: '',
                       storage: '',
                     },
-                   
                   })
                 }
                 icon={<PlusOutlined />}

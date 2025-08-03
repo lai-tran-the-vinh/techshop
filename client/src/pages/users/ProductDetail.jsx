@@ -483,85 +483,66 @@ function ProductDetail() {
               )}
 
               {/* Phần Màu sắc - chỉ hiển thị khi đã chọn bộ nhớ */}
-              {selectedMemory?.ram &&
-                selectedMemory?.storage &&
-                selectedVariant && (
-                  <div className="mb-6">
-                    <Title level={5} className="mb-2 text-sm sm:text-base">
-                      Màu sắc
-                    </Title>
-                    <Row gutter={[8, 8]}>
-                      {selectedVariant?.color?.map((color, index) => {
-                        const isSelected = selectedColor === color.colorName;
-
-                        return (
-                          <Col span={12} key={`color-${index}`}>
-                            <div
-                              className={
-                                'flex items-center gap-4 py-10 sm:py-4 px-8 sm:px-4 text-xs bg-white! rounded-md! sm:text-sm cursor-pointer hover:bg-gray-50 ' +
-                                (isSelected
-                                  ? 'border border-primary bg-blue-50'
-                                  : 'border border-gray-200')
-                              }
-                              onClick={() => setSelectedColor(color.colorName)}
-                            >
-                              <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                                <Image
-                                  preview={false}
-                                  src={
-                                    color.images?.[0] ||
-                                    'https://dummyimage.com/200x200/ccc/000&text=No+Image'
-                                  }
-                                  className="w-full! h-full! object-contain!"
-                                />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <Typography.Text
-                                  strong
-                                  className="block text-xs sm:text-sm truncate"
-                                >
-                                  {color.colorName}
-                                </Typography.Text>
-                                <Typography.Text
-                                  type="secondary"
-                                  className="text-xs sm:text-sm"
-                                >
-                                  {formatCurrency(selectedVariant.price)}đ
-                                </Typography.Text>
-                                {/* Hiển thị thông tin memory */}
-                                <Typography.Text
-                                  type="secondary"
-                                  className="block text-xs mt-1"
-                                >
-                                  {selectedVariant.memory?.storage &&
-                                  selectedVariant.memory?.ram
-                                    ? `${selectedVariant.memory.storage} - ${selectedVariant.memory.ram}`
-                                    : selectedVariant.memory?.storage ||
-                                      selectedVariant.memory?.ram}
-                                </Typography.Text>
-                              </div>
-                            </div>
-                          </Col>
-                        );
-                      })}
-                    </Row>
-                  </div>
-                )}
-
-              {/* Thông báo khi chưa chọn bộ nhớ */}
-              {(!selectedMemory?.ram || !selectedMemory?.storage) && (
+              {selectedVariant && (
                 <div className="mb-6">
-                  <Title
-                    level={5}
-                    className="mb-2 text-sm sm:text-base text-gray-400"
-                  >
+                  <Title level={5} className="mb-2 text-sm sm:text-base">
                     Màu sắc
                   </Title>
-                  <div className="p-4 border border-dashed border-gray-300 rounded-md text-center">
-                    <Text type="secondary" className="text-sm">
-                      Vui lòng chọn bộ nhớ trước để xem các màu sắc có sẵn
-                    </Text>
-                  </div>
+                  <Row gutter={[8, 8]}>
+                    {selectedVariant?.color?.map((color, index) => {
+                      const isSelected = selectedColor === color.colorName;
+
+                      return (
+                        <Col span={12} key={`color-${index}`}>
+                          <div
+                            className={
+                              'flex items-center gap-4 py-10 sm:py-4 px-8 sm:px-4 text-xs bg-white! rounded-md! sm:text-sm cursor-pointer hover:bg-gray-50 ' +
+                              (isSelected
+                                ? 'border border-primary bg-blue-50'
+                                : 'border border-gray-200')
+                            }
+                            onClick={() => setSelectedColor(color.colorName)}
+                          >
+                            <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                              <Image
+                                preview={false}
+                                src={
+                                  color.images?.[0] ||
+                                  'https://dummyimage.com/200x200/ccc/000&text=No+Image'
+                                }
+                                className="w-full! h-full! object-contain!"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <Typography.Text
+                                strong
+                                className="block text-xs sm:text-sm truncate"
+                              >
+                                {color.colorName}
+                              </Typography.Text>
+                              <Typography.Text
+                                type="secondary"
+                                className="text-xs sm:text-sm"
+                              >
+                                {formatCurrency(selectedVariant.price)}đ
+                              </Typography.Text>
+                              {/* Hiển thị thông tin memory */}
+                              <Typography.Text
+                                type="secondary"
+                                className="block text-xs mt-1"
+                              >
+                                {selectedVariant.memory?.storage &&
+                                selectedVariant.memory?.ram
+                                  ? `${selectedVariant.memory.storage} - ${selectedVariant.memory.ram}`
+                                  : selectedVariant.memory?.storage ||
+                                    selectedVariant.memory?.ram}
+                              </Typography.Text>
+                            </div>
+                          </div>
+                        </Col>
+                      );
+                    })}
+                  </Row>
                 </div>
               )}
 
