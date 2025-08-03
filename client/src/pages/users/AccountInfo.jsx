@@ -494,7 +494,6 @@ const AccountInfoPage = () => {
     try {
       const values = await form.validateFields();
       message.loading('Đang xử lý yêu cầu trả hàng...');
-      console.log(values.returnReason);
       const response = await Products.requestReturn(selectedOrder.id, {
         returnReason: values.returnReason,
         returnStatus: 'requested',
@@ -1036,8 +1035,9 @@ const AccountInfoPage = () => {
     );
   }
 
+  console.log('Selected Order:', selectedOrder);
+
   const orderData = orders?.find((o) => o._id === selectedOrder?.id);
-  console.log(orderData);
   const paymentStatus = {
     PENDING: 'Chờ xử lý',
     COMPLETED: 'Đã hoàn thành',
