@@ -257,7 +257,7 @@ function SearchBox() {
                   >
                     <div className="w-50 h-50  flex items-center justify-center">
                       <img
-                        src={item.variants[0].images[0]}
+                        src={item.variants[0]?.color[0]?.images[0]}
                         alt={item.name}
                         className="w-50 h-50 object-contain"
                       />
@@ -268,7 +268,7 @@ function SearchBox() {
                       </div>
                     </div>
                     <div className="text-primary font-semibold">
-                      {item.variants[0].price.toLocaleString()}₫
+                      {item.variants[0]?.price.toLocaleString()}₫
                     </div>
                   </div>
                 ))}
