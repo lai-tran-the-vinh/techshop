@@ -197,8 +197,7 @@ function Order() {
 
   const getUser = async () => {
     try {
-      const userService = new UserService();
-      const response = await userService.get(user._id);
+      const response = await UserService.get(user._id);
       if (response.status === 200) {
         setUserInfo(response.data.data);
         setLoading(false);
