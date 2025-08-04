@@ -366,8 +366,8 @@ const Dashboard = () => {
         <Col xs={24} lg={16}>
           <Card
             style={{
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
+              borderRadius: '16px',
+              border: '1px solid #e2e8f0',
               height: '100%',
             }}
             title={
@@ -376,20 +376,11 @@ const Dashboard = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  height: 50,
                 }}
               >
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-                >
-                  <div
-                    style={{
-                      width: '4px',
-                      height: '24px',
-                      backgroundColor: '#6366f1',
-                      borderRadius: '2px',
-                    }}
-                  ></div>
-                  <Text strong style={{ fontSize: '16px', color: '#1f2937' }}>
+                <div>
+                  <Text strong style={{ fontSize: '18px', color: '#1e293b' }}>
                     Doanh thu theo chi nhánh
                   </Text>
                 </div>
@@ -414,19 +405,34 @@ const Dashboard = () => {
                 data={branchChartData?.length ? branchChartData : []}
                 margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="date" stroke="#6b7280" fontSize={12} />
-                <YAxis
-                  stroke="#6b7280"
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis
+                  dataKey="date"
+                  stroke="#1e293b"
                   fontSize={12}
+                  tick={{ fill: '#475569' }}
+                />
+                <YAxis
+                  stroke="#1e293b"
+                  fontSize={12}
+                  tick={{ fill: '#475569' }}
                   tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`}
+                />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: 15,
+                    fontSize: 14,
+                    color: '#1e293b',
+                    fontWeight: '500',
+                  }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                    padding: '12px',
                   }}
                   formatter={(value, name) => {
                     if (name === 'Doanh thu' || name === 'Lợi nhuận') {
@@ -435,17 +441,42 @@ const Dashboard = () => {
                     return [value.toLocaleString(), name];
                   }}
                 />
+
+                {/* Gradient definitions */}
+                <defs>
+                  <linearGradient
+                    id="revenueGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#06d6a0" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#05a085" stopOpacity={0.8} />
+                  </linearGradient>
+                  <linearGradient
+                    id="profitGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.8} />
+                  </linearGradient>
+                </defs>
+
                 <Bar
                   dataKey="totalRevenueBranch"
-                  fill="#10b981"
+                  fill="url(#revenueGradient)"
                   name="Doanh thu"
-                  radius={[4, 4, 0, 0]}
+                  radius={[6, 6, 0, 0]}
                 />
                 <Bar
                   dataKey="profitBranch"
-                  fill="#3b82f6"
+                  fill="url(#profitGradient)"
                   name="Lợi nhuận"
-                  radius={[4, 4, 0, 0]}
+                  radius={[6, 6, 0, 0]}
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -456,22 +487,19 @@ const Dashboard = () => {
           <Card
             style={{
               borderRadius: '12px',
-              border: '1px solid #e5e7eb',
+              border: '1px solid #e2e8f0',
               height: '100%',
             }}
             title={
               <div
-                style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  height: 50,
+                }}
               >
-                <div
-                  style={{
-                    width: '4px',
-                    height: '24px',
-                    backgroundColor: '#10b981',
-                    borderRadius: '2px',
-                  }}
-                ></div>
-                <Text strong style={{ fontSize: '16px', color: '#1f2937' }}>
+                <Text strong style={{ fontSize: '18px', color: '#1e293b' }}>
                   Phân bổ doanh thu
                 </Text>
               </div>
@@ -485,10 +513,14 @@ const Dashboard = () => {
                   nameKey="branchName"
                   cx="50%"
                   cy="50%"
-                  innerRadius={40}
-                  outerRadius={80}
+                  innerRadius={45}
+                  outerRadius={85}
                   label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                  labelStyle={{ fontSize: '12px', fontWeight: '500' }}
+                  labelStyle={{
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    fill: '#1e293b',
+                  }}
                 >
                   {pieChartData.map((entry, index) => (
                     <Cell
@@ -499,9 +531,11 @@ const Dashboard = () => {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                    padding: '12px',
                   }}
                   formatter={(value) => [
                     `${formatCurrency(value)} VNĐ`,
@@ -510,7 +544,8 @@ const Dashboard = () => {
                 />
               </PieChart>
             </ResponsiveContainer>
-            <div style={{ marginTop: '16px' }}>
+
+            <div style={{ marginTop: '20px' }}>
               {pieChartData.map((item, index) => (
                 <div
                   key={item.branchName}
@@ -518,32 +553,42 @@ const Dashboard = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '8px 0',
-                    borderBottom:
-                      index < pieChartData.length - 1
-                        ? '1px solid #f3f4f6'
-                        : 'none',
+                    padding: '12px 8px',
+                    borderRadius: '8px',
+                    marginBottom: '8px',
+                    backgroundColor:
+                      index % 2 === 0 ? '#f8fafc' : 'transparent',
+                    transition: 'all 0.2s ease',
                   }}
                 >
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '8px',
+                      gap: '12px',
                     }}
                   >
                     <div
                       style={{
-                        width: '12px',
-                        height: '12px',
+                        width: '14px',
+                        height: '14px',
                         borderRadius: '50%',
                         backgroundColor:
                           BRANCH_COLORS[index % BRANCH_COLORS.length],
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                       }}
                     />
-                    <Text style={{ fontSize: '14px' }}>{item.branchName}</Text>
+                    <Text
+                      style={{
+                        fontSize: '14px',
+                        color: '#374151',
+                        fontWeight: '500',
+                      }}
+                    >
+                      {item.branchName}
+                    </Text>
                   </div>
-                  <Text strong style={{ fontSize: '14px' }}>
+                  <Text strong style={{ fontSize: '14px', color: '#1e293b' }}>
                     {formatCurrency(item.totalRevenue)} VNĐ
                   </Text>
                 </div>
@@ -821,23 +866,18 @@ const Dashboard = () => {
                   { label: 'Tháng', value: 'monthly' },
                   { label: 'Năm', value: 'yearly' },
                 ]}
-                style={{
-                  backgroundColor: '#f8fafc',
-                  border: '1px solid #e2e8f0',
-                }}
               />
             </Space>
           </Col>
         </Row>
       </Card>
       {/* Stats Cards */}
-      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+      <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={8}>
           <Card
             style={{
               borderRadius: '12px',
               border: '1px solid #e5e7eb',
-              background: 'linear-gradient(135deg, #fff 0%, #f8fafc 100%)',
             }}
           >
             <Statistic
@@ -873,7 +913,6 @@ const Dashboard = () => {
             style={{
               borderRadius: '12px',
               border: '1px solid #e5e7eb',
-              background: 'linear-gradient(135deg, #fff 0%, #f8fafc 100%)',
             }}
           >
             <Statistic
@@ -908,7 +947,6 @@ const Dashboard = () => {
             style={{
               borderRadius: '12px',
               border: '1px solid #e5e7eb',
-              background: 'linear-gradient(135deg, #fff 0%, #f8fafc 100%)',
             }}
           >
             <Statistic
@@ -954,6 +992,7 @@ const Dashboard = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '5px 0px',
+                  height: 50,
                 }}
               >
                 <div
@@ -988,14 +1027,14 @@ const Dashboard = () => {
                 data={chartData}
                 margin={{ top: 30, right: 10, bottom: 40, left: 10 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
 
                 {/* Trục X */}
                 <XAxis
                   dataKey="date"
-                  stroke="#374151"
+                  stroke="#1e293b"
                   fontSize={13}
-                  tick={{ fill: '#6b7280' }}
+                  tick={{ fill: '#475569' }}
                   padding={{ left: 10, right: 10 }}
                 />
 
@@ -1003,7 +1042,7 @@ const Dashboard = () => {
                 <Brush
                   dataKey="date"
                   height={15}
-                  stroke="#4f46e5"
+                  stroke="#3b82f6"
                   travellerWidth={10}
                   traveller={false}
                   strokeDasharray="3 3"
@@ -1012,29 +1051,29 @@ const Dashboard = () => {
                 {/* Trục Y bên trái */}
                 <YAxis
                   yAxisId="left"
-                  stroke="#374151"
+                  stroke="#1e293b"
                   fontSize={13}
                   tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`}
-                  tick={{ fill: '#6b7280' }}
+                  tick={{ fill: '#475569' }}
                 />
 
                 {/* Trục Y bên phải */}
                 <YAxis
                   yAxisId="right"
                   orientation="right"
-                  stroke="#374151"
+                  stroke="#1e293b"
                   fontSize={13}
-                  tick={{ fill: '#6b7280' }}
+                  tick={{ fill: '#475569' }}
                 />
 
                 {/* Tooltip đẹp hơn */}
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '10px',
-                    padding: '10px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '12px',
+                    padding: '12px',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
                   }}
                   formatter={(value, name) => {
                     if (name === 'Doanh thu' || name === 'Lợi nhuận') {
@@ -1049,30 +1088,45 @@ const Dashboard = () => {
                   wrapperStyle={{
                     paddingTop: 10,
                     fontSize: 13,
-                    color: '#374151',
+                    color: '#1e293b',
+                    fontWeight: '500',
                   }}
                 />
 
                 {/* Gradient cho Area */}
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0.05} />
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
                   </linearGradient>
                   <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.05} />
+                    <stop offset="5%" stopColor="#06d6a0" stopOpacity={0.6} />
+                    <stop offset="95%" stopColor="#06d6a0" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#fbbf24" stopOpacity={0.7} />
                   </linearGradient>
                 </defs>
+
+                {/* Bar - Số đơn hàng */}
+                <Bar
+                  yAxisId="right"
+                  dataKey="orders"
+                  fill="url(#colorOrders)"
+                  name="Số đơn hàng"
+                  radius={[6, 6, 0, 0]}
+                  opacity={0.9}
+                />
 
                 {/* Area - Doanh thu */}
                 <Area
                   yAxisId="left"
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#6366f1"
+                  stroke="#3b82f6"
                   fill="url(#colorRevenue)"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   name="Doanh thu"
                 />
 
@@ -1081,20 +1135,10 @@ const Dashboard = () => {
                   yAxisId="left"
                   type="monotone"
                   dataKey="profit"
-                  stroke="#10b981"
+                  stroke="#06d6a0"
                   fill="url(#colorProfit)"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   name="Lợi nhuận"
-                />
-
-                {/* Bar - Số đơn hàng */}
-                <Bar
-                  yAxisId="right"
-                  dataKey="orders"
-                  fill="#f59e0b"
-                  name="Số đơn hàng"
-                  radius={[5, 5, 0, 0]}
-                  opacity={0.85}
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1108,7 +1152,7 @@ const Dashboard = () => {
               height: '100%',
             }}
             title={
-              <div className="flex items-center gap-3 py-2">
+              <div className="flex items-center gap-3 py-2 h-[50px]">
                 <div className="w-2 h-8 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
                   Phương thức thanh toán
