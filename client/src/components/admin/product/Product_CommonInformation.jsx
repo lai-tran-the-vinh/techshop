@@ -14,7 +14,7 @@ function CommonInformation({
   onCategoryChange,
 }) {
   const { message } = useAppContext();
-  const handleImageUpload = useCallback(async (files, uploadHandler) => {
+  const handleImageUpload = useCallback(async (files, info, uploadHandler) => {
     try {
       const file = files[0];
       if (!file) throw new Error('No file selected');
@@ -22,6 +22,7 @@ function CommonInformation({
       const imageUrl = await Files.upload(file);
 
       if (typeof imageUrl === 'string' && imageUrl.startsWith('http')) {
+        console.log('Chạy vô đây nè', imageUrl);
         uploadHandler({
           result: [{ url: imageUrl, name: file.name, size: file.size }],
         });

@@ -136,8 +136,6 @@ const UserRoleManagement = () => {
     }
   };
 
-  console.log(selectedUser);
-
   useEffect(() => {
     if (selectedUser) {
       form.setFieldsValue({

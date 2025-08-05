@@ -98,7 +98,7 @@ function Editor({ setProduct, product, ...properties }) {
           ],
 
           imageUploadUrl: '',
-          imageAccept: '.jpg, .jpeg, .png, .gif',
+          imageAccept: '.jpg, .jpeg, .png, .gif .webp',
           imageUploadSizeLimit: 5242880,
           videoFileInput: true,
           videoAccept: '.mp4, .webm, .ogg',
