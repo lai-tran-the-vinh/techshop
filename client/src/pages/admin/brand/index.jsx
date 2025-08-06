@@ -516,13 +516,15 @@ const BrandManagement = () => {
               gap: '16px',
             }}
           >
-            <Avatar
+            <Image
               src={selectedBrand.logo}
               alt={selectedBrand.name}
-              shape="square"
-              size={120}
-              style={{ marginBottom: 16 }}
+              width={200}
+              height={150}
+              style={{ objectFit: 'contain', borderRadius: 8 }}
             />
+            <Title level={4}>{selectedBrand.name}</Title>
+            <Text type="secondary">{selectedBrand._id}</Text>
             <div style={{ width: '100%' }}>
               <Title level={5}>Mô tả</Title>
               <Paragraph>
