@@ -39,7 +39,7 @@ function Cart() {
       const cartServices = new CartServices();
       const response = await cartServices.get();
       if (response.status === 200) {
-        setCartItems(response.data.data.items);
+        setCartItems(response.data.data?.items);
         setLoading(false);
       }
     } catch (error) {
@@ -143,13 +143,7 @@ function Cart() {
     const discountAmount = originalPrice * (item.product.discount / 100);
     return originalPrice - discountAmount;
   };
-  console.log(cartItems);
-  // const colorItem = cartItems.map((item) => );
-  // console.log(colorItem);
-  // const colorVariant = cartItems.variant.color.map(
-  //   (item) => item.colorName === colorItem,
-  // );
-  // console.log(colorVariant);
+  
   const variantItem = cartItems.map((item) => {
     const selectedColor = item.variant.color.find(
       (color) => color.colorName === item.color,
