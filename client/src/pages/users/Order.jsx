@@ -167,10 +167,14 @@ function Order() {
         status: 'pending',
         recipient: {
           name: fullName,
-          phone: phone,
+          phone: phone || userInfo?.phone,
           address: canChooseAddress
             ? `${userTypeAddress.addressDetail}, ${userTypeAddress.specificAddress}`
             : selectedAddress || '',
+        },
+        buyer: {
+          name: userInfo?.name || fullName,
+          phone: userInfo?.phone || phone,
         },
         items: items,
         branch: selectedBranch,
@@ -179,7 +183,7 @@ function Order() {
           paymentMethod === 'Thanh toán khi nhận hàng' ? 'cash' : 'momo',
       });
     }
-  }, [items]);
+  }, [items, phone]);
 
   const getCart = async () => {
     try {
@@ -260,6 +264,7 @@ function Order() {
 
   const handleOrder = async (order) => {
     let paymentInformation;
+    console.log('Order:', order);
     try {
       message.loading('Đang xử lý');
       const productService = new Products();
@@ -328,6 +333,12 @@ function Order() {
       setSelectedAddress(selectedAddress);
     }
   }, [shippingMethod]);
+
+  const canOrder =
+    (order && order?.recipient.phone && order?.recipient.address) ||
+    order?.buyer.phone;
+
+  let addressDisplay;
 
   if (loading) {
     return (
@@ -603,6 +614,7 @@ function Order() {
                   const userAddress = userInfo?.addresses?.filter(
                     (address) => address.default === true,
                   )[0];
+                  if (!userAddress) return 'Chưa có địa chỉ';
                   return `${userAddress?.addressDetail}, ${userAddress?.specificAddress}`;
                 }}
                 options={userInfo?.addresses?.map((address) => {
@@ -693,7 +705,7 @@ function Order() {
                 Số điện thoại
               </Typography.Text>
               <Typography.Text className="text-sm!">
-                {userInfo.phone || phone}
+                {userInfo.phone || phone || 'Chưa có'}
               </Typography.Text>
             </Flex>
             <Divider className="my-0!" />
@@ -711,9 +723,9 @@ function Order() {
                 Địa chỉ
               </Typography.Text>
               <Typography.Text className="text-sm!">
-                {canChooseAddress
-                  ? `${userTypeAddress.addressDetail}, ${userTypeAddress.specificAddress}`
-                  : selectedAddress}
+                {!canChooseAddress
+                  ? 'Chưa có'
+                  : `${userTypeAddress.addressDetail || ''}, ${userTypeAddress.specificAddress || ''}`}
               </Typography.Text>
             </Flex>
             <Divider className="my-0!" />
@@ -745,7 +757,7 @@ function Order() {
 
             <Flex className="w-full!" justify="end" align="center" gap={8}>
               <Button
-                disabled={!order}
+                disabled={!canOrder}
                 onClick={() => {
                   handleOrder(order);
                 }}
