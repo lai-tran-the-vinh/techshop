@@ -18,6 +18,7 @@ import {
   Form,
   Upload,
   Image,
+  Badge,
 } from 'antd';
 import {
   DeleteOutlined,
@@ -188,9 +189,10 @@ const BrandManagement = () => {
       align: 'center',
       width: 120,
       render: (record) => (
-        <Tooltip title="Đang hoạt động">
-          {record.isActive ? ' Còn hoạt động' : 'Ngưng hoạt động'}
-        </Tooltip>
+        <Badge
+          status={record.isActive ? 'success' : 'default'}
+          text={record.isActive ? 'Còn hoạt động' : 'Ngưng hoạt động'}
+        />
       ),
     },
     {
@@ -514,13 +516,15 @@ const BrandManagement = () => {
               gap: '16px',
             }}
           >
-            <Avatar
+            <Image
               src={selectedBrand.logo}
               alt={selectedBrand.name}
-              shape="square"
-              size={120}
-              style={{ marginBottom: 16 }}
+              width={200}
+              height={150}
+              style={{ objectFit: 'contain', borderRadius: 8 }}
             />
+            <Title level={4}>{selectedBrand.name}</Title>
+
             <div style={{ width: '100%' }}>
               <Title level={5}>Mô tả</Title>
               <Paragraph>

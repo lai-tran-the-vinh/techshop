@@ -488,7 +488,7 @@ const WarehouseTransferManagement = () => {
   );
 
   return (
-    <div className="p-6 bg-gray-50 ">
+    <div>
       <Card>
         <div className="flex justify-between items-center mb-6">
           <Title level={2} className="m-0! ">
@@ -774,14 +774,10 @@ const WarehouseTransferManagement = () => {
             />
 
             <Descriptions bordered column={2}>
-              <Descriptions.Item label="Trạng thái">
-                <Tag
-                  color={statusConfig[viewingTransfer.status].color}
-                  className="flex! flex-row! gap-5!  w-[100px]!"
-                >
-                  <div>{statusConfig[viewingTransfer.status].icon}</div>
+              <Descriptions.Item label="Trạng thái" span={2}>
+                <Typography.Text className="flex! flex-row! gap-5!  w-[100px]!">
                   <div>{statusConfig[viewingTransfer.status].text}</div>
-                </Tag>
+                </Typography.Text>
               </Descriptions.Item>
               <Descriptions.Item label="Từ kho">
                 {viewingTransfer.fromBranchId.name}
@@ -792,7 +788,7 @@ const WarehouseTransferManagement = () => {
               <Descriptions.Item label="Ngày tạo">
                 {dayjs(viewingTransfer.createdAt).format('DD/MM/YYYY HH:mm')}
               </Descriptions.Item>
-              <Descriptions.Item label="Người tạo">
+              <Descriptions.Item label="Người tạo" span={2}>
                 {viewingTransfer.createdBy.name}
               </Descriptions.Item>
               {viewingTransfer.approvedBy && (
@@ -805,7 +801,7 @@ const WarehouseTransferManagement = () => {
                   </Descriptions.Item>
                 </>
               )}
-              <Descriptions.Item label="Ghi chú" span={7}>
+              <Descriptions.Item label="Ghi chú" span={2}>
                 {viewingTransfer.note || 'Không có ghi chú'}
               </Descriptions.Item>
             </Descriptions>
@@ -817,13 +813,9 @@ const WarehouseTransferManagement = () => {
                   <Text strong>Trạng thái hiện tại:</Text>
                 </Col>
                 <Col span={16}>
-                  <Tag
-                    color={statusConfig[viewingTransfer.status].color}
-                    className="flex! flex-row! gap-5! w-[100px]!"
-                  >
-                    <div>{statusConfig[viewingTransfer.status].icon}</div>
+                  <Text className="flex! flex-row! gap-5!">
                     <div>{statusConfig[viewingTransfer.status].text}</div>
-                  </Tag>
+                  </Text>
                 </Col>
               </Row>
 

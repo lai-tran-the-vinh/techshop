@@ -212,6 +212,7 @@ const WarehouseInbound = () => {
         'productId',
         'variant',
         'variantColor',
+        'cost',
         'quantity',
       ])
       .then((values) => {
@@ -236,7 +237,7 @@ const WarehouseInbound = () => {
           );
           return;
         }
-
+        console.log(values);
         const newItem = {
           id: Date.now(),
           productId: values.productId,
@@ -415,7 +416,7 @@ const WarehouseInbound = () => {
       ),
     },
     {
-      title: 'Số lượng',
+      title: 'Số lượng ',
       key: 'quantity',
       width: 120,
       render: (_, record) => (
@@ -477,7 +478,7 @@ const WarehouseInbound = () => {
       title: 'Mã phiếu nhập',
       dataIndex: '_id',
       key: 'code',
-      width: 150,
+      width: 130,
       render: (text) => (
         <Tooltip title={text}>
           <Text strong copyable={{ text: text }}>
@@ -512,7 +513,7 @@ const WarehouseInbound = () => {
       ),
     },
     {
-      title: 'Số lượng',
+      title: 'Số lượng ',
       key: 'totalItems',
       width: 100,
       align: 'center',
@@ -570,7 +571,7 @@ const WarehouseInbound = () => {
     0,
   );
   const totalValue = inboundItems.reduce((sum, item) => sum + item.total, 0);
-
+  console.log('Inbound Items:', totalValue);
   if (pageLoading) {
     return (
       <div
@@ -578,7 +579,7 @@ const WarehouseInbound = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '60vh',
+          minHeight: '100vh',
         }}
       >
         <Spin size="large" />
@@ -618,7 +619,7 @@ const WarehouseInbound = () => {
           <Card
             className="h-full!"
             title={
-              <Space className="py-5!">
+              <Space className="py-10!">
                 <ImportOutlined />
                 <Text strong className="text-[16px]!">
                   Tạo phiếu nhập kho
@@ -653,7 +654,7 @@ const WarehouseInbound = () => {
           <Card
             className="mt-10!"
             title={
-              <Space className="py-5!">
+              <Space className="py-10!">
                 <ProductOutlined style={{ color: '#52c41a' }} />
                 <span>Danh sách sản phẩm</span>
               </Space>
@@ -756,7 +757,7 @@ const WarehouseInbound = () => {
       {inboundItems.length > 0 && (
         <Card
           title={
-            <Space>
+            <Space className="py-10!">
               <ProductOutlined style={{ color: '#722ed1' }} />
               <span>Chi tiết sản phẩm nhập kho</span>
             </Space>
@@ -784,7 +785,7 @@ const WarehouseInbound = () => {
             margin: '10px 0',
           }}
         >
-          <Row gutter={[16, 16]}>
+          <Row gutter={[10, 10]}>
             <Col span={8}>
               <Input
                 size="large"
@@ -844,7 +845,7 @@ const WarehouseInbound = () => {
                 Làm mới
               </Button>
             </Col>
-            <Divider />
+            <Divider className="my-5!" />
             <Col span={24}>
               <Card
                 title={
@@ -860,10 +861,6 @@ const WarehouseInbound = () => {
                   rowKey="_id"
                   pagination={{
                     pageSize: 10,
-                    showSizeChanger: true,
-                    showQuickJumper: true,
-                    showTotal: (total, range) =>
-                      `${range[0]}-${range[1]} của ${total} bản ghi`,
                   }}
                 />
               </Card>

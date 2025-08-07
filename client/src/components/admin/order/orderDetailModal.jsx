@@ -159,7 +159,7 @@ const OrderDetailsModal = ({
   };
 
   const stepInfo = getStatusSteps(editableOrder.status);
-console.log(editableOrder);
+
   return (
     <Modal
       title={
@@ -285,9 +285,13 @@ console.log(editableOrder);
                     </>
                   }
                 >
-                  {editableOrder.items
-                    ?.map((item) => item.branch?.name)
-                    .join(', ') || 'Không có'}
+                  {[
+                    ...new Set(
+                      editableOrder.items
+                        ?.map((item) => item.branch?.name)
+                        .filter(Boolean),
+                    ),
+                  ].join(', ') || 'Không có'}
                 </Descriptions.Item>
                 <Descriptions.Item
                   label={

@@ -752,19 +752,20 @@ const WarehouseOutbound = () => {
         </Space>
       </div>
 
-      <Row gutter={[24, 24]}>
+      <Row gutter={[10, 10]}>
         {/* Form tạo phiếu xuất kho */}
         <Col xs={24} lg={14}>
           <Card
             title={
-              <Space>
+              <Space className="py-10! ">
                 <ExportOutlined />
                 <Text strong>Tạo phiếu xuất kho</Text>
               </Space>
             }
+            className="h-full!"
           >
             <Form form={form} layout="vertical">
-              <Row gutter={16}>
+              <Row gutter={[10, 10]}>
                 <Col span={24}>
                   <Form.Item
                     label="Chi nhánh"
@@ -903,6 +904,7 @@ const WarehouseOutbound = () => {
                       {
                         type: 'number',
                         min: 1,
+
                         message: 'Số lượng phải lớn hơn 0',
                       },
                     ]}
@@ -920,6 +922,11 @@ const WarehouseOutbound = () => {
                       placeholder="Nhập số lượng"
                       style={{ width: '100%' }}
                       size="large"
+                      onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                          event.preventDefault(); // chặn nhập nếu không phải số
+                        }
+                      }}
                     />
                   </Form.Item>
                 </Col>

@@ -19,8 +19,7 @@ import {
   ReloadOutlined,
   DollarOutlined,
   PlusOutlined,
-  MinusOutlined,
-  DeleteOutlined,
+ 
 } from '@ant-design/icons';
 import {
   Badge,
@@ -70,6 +69,7 @@ const useOrderData = () => {
   const [products, setProducts] = useState([]);
   const [productsInInventory, setProductsInInventory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useAppContext();
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -123,7 +123,13 @@ const useOrderData = () => {
   const fetchProductsInInventory = useCallback(async () => {
     try {
       const res = await Inventory.getAll();
-      setProductsInInventory(res.data.data);
+      const inventory = res.data.data;
+      if (user.branch) {
+        const branchInventory = inventory.filter(
+          (item) => item.branch && item.branch._id === user.branch,
+        );
+        setProductsInInventory(branchInventory);
+      }
     } catch (error) {
       notification.error({
         message: 'Lỗi tải dữ liệu sản phẩm',
@@ -338,9 +344,10 @@ const OrderStatistics = ({ orders, filters, branches }) => {
 
 const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
   <Card style={{ marginBottom: '10px' }}>
-    <Row gutter={16}>
+    <Row gutter={10} align="middle">
       <Col span={6}>
         <Input
+          className="h-[40px] w-full"
           placeholder="Tìm kiếm theo tên, SĐT, sản phẩm..."
           prefix={<SearchOutlined />}
           value={filters.searchText}
@@ -382,14 +389,14 @@ const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
       </Col>
       <Col span={4}>
         <RangePicker
-          style={{ width: '100%' }}
+          className="h-[40px] w-full"
           placeholder={['Từ ngày', 'Đến ngày']}
           value={filters.dateRange}
           onChange={(dates) => setFilters({ ...filters, dateRange: dates })}
         />
       </Col>
       <Col span={2}>
-        <Button
+        {/* <Button
           icon={<ReloadOutlined />}
           onClick={() =>
             setFilters({
@@ -401,10 +408,15 @@ const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
           }
         >
           Reset
-        </Button>
+        </Button> */}
       </Col>
       <Col span={4}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={onCreateOrder}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={onCreateOrder}
+          className="w-full! h-[40px]!"
+        >
           Tạo Đơn Hàng Tại Quầy
         </Button>
       </Col>
@@ -609,25 +621,36 @@ const OrderManagement = () => {
     {
       title: 'Sản phẩm',
       key: 'items',
-      width: 200,
-      render: (_, record) => (
-        <div>
-          {record.items?.map((item, index) => (
-            <div
-              key={`${item.product?._id}-${item.variant?._id}-${index}`}
-              style={{ marginBottom: index < record.items.length - 1 ? 4 : 0 }}
-            >
-              <div style={{ fontSize: '13px' }}>
-                {item.product?.name || 'Không có tên'}
+      width: 250,
+      render: (_, record) => {
+        if (!record.items || record.items.length === 0)
+          return 'Không có sản phẩm';
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {record.items.map((item, index) => (
+              <div
+                key={`${item.product?._id}-${item.variant?._id}-${index}`}
+                style={{
+                  padding: '4px 8px',
+                  backgroundColor: '#f9f9f9',
+                  borderRadius: 4,
+                  border: '1px solid #eee',
+                }}
+              >
+                <div style={{ fontWeight: 500 }}>
+                  • {item.product?.name || 'Không có tên'}
+                </div>
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                  <Text code>{item.variant?.name || 'Không có phân loại'}</Text>
+                  <Text>{item.variantColor || ''}</Text> x{' '}
+                  <Text code>{item.quantity || 0}</Text>
+                </div>
               </div>
-              <div style={{ fontSize: '11px', color: '#666' }}>
-                {item.variant?.name || 'Không có phân loại'} x{' '}
-                {item.quantity || 0}
-              </div>
-            </div>
-          )) || 'Không có sản phẩm'}
-        </div>
-      ),
+            ))}
+          </div>
+        );
+      },
     },
     {
       title: 'Tổng tiền',
@@ -719,10 +742,6 @@ const OrderManagement = () => {
           rowKey="_id"
           pagination={{
             pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} của ${total} đơn hàng`,
           }}
           loading={loading}
           locale={{
@@ -750,6 +769,7 @@ const OrderManagement = () => {
         onCancel={() => setIsCreateModalVisible(false)}
         onSubmit={handleCreateOrderSubmit}
         loading={loading}
+        products={products}
         branches={branches}
         productsInInventory={productsInInventory}
         user={user}
