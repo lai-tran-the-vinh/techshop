@@ -23,7 +23,9 @@ function CommonInformation({
 
       if (typeof imageUrl === 'string' && imageUrl.startsWith('http')) {
         console.log('Chạy vô đây nè', imageUrl);
-        uploadHandler(imageUrl, file.name);
+        uploadHandler({
+          result: [{ url: imageUrl, name: file.name, size: file.size }],
+        });
       } else {
         throw new Error('Invalid image URL');
       }
