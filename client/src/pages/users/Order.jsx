@@ -171,7 +171,7 @@ function Order() {
           name: fullName,
           phone: phone || userInfo?.phone,
           address: canChooseAddress
-            ? `${userTypeAddress.addressDetail}, ${userTypeAddress.specificAddress}`
+            ? `${userTypeAddress?.addressDetail}, ${userTypeAddress?.specificAddress}`
             : selectedAddress || '',
         },
         buyer: {
@@ -278,7 +278,7 @@ function Order() {
         };
 
         message.destroy();
-        if (paymentMethod === 'Thanh toán khi nhận hàng') {
+        if (paymentMethod === 'cash') {
           message.success('Đặt hàng thành công');
           navigate('/');
           return;
@@ -325,7 +325,7 @@ function Order() {
       const defaultAddress = userInfo.addresses?.find(
         (address) => address.default,
       );
-      setSelectedAddress(defaultAddress.addressDetail);
+      setSelectedAddress(defaultAddress?.addressDetail);
       return;
     }
 
@@ -337,7 +337,7 @@ function Order() {
 
   const canOrder =
     (order && order?.recipient.phone && order?.recipient.address) ||
-    order?.buyer.phone;
+    order?.buyer.phone || selectedAddress;
 
   let addressDisplay;
 
@@ -620,8 +620,8 @@ function Order() {
                 }}
                 options={userInfo?.addresses?.map((address) => {
                   return {
-                    value: `${address.addressDetail}, ${address.specificAddress}`,
-                    label: `${address.addressDetail}, ${address.specificAddress}`,
+                    value: `${address?.addressDetail}, ${address?.specificAddress}`,
+                    label: `${address?.addressDetail}, ${address?.specificAddress}`,
                   };
                 })}
               />
@@ -729,7 +729,7 @@ function Order() {
                   ? selectedAddress
                     ? selectedAddress
                     : 'Chưa có'
-                  : `${userTypeAddress.addressDetail || ''}, ${userTypeAddress.specificAddress || ''}`}
+                  : `${userTypeAddress?.addressDetail || ''}, ${userTypeAddress.specificAddress || ''}`}
               </Typography.Text>
             </Flex>
             <Divider className="my-0!" />

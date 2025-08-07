@@ -13,6 +13,10 @@ class CartServices {
     return axiosInstance.delete(`/api/v1/carts/remove-all?id=${id}`);
   }
 
+  update(id, cartItems) {
+    return axiosInstance.patch(`/api/v1/carts/${id}`, { user: id, items: cartItems });
+  }
+
   deleteOne(productId, variantId) {
     const params = new URLSearchParams();
     params.append('productId', productId);
