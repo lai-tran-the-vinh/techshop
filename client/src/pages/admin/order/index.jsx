@@ -19,7 +19,6 @@ import {
   ReloadOutlined,
   DollarOutlined,
   PlusOutlined,
- 
 } from '@ant-design/icons';
 import {
   Badge,
@@ -232,7 +231,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
       );
 
       totalOrders = branchOrders.length;
-      totalRevenue = branchOrders.reduce(
+      totalRevenue = validOrders.reduce(
         (sum, order) => sum + order.totalPrice,
         0,
       );
@@ -299,10 +298,9 @@ const OrderStatistics = ({ orders, filters, branches }) => {
       <Col span={filters.branch ? 5 : 6}>
         <Card>
           <Statistic
-            title={filters.branch ? 'Doanh thu (Chi nhánh)' : 'Tổng doanh thu'}
+            title={'Tổng doanh thu'}
             value={stats.totalRevenue}
-            formatter={(value) => formatCurrency(value)}
-            prefix={<DollarOutlined />}
+            formatter={(value) => `${formatCurrency(value)} VND`}
           />
         </Card>
       </Col>
@@ -312,8 +310,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
             <Statistic
               title={`Doanh thu ${stats.branchName}`}
               value={stats.branchRevenue}
-              formatter={(value) => formatCurrency(value)}
-              prefix={<EnvironmentOutlined />}
+              formatter={(value) => `${formatCurrency(value)} VND`}
               valueStyle={{ color: '#52c41a' }}
             />
           </Card>
@@ -632,7 +629,7 @@ const OrderManagement = () => {
             {record.items.map((item, index) => (
               <div
                 key={`${item.product?._id}-${item.variant?._id}-${index}`}
-                className='px-4 py-8'
+                className="px-4 py-8"
                 // style={{
                 //   padding: '4px 8px',
                 //   backgroundColor: '#f9f9f9',
@@ -723,7 +720,7 @@ const OrderManagement = () => {
 
   return (
     <div style={{ padding: '0px' }}>
-      <Card className='mb-10!'>
+      <Card className="mb-10!">
         <Title
           level={3}
           style={{ margin: 0, display: 'flex', alignItems: 'center' }}
