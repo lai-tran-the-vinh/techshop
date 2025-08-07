@@ -359,17 +359,17 @@ const WarehouseManagement = () => {
   return (
     <div className=" min-h-screen">
       <div className="mb-5">
-        <div>
-          <Title level={2} className="mb-20! flex! items-center! gap-8!">
+        <Card>
+          <Title level={2} className="mb-5! flex! items-center! gap-2!">
             <FaWarehouse className="mr-2" />
             Quản lý kho hàng
           </Title>
           <Text type="secondary">
             Quản lý kho: {uniqueBranchNames.join(', ')}{' '}
           </Text>
-        </div>
+        </Card>
       </div>
-      <Row gutter={[16, 16]} style={{ marginBottom: '10px' }}>
+      <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={12} md={8}>
           <Card>
             <Text type="secondary" className="text-[14px]! font-medium!">
@@ -504,9 +504,10 @@ const WarehouseManagement = () => {
           marginBottom: '10px',
         }}
       >
-        <Row gutter={[16, 16]} align="middle">
+        <Row gutter={[10, 10]} align="middle">
           <Col xs={24} sm={12} md={6}>
             <Input
+              className="h-[40px] w-full"
               placeholder="Tìm kiếm sản phẩm, chi nhánh, người tạo..."
               prefix={<SearchOutlined />}
               value={searchText}
@@ -529,6 +530,7 @@ const WarehouseManagement = () => {
               ))}
             </Select>
           </Col>
+
           <Col xs={24} sm={12} md={6}>
             <Space>
               <Checkbox
@@ -539,7 +541,8 @@ const WarehouseManagement = () => {
               </Checkbox>
             </Space>
           </Col>
-          <Col xs={24} sm={24} md={4}>
+          {/* <Col xs={24} sm={12} md={2}></Col> */}
+          {/* <Col xs={24} sm={24} md={4}>
             <Space>
               <Button
                 icon={<ReloadOutlined />}
@@ -549,15 +552,11 @@ const WarehouseManagement = () => {
                 Làm mới
               </Button>
             </Space>
-          </Col>
+          </Col> */}
         </Row>
       </Card>
 
-      <Card
-        style={{
-          minHeight: '90vh',
-        }}
-      >
+      <Card>
         <div style={{ marginBottom: '16px' }}>
           <Space>
             <Title level={4}>Danh sách kho hàng</Title>
@@ -584,7 +583,7 @@ const WarehouseManagement = () => {
             ),
           }}
           pagination={{
-            pageSize: 10,
+            pageSize: 20,
           }}
           bordered
           loading={loading}

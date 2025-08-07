@@ -14,7 +14,7 @@ const InboundSummary = ({
   return (
     <Card
       title={
-        <Space className="py-5!">
+        <Space className="py-10!">
           <Text strong>
             {inbound ? 'Chi tiết phiếu nhập' : 'Chi tiết phiêu xuất'}
           </Text>

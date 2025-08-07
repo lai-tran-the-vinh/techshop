@@ -118,7 +118,7 @@ const ChatBot = () => {
   return (
     <>
       {visible && (
-        <div className="fixed bottom-20 right-6 w-[400px] h-[500px] z-[1000] bg-white shadow-2xl rounded-xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-20 right-6 w-[500px] h-[600px] z-[1000] bg-white shadow-2xl rounded-xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5 duration-300">
           <div className="bg-gradient-to-r bg-primary text-white px-12 py-8 rounded-t-xl">
             <Flex justify="space-between" align="center">
               <Flex align="center" gap={8}>

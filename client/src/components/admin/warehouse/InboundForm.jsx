@@ -38,8 +38,6 @@ const InboundForm = ({
     form.setFieldsValue({
       variantColor: undefined,
     });
-
-    console.log('Selected variant:', variant);
   };
 
   // Lấy các màu của biến thể đã chọn
@@ -73,7 +71,7 @@ const InboundForm = ({
             <Form.Item name="productId" style={{ display: 'none' }}>
               <Input type="hidden" />
             </Form.Item>
-            <Input
+            <Input className='h-[40px]'
               placeholder="Click để tìm kiếm sản phẩm"
               readOnly
               onClick={() => setProductSearchVisible(true)}
@@ -156,7 +154,7 @@ const InboundForm = ({
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[10, 10]}>
         <Col span={7}>
           <Form.Item
             name="quantity"
