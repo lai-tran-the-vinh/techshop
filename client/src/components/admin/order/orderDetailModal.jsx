@@ -193,10 +193,11 @@ const OrderDetailsModal = ({
           Lưu thay đổi
         </Button>,
       ]}
+      className="overflow-y-auto!"
       width={1100}
       style={{ top: 10 }}
     >
-      <div style={{ maxHeight: '100vh' }}>
+      <div style={{}}>
         <Card style={{ marginBottom: 20, backgroundColor: '#fafafa' }}>
           <Steps
             current={stepInfo.current}

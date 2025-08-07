@@ -578,20 +578,20 @@ const OrderManagement = () => {
         </Text>
       ),
     },
-    {
-      title: 'Người tạo đơn hàng',
-      dataIndex: 'createdBy',
-      key: 'createdBy',
-      width: 180,
-      render: (_, record) => (
-        <div>
-          <div>{record.createdBy?.name || 'Không có'}</div>
-          <div style={{ fontSize: '12px', color: '#666' }}>
-            {record.createdBy?.email || ''}
-          </div>
-        </div>
-      ),
-    },
+    // {
+    //   title: 'Người tạo đơn hàng',
+    //   dataIndex: 'createdBy',
+    //   key: 'createdBy',
+    //   width: 180,
+    //   render: (_, record) => (
+    //     <div>
+    //       <div>{record.createdBy?.name || 'Không có'}</div>
+    //       <div style={{ fontSize: '12px', color: '#666' }}>
+    //         {record.createdBy?.email || ''}
+    //       </div>
+    //     </div>
+    //   ),
+    // },
     {
       title: 'Khách hàng',
       key: 'buyer',
@@ -631,15 +631,16 @@ const OrderManagement = () => {
             {record.items.map((item, index) => (
               <div
                 key={`${item.product?._id}-${item.variant?._id}-${index}`}
-                style={{
-                  padding: '4px 8px',
-                  backgroundColor: '#f9f9f9',
-                  borderRadius: 4,
-                  border: '1px solid #eee',
-                }}
+                className='px-4 py-8'
+                // style={{
+                //   padding: '4px 8px',
+                //   backgroundColor: '#f9f9f9',
+                //   borderRadius: 4,
+                //   border: '1px solid #eee',
+                // }}
               >
                 <div style={{ fontWeight: 500 }}>
-                  • {item.product?.name || 'Không có tên'}
+                  {item.product?.name || 'Không có tên'}
                 </div>
                 <div style={{ fontSize: '12px', color: '#666' }}>
                   <Text code>{item.variant?.name || 'Không có phân loại'}</Text>
