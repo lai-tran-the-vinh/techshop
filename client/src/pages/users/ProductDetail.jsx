@@ -202,7 +202,7 @@ function ProductDetail() {
     }
 
     record();
-  }, [product._id, user?._id]);
+  }, [product._id, user?._id, id]);
 
   const handleAddItemsToCart = async (items) => {
     const cartServices = new CartServices();
