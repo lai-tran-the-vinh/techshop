@@ -694,7 +694,7 @@ function Order() {
                 Số điện thoại
               </Typography.Text>
               <Typography.Text className="text-sm!">
-                {userInfo.phone}
+                {userInfo.phone || phone}
               </Typography.Text>
             </Flex>
             <Divider className="my-0!" />
