@@ -438,7 +438,7 @@ function Order() {
               Số điện thoại
             </Typography.Text>
             <Input
-              value={phone}
+              value={phone || userInfo?.phone}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full! flex-1 py-8!"
             />
@@ -725,7 +725,7 @@ function Order() {
               </Typography.Text>
               <Typography.Text className="text-sm!">
                 {!canChooseAddress
-                  ? 'Chưa có'
+                  ? selectedAddress ? selectedAddress : 'Chưa có'
                   : `${userTypeAddress.addressDetail || ''}, ${userTypeAddress.specificAddress || ''}`}
               </Typography.Text>
             </Flex>
