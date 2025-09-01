@@ -34,10 +34,6 @@ import {
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
-  AppstoreOutlined,
-  BarcodeOutlined,
-  CheckCircleOutlined,
-  StopOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
 } from '@ant-design/icons';
@@ -49,6 +45,7 @@ import {
 import { useAppContext } from '@/contexts';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ExpandedRowRender } from '@/components/admin/product/ExpandRowRender';
+import { BsCheckCircleFill, BsFillGridFill, BsFillStopCircleFill, BsTagFill } from 'react-icons/bs';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -369,45 +366,29 @@ function ListProduct() {
         <Row gutter={16} style={{ marginBottom: '10px' }}>
           <Col xs={12} sm={6}>
             <Card>
-              <Statistic
-                title={<span style={{ color: '#475569' }}>Tổng sản phẩm</span>}
-                value={stats.total}
-                prefix={<AppstoreOutlined style={{ color: '#4F46E5' }} />}
-                valueStyle={{ color: '#4F46E5', fontWeight: 600 }}
-              />
+              <span className='text-[#475569]!'>Tổng sản phẩm</span>
+              <div className='flex! items-center! gap-4! mt-6!'><BsFillGridFill className='text-[#4F46E5]! text-2xl!' /><span className='text-2xl! text-[#4F46E5]! font-bold!'>{stats.total}</span></div>
             </Card>
           </Col>
           <Col xs={12} sm={6}>
             <Card>
-              <Statistic
-                title={<span style={{ color: '#475569' }}>Đang bán</span>}
-                value={stats.active}
-                prefix={<CheckCircleOutlined style={{ color: '#8B5CF6' }} />}
-                valueStyle={{ color: '#8B5CF6', fontWeight: 600 }}
-              />
+              <span className='text-[#475569]!'>Đang bán</span>
+              <div className='flex! items-center! gap-4! mt-6!'><BsCheckCircleFill className='text-[#8B5CF6]! text-2xl!' /><span className='text-2xl! text-[#8B5CF6]! font-bold!'>{stats.active}</span></div>
+              
             </Card>
           </Col>
           <Col xs={12} sm={6}>
             <Card>
-              <Statistic
-                title={<span style={{ color: '#475569' }}>Ngừng bán</span>}
-                value={stats.inactive}
-                prefix={<StopOutlined style={{ color: '#94A3B8' }} />}
-                valueStyle={{
-                  color: '#94A3B8',
-                  fontWeight: 600,
-                }}
-              />
+              <span className='text-[#475569]!'>Ngừng bán</span>
+              <div className='flex! items-center! gap-4! mt-6!'><BsFillStopCircleFill className='text-[#94A3B8]! text-2xl!' /><span className='text-2xl! text-[#94A3B8]! font-bold!'>{stats.inactive}</span></div>
+              
             </Card>
           </Col>
           <Col xs={12} sm={6}>
             <Card>
-              <Statistic
-                title={<span style={{ color: '#475569' }}>Có giảm giá</span>}
-                value={stats.discounted}
-                prefix={<TagOutlined style={{ color: '#EF4444' }} />}
-                valueStyle={{ color: '#EF4444', fontWeight: 600 }}
-              />
+              <span className='text-[#475569]!'>Có giảm giá</span>
+              <div className='flex! items-center! gap-4! mt-6!'><BsTagFill className='text-[#EF4444]! text-2xl!' /><span className='text-2xl! text-[#EF4444]! font-bold!'>{stats.discounted}</span></div>
+              
             </Card>
           </Col>
         </Row>
@@ -426,10 +407,7 @@ function ListProduct() {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 allowClear
-                style={{
-                  borderRadius: 8,
-                  border: `1px solid "#CBD5E1"`,
-                }}
+                className='h-40!'
               />
             </Col>
 
@@ -471,11 +449,7 @@ function ListProduct() {
                 <Button
                   onClick={handleClearFilters}
                   icon={<ReloadOutlined />}
-                  style={{
-                    borderColor: '#94A3B8',
-                    color: '#475569',
-                    borderRadius: 8,
-                  }}
+                  className='h-40!'
                 >
                   Xóa bộ lọc
                 </Button>
@@ -489,12 +463,7 @@ function ListProduct() {
                   type="primary"
                   icon={<PlusOutlined />}
                   onClick={() => navigate('/admin/product/add')}
-                  style={{
-                    backgroundColor: 'rgb(11, 162, 36)',
-                    borderRadius: 8,
-                    fontWeight: 500,
-                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)',
-                  }}
+                  className='h-40!'
                 >
                   Thêm sản phẩm
                 </Button>
@@ -504,9 +473,8 @@ function ListProduct() {
                   onClick={handleEditProduct}
                   disabled={!(selectedRowKeys.length === 1 && canUpdateProduct)}
                   icon={<EditOutlined />}
+                  className='h-40!'
                   style={{
-                    borderRadius: 8,
-                    fontWeight: 500,
                     boxShadow:
                       selectedRowKeys.length === 1
                         ? '0 2px 8px rgba(79, 70, 229, 0.2)'
@@ -521,16 +489,9 @@ function ListProduct() {
                   onClick={() => setOpen(true)}
                   disabled={selectedRowKeys.length === 0 || !canDeleteProduct}
                   icon={<DeleteOutlined />}
+                  className='h-40!'
                   style={{
-                    borderRadius: 8,
                     fontWeight: 500,
-
-                    borderColor:
-                      selectedRowKeys.length > 0 ? '#EF4444' : undefined,
-                    boxShadow:
-                      selectedRowKeys.length > 0
-                        ? '0 2px 8px rgba(239, 68, 68, 0.2)'
-                        : 'none',
                   }}
                 >
                   Xóa ({selectedRowKeys.length})

@@ -360,19 +360,10 @@ const Dashboard = () => {
           <Card
             className="rounded-xl! h-full!"
             title={
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  height: 50,
-                }}
-              >
-                <div>
-                  <Text strong style={{ fontSize: '18px', color: '#1e293b' }}>
-                    Doanh thu theo chi nhánh
-                  </Text>
-                </div>
+              <div className='flex items-center justify-between md:gap-10 max-sm:flex-col max-sm:items-start py-10'>
+                <Text strong className='block! py-10! text-lg! text-[#1e293b]!'>
+                  Doanh thu theo chi nhánh
+                </Text>
                 <Select
                   size="middle"
                   style={{ width: 250 }}
@@ -389,6 +380,7 @@ const Dashboard = () => {
               </div>
             }
           >
+
             <ResponsiveContainer width="100%" height={350}>
               <ComposedChart
                 data={branchChartData?.length ? branchChartData : []}
@@ -828,12 +820,12 @@ const Dashboard = () => {
             </Title>
             <Text
               type="secondary"
-              style={{ fontSize: '14px', color: '#6b7280' }}
+              className='text-sm! text-[#6b7280]! '
             >
               Tổng quan hiệu suất kinh doanh
             </Text>
           </Col>
-          <Col>
+          <Col className={`md:sm:mt-8! max-sm:mt-8!`}>
             <Space size="middle">
               <Segmented
                 value={selectedPeriod}
@@ -852,7 +844,7 @@ const Dashboard = () => {
       {/* Stats Cards */}
       <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl!">
+          <Card className="rounded-xl! h-full!">
             <Statistic
               title={
                 <Text
@@ -882,7 +874,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl!">
+          <Card className="rounded-xl! h-full!">
             <Statistic
               title={
                 <Text
@@ -911,7 +903,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl!">
+          <Card className="rounded-xl! h-full!">
             <Statistic
               title={
                 <Text
@@ -946,37 +938,17 @@ const Dashboard = () => {
           <Card
             className="rounded-xl!"
             title={
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '5px 0px',
-                  height: 50,
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '12px',
-                  }}
-                >
-                  <Text strong style={{ fontSize: '16px', color: '#1f2937' }}>
-                    Doanh thu & Lợi nhuận & Đơn hàng
-                  </Text>
-                </div>
+              <div className='flex items-center justify-between md:gap-10 max-sm:flex-col max-sm:items-start py-10'>
+                <Text strong className='text-[16px]! block! py-10! text-[#1f2937]!'>
+                  Doanh thu & Lợi nhuận & Đơn hàng
+                </Text>
                 <RangePicker
                   value={chartDateRange}
                   onChange={handleChartDateRangeChange}
                   presets={getDatePresets()}
                   format="DD/MM/YYYY"
                   placeholder={['Từ ngày', 'Đến ngày']}
-                  style={{
-                    borderRadius: '6px',
-                    minWidth: '280px',
-                  }}
+                  className='h-35!'
                   allowClear
                 />
               </div>
@@ -1110,7 +1082,6 @@ const Dashboard = () => {
             className="rounded-xl! h-full!"
             title={
               <div className="flex items-center gap-3 py-2 h-[50px]">
-                <div className="w-2 h-8 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
                   Phương thức thanh toán
                 </Text>
@@ -1214,7 +1185,7 @@ const Dashboard = () => {
               className='w-full! h-full!'
             />
           </Card>
-         
+
         </Col>
 
         <Col xs={24} lg={12}>
@@ -1241,7 +1212,7 @@ const Dashboard = () => {
       </Row>
       {currentStats?.lastUpdated && (
         <Card
-         className='text-center! border-none! bg-transparent!'
+          className='text-center! border-none! bg-transparent!'
         >
           <Text className='text-[#6b7280]! text-sm!'>
             Cập nhật lần cuối:{' '}

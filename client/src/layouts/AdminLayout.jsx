@@ -28,7 +28,7 @@ import { callLogout } from '@/services/apis';
 import { hasPermission } from '@/helpers';
 import { Actions, Subjects } from '@/constants/permissions';
 import { AvatarDefault } from '@/components/app';
-import { BsArrowRightCircleFill, BsBagFill, BsFillBoxSeamFill, BsFillCheckCircleFill, BsFillGridFill, BsFillHouseLockFill, BsFillImageFill, BsFillLockFill, BsFillPeopleFill, BsFillTagsFill, BsPieChartFill, BsPinMapFill, BsTools } from 'react-icons/bs';
+import { BsArrowRightCircleFill, BsBagFill, BsFillBoxSeamFill, BsFillCheckCircleFill, BsFillGridFill, BsFillHouseFill, BsFillHouseLockFill, BsFillImageFill, BsFillLockFill, BsFillPeopleFill, BsFillTagsFill, BsPieChartFill, BsPinMapFill, BsTools } from 'react-icons/bs';
 
 function AdminLayout() {
   const { Title, Text } = Typography;
@@ -494,7 +494,7 @@ function AdminLayout() {
       >
         <FloatButton
           shape="circle"
-          icon={<BsFillPeopleFill className='text-primary!' />}
+          icon={<BsFillHouseFill  className='text-primary!' />}
           type="default"
           onClick={() => navigate('/')}
         />
