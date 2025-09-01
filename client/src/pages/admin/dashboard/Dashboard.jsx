@@ -1241,9 +1241,9 @@ const Dashboard = () => {
       </Row>
       {currentStats?.lastUpdated && (
         <Card
-         className='text-center! border-none!'
+         className='text-center! border-none! bg-transparent!'
         >
-          <Text style={{ fontSize: '13px', color: '#6b7280' }}>
+          <Text className='text-[#6b7280]! text-sm!'>
             Cập nhật lần cuối:{' '}
             <Text strong style={{ color: '#374151' }}>
               {dayjs(currentStats.lastUpdated).format('DD/MM/YYYY - HH:mm:ss')}

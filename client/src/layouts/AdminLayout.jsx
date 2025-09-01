@@ -4,36 +4,23 @@ import {
   Layout,
   Typography,
   Menu,
-  Space,
   Avatar,
-  Badge,
-  Divider,
   Button,
   Tooltip,
-  Card,
   FloatButton,
-  message,
+  
   Drawer,
-  Flex,
 } from 'antd';
 import {
-  ProductOutlined,
   ShoppingOutlined,
   UserOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  TagsOutlined,
-  ContainerOutlined,
-  SettingOutlined,
   LogoutOutlined,
-  CustomerServiceOutlined,
   ToolOutlined,
   SafetyOutlined,
-  PlaySquareOutlined,
   SlidersOutlined,
   BranchesOutlined,
-  LockOutlined,
-  BarChartOutlined,
 } from '@ant-design/icons';
 import '@styles/admin-layout.css';
 import { useEffect, useMemo, useState } from 'react';
@@ -41,6 +28,7 @@ import { callLogout } from '@/services/apis';
 import { hasPermission } from '@/helpers';
 import { Actions, Subjects } from '@/constants/permissions';
 import { AvatarDefault } from '@/components/app';
+import { BsArrowRightCircleFill, BsBagFill, BsFillBoxSeamFill, BsFillCheckCircleFill, BsFillGridFill, BsFillHouseLockFill, BsFillImageFill, BsFillLockFill, BsFillPeopleFill, BsFillTagsFill, BsPieChartFill, BsPinMapFill, BsTools } from 'react-icons/bs';
 
 function AdminLayout() {
   const { Title, Text } = Typography;
@@ -60,7 +48,7 @@ function AdminLayout() {
       {
         key: 'dashboard',
         label: 'Tổng quan',
-        icon: <BarChartOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsPieChartFill className='text-primary! text-xl!' />,
         onClick: () => {
           navigate('/admin/dashboard');
           setDrawerVisible(false);
@@ -68,36 +56,36 @@ function AdminLayout() {
       },
 
       hasPermission(permissions, Subjects.Product, Actions.Read) &&
-        ({ type: 'divider' },
-        {
-          key: 'product',
-          label: 'Sản phẩm',
-          icon: <ProductOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-          children: [
-            {
-              key: 'allproducts',
-              label: 'Danh sách sản phẩm',
-              onClick: () => {
-                navigate('/admin/product');
-                setDrawerVisible(false);
-              },
+      ({ type: 'divider' },
+      {
+        key: 'product',
+        label: 'Sản phẩm',
+        icon: <BsFillBoxSeamFill className='text-primary! text-xl!' />,
+        children: [
+          {
+            key: 'allproducts',
+            label: 'Danh sách sản phẩm',
+            onClick: () => {
+              navigate('/admin/product');
+              setDrawerVisible(false);
             },
-            hasPermission(permissions, Subjects.Product, Actions.Create) && {
-              key: 'addproduct',
-              label: 'Thêm sản phẩm',
-              onClick: () => {
-                navigate('/admin/product/add');
-                setDrawerVisible(false);
-              },
+          },
+          hasPermission(permissions, Subjects.Product, Actions.Create) && {
+            key: 'addproduct',
+            label: 'Thêm sản phẩm',
+            onClick: () => {
+              navigate('/admin/product/add');
+              setDrawerVisible(false);
             },
-          ],
-        }),
+          },
+        ],
+      }),
       (hasPermission(permissions, Subjects.Inventory, Actions.Read) ||
         hasPermission(permissions, Subjects.Transfer, Actions.Read) ||
         hasPermission(permissions, Subjects.StockMovement, Actions.Read)) && {
         key: 'inventory',
         label: 'Kho hàng',
-        icon: <ContainerOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsFillHouseLockFill className='text-primary! text-xl!' />,
         children: [
           hasPermission(permissions, Subjects.Inventory, Actions.Read) && {
             key: 'allinventory',
@@ -147,7 +135,7 @@ function AdminLayout() {
       hasPermission(permissions, Subjects.Order, Actions.Read) && {
         key: 'order',
         label: 'Đơn hàng',
-        icon: <ShoppingOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsBagFill className='text-primary! text-xl!' />,
         onClick: () => {
           navigate('/admin/order');
           setDrawerVisible(false);
@@ -155,22 +143,22 @@ function AdminLayout() {
       },
 
       hasPermission(permissions, Subjects.Branch, Actions.Read) &&
-        ({
-          type: 'divider',
+      ({
+        type: 'divider',
+      },
+      {
+        key: 'branch',
+        label: 'Chi nhánh',
+        icon: <BsPinMapFill  className='text-primary! text-xl!' />,
+        onClick: () => {
+          navigate('/admin/branch/management');
+          setDrawerVisible(false);
         },
-        {
-          key: 'branch',
-          label: 'Chi nhánh',
-          icon: <BranchesOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-          onClick: () => {
-            navigate('/admin/branch/management');
-            setDrawerVisible(false);
-          },
-        }),
+      }),
       hasPermission(permissions, Subjects.Category, Actions.Read) && {
         key: 'category',
         label: 'Danh mục',
-        icon: <ShoppingOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsFillGridFill  className='text-primary! text-xl!' />,
         onClick: () => {
           navigate('/admin/category/management');
           setDrawerVisible(false);
@@ -179,7 +167,7 @@ function AdminLayout() {
       hasPermission(permissions, Subjects.Brand, Actions.Read) && {
         key: 'brand',
         label: 'Thương hiệu',
-        icon: <TagsOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsFillTagsFill className='text-primary! text-xl!' />,
         onClick: () => {
           navigate('/admin/brand/management');
           setDrawerVisible(false);
@@ -187,22 +175,22 @@ function AdminLayout() {
       },
 
       hasPermission(permissions, Subjects.User, Actions.Read) &&
-        ({
-          type: 'divider',
+      ({
+        type: 'divider',
+      },
+      {
+        key: 'user',
+        label: 'Người dùng',
+        icon: <BsFillPeopleFill className='text-primary! text-xl!' />,
+        onClick: () => {
+          navigate('/admin/user/management');
+          setDrawerVisible(false);
         },
-        {
-          key: 'user',
-          label: 'Người dùng',
-          icon: <UserOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-          onClick: () => {
-            navigate('/admin/user/management');
-            setDrawerVisible(false);
-          },
-        }),
+      }),
       {
         key: 'permissions',
         label: 'Phân quyền',
-        icon: <LockOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsFillLockFill className='text-primary! text-xl!' />,
         children: [
           {
             key: 'role',
@@ -232,36 +220,36 @@ function AdminLayout() {
       },
 
       hasPermission(permissions, Subjects.Benefit, Actions.Read) &&
-        ({
-          type: 'divider',
-        },
-        {
-          key: 'policy',
-          label: 'Chính sách ',
-          icon: <SafetyOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
-          children: [
-            {
-              key: 'warranty',
-              label: 'Chính sách bảo hành',
-              onClick: () => {
-                navigate('/admin/policy/warranty/management');
-                setDrawerVisible(false);
-              },
+      ({
+        type: 'divider',
+      },
+      {
+        key: 'policy',
+        label: 'Chính sách ',
+        icon: <BsFillCheckCircleFill className='text-primary! text-xl!' />,
+        children: [
+          {
+            key: 'warranty',
+            label: 'Chính sách bảo hành',
+            onClick: () => {
+              navigate('/admin/policy/warranty/management');
+              setDrawerVisible(false);
             },
-            {
-              key: 'promotion',
-              label: 'Khuyến mãi',
-              onClick: () => {
-                navigate('/admin/policy/promotion/management');
-                setDrawerVisible(false);
-              },
+          },
+          {
+            key: 'promotion',
+            label: 'Khuyến mãi',
+            onClick: () => {
+              navigate('/admin/policy/promotion/management');
+              setDrawerVisible(false);
             },
-          ],
-        }),
+          },
+        ],
+      }),
       hasPermission(permissions, Subjects.Banner, Actions.Read) && {
         key: 'banner',
         label: 'Banner',
-        icon: <SlidersOutlined style={{ color: '#dc2626', fontSize: 15 }} />,
+        icon: <BsFillImageFill  className='text-primary! text-xl!'/>,
         onClick: () => {
           navigate('/admin/banner/management');
           setDrawerVisible(false);
@@ -350,16 +338,16 @@ function AdminLayout() {
           theme="light"
         />
       </div>
-      <div className="p-4 mt-auto">
+      {/* <div className="mt-auto pl-24!">
         <Button
           type="default"
-          className="w-full!  border-primary! text-primary! hover:bg-primary! hover:text-white! hover:shadow-xl! rounded-lg!"
-          icon={<LogoutOutlined />}
+          className="w-full! border-none! flex! items-center! justify-start!"
+          icon={<BsArrowUpLeftCircleFill className='text-xl! text-primary!' />}
           onClick={handleLogout}
         >
           {collapsed && !isMobile ? null : 'Đăng xuất'}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 
@@ -501,18 +489,18 @@ function AdminLayout() {
           insetBlockEnd: isMobile ? 16 : 24,
           transform: isMobile ? 'scale(0.9)' : 'scale(1.1)',
         }}
-        icon={<ToolOutlined style={{ color: '#FEFEFE' }} />}
+        icon={<BsTools />}
         type="primary"
       >
         <FloatButton
           shape="circle"
-          icon={<UserOutlined />}
+          icon={<BsFillPeopleFill className='text-primary!' />}
           type="default"
           onClick={() => navigate('/')}
         />
         <FloatButton
           shape="circle"
-          icon={<LogoutOutlined />}
+          icon={<BsArrowRightCircleFill className='text-primary!'  />}
           onClick={handleLogout}
         />
       </FloatButton.Group>
