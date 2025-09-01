@@ -346,7 +346,7 @@ function AdminLayout() {
         <Menu
           mode="inline"
           items={navItems}
-          className="border-none bg-transparent text-sm"
+          className="border-none! bg-transparent text-sm"
           theme="light"
         />
       </div>
@@ -403,16 +403,7 @@ function AdminLayout() {
 
           <Link to="/admin/dashboard">
             <div className="flex items-end space-x-3 cursor-pointer">
-              <Title
-                level={1}
-                style={{
-                  fontWeight: 'bold',
-                  margin: 0,
-                  fontFamily: 'Roboto',
-                  color: '#dc2626',
-                  fontSize: isMobile ? '20px' : '40px',
-                }}
-              >
+              <Title level={1} className="font-bold! m-0! text-[#dc2626]!">
                 TechShop
               </Title>
             </div>
@@ -435,7 +426,7 @@ function AdminLayout() {
               left: 0,
               top: 64,
               background: 'rgb(255, 255, 255)',
-              borderRight: `1px solid #E2E8F0`,
+              // borderRight: `1px solid #E2E8F0`,
               transition: 'all 0.3s ease',
 
               zIndex: 1000,

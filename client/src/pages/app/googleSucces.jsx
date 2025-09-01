@@ -13,12 +13,12 @@ const GoogleSuccess = () => {
     const accessToken = queryParams.get('access_token');
     if (accessToken) {
       localStorage.setItem('access_token', accessToken);
-     
+
       notification.success({
         message: 'Đăng nhập thành công',
         description: 'Bạn đã đăng nhập bằng tài khoản Google.',
       });
-       window.location.href = '/';
+      window.location.href = '/';
     } else {
       notification.error({
         message: 'Đăng nhập thất bại',

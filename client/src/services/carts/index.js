@@ -14,17 +14,15 @@ class CartServices {
   }
 
   static update(id, cartItems) {
-
     return axiosInstance.patch(`/api/v1/carts/${id}`, { items: cartItems });
   }
 
   deleteOne(productId, variantId) {
-
     return axiosInstance.delete(`/api/v1/carts/remove-item`, {
       data: {
         productId: productId,
-        variantId: variantId
-      }
+        variantId: variantId,
+      },
     });
   }
 }

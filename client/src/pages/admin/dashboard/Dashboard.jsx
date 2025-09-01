@@ -13,19 +13,13 @@ import {
   Space,
   Tag,
   Segmented,
-  Button,
 } from 'antd';
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   MinusOutlined,
-  CalendarOutlined,
-  FilterOutlined,
 } from '@ant-design/icons';
 import {
-  LineChart,
-  Line,
-  BarChart,
   Bar,
   PieChart,
   Pie,
@@ -36,7 +30,6 @@ import {
   Legend,
   ResponsiveContainer,
   Cell,
-  AreaChart,
   Area,
   ComposedChart,
   Brush,
@@ -365,11 +358,7 @@ const Dashboard = () => {
       <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
         <Col xs={24} lg={16}>
           <Card
-            style={{
-              borderRadius: '16px',
-              border: '1px solid #e2e8f0',
-              height: '100%',
-            }}
+            className="rounded-xl! h-full!"
             title={
               <div
                 style={{
@@ -485,11 +474,7 @@ const Dashboard = () => {
 
         <Col xs={24} lg={8}>
           <Card
-            style={{
-              borderRadius: '12px',
-              border: '1px solid #e2e8f0',
-              height: '100%',
-            }}
+            className="rounded-xl! h-full!"
             title={
               <div
                 style={{
@@ -831,18 +816,11 @@ const Dashboard = () => {
     <div
       style={{
         padding: '16px',
-        backgroundColor: '#f9fafb',
         minHeight: '100vh',
       }}
     >
       {/* Header */}
-      <Card
-        style={{
-          marginBottom: '16px',
-          borderRadius: '12px',
-          border: '1px solid #e5e7eb',
-        }}
-      >
+      <Card className="mb-16! rounded-xl!">
         <Row justify="space-between" align="middle">
           <Col>
             <Title level={2} style={{ margin: 0, color: '#111827' }}>
@@ -874,12 +852,7 @@ const Dashboard = () => {
       {/* Stats Cards */}
       <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={8}>
-          <Card
-            style={{
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
-            }}
-          >
+          <Card className="rounded-xl!">
             <Statistic
               title={
                 <Text
@@ -909,12 +882,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card
-            style={{
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
-            }}
-          >
+          <Card className="rounded-xl!">
             <Statistic
               title={
                 <Text
@@ -943,12 +911,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card
-            style={{
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
-            }}
-          >
+          <Card className="rounded-xl!">
             <Statistic
               title={
                 <Text
@@ -981,10 +944,7 @@ const Dashboard = () => {
       <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} lg={16}>
           <Card
-            style={{
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
-            }}
+            className="rounded-xl!"
             title={
               <div
                 style={{
@@ -1147,10 +1107,7 @@ const Dashboard = () => {
 
         <Col xs={24} lg={8}>
           <Card
-            style={{
-              borderRadius: '16px',
-              height: '100%',
-            }}
+            className="rounded-xl! h-full!"
             title={
               <div className="flex items-center gap-3 py-2 h-[50px]">
                 <div className="w-2 h-8 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>

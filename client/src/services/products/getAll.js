@@ -17,4 +17,3 @@ async function getAll(page, limit, category, brand) {
   throw new Error('Không lấy được danh sách sản phẩm.');
 }
 export default getAll;
-

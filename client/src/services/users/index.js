@@ -41,7 +41,6 @@ class UserService {
   }
 
   static update(user) {
-
     return axiosInstance.patch(`/api/v1/users/${user._id}`, user);
   }
 

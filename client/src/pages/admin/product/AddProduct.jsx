@@ -206,7 +206,7 @@ function AddProduct() {
         navigate('/admin/product');
       }
     } catch (error) {
-        message.destroy();
+      message.destroy();
       console.error('Đã có lỗi xảy ra khi thêm sản phẩm:', error);
 
       if (error.errorFields && error.errorFields.length > 0) {

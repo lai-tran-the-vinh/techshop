@@ -71,7 +71,8 @@ const InboundForm = ({
             <Form.Item name="productId" style={{ display: 'none' }}>
               <Input type="hidden" />
             </Form.Item>
-            <Input className='h-[40px]'
+            <Input
+              className="h-[40px]"
               placeholder="Click để tìm kiếm sản phẩm"
               readOnly
               onClick={() => setProductSearchVisible(true)}

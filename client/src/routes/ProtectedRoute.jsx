@@ -57,8 +57,8 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     );
   }
 
-  if (!isAuthenticated() ) {
-    return <UnauthenticatedContent  />;
+  if (!isAuthenticated()) {
+    return <UnauthenticatedContent />;
   }
 
   // Kiểm tra quyền admin nếu cần

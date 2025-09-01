@@ -9,7 +9,6 @@ class Files {
 
     return await axiosInstance.delete(`/api/v1/upload/image`, { params });
   }
-};
-
+}
 
 export default Files;

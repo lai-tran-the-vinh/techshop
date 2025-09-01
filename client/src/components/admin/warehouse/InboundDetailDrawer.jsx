@@ -20,7 +20,6 @@ const InboundDetailDrawer = ({
   onClose,
   selectedInboundDetail,
 }) => {
-  
   const handlePrint = () => {
     if (!selectedInboundDetail) return;
 

@@ -21,8 +21,8 @@ function PaymentSuccess() {
             </Button>
           </Link>
         </Flex>
-        <div className='mr-50!'>
-          <BsCheckCircleFill size={200} className='text-green-500!' />
+        <div className="mr-50!">
+          <BsCheckCircleFill size={200} className="text-green-500!" />
         </div>
       </Flex>
     </div>

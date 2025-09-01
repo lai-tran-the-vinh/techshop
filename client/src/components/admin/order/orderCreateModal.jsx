@@ -307,7 +307,6 @@ const CreateOrderModal = ({
                   setSelectedVariant(null);
                   setSelectedColor(null);
                 }}
-               
               >
                 {productsInInventory?.map((inventory) => (
                   <Option key={inventory._id} value={inventory.product?._id}>

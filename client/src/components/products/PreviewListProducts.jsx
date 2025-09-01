@@ -15,7 +15,7 @@ function PreviewListProducts({
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
-   const settings = {
+  const settings = {
     speed: 500,
     infinite: products.length > 5,
     slidesToShow: 5,

@@ -70,7 +70,7 @@ const ModalSearchProduct = ({
       render: (_, record) => (
         <Button
           type="primary"
-          className='rounded-lg!'
+          className="rounded-lg!"
           size="small"
           onClick={() => {
             handleSelectProduct(record);

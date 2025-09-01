@@ -177,8 +177,6 @@ function Cart() {
     return originalPrice - discountAmount;
   };
 
-
-
   const variantItem = cartItems.map((item) => {
     const selectedColor = item.variant?.color?.find(
       (color) => color.colorName === item.color,
@@ -188,8 +186,6 @@ function Cart() {
       color: selectedColor,
     };
   });
-
-  
 
   const columns = [
     {
