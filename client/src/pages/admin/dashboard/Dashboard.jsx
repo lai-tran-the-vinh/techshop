@@ -1196,18 +1196,9 @@ const Dashboard = () => {
       <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
         <Col xs={24} lg={12}>
           <Card
-            style={{
-              borderRadius: '16px',
-              border: 'none',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-              background:
-                'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%)',
-              height: '100%',
-            }}
-            bodyStyle={{ padding: '24px' }}
+            className='rounded-xl! h-full!'
             title={
               <div className="flex items-center gap-3 py-3">
-                <div className="w-2 h-8 bg-gradient-to-b from-amber-500 to-orange-600 rounded-full"></div>
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
                   Top sản phẩm bán chạy
                 </Text>
@@ -1218,42 +1209,19 @@ const Dashboard = () => {
               dataSource={currentStats?.topSellingProducts || []}
               columns={topProductsColumns}
               pagination={false}
+              bordered
               rowKey="productId"
-              style={{
-                '& .ant-table': {
-                  borderRadius: '12px',
-                },
-                '& .ant-table-thead > tr > th': {
-                  backgroundColor: '#f9fafb',
-                  borderBottom: '1px solid #e5e7eb',
-                  color: '#374151',
-                  fontWeight: '600',
-                },
-                '& .ant-table-tbody > tr': {
-                  borderBottom: '1px solid #f3f4f6',
-                },
-                '& .ant-table-tbody > tr:hover': {
-                  backgroundColor: '#f8fafc',
-                },
-              }}
+              className='w-full! h-full!'
             />
           </Card>
+         
         </Col>
 
         <Col xs={24} lg={12}>
           <Card
-            style={{
-              borderRadius: '16px',
-              border: 'none',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-              background:
-                'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%)',
-              height: '100%',
-            }}
-            bodyStyle={{ padding: '24px' }}
+            className='rounded-xl! h-full!'
             title={
               <div className="flex items-center gap-3 py-3">
-                <div className="w-2 h-8 bg-gradient-to-b from-violet-500 to-purple-600 rounded-full"></div>
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
                   Sản phẩm được quan tâm
                 </Text>
@@ -1265,38 +1233,15 @@ const Dashboard = () => {
               columns={topViewCountColumns}
               pagination={false}
               rowKey="productId"
-              style={{
-                '& .ant-table': {
-                  borderRadius: '12px',
-                },
-                '& .ant-table-thead > tr > th': {
-                  backgroundColor: '#f9fafb',
-                  borderBottom: '1px solid #e5e7eb',
-                  color: '#374151',
-                  fontWeight: '600',
-                },
-                '& .ant-table-tbody > tr': {
-                  borderBottom: '1px solid #f3f4f6',
-                },
-                '& .ant-table-tbody > tr:hover': {
-                  backgroundColor: '#f8fafc',
-                },
-              }}
+              bordered
+              className='w-full! h-full!'
             />
           </Card>
         </Col>
       </Row>
       {currentStats?.lastUpdated && (
         <Card
-          style={{
-            borderRadius: '12px',
-            border: 'none',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            background:
-              'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(248,250,252,0.8) 100%)',
-            textAlign: 'center',
-          }}
-          bodyStyle={{ padding: '20px' }}
+         className='text-center! border-none!'
         >
           <Text style={{ fontSize: '13px', color: '#6b7280' }}>
             Cập nhật lần cuối:{' '}
