@@ -389,9 +389,9 @@ function Cart() {
             </Link>
           </Flex>
           <Image
-            width={300}
+            width={500}
             preview={false}
-            src="https://fptshop.com.vn/img/empty_state.png?w=640&q=75"
+            src="https://fptshop.com.vn/img/empty_cart.png?w=1920&q=75"
           />
         </Flex>
       ) : (
