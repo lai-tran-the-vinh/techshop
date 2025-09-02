@@ -90,11 +90,11 @@ function PreviewListProducts({
   }
 
   return (
-    <div className="w-full bg-white p-4 sm:p-8 lg:p-12 xl:p-20 rounded-xl mt-8 sm:mt-12 lg:mt-16 xl:mt-20">
-      <div className="flex mb-6 sm:mb-8 lg:mb-10 items-center justify-between">
+    <div className="w-full bg-white rounded-xl mt-8">
+      <div className="flex items-center pt-12 px-12 justify-between">
         <Typography.Title
           level={2}
-          className="font-inter! ml-2! sm:ml-4! lg:ml-8! mb-0!"
+          className="font-inter! mb-0! uppercase! text-primary! text-lg! sm:text-xl! lg:text-2xl!"
         >
           {title}
         </Typography.Title>
@@ -131,12 +131,12 @@ function PreviewListProducts({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Slider {...settings} className="bg-white w-full h-full">
+          <Slider {...settings} className="bg-white px-4! py-12! w-full rounded-xl! h-full">
             {products.map((product, index) => {
               return (
                 <div
                   key={index}
-                  className="px-2 sm:px-3 lg:px-4 my-6 sm:my-8 lg:my-10 w-1/5"
+                  className="px-8 w-1/5"
                 >
                   <CardProduct
                     product={product}

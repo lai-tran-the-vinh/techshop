@@ -26,7 +26,6 @@ const { Panel } = Collapse;
 
 function ListProducts(properties) {
   const {
-    sort,
     brands,
     filter,
     setSort,
@@ -64,9 +63,9 @@ function ListProducts(properties) {
     }
   };
 
-  useEffect(() => {
-    fetchBranches();
-  }, []);
+  // useEffect(() => {
+  //   fetchBranches();
+  // }, []);
 
   const startIndex = (_page - 1) * _limit;
   const endIndex = startIndex + _limit;

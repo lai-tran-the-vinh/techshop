@@ -211,31 +211,31 @@ function Home() {
         </Row>
       </section>
       {!loading && recommentProducts.length > 0 && (
-        <section className="w-full xl:p-20 mb-12 bg-[#ffffff] rounded-xl">
+        <section className="w-full mb-12 bg-[#ffffff] rounded-xl">
           <>
-            <div className="flex mb-10 items-center justify-between">
+            <div className="flex items-center justify-between pt-12 pl-12 ">
               <Typography.Title
                 level={3}
-                className="font-inter! uppercase! font-bold! text-primary! ml-2! sm:ml-4! lg:ml-8! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
+                className="font-inter! uppercase! font-bold! text-primary! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
               >
                 Sản phẩm có thể phù hợp với bạn
               </Typography.Title>
             </div>
 
-            <Flex className="w-full mx-auto">
+            <div className="w-full justify-between flex flex-wrap pb-12 px-4">
               {recommentProducts?.map((product, index) => {
                 if (index > 4) return;
                 return (
-                  <div key={index} className="w-1/5 px-8">
+                  <div key={index} className="lg:w-1/5 max-lg:w-1/2 max-sm:w-full max-lg:mt-16 px-8">
                     <CardProduct
                       product={product}
                       loading={loading}
-                      className="transform transition-all duration-300"
+                      className="transform w-full transition-all duration-300"
                     />
                   </div>
                 );
               })}
-            </Flex>
+            </div>
           </>
         </section>
       )}

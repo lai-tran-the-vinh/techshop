@@ -204,7 +204,7 @@ function UsersLayout() {
       {loading ? (
         <Spin size="large" fullscreen />
       ) : (
-        <Layout.Content className="w-5/6! bg-[#f3f4f6]! min-h-screen!  mt-[120px]!  md:mt-[60px]!  flex flex-col items-center rounded-[10px]">
+        <Layout.Content className="w-5/6! max-lg:w-[90%]! bg-[#f3f4f6]! min-h-screen!  mt-[120px]!  md:mt-[60px]!  flex flex-col items-center rounded-[10px]">
           <Outlet />
           {showLogin && <Login />}
           {showSignup && <Signup />}
