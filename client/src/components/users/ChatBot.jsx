@@ -177,9 +177,10 @@ const ChatBot = () => {
                         </span>
                       </div>
                     ) : msg.sender === 'bot' ? (
-                      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                        {msg.text}
-                      </ReactMarkdown>
+                      <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+                      // <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                      //   {msg.text}
+                      // </ReactMarkdown>
                     ) : (
                       <span className="whitespace-pre-line">{msg.text}</span>
                     )}
