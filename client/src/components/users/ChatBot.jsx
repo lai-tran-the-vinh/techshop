@@ -1,4 +1,3 @@
-import axios from 'axios';
 import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
 import { useState, useRef, useEffect } from 'react';
@@ -8,9 +7,8 @@ import {
   MessageOutlined,
   CloseOutlined,
   RobotOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
-import { BsChatLeftFill, BsSearch } from 'react-icons/bs';
+import { BsChatLeftFill } from 'react-icons/bs';
 import axiosInstance from '@/services/apis';
 import { useAppContext } from '@/contexts';
 
@@ -84,16 +82,22 @@ const ChatBot = () => {
         message: input,
         metadata: {
           accessToken: localStorage.getItem('access_token'),
-        }
-      }
-      print('Payload:', payload)
-      const response = await axiosInstance.post(import.meta.env.VITE_RASA_URL, payload);
+        },
+      };
+      const response = await axiosInstance.post(
+        import.meta.env.VITE_RASA_URL,
+        payload,
+      );
 
       if (response.status === 200) {
         setChatHistory((prev) => {
           const newHistory = [
             ...prev.slice(0, -1), // Xóa phần tử loading cuối cùng
-            { sender: 'bot', text: response.data?.[0]?.text, typing: true },
+            {
+              sender: 'bot',
+              text: response.data?.[0]?.text || response.data?.[0]?.custom,
+              typing: true,
+            },
           ];
           // Cập nhật index của tin nhắn bot mới nhất
           setLatestBotMessageIndex(newHistory.length - 1);
@@ -145,10 +149,11 @@ const ChatBot = () => {
           </div>
           <div
             ref={chatBoxRef}
-            className={`flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 ${chatHistory.length === 0 && !loading
-              ? 'flex items-center justify-center'
-              : ''
-              }`}
+            className={`flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 ${
+              chatHistory.length === 0 && !loading
+                ? 'flex items-center justify-center'
+                : ''
+            }`}
           >
             {chatHistory.length === 0 && !loading && (
               <div className="text-center">
@@ -169,10 +174,11 @@ const ChatBot = () => {
                   className={`flex items-start gap-2 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
                 >
                   <div
-                    className={`px-15 py-10 rounded-lg my-10 shadow-none ${msg.sender === 'user'
-                      ? 'bg-primary! text-white'
-                      : 'bg-white text-gray-800 border border-gray-200'
-                      }`}
+                    className={`px-15 py-10 rounded-lg my-10 shadow-none ${
+                      msg.sender === 'user'
+                        ? 'bg-primary! text-white'
+                        : 'bg-white text-gray-800 border border-gray-200'
+                    }`}
                   >
                     {msg.loading ? (
                       <div className="flex items-center gap-8">
@@ -183,9 +189,6 @@ const ChatBot = () => {
                       </div>
                     ) : msg.sender === 'bot' ? (
                       <div dangerouslySetInnerHTML={{ __html: msg.text }} />
-                      // <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                      //   {msg.text}
-                      // </ReactMarkdown>
                     ) : (
                       <span className="whitespace-pre-line">{msg.text}</span>
                     )}
@@ -206,7 +209,6 @@ const ChatBot = () => {
               ></Button>
               <Input
                 value={input}
-                // onSearch={handleSend}
                 onPressEnter={handleSend}
                 placeholder="Nhập câu hỏi của bạn..."
                 onChange={(e) => setInput(e.target.value)}
