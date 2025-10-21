@@ -1,6 +1,7 @@
 import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
 import { useState, useRef, useEffect } from 'react';
+import SpeechToTextButton from './SpeechToTextButton';
 import { Button, Input, Flex, Typography, Spin } from 'antd';
 import {
   SendOutlined,
@@ -54,6 +55,11 @@ const ChatBot = () => {
     { sender: 'bot', text: 'Xin chào! Tôi có thể giúp gì cho bạn?' },
   ]);
   const [latestBotMessageIndex, setLatestBotMessageIndex] = useState(-1);
+  // ----------------------------------------------------------------
+  // THÊM VÀO: Các ref và state mới cho speech-to-text
+  const inputRef = useRef(null); // Ref để focus vào ô input
+  const wasRecordingRef = useRef(false); // Ref theo dõi trạng thái ghi âm
+  const [isRecording, setIsRecording] = useState(false); // State đang ghi âm
 
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -61,7 +67,32 @@ const ChatBot = () => {
     }
   }, [chatHistory]);
 
+  // ----------------------------------------------------------------
+  // THÊM VÀO: useEffect để focus vào input sau khi nói xong
+  useEffect(() => {
+    // Nếu trước đó đang ghi (true) và bây giờ đã dừng (false)
+    if (wasRecordingRef.current && !isRecording) {
+      inputRef.current?.focus(); // Focus vào ô input
+    }
+    // Cập nhật trạng thái trước đó
+    wasRecordingRef.current = isRecording;
+  }, [isRecording]); // Chạy mỗi khi state 'isRecording' thay đổi
+  // ----------------------------------------------------------------
+
   const toggleChat = () => setVisible(!visible);
+
+  // ----------------------------------------------------------------
+  // THÊM VÀO: 2 hàm callback cho component micro
+  const handleTranscript = (text) => {
+    setInput(text);
+    // Tùy chọn: Bạn có thể bỏ comment dòng dưới để tự động gửi sau khi nói
+    // handleSend(text); 
+  };
+
+  const handleListeningChange = (isListening) => {
+    setIsRecording(isListening);
+  };
+  // ----------------------------------------------------------------
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -149,11 +180,10 @@ const ChatBot = () => {
           </div>
           <div
             ref={chatBoxRef}
-            className={`flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 ${
-              chatHistory.length === 0 && !loading
-                ? 'flex items-center justify-center'
-                : ''
-            }`}
+            className={`flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 ${chatHistory.length === 0 && !loading
+              ? 'flex items-center justify-center'
+              : ''
+              }`}
           >
             {chatHistory.length === 0 && !loading && (
               <div className="text-center">
@@ -174,11 +204,10 @@ const ChatBot = () => {
                   className={`flex items-start gap-2 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
                 >
                   <div
-                    className={`px-15 py-10 rounded-lg my-10 shadow-none ${
-                      msg.sender === 'user'
-                        ? 'bg-primary! text-white'
-                        : 'bg-white text-gray-800 border border-gray-200'
-                    }`}
+                    className={`px-15 py-10 rounded-lg my-10 shadow-none ${msg.sender === 'user'
+                      ? 'bg-primary! text-white'
+                      : 'bg-white text-gray-800 border border-gray-200'
+                      }`}
                   >
                     {msg.loading ? (
                       <div className="flex items-center gap-8">
@@ -200,6 +229,16 @@ const ChatBot = () => {
 
           <div className="p-10 border-t border-gray-200 bg-white">
             <div className="rounded-full! relative">
+              {/* ---------------------------------------------------------------- */}
+              {/* THÊM VÀO: Đặt nút micro ở đây */}
+              <SpeechToTextButton
+                onTranscript={handleTranscript}
+                onListeningChange={handleListeningChange}
+                // Dùng style của nút Send, nhưng đổi 'right-6' thành 'left-6'
+                // và đổi màu text
+                className="absolute! right-26! flex! items-center! w-30! h-30! justify-center! rounded-full! bg-transparent! border-none! shadow-none! text-gray-500! z-10! top-1/2! -translate-y-1/2! hover:text-primary!"
+              />
+              {/* ---------------------------------------------------------------- */}
               <Button
                 onClick={handleSend}
                 icon={
@@ -207,7 +246,7 @@ const ChatBot = () => {
                 }
                 className="absolute! flex! items-center! w-30! h-30! justify-center! right-6! rounded-full! bg-transparent! border-none! shadow-none! text-white! z-10! top-1/2! -translate-y-1/2!"
               ></Button>
-              <Input
+              {/* <Input
                 value={input}
                 onPressEnter={handleSend}
                 placeholder="Nhập câu hỏi của bạn..."
@@ -215,7 +254,21 @@ const ChatBot = () => {
                 disabled={loading}
                 className="rounded-full! px-12! placeholder:text-sm! text-sm!"
                 size="large"
+              /> */}
+              {/* ---------------------------------------------------------------- */}
+              {/* SỬA ĐỔI: Thêm 3 props vào <Input /> */}
+              <Input
+                ref={inputRef} // 1. Thêm ref
+                value={input}
+                onPressEnter={handleSend}
+                placeholder="Nhập câu hỏi của bạn..."
+                onChange={(e) => setInput(e.target.value)}
+                disabled={loading || isRecording} // 2. Thêm || isRecording
+                status={isRecording ? 'error' : ''} // 3. Thêm status 'error'
+                className="rounded-full! px-12! placeholder:text-sm! text-sm!"
+                size="large"
               />
+              {/* ---------------------------------------------------------------- */}
             </div>
           </div>
         </div>
