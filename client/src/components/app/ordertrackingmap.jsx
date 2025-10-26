@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import axiosInstance from '@/services/apis';
 
-const GEOAPIFY_PUBLIC_KEY = '3dc6904642604807b718858b9138eb38';
+const GEOAPIFY_PUBLIC_KEY = process.env.REACT_APP_GEOAPIFY_PUBLIC_KEY;
 
 const fetchRoute = async (startCoords, endCoords) => {
   const [startLng, startLat] = startCoords;
@@ -304,7 +304,7 @@ const OrderTrackingMap = ({ orderId, orderData }) => {
         source: 'history-route',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#8b5cf6', 
+          'line-color': '#8b5cf6',
           'line-width': 4,
           'line-opacity': 0.9,
         },
