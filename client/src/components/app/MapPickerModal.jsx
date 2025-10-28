@@ -4,7 +4,8 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { EnvironmentOutlined, AimOutlined } from '@ant-design/icons';
 
-const GEOAPIFY_PUBLIC_KEY = process.env.REACT_APP_GEOAPIFY_PUBLIC_KEY;
+const GEOAPIFY_PUBLIC_KEY = import.meta.env.VITE_REACT_APP_GEOAPIFY_PUBLIC_KEY;
+
 
 async function reverseGeocode(lng, lat) {
   try {
