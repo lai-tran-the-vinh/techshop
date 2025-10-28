@@ -10,7 +10,8 @@ import {
 } from '@ant-design/icons';
 import axiosInstance from '@/services/apis';
 
-const GEOAPIFY_PUBLIC_KEY = process.env.REACT_APP_GEOAPIFY_PUBLIC_KEY;
+const GEOAPIFY_PUBLIC_KEY = import.meta.env.VITE_REACT_APP_GEOAPIFY_PUBLIC_KEY;
+
 
 const fetchRoute = async (startCoords, endCoords) => {
   const [startLng, startLat] = startCoords;
