@@ -493,8 +493,6 @@ const AccountInfoPage = () => {
       message.loading('Đang xử lý yêu cầu trả hàng...');
       const response = await Products.requestReturn(selectedOrder.id, {
         returnReason: values.returnReason,
-        returnStatus: 'requested',
-        isReturned: true,
       });
 
       message.destroy();
@@ -1272,8 +1270,15 @@ const AccountInfoPage = () => {
                         type="primary"
                         className="h-40!"
                         onClick={() => setIsReturned(true)}
+                        disabled={
+                          orderData?.isReturned ||
+                          orderData?.returnStatus === 'requested'
+                        }
                       >
-                        Yêu cầu trả hàng
+                        {orderData?.isReturned ||
+                        orderData?.returnStatus === 'requested'
+                          ? 'Đã gửi yêu cầu trả hàng'
+                          : 'Yêu cầu trả hàng'}
                       </Button>
                     )}
 

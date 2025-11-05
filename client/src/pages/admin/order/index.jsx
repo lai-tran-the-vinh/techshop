@@ -51,6 +51,7 @@ const STATUS_OPTIONS = [
   { value: 'CONFIRMED', label: 'Đã xác nhận', color: 'blue' },
   { value: 'SHIPPING', label: 'Đang giao hàng', color: 'purple' },
   { value: 'DELIVERED', label: 'Đã giao hàng', color: 'green' },
+  { value: 'RETURN_REQUESTED', label: 'Yêu cầu trả hàng', color: 'gold' },
   { value: 'CANCELLED', label: 'Đã hủy', color: 'red' },
   { value: 'RETURNED', label: 'Đã trả hàng', color: 'gray' },
 ];
@@ -286,7 +287,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
 
   return (
     <Row gutter={10} style={{ marginBottom: '10px' }}>
-      <Col span={filters.branch ? 5 : 6}>
+      <Col span={filters.branch ? 5 : 4}>
         <Card>
           <Statistic
             title={filters.branch ? 'Đơn hàng (Chi nhánh)' : 'Tổng đơn hàng'}
@@ -316,7 +317,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           </Card>
         </Col>
       )}
-      <Col span={filters.branch ? 5 : 6}>
+      <Col span={filters.branch ? 3 : 5}>
         <Card>
           <Statistic
             title="Đơn chờ xử lý"
@@ -326,13 +327,30 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           />
         </Card>
       </Col>
-      <Col span={filters.branch ? 4 : 6}>
+      <Col span={filters.branch ? 3 : 5}>
         <Card>
           <Statistic
             title="Chưa thanh toán"
             value={stats.unpaidOrders}
             valueStyle={{ color: '#ff4d4f' }}
             prefix={<Badge status="error" />}
+          />
+        </Card>
+      </Col>
+      <Col span={filters.branch ? 3 : 4}>
+        <Card>
+          <Statistic
+            title="Đơn trả hàng"
+            value={
+              orders.filter(
+                (order) =>
+                  order.isReturned ||
+                  order.returnStatus === 'requested' ||
+                  order.status === 'RETURNED',
+              ).length
+            }
+            valueStyle={{ color: '#722ed1' }}
+            prefix={<ReloadOutlined />}
           />
         </Card>
       </Col>
@@ -666,16 +684,29 @@ const OrderManagement = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: 120,
-      render: (status) => {
-        const statusOption = STATUS_OPTIONS.find((opt) => opt.value === status);
+      width: 150,
+      render: (_, record) => {
+        const statusOption = STATUS_OPTIONS.find(
+          (opt) => opt.value === record.status,
+        );
+        const hasReturnRequest =
+          record.isReturned || record.returnStatus === 'requested';
+
         return (
-          <Text color={statusOption?.color || 'default'}>
-            {statusOption?.label || status}
-          </Text>
+          <div>
+            <Text color={statusOption?.color || 'default'}>
+              {statusOption?.label || record.status}
+            </Text>
+            {hasReturnRequest && (
+              <div style={{ fontSize: 12, color: '#fa8c16', marginTop: 2 }}>
+                Có yêu cầu trả hàng
+              </div>
+            )}
+          </div>
         );
       },
     },
+
     {
       title: 'Thanh toán',
       dataIndex: 'paymentStatus',
