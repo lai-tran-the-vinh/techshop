@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
 import { Send, MessageCircle, X, RefreshCw, Loader } from 'lucide-react';
-import axiosInstance from '@/services/apis';
+import axiosInstance, { getValidToken } from '@/services/apis';
 import { useAppContext } from '@/contexts';
 
 const Chatbot = () => {
@@ -67,7 +67,8 @@ const Chatbot = () => {
 
   // --- Gửi tin nhắn hoặc payload đến Rasa ---
   const handleSend = async (textToSend = null, isPayload = false) => {
-    console.log(textToSend);
+    const accessToken = await getValidToken();
+    console.log(textToSend, isPayload);
     const messageText = textToSend || input;
     if (!messageText.trim()) return;
     if (!isPayload) {
@@ -88,7 +89,7 @@ const Chatbot = () => {
         sender: user?._id || 'guest_user',
         message: messageText, // có thể là text hoặc payload "/order"
         metadata: {
-          accessToken: localStorage.getItem('access_token'),
+          accessToken: accessToken || '',
         },
       };
 
@@ -127,7 +128,6 @@ const Chatbot = () => {
     }
   };
   const handleQuickReply = (text) => {
-    setChatHistory((prev) => [...prev, { sender: 'user', text }]);
     handleSend(text);
   };
 
@@ -159,7 +159,7 @@ const Chatbot = () => {
       setChatHistory(initialChat);
 
       await axiosInstance.post(import.meta.env.VITE_RASA_URL, {
-        message: '/restart',
+        message: '/restart_slot',
         sender: user?._id || 'guest_user',
       });
 
