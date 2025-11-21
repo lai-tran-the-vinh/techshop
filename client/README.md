@@ -1,12 +1,75 @@
-# React + Vite
+# TechShop Client (ReactJS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Chào mừng đến với **TechShop Client**! Đây là frontend repository cho ứng dụng thương mại điện tử TechShop, được xây dựng bằng **ReactJS** và **Vite**, tập trung vào hiệu suất và trải nghiệm người dùng hiện đại.
 
-Currently, two official plugins are available:
+## 🚀 Công Nghệ Sử Dụng
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Dự án sử dụng các thư viện và công cụ mạnh mẽ sau:
 
-## Expanding the ESLint configuration
+- **Core**: [React 19](https://react.dev/), [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/), [Ant Design](https://ant.design/)
+- **Routing**: [React Router DOM 7](https://reactrouter.com/)
+- **State Management & Data Fetching**: [Axios](https://axios-http.com/), [React Query](https://tanstack.com/query/latest) (nếu có), Context API
+- **Forms**: [React Hook Form](https://react-hook-form.com/)
+- **Bản đồ**: [MapLibre GL](https://maplibre.org/), [React Map GL](https://visgl.github.io/react-map-gl/)
+- **Biểu đồ**: [Recharts](https://recharts.org/)
+- **Editor**: [SunEditor React](https://github.com/mkhstar/suneditor-react)
+- **Icons**: [React Icons](https://react-icons.github.io/react-icons/), [Lucide React](https://lucide.dev/)
+- **Tiện ích khác**: Day.js, Lodash, JWT Decode
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Cài Đặt và Chạy Dự Án
+
+Đảm bảo bạn đã cài đặt [Node.js](https://nodejs.org/) trên máy của mình.
+
+1.  **Clone repository** (nếu chưa có):
+    ```bash
+    git clone https://github.com/VoViet266/techshop_client_reactjs.git
+    cd techshop_client_reactjs
+    ```
+
+2.  **Cài đặt dependencies**:
+    ```bash
+    npm install
+    ```
+
+3.  **Chạy môi trường phát triển (Development)**:
+    ```bash
+    npm run dev
+    ```
+    Truy cập `http://localhost:5173` để xem ứng dụng.
+
+4.  **Build cho production**:
+    ```bash
+    npm run build
+    ```
+
+5.  **Xem trước bản build**:
+    ```bash
+    npm run preview
+    ```
+
+## 📂 Cấu Trúc Thư Mục
+
+```
+src/
+├── assets/         # Hình ảnh, fonts, static files
+├── components/     # Các component tái sử dụng (Button, Input, etc.)
+├── layouts/        # Bố cục trang (MainLayout, AuthLayout)
+├── pages/          # Các trang chính (Home, Product, Cart, etc.)
+├── services/       # API calls (Axios configuration)
+├── hooks/          # Custom React hooks
+├── utils/          # Các hàm tiện ích (format currency, date, etc.)
+├── contexts/       # React Context (AuthContext, CartContext)
+└── App.jsx         # Component gốc và cấu hình routes
+```
+
+## 🤝 Đóng Góp
+
+1.  Fork dự án
+2.  Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit thay đổi (`git commit -m 'Add some AmazingFeature'`)
+4.  Push lên branch (`git push origin feature/AmazingFeature`)
+5.  Tạo Pull Request
+
+---
+*Dự án được phát triển bởi VoViet266.*
