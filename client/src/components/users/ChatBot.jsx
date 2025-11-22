@@ -2,7 +2,15 @@ import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
 import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
-import { Send, MessageCircle, X, RefreshCw, Loader } from 'lucide-react';
+import {
+  Send,
+  MessageCircle,
+  X,
+  RefreshCw,
+  Loader,
+  Maximize2,
+  Minimize2,
+} from 'lucide-react';
 import axiosInstance, { callFreshToken } from '@/services/apis';
 import { jwtDecode } from 'jwt-decode';
 import { useAppContext } from '@/contexts';
@@ -16,6 +24,7 @@ const Chatbot = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
 
@@ -23,10 +32,7 @@ const Chatbot = () => {
     'Cho tôi điện thoại giá rẻ',
     'Máy tính học sinh sinh viên',
     'Chính sách bảo hành',
-    'Shop có cài win giúp không',
-    'Máy bị lỗi màn hình xanh',
-    'Có hỗ trợ trả góp không',
-    'Nút sườn bị kẹt không bấm được'
+    'Shop bán những hãng nào?',
   ];
 
   // --- Lưu và load lịch sử chat ---
@@ -221,29 +227,55 @@ const Chatbot = () => {
     }
   };
 
-  const toggleChat = () => setVisible(!visible);
+  const toggleChat = () => {
+    setVisible(!visible);
+    setIsFullScreen(false);
+  };
+  const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
 
   return (
     <>
       {visible && (
-        <div className="fixed bottom-20 right-6 w-[550px] h-[650px] z-[1000] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5 duration-300">
-          <div className="bg-gradient-to-r from-pink-200 to-pink-100 px-6 py-6 rounded-t-2xl">
+        <div
+          className={`fixed z-[1000] bg-white shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 ${
+            isFullScreen
+              ? 'top-[80px] left-0 right-0 bottom-0 w-full rounded-none border-t border-gray-300'
+              : 'bottom-20 right-6 w-[550px] h-[650px] rounded-2xl'
+          }`}
+        >
+          <div
+            className={`bg-gradient-to-r from-pink-200 to-pink-100 px-6 py-6 ${
+              isFullScreen ? '' : 'rounded-t-2xl'
+            }`}
+          >
             <div className="flex justify-between items-center mb-2">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">🤖</div>
                 <h2 className="text-xl font-bold text-gray-800">Trợ lý AI</h2>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-2">
+                <button
+                  onClick={toggleFullScreen}
+                  className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
+                  title={isFullScreen ? 'Thu nhỏ' : 'Phóng to'}
+                >
+                  {isFullScreen ? (
+                    <Minimize2 size={19} className="text-gray-600" />
+                  ) : (
+                    <Maximize2 size={19} className="text-gray-600" />
+                  )}
+                </button>
                 <button
                   onClick={handleClearChat}
-                  className="p-3 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
-                  title="Clear chat"
+                  className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
+                  title="Làm mới đoạn chat"
                 >
                   <RefreshCw size={19} className="text-gray-600" />
                 </button>
                 <button
                   onClick={toggleChat}
                   className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
+                  title="Đóng"
                 >
                   <X size={20} className="text-gray-600" />
                 </button>
