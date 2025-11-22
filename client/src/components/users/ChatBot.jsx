@@ -3,7 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
 import { Send, MessageCircle, X, RefreshCw, Loader } from 'lucide-react';
-import axiosInstance from '@/services/apis';
+import axiosInstance, { callFreshToken } from '@/services/apis';
+import { jwtDecode } from 'jwt-decode';
 import { useAppContext } from '@/contexts';
 
 const Chatbot = () => {
@@ -65,9 +66,39 @@ const Chatbot = () => {
     wasRecordingRef.current = isRecording;
   }, [isRecording]);
 
+  // --- Kiểm tra và refresh token nếu cần ---
+  const ensureValidToken = async () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) return null;
+
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      // Nếu token còn hạn > 2 phút thì dùng luôn
+      if (decoded.exp - currentTime > 120) {
+        return token;
+      }
+
+      // Nếu sắp hết hạn hoặc đã hết hạn -> Refresh
+      const res = await callFreshToken();
+      const newToken = res.data?.data?.access_token;
+
+      if (newToken) {
+        localStorage.setItem('access_token', newToken);
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+        return newToken;
+      }
+
+      return null; // Refresh thất bại
+    } catch (error) {
+      console.error('Chatbot: Lỗi kiểm tra token:', error);
+      return null;
+    }
+  };
+
   // --- Gửi tin nhắn hoặc payload đến Rasa ---
   const handleSend = async (textToSend = null, isPayload = false) => {
-    console.log(textToSend);
     const messageText = textToSend || input;
     if (!messageText.trim()) return;
     if (!isPayload) {
@@ -84,11 +115,27 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
+      // Kiểm tra token trước khi gửi
+      const validToken = await ensureValidToken();
+
+      // Nếu user đang đăng nhập mà không lấy được token hợp lệ -> Báo lỗi session
+      if (user && !validToken) {
+        setChatHistory((prev) => [
+          ...prev.slice(0, -1), // Xóa loading
+          {
+            sender: 'bot',
+            text: '⚠️ Phiên đăng nhập đã hết hạn. Vui lòng <a href="/login" style="color: #d32f2f; font-weight: bold; text-decoration: underline;">đăng nhập lại</a> để tiếp tục.',
+          },
+        ]);
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         sender: user?._id || 'guest_user',
         message: messageText, // có thể là text hoặc payload "/order"
         metadata: {
-          accessToken: localStorage.getItem('access_token'),
+          accessToken: validToken, // ✅ Gửi token đã được làm mới
         },
       };
 
