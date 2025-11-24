@@ -34,7 +34,7 @@ export default class Policy {
   }
 
   static updatePromotions(id, data) {
-    return axiosInstance.put(`/api/v1/benefits/promotions/${id}`, data);
+    return axiosInstance.patch(`/api/v1/benefits/promotions/${id}`, data);
   }
 
   static deletePromotions(id) {
