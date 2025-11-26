@@ -348,6 +348,12 @@ const AccountInfoPage = () => {
             <div>{product?.name}</div>
             <div className="text-xs text-gray-500">{record?.variant?.name}</div>
             <div className="text-xs text-gray-500">{record?.variantColor}</div>
+            {record?.warranty && (
+              <div className="text-xs text-orange-500">
+                Bảo hành: {record.warranty.name} (+
+                {formatCurrency(record.warrantyPrice || 0)}đ)
+              </div>
+            )}
           </>
         );
       },
@@ -1240,12 +1246,7 @@ const AccountInfoPage = () => {
                     <div className="flex justify-end">
                       <div className="text-right">
                         <div className="text-lg font-semibold text-primary">
-                          Tổng cộng:{' '}
-                          {formatCurrency(
-                            selectedOrder.total -
-                              selectedOrder.total * (parseInt(discount) / 100),
-                          )}
-                          đ
+                          Tổng cộng: {formatCurrency(selectedOrder.total)}đ
                         </div>
                       </div>
                     </div>
@@ -1297,7 +1298,9 @@ const AccountInfoPage = () => {
                             handlePayment(paymentInformation);
                           }}
                         >
-                          Thanh toán ngay
+                          {orderData?.paymentStatus === 'CANCELLED'
+                            ? 'Thanh toán lại'
+                            : 'Thanh toán ngay'}
                         </Button>
                       )}
                   </div>

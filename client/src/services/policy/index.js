@@ -14,7 +14,7 @@ export default class Policy {
   }
 
   static updateWarranties(id, data) {
-    return axiosInstance.put(`/api/v1/benefits/warranties/${id}`, data);
+    return axiosInstance.patch(`/api/v1/benefits/warranties/${id}`, data);
   }
 
   static deleteWarranties(id) {

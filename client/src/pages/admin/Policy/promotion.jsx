@@ -38,6 +38,7 @@ import {
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import Policy from '@/services/policy';
+import { callFetchCategories } from '@/services/apis';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -54,73 +55,23 @@ const PromotionManagement = () => {
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [promotion, setPromotion] = useState(null);
-
-  // Mock data theo schema
-  const mockData = [
-    {
-      _id: '1',
-      title: 'Khuyến mãi hè 2024',
-      valueType: 'percent',
-      value: 20,
-      startDate: '2024-06-01T00:00:00Z',
-      endDate: '2024-08-31T23:59:59Z',
-      conditions: {
-        minOrder: 500000,
-        payment: 'MOMO',
-      },
-      isActive: true,
-      createdAt: '2024-05-15T10:30:00Z',
-      updatedAt: '2024-05-15T10:30:00Z',
-    },
-    {
-      _id: '2',
-      title: 'Giảm giá khách hàng mới',
-      valueType: 'fixed',
-      value: 50000,
-      startDate: '2024-01-01T00:00:00Z',
-      endDate: '2024-12-31T23:59:59Z',
-      conditions: {
-        minOrder: 200000,
-      },
-      isActive: true,
-      createdAt: '2024-01-01T08:00:00Z',
-      updatedAt: '2024-01-01T08:00:00Z',
-    },
-    {
-      _id: '3',
-      title: 'Black Friday Sale',
-      valueType: 'percent',
-      value: 50,
-      startDate: '2023-11-24T00:00:00Z',
-      endDate: '2023-11-24T23:59:59Z',
-      conditions: {
-        minOrder: 1000000,
-        payment: 'BANK',
-      },
-      isActive: false,
-      createdAt: '2023-11-01T09:00:00Z',
-      updatedAt: '2023-11-01T09:00:00Z',
-    },
-    {
-      _id: '4',
-      title: 'Khuyến mãi COD',
-      valueType: 'fixed',
-      value: 30000,
-      startDate: '2024-07-01T00:00:00Z',
-      endDate: '2024-07-31T23:59:59Z',
-      conditions: {
-        minOrder: 300000,
-        payment: 'COD',
-      },
-      isActive: true,
-      createdAt: '2024-06-25T14:20:00Z',
-      updatedAt: '2024-06-25T14:20:00Z',
-    },
-  ];
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     loadData();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await callFetchCategories();
+      if (res && res.data) {
+        setCategories(res.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -150,6 +101,7 @@ const PromotionManagement = () => {
       minOrder: record.conditions?.minOrder || 0,
       payment: record.conditions?.payment || undefined,
       isActive: record.isActive,
+      categories: record.categories || [],
     });
     setIsModalOpen(true);
   };
@@ -185,6 +137,7 @@ const PromotionManagement = () => {
           ...(values.payment && { payment: values.payment }),
         },
         isActive: values.isActive,
+        categories: values.categories || [],
       };
 
       if (editingRecord) {
@@ -294,6 +247,27 @@ const PromotionManagement = () => {
       render: (_, record) => (
         <div className="flex items-center">
           <Text strong>{formatValue(record.valueType, record.value)}</Text>
+        </div>
+      ),
+    },
+    {
+      title: 'Danh mục áp dụng',
+      key: 'categories',
+      width: '15%',
+      render: (_, record) => (
+        <div>
+          {record.categories && record.categories.length > 0 ? (
+            record.categories.map((catId) => {
+              const cat = categories.find((c) => c._id === catId);
+              return (
+                <Tag key={catId} color="blue" className="mr-1 mb-1">
+                  {cat ? cat.name : 'Unknown'}
+                </Tag>
+              );
+            })
+          ) : (
+            <Tag color="green">Tất cả</Tag>
+          )}
         </div>
       ),
     },
@@ -590,6 +564,27 @@ const PromotionManagement = () => {
                 placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
                 className="w-full"
               />
+            </Form.Item>
+
+            <Form.Item
+              name="categories"
+              label="Danh mục áp dụng (Để trống nếu áp dụng cho tất cả)"
+            >
+              <Select
+                mode="multiple"
+                placeholder="Chọn danh mục áp dụng"
+                allowClear
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {categories.map((cat) => (
+                  <Option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Divider orientation="left">Điều kiện áp dụng</Divider>

@@ -16,6 +16,7 @@ import {
   Col,
   Statistic,
   Divider,
+  Select,
 } from 'antd';
 import {
   PlusOutlined,
@@ -27,9 +28,11 @@ import {
 } from '@ant-design/icons';
 import Policy from '@/services/policy';
 import { formatCurrency } from '@/helpers';
+import { callFetchCategories } from '@/services/apis';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
+const { Option } = Select;
 
 const WarrantyPolicyManagement = () => {
   const [form] = Form.useForm();
@@ -40,6 +43,7 @@ const WarrantyPolicyManagement = () => {
   const [editingRecord, setEditingRecord] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [warrantyPolicy, setWarrantyPolicy] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const fetchWarrantyPolicies = async () => {
     try {
@@ -51,8 +55,21 @@ const WarrantyPolicyManagement = () => {
       message.error('Lỗi khi tải dữ liệu');
     }
   };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await callFetchCategories();
+      if (res && res.data) {
+        setCategories(res.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
+
   useEffect(() => {
     fetchWarrantyPolicies();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -72,6 +89,7 @@ const WarrantyPolicyManagement = () => {
       description: record.description,
       durationMonths: record.durationMonths,
       price: record.price,
+      categories: record.categories || [],
     });
     setIsModalOpen(true);
   };
@@ -92,12 +110,16 @@ const WarrantyPolicyManagement = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
+      const formData = {
+        ...values,
+        categories: values.categories || [],
+      };
       if (editingRecord) {
-        await Policy.updateWarranties(editingRecord._id, values);
+        await Policy.updateWarranties(editingRecord._id, formData);
         message.success('Cập nhật thành công');
         setLoading(false);
       } else {
-        await Policy.createWarranties(values);
+        await Policy.createWarranties(formData);
         message.success('Thêm mới thành công');
         setLoading(false);
       }
@@ -136,17 +158,38 @@ const WarrantyPolicyManagement = () => {
       title: 'Tên chính sách',
       dataIndex: 'name',
       key: 'name',
-      width: '25%',
+      width: '20%',
       render: (text) => <Text strong>{text}</Text>,
     },
     {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
-      width: '30%',
+      width: '25%',
       render: (text) => (
         <div className="max-w-xs">
           <Text ellipsis={{ tooltip: text }}>{text}</Text>
+        </div>
+      ),
+    },
+    {
+      title: 'Danh mục áp dụng',
+      key: 'categories',
+      width: '15%',
+      render: (_, record) => (
+        <div>
+          {record.categories && record.categories.length > 0 ? (
+            record.categories.map((catId) => {
+              const cat = categories.find((c) => c._id === catId);
+              return (
+                <Tag key={catId} color="blue" className="mr-1 mb-1">
+                  {cat ? cat.name : 'Unknown'}
+                </Tag>
+              );
+            })
+          ) : (
+            <Tag color="green">Tất cả</Tag>
+          )}
         </div>
       ),
     },
@@ -161,7 +204,7 @@ const WarrantyPolicyManagement = () => {
       title: 'Giá',
       dataIndex: 'price',
       key: 'price',
-      width: '15%',
+      width: '10%',
       render: (price) => (
         <Text strong color={price > 0 ? 'orange' : 'green'}>
           {price > 0 ? `${formatCurrency(price)} VNĐ` : 'Miễn phí'}
@@ -225,46 +268,6 @@ const WarrantyPolicyManagement = () => {
           </Text>
         </div>
 
-        {/* <Row gutter={16} className="mb-6">
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Tổng số chính sách"
-                value={stats.total}
-                valueStyle={{ color: '#1890ff' }}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Miễn phí"
-                value={stats.free}
-                valueStyle={{ color: '#52c41a' }}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Có phí"
-                value={stats.paid}
-                valueStyle={{ color: '#fa8c16' }}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Thời gian TB"
-                value={stats.avgDuration}
-                suffix="tháng"
-                valueStyle={{ color: '#722ed1' }}
-              />
-            </Card>
-          </Col>
-        </Row> */}
-
         <Card className="mb-10!">
           <Row gutter={[10, 10]} align="middle">
             <Col flex="auto">
@@ -288,7 +291,7 @@ const WarrantyPolicyManagement = () => {
               <Space>
                 <Button
                   icon={<ReloadOutlined />}
-                  onClick={warrantyPolicy}
+                  onClick={reloadTable}
                   loading={loading}
                 >
                   Làm mới
@@ -356,6 +359,27 @@ const WarrantyPolicyManagement = () => {
                 showCount
                 maxLength={500}
               />
+            </Form.Item>
+
+            <Form.Item
+              name="categories"
+              label="Danh mục áp dụng (Để trống nếu áp dụng cho tất cả)"
+            >
+              <Select
+                mode="multiple"
+                placeholder="Chọn danh mục áp dụng"
+                allowClear
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {categories.map((cat) => (
+                  <Option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Row gutter={16}>

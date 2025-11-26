@@ -10,6 +10,7 @@ import {
   Loader,
   Maximize2,
   Minimize2,
+  Bot,
 } from 'lucide-react';
 import axiosInstance, { callFreshToken } from '@/services/apis';
 import { jwtDecode } from 'jwt-decode';
@@ -249,9 +250,11 @@ const Chatbot = () => {
             }`}
           >
             <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">🤖</div>
-                <h2 className="text-xl font-bold text-gray-800">Trợ lý AI</h2>
+              <div className="flex items-center  gap-3">
+                <Bot size={24} className="text-primary"/>
+                <h2 className="text-[24px] font-bold text-gray-800 leading-none flex items-center">
+  Trợ lý AI
+</h2>
               </div>
               <div className="flex gap-2">
                 <button
@@ -291,7 +294,7 @@ const Chatbot = () => {
               <div key={index}>
                 {msg.sender === 'bot' ? (
                   <div className="flex justify-start mb-8">
-                    <div className="max-w-[450px] bg-pink-50 text-gray-800 p-7 rounded-xl border border-pink-200 shadow-sm">
+                    <div className="max-w-[450px] bg-white text-gray-800 p-7 rounded-xl border border-gray-200 shadow-sm">
                       {msg.loading ? (
                         <div className="flex items-center gap-2">
                           <Loader

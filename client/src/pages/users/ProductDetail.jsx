@@ -14,6 +14,7 @@ import {
   Drawer,
   Slider,
   Tag,
+  Radio,
 } from 'antd';
 import {
   BsShop,
@@ -67,7 +68,7 @@ function ProductDetail() {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedMemory, setSelectedMemory] = useState({});
   const [selectBranchs, setSelectBranchs] = useState({});
-
+  const [selectedWarranty, setSelectedWarranty] = useState(null);
   const [detailDrawerSpecsVisible, setDetailDrawerSpecsVisible] =
     useState(false);
   const [drawerAddressVisible, setDrawerAddessVisible] = useState(false);
@@ -110,15 +111,21 @@ function ProductDetail() {
   useEffect(() => {
     document.title = 'TechShop | Chi tiết sản phẩm';
     fetchProductDetail();
-    fetchPromotions();
-    fetchWarranties();
     fetchBranchs();
     fetchStats();
   }, []);
 
-  const fetchWarranties = async () => {
+  useEffect(() => {
+    if (product?._id) {
+      const categoryId = product.category?._id;
+      fetchPromotions(categoryId);
+      fetchWarranties(categoryId);
+    }
+  }, [product]);
+
+  const fetchWarranties = async (categoryId) => {
     try {
-      const response = await WarrantyService.getAll();
+      const response = await WarrantyService.getAll(categoryId);
       if (response.status === 200) {
         const warranties = response.data.data;
         setWarranties(warranties);
@@ -149,9 +156,9 @@ function ProductDetail() {
     }
   };
 
-  const fetchPromotions = async () => {
+  const fetchPromotions = async (categoryId) => {
     try {
-      const response = await PromotionService.getAll();
+      const response = await PromotionService.getAll(categoryId);
       if (response.status === 200) {
         const promotions = response.data.data;
         setPromotions(promotions);
@@ -164,8 +171,12 @@ function ProductDetail() {
   const fetchBranchs = async () => {
     try {
       const res = await callFetchBranches();
-      setBranchs(res.data.data);
-      setSelectBranchs(res.data.data[0]._id);
+      if (res.data.data && res.data.data.length > 0) {
+        setBranchs(res.data.data);
+        setSelectBranchs(res.data.data[0]._id);
+      } else {
+        setBranchs([]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -212,7 +223,13 @@ function ProductDetail() {
         key: 'loading',
       });
 
-      const response = await cartServices.add(items);
+      // Thêm warranty vào items
+      const itemsWithWarranty = items.map((item) => ({
+        ...item,
+        warranty: selectedWarranty,
+      }));
+
+      const response = await cartServices.add(itemsWithWarranty);
       if (response.status === 201) {
         message.success({
           content: 'Thêm sản phẩm vào giỏ hàng thành công',
@@ -229,7 +246,13 @@ function ProductDetail() {
   const handleBuy = async (items) => {
     const cartServices = new CartServices();
     try {
-      const response = await cartServices.add(items);
+      // Thêm warranty vào items
+      const itemsWithWarranty = items.map((item) => ({
+        ...item,
+        warranty: selectedWarranty,
+      }));
+
+      const response = await cartServices.add(itemsWithWarranty);
       if (response.status === 201) {
         navigate('/order');
       }
@@ -612,6 +635,34 @@ function ProductDetail() {
                     })}
                   </div>
                 </div>
+                {/* Extended Warranty Selection */}
+                {warranties?.some((w) => w.price > 0) && (
+                  <div className="border border-gray-300 rounded-md p-4 mt-4">
+                    <Typography.Text className="font-medium block mb-3">
+                      Bảo hành mở rộng (Tùy chọn)
+                    </Typography.Text>
+                    <Radio.Group
+                      onChange={(e) => setSelectedWarranty(e.target.value)}
+                      value={selectedWarranty}
+                      className="flex flex-col gap-2"
+                    >
+                      <Radio value={null}>Không chọn bảo hành mở rộng</Radio>
+                      {warranties &&
+                        warranties
+                          .filter((w) => w.price > 0)
+                          .map((warranty) => (
+                            <Radio key={warranty._id} value={warranty._id}>
+                              <Space>
+                                <span>{warranty.name}</span>
+                                <Tag color="gold">
+                                  +{formatCurrency(warranty.price || 0)}đ
+                                </Tag>
+                              </Space>
+                            </Radio>
+                          ))}
+                    </Radio.Group>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-3">

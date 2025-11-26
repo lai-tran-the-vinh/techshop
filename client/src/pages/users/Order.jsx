@@ -205,6 +205,8 @@ function Order() {
       quantity: item.quantity,
       price: item.price,
       branch: item.branch,
+      warranty: item.warranty?._id,
+      warrantyPrice: item.warrantyPrice,
     }));
 
     setOrder({
@@ -355,6 +357,16 @@ function Order() {
                       {item.variant.memory && (
                         <Typography.Text type="secondary">
                           {`Biến thể: ${item.variant.memory.ram}, ${item.variant.memory.storage}`}
+                        </Typography.Text>
+                      )}
+                      {item.warranty && (
+                        <Typography.Text
+                          type="secondary"
+                          className="text-orange-500!"
+                        >
+                          {`Bảo hành: ${item.warranty.name} (+${formatCurrency(
+                            item.warrantyPrice || 0,
+                          )}đ)`}
                         </Typography.Text>
                       )}
                     </Flex>

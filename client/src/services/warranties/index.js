@@ -1,8 +1,10 @@
 import axiosInstance from '../apis';
 
 class WarrantyService {
-  static getAll() {
-    return axiosInstance.get('/api/v1/benefits/warranties');
+  static getAll(categoryId) {
+    return axiosInstance.get('/api/v1/benefits/warranties', {
+      params: { categoryId },
+    });
   }
 }
 
