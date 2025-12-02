@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
 import {
   Send,
-  MessageCircle,
+
   X,
   RefreshCw,
   Loader,
@@ -251,10 +251,12 @@ const Chatbot = () => {
           >
             <div className="flex justify-between items-center mb-2">
               <div className="flex items-center  gap-3">
-                <Bot size={24} className="text-primary"/>
+                <div className='w-[45px] h-[45px] bg-transparent text-white'>
+                  <img src="/chatbot_2.png" alt="Chatbot" className="w-full h-full object-contain rounded-full" />
+                </div>
                 <h2 className="text-[24px] font-bold text-gray-800 leading-none flex items-center">
-  Trợ lý AI
-</h2>
+                  Trợ lý AI
+                </h2>
               </div>
               <div className="flex gap-2">
                 <button
@@ -390,9 +392,9 @@ const Chatbot = () => {
       {!visible && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-24 right-10 w-[50px] h-[50px] bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center z-[999] animate-bounce print:hidden"
+          className="fixed bottom-24 right-10 w-[45px] h-[45px] bg-transparent text-white rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center z-[999] animate-bounce print:hidden"
         >
-          <MessageCircle size={24} />
+          <img src="/chatbot.png" alt="Chatbot" className="w-full h-full object-contain rounded-full" />
         </button>
       )}
 

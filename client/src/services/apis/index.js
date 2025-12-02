@@ -198,6 +198,7 @@ export const callDeleteBranch = (id) => {
 };
 
 export const callUpdateBranch = (value) => {
+  console.log(value)
   return axiosInstance.patch(`/api/v1/branchs/${value._id}`, {
     ...value,
   });
