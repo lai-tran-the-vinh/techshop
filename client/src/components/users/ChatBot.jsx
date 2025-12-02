@@ -31,7 +31,7 @@ const Chatbot = () => {
 
   const quickReplies = [
     'Cho tôi điện thoại giá rẻ',
-    'Máy tính học sinh sinh viên',
+    'Máy bị lỗi màn hình xanh',
     'Chính sách bảo hành',
     'Shop bán những hãng nào?',
   ];
