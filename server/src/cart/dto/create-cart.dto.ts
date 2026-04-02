@@ -1,0 +1,30 @@
+import { Types } from 'mongoose';
+import { Min } from 'class-validator';
+
+export class CartItemDto {
+  product: string;
+
+  variant: Types.ObjectId | string;
+
+  color: string;
+
+  @Min(1)
+  quantity: number;
+
+  price?: number;
+
+  branch: string;
+
+  warranty?: string;
+}
+
+export class CreateCartDto {
+  user: Types.ObjectId | string;
+
+  items: CartItemDto[];
+
+ 
+  totalQuantity?: number;
+
+  totalPrice?: number;
+}
