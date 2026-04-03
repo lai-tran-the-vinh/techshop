@@ -145,14 +145,14 @@ function Home() {
   };
   if (loading) {
     return (
-      <div className="w-full h-[calc(100vh-60px)] flex justify-center items-center">
+      <div className="w-full h-screen flex justify-center items-center">
         <Spin size="large" tip="Đang tải..." delay={1000} fullscreen />
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-screen ">
+    <div className="w-full min-h-screen">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
           <Col xs={24} md={24} lg={18} xl={19}>
