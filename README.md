@@ -157,6 +157,71 @@ VITE_REACT_APP_GEOAPIFY_PUBLIC_KEY=
 
 ```
 
+Tạo file `.env` trong thư mục `server`:
+
+```
+# GEMINI_API_KEY=AIzaSyDoV-Wrx3it_aeTOgJbqb06_jZN8wimM2s
+
+# Cái này là tôi tự tạo do tôi gặp lỗi và không biết là cái cũ còn dùng được hay không
+
+GEMINI_API_KEY=
+
+JWT_ACCESS_EXPIRE=600s
+
+CLOUDINARY_API_SECRET=
+
+CLOUDINARY_API_KEY=
+
+GOOGLE_CLIENT_SECRET=
+
+MAIL_USER=
+
+REDIS_HOST=
+
+CLOUDINARY_NAME=
+
+GOOGLE_CLIENT_ID=
+
+MAIL_SECURE=false
+
+EXPRESS_SESSION_COOKIE=1h
+
+MAIL_HOST=smtp.gmail.com
+
+REDIS_PORT=
+
+JWT_REFRESH_TOKEN_SECRET=
+
+REDIS_PASSWORD=
+
+MAIL_PASSWORD=
+
+URL_REACT_FRONTEND=
+
+EXPRESS_SESSION_SECRET=secret
+
+JWT_ACCESS_TOKEN_SECRET=
+
+MAIL_PORT=
+
+BASE_URL=
+
+REDIS_USERNAME=
+
+MAIL_FROM_NAME=
+
+PORT=8080
+
+GOOGLE_CALLBACK_URL=
+
+JWT_REFRESH_EXPIRE=30d
+
+MONGODB_URI=mongodb+srv://VieDev:durNBv9YO1TvPvtJ@cluster0.h4trl.mongodb.net/techshop_db?retryWrites=true&w=majority&appName=Cluster0
+
+NODE_ENV=production
+
+```
+
 Lưu ý: Do vấn đề về chi phí triển khai trên máy chủ nên để có thể thực hiện được chức năng trò chuyện với chatbot, xin vui lòng tải mã nguồn về máy cá nhân và thực thi theo hướng dẫn tại https://github.com/lai-tran-the-vinh/chatbot-training.git 
 
 ----------
