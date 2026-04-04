@@ -176,5 +176,4 @@ Lưu ý: Do vấn đề về chi phí triển khai trên máy chủ nên để c
 
 # 👨‍💻 Tác giả
 
-Lại Trần Thế Vinh
-Võ Quốc Việt
+Lại Trần Thế Vinh - Võ Quốc Việt
