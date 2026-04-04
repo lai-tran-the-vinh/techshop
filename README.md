@@ -1,75 +1,180 @@
-# TechShop Client (ReactJS)
+# 🛒 TechShop
 
-Chào mừng đến với **TechShop Client**! Đây là frontend repository cho ứng dụng thương mại điện tử TechShop, được xây dựng bằng **ReactJS** và **Vite**, tập trung vào hiệu suất và trải nghiệm người dùng hiện đại.
+Chào mừng đến với **TechShop** 🚀  
+Đây là hệ thống thương mại điện tử và quản lý chuỗi cửa hàng gồm:
+
+-   🖥️ Frontend: React + Vite
+    
+-   ⚙️ Backend: NestJS + MongoDB
+    
+
+----------
+
+# 📦 1. TechShop Client (Frontend)
 
 ## 🚀 Công Nghệ Sử Dụng
 
-Dự án sử dụng các thư viện và công cụ mạnh mẽ sau:
+-   **Core**: React 19, Vite
+    
+-   **UI & Styling**: Tailwind CSS 4, Ant Design (antd)
+    
+-   **Routing**: React Router DOM 7
+    
+-   **Forms**: React Hook Form
+    
+-   **HTTP Client**: Axios
+    
+-   **Maps**: MapLibre GL, React Map GL
+    
+-   **Charts**: Recharts
+    
+-   **Editor**: SunEditor
+    
+-   **Icons**: Lucide React, React Icons, Ant Design Icons
+    
+-   **Utilities**: Day.js, Moment, Lodash.get, JWT Decode, React Markdown
+    
 
-- **Core**: [React 19](https://react.dev/), [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/), [Ant Design](https://ant.design/)
-- **Routing**: [React Router DOM 7](https://reactrouter.com/)
-- **State Management & Data Fetching**: [Axios](https://axios-http.com/), [React Query](https://tanstack.com/query/latest) (nếu có), Context API
-- **Forms**: [React Hook Form](https://react-hook-form.com/)
-- **Bản đồ**: [MapLibre GL](https://maplibre.org/), [React Map GL](https://visgl.github.io/react-map-gl/)
-- **Biểu đồ**: [Recharts](https://recharts.org/)
-- **Editor**: [SunEditor React](https://github.com/mkhstar/suneditor-react)
-- **Icons**: [React Icons](https://react-icons.github.io/react-icons/), [Lucide React](https://lucide.dev/)
-- **Tiện ích khác**: Day.js, Lodash, JWT Decode
+## 🛠️ Cài đặt và chạy Client
 
-## 🛠️ Cài Đặt và Chạy Dự Án
+```bash
+git clone https://github.com/lai-tran-the-vinh/techshop.git
+cd client
+npm install
+npm run dev
 
-Đảm bảo bạn đã cài đặt [Node.js](https://nodejs.org/) trên máy của mình.
+```
 
-1.  **Clone repository** (nếu chưa có):
-    ```bash
-    git clone https://github.com/VoViet266/techshop_client_reactjs.git
-    cd techshop_client_reactjs
-    ```
+👉 Truy cập: [http://localhost:5173](http://localhost:5173/)
 
-2.  **Cài đặt dependencies**:
-    ```bash
-    npm install
-    ```
+## ⚙️ Scripts Client
 
-3.  **Chạy môi trường phát triển (Development)**:
-    ```bash
-    npm run dev
-    ```
-    Truy cập `http://localhost:5173` để xem ứng dụng.
+```bash
+npm run dev
+npm run build
+npm run preview
+npm run format
 
-4.  **Build cho production**:
-    ```bash
-    npm run build
-    ```
+```
 
-5.  **Xem trước bản build**:
-    ```bash
-    npm run preview
-    ```
-
-## 📂 Cấu Trúc Thư Mục
+## 📂 Cấu trúc thư mục Client
 
 ```
 src/
-├── assets/         # Hình ảnh, fonts, static files
-├── components/     # Các component tái sử dụng (Button, Input, etc.)
-├── layouts/        # Bố cục trang (MainLayout, AuthLayout)
-├── pages/          # Các trang chính (Home, Product, Cart, etc.)
-├── services/       # API calls (Axios configuration)
-├── hooks/          # Custom React hooks
-├── utils/          # Các hàm tiện ích (format currency, date, etc.)
-├── contexts/       # React Context (AuthContext, CartContext)
-└── App.jsx         # Component gốc và cấu hình routes
+├── assets/
+├── components/
+├── pages/
+├── layouts/
+├── services/
+├── hooks/
+├── utils/
+├── contexts/
+└── App.jsx
+
 ```
 
-## 🤝 Đóng Góp
+----------
 
-1.  Fork dự án
-2.  Tạo feature branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit thay đổi (`git commit -m 'Add some AmazingFeature'`)
-4.  Push lên branch (`git push origin feature/AmazingFeature`)
-5.  Tạo Pull Request
+# 🖥️ 2. TechShop Server (Backend - NestJS)
 
----
-*Dự án được phát triển bởi VoViet266.*
+## 🚀 Công Nghệ Sử Dụng
+
+-   **Framework**: NestJS 11
+    
+-   **Database**: MongoDB + Mongoose
+    
+-   **Authentication**: JWT, Passport (local, Google OAuth)
+    
+-   **Authorization**: CASL
+    
+-   **Cache**: Redis (ioredis)
+    
+-   **Upload**: Multer + Cloudinary
+    
+-   **Validation**: class-validator, class-transformer
+    
+-   **Mail**: Nodemailer
+    
+-   **AI**: Google Generative AI
+    
+-   **Khác**: Slugify, OTP Generator, Natural (NLP)
+    
+
+## 🛠️ Cài đặt và chạy Server
+
+```bash
+cd server
+npm install
+npm run start:dev
+
+```
+
+👉 Server chạy tại: [http://localhost:3000](http://localhost:3000/)
+
+## ⚙️ Scripts Server
+
+```bash
+npm run build
+npm run start
+npm run start:dev
+npm run start:prod
+npm run lint
+npm run format
+npm run test
+npm run test:watch
+npm run test:cov
+npm run test:e2e
+
+```
+
+## 📂 Cấu trúc thư mục Server
+
+```
+src/
+├── modules/
+├── common/
+├── config/
+├── guards/
+├── strategies/
+├── decorators/
+├── pipes/
+└── main.ts
+
+```
+
+----------
+
+# 🔗 Kết nối Client - Server
+
+Tạo file `.env` trong thư mục `client`:
+
+```
+VITE_SERVER_URL=http://localhost:8080
+
+VITE_RASA_URL=http://localhost:5005/webhooks/rest/webhook
+
+VITE_REACT_APP_GEOAPIFY_PUBLIC_KEY=
+
+```
+
+Lưu ý: Do vấn đề về chi phí triển khai trên máy chủ nên để có thể thực hiện được chức năng trò chuyện với chatbot, xin vui lòng tải mã nguồn về máy cá nhân và thực thi theo hướng dẫn tại https://github.com/lai-tran-the-vinh/chatbot-training.git 
+
+----------
+
+# 🤝 Đóng góp
+
+1.  Fork project
+    
+2.  Tạo branch: `feature/your-feature`
+    
+3.  Commit: `git commit -m "feat: add feature"`
+    
+4.  Push và tạo Pull Request
+    
+
+----------
+
+# 👨‍💻 Tác giả
+
+Lại Trần Thế Vinh
+Võ Quốc Việt
