@@ -21,10 +21,16 @@ class LocationDto {
 }
 
 export class CreateBranchDto {
+  @IsString()
+  @IsNotEmpty({ message: 'Tên chi nhánh không được để trống' })
   name: string;
 
+  @IsString()
+  @IsNotEmpty({ message: 'Địa chỉ không được để trống' })
   address: string;
 
+  @IsString()
+  @IsNotEmpty({ message: 'Số điện thoại không được để trống' })
   phone: string;
 
   @IsObject()

@@ -27,17 +27,8 @@ export class ProductBenefitService {
     return this.promotionModel.create(data);
   }
 
-  async getAllPromotions(categoryId?: string) {
-    const filter: any = {};
-    if (categoryId) {
-      filter.$or = [
-        { categories: categoryId },
-        { categories: { $size: 0 } },
-        { categories: { $exists: false } },
-        { categories: null },
-      ];
-    }
-    return this.promotionModel.find(filter);
+  async getAllPromotions() {
+    return this.promotionModel.find();
   }
 
   async getPromotionById(id: string) {
@@ -57,17 +48,8 @@ export class ProductBenefitService {
     return this.warrantyModel.create(data);
   }
 
-  async getAllWarranties(categoryId?: string) {
-    const filter: any = {};
-    if (categoryId) {
-      filter.$or = [
-        { categories: categoryId },
-        { categories: { $size: 0 } },
-        { categories: { $exists: false } },
-        { categories: null },
-      ];
-    }
-    return this.warrantyModel.find(filter);
+  async getAllWarranties() {
+    return this.warrantyModel.find();
   }
 
   async getWarrantyById(id: string) {

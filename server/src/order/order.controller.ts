@@ -1,5 +1,3 @@
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { CreateOrderDto } from './dto/create-order.dto';
 import {
   Controller,
   Get,
@@ -12,7 +10,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 import { User } from 'src/decorator/userDecorator';
 import { IUser } from 'src/user/interface/user.interface';
 
@@ -27,6 +26,7 @@ export class OrderController {
 
   @Post()
   create(@Body() createOrderDto: CreateOrderDto, @User() user: IUser) {
+   
     return this.orderService.create(createOrderDto, user);
   }
 
@@ -39,7 +39,7 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @Get('tracking/latest')
   async getLatestOrderTracking(@Req() req) {
-    const userId = req.user._id;
+    const userId = req.user._id; 
 
     const trackingData =
       await this.orderService.findLatestTrackingForUser(userId);
@@ -47,7 +47,10 @@ export class OrderController {
     return trackingData;
   }
   @Get('tracking/:id')
-  async getOrderTrackingDetails(@Param('id') id: string) {
+
+  async getOrderTrackingDetails(
+    @Param('id') id: string,
+  ) {
     const trackingData = await this.orderService.findTrackingDetails(id);
     return {
       statusCode: 200,
@@ -110,6 +113,8 @@ export class OrderController {
   @Patch('/request-return/:id')
   requestReturn(
     @Param('id') id: string,
+    @User() user: IUser,
+
     @Body()
     dto: {
       returnReason: string;
@@ -124,6 +129,7 @@ export class OrderController {
     @User() user: IUser,
     @Body('returnStatus') returnStatus: string,
   ) {
+    console.log(returnStatus);
     return this.orderService.confirmReturn(id, returnStatus, user);
   }
 }

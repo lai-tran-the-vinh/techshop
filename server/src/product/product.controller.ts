@@ -33,17 +33,14 @@ export class ProductController {
 
   @Post()
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.Product))
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
-
-  @Post('insert')
-  @Public()
-  @ResponseMessage('Tạo nhiều sản phẩm thành công')
-  bulkInsert(@Body() createProductDtos: CreateProductDto[]) {
-    return this.productService.insertManyProduct(createProductDtos);
-  }
+  // @Post('insert')
+  // @Public()
+  // Insert(@Body() createProductDto: CreateProductDto[]) {
+  //   return this.productService.insertManyProduct(createProductDto);
+  // }
 
   // @Post('import-csv')
   // @UseInterceptors(FileInterceptor('file'))
@@ -89,27 +86,21 @@ export class ProductController {
     };
   }
   @Patch('/:id')
-  @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Update, Subjects.Product))
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Delete, Subjects.Product))
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
   }
 
   @Patch('/:id/view-count')
-  @Public()
   setViewCount(@Param('id') id: string) {
     return this.productService.countViews(id);
   }
 
   @Patch('/:id/order-count')
-  @Public()
   setOrderCount(@Param('id') id: string) {
     return this.productService.countOrders(id);
   }

@@ -1,11 +1,7 @@
-;
-
 export class CreateBrandDto {
- 
   name: string;
-
- 
   description?: string;
+  logo?: string;
 
   // Nếu cần mở thêm các trường khác, bạn có thể thêm như sau:
 
@@ -55,8 +51,4 @@ export class CreateBrandDto {
   // @IsObject()
   // @IsOptional()
   // socialMediaLinks?: Record<string, string>;
-  
-  logo?: string;
-
-  
 }

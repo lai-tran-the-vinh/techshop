@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
-import { Category } from 'src/category/schemas/category.schema';
+import { Document } from 'mongoose';
 
 export type PromotionDocument = Promotion & Document;
 
@@ -43,12 +42,6 @@ export class Promotion {
 
   @Prop({ default: true })
   isActive: boolean;
-
-  @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
-    default: [],
-  })
-  categories: mongoose.Schema.Types.ObjectId[];
 }
 
 export const PromotionSchema = SchemaFactory.createForClass(Promotion);

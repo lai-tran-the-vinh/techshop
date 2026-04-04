@@ -14,8 +14,6 @@ export class CartItemDto {
   price?: number;
 
   branch: string;
-
-  warranty?: string;
 }
 
 export class CreateCartDto {
@@ -23,7 +21,6 @@ export class CreateCartDto {
 
   items: CartItemDto[];
 
- 
   totalQuantity?: number;
 
   totalPrice?: number;

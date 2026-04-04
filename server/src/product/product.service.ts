@@ -5,7 +5,7 @@ import {
   Injectable,
   Param,
 } from '@nestjs/common';
-
+import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,7 +15,7 @@ import {
   Inventory,
   InventoryDocument,
 } from 'src/inventory/schemas/inventory.schema';
-
+import { console } from 'inspector';
 import slugify from 'slugify';
 import aqp from 'api-query-params';
 import { Variant, VariantDocument } from './schemas/variant.schema';
@@ -51,11 +51,6 @@ export class ProductService {
       // slug: slug,
       variants: createdVariants?.map((variant) => variant._id) || [],
     });
-    // Xóa cache danh sách sản phẩm khi có sản phẩm mới
-    const keys = await this.redisClient.keys('products-*');
-    if (keys.length > 0) {
-      await this.redisClient.del(...keys);
-    }
     return createdProduct;
   }
 
@@ -83,22 +78,10 @@ export class ProductService {
     );
     const createdProducts =
       await this.productModel.insertMany(productsToInsert);
-    
-    // Xóa cache danh sách sản phẩm
-    const keys = await this.redisClient.keys('products-*');
-    if (keys.length > 0) {
-      await this.redisClient.del(...keys);
-    }
     return createdProducts;
   }
 
   async autocompleteSearch(query: string) {
-    const cacheKey = `search-autocomplete:${query}`;
-    const cached = await this.redisClient.get(cacheKey);
-    if (cached) {
-      return JSON.parse(cached);
-    }
-
     const result = await this.productModel.aggregate([
       {
         $search: {
@@ -116,7 +99,7 @@ export class ProductService {
               {
                 text: {
                   query: query,
-                  path: ['name', 'brands', 'categories'],
+                  path: 'name',
                   fuzzy: { maxEdits: 2 },
                 },
               },
@@ -159,34 +142,44 @@ export class ProductService {
       {
         $project: {
           name: 1,
-          category: '$category.name',
-          brand: '$brand.name',
+          slug: 1,
+          description: 1,
+          discount: 1,
+          tags: 1,
+          category: {
+            _id: '$category._id',
+            name: '$category.name',
+          },
+          brand: {
+            _id: '$brand._id',
+            name: '$brand.name',
+          },
+          attributes: 1,
           variants: 1,
           isActive: 1,
+          isFeatured: 1,
+          averageRating: 1,
+          reviewCount: 1,
         },
       },
     ]);
     if (result.length === 0) {
       return ` không tìm thấy sản phẩm với query ${query}`;
     }
-    
-    await this.redisClient.set(cacheKey, JSON.stringify(result), 'EX', 300); // cache 5 phút
     return result;
   }
 
-  async findAll(currentPage: number, limit: number, qs: string | any) {
+  async findAll(currentPage: number, limit: number, qs: string) {
     const { filter } = aqp(qs);
 
     delete filter.page;
     delete filter.limit;
     filter.isDeleted = false;
-    
-    const cacheKey = `products-${JSON.stringify(qs)}`;
-    const cached = await this.redisClient.get(cacheKey);
-    if (cached) {
-      return JSON.parse(cached);
-    }
-    
+    // const cacheKey = `products-${qs}`;
+    // const cached = await this.redisClient.get(cacheKey);
+    // if (cached) {
+    //   return JSON.parse(cached);
+    // }
     const offset = (currentPage - 1) * limit;
     const defaultLimit = limit;
 
@@ -320,18 +313,12 @@ export class ProductService {
       },
       result,
     };
-    await this.redisClient.set(cacheKey, JSON.stringify(response), 'EX', 300); // Cache 5 phút
+    // await this.redisClient.set(cacheKey, JSON.stringify(response), 'EX', 300);
     return response;
   }
 
   async findOneById(id: string) {
-    const cacheKey = `product:${id}`;
-    const cached = await this.redisClient.get(cacheKey);
-    if (cached) {
-      return JSON.parse(cached);
-    }
-
-    const product = await this.productModel
+    return await this.productModel
       .findById({ _id: id })
       .populate({
         path: 'variants',
@@ -339,11 +326,6 @@ export class ProductService {
       })
       .populate('brand', 'name description logo')
       .populate('category', 'name description configFields ');
-    
-    if (product) {
-      await this.redisClient.set(cacheKey, JSON.stringify(product), 'EX', 600); // Cache 10 phút
-    }
-    return product;
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
@@ -392,14 +374,7 @@ export class ProductService {
         variants: variantIds,
       },
     );
-    
-    // Invalidate cache
-    await this.redisClient.del(`product:${id}`);
-    const keys = await this.redisClient.keys('products-*');
-    if (keys.length > 0) {
-      await this.redisClient.del(...keys);
-    }
-    
+    this.redisClient.del(`product`);
     return { message: 'Cập nhật thành công' };
   }
 
@@ -414,15 +389,6 @@ export class ProductService {
     return await this.productModel.updateOne(
       { _id: id },
       { $inc: { soldCount: 1 } },
-    );
-  }
-
-  async updateRating(id: string, rating: number, reviewCount: number) {
-    await this.redisClient.del(`product:${id}`);
-    
-    return await this.productModel.updateOne(
-      { _id: id },
-      { $set: { averageRating: rating, reviewCount: reviewCount } },
     );
   }
 
@@ -442,14 +408,6 @@ export class ProductService {
       return await this.variantModel.findByIdAndDelete(v);
     });
     await this.inventoryModel.deleteMany({ product: id });
-    
-    // Invalidate cache
-    await this.redisClient.del(`product:${id}`);
-    const keys = await this.redisClient.keys('products-*');
-    if (keys.length > 0) {
-      await this.redisClient.del(...keys);
-    }
-    
     return this.productModel.softDelete({ _id: id });
   }
 }

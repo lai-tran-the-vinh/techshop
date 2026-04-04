@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ProductBenefitService } from './benefit.service';
 import { Public } from 'src/decorator/publicDecorator';
@@ -22,8 +21,8 @@ export class ProductBenefitController {
 
   @Get('promotions')
   @Public()
-  getAllPromotions(@Query('categoryId') categoryId?: string) {
-    return this.benefitService.getAllPromotions(categoryId);
+  getAllPromotions() {
+    return this.benefitService.getAllPromotions();
   }
 
   @Get('promotions/:id')
@@ -48,8 +47,8 @@ export class ProductBenefitController {
 
   @Get('warranties')
   @Public()
-  getAllWarranties(@Query('categoryId') categoryId?: string) {
-    return this.benefitService.getAllWarranties(categoryId);
+  getAllWarranties() {
+    return this.benefitService.getAllWarranties();
   }
 
   @Get('warranties/:id')

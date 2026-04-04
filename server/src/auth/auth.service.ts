@@ -151,7 +151,7 @@ export class AuthService {
 
       const role: any = user.role;
       const roleName = role?.name;
-
+      const permission = role?.permissions?.map((per: any) => per.name);
       const payload = {
         sub: 'token login',
         iss: 'from server',
@@ -161,6 +161,7 @@ export class AuthService {
         avatar: user.avatar,
         branch: user.branch,
         role: roleName,
+        permission: permission,
       };
 
       return {
@@ -174,6 +175,7 @@ export class AuthService {
         avatar: user.avatar,
         branch: user.branch,
         role: roleName,
+        permission: permission,
       };
     } catch (error) {
       throw error;
@@ -253,5 +255,6 @@ export class AuthService {
       },
     );
     await this.userService.updateUserToken(user._id.toString(), null);
+    console.log('Mật khẩu đã được cập nhật thành công.');
   }
 }

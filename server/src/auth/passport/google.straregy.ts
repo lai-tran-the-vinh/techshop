@@ -14,7 +14,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: configSerive.get<string>('GOOGLE_CLIENT_ID'),
       clientSecret: configSerive.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configSerive.get<string>('GOOGLE_CALLBACK_URL'),
+      callbackURL: 'http://localhost:8080/api/v1/auth/google/callback',
       scope: ['email', 'profile'],
     });
   }
@@ -42,7 +42,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
       if (existingUser) {
         user = existingUser;
+        console.log('User already exists:', user.email);
       } else {
+        console.log('User does not exist, creating new user:', email);
         user = await this.userService.create({
           email,
           name: `${name.givenName} ${name.familyName}`,
@@ -52,7 +54,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
           address: [],
           age: 0,
           refreshToken: '',
-          branch: null,
+          branch: '',
         });
       }
 

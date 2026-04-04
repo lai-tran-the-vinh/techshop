@@ -9,6 +9,7 @@ import {
   Min,
   IsOptional,
 } from 'class-validator';
+
 import { Type } from 'class-transformer';
 
 export class CartItemDto {
@@ -21,19 +22,23 @@ export class CartItemDto {
   price?: number;
 
   variant?: string;
-
-  warranty?: string;
-
-  warrantyPrice?: number;
 }
 class RecipientDto {
   @IsString()
+  @IsNotEmpty()
   name: string;
 
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
   address: string;
 
+  @IsString()
+  @IsOptional()
   note?: string;
 }
 export class CreateOrderDto {

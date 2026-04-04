@@ -113,7 +113,7 @@ export class InventoryService {
         .find()
         .populate('product', 'name')
         .populate('branch', 'name location')
-        .populate('variants.variantId', 'name sku')
+        .populate('variants.variantId', 'name sku') // Populate the variantId field inside variants
         .sort({ createdAt: -1 })
         .lean();
     }
@@ -122,10 +122,10 @@ export class InventoryService {
       .populate('product', 'name  ')
       .populate('branch', 'name location')
       .populate('variants.variantId', 'name sku')
-      .sort({ createdAt: -1 })
       .lean();
   }
   findImport(user: any) {
+    console.log(user);
     if (user.role === RolesUser.Admin) {
       return this.movementModel
         .find({ type: TransactionType.IMPORT })
@@ -136,7 +136,7 @@ export class InventoryService {
         .lean();
     }
     return this.movementModel
-      .find({ branchId: user.branch, type: TransactionType.IMPORT })
+      .find({ branch: user.branch, type: TransactionType.IMPORT })
       .populate('productId', 'name  ')
       .populate('branchId', 'name location')
       .populate('variants.variantId', 'name sku')
@@ -155,7 +155,7 @@ export class InventoryService {
         .lean();
     }
     return this.movementModel
-      .find({ branchId: user.branch, type: TransactionType.EXPORT })
+      .find({ branch: user.branch, type: TransactionType.EXPORT })
       .populate('productId', 'name  ')
       .populate('branchId', 'name location')
       .populate('variants.variantId', 'name sku')
@@ -167,7 +167,7 @@ export class InventoryService {
     return this.inventoryModel
       .findById(id)
       .populate('product', 'name')
-      .populate('branchId', 'name ')
+      .populate('branch', 'name location')
       .lean();
   }
 
@@ -196,7 +196,6 @@ export class InventoryService {
 
   async importStock(dto: CreateStockMovementDto, user: IUser) {
     const { branchId, productId, variants } = dto;
-  
     let inventory = await this.inventoryModel.findOne({
       branch: branchId,
       product: productId,
@@ -223,9 +222,7 @@ export class InventoryService {
     // Cập nhật variants
     variants.forEach(({ variantId, variantColor, quantity, cost }) => {
       const variant = inventory.variants.find(
-        (v) =>
-          v.variantId.toString() === variantId &&
-          v.variantColor === variantColor,
+        (v) => v.variantId.toString() === variantId,
       );
 
       if (variant) {
@@ -374,6 +371,7 @@ export class InventoryService {
 
     if (updateTransferDto.status === TransactionStatus.RECEIVED) {
       for (const item of updateTransferDto.items) {
+        console.log(item);
         await this.exportStock(
           {
             branchId: updateTransferDto.fromBranchId,

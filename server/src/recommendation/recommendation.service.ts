@@ -226,25 +226,17 @@ export class RecommendationService implements OnModuleInit {
     }
   }
   // Triển khai hàm tạo vector cho mô tả
-  // Tăng trọng số cho Brand và Category để tăng độ tương đồng content-based
   private extractProductFeatures(product: any): string {
-    const brandName = (product.brand?.name || '').toLowerCase();
-    const categoryName = (product.category?.name || '').toLowerCase();
-    const productName = (product.name || '').toLowerCase();
-
     const features = [
-      // Brand quan trọng nhất (lặp 5 lần) -> Sản phẩm cùng hãng sẽ có score cao
-      ...Array(5).fill(brandName),
-
-      // Category quan trọng nhì (lặp 3 lần) -> Cùng loại sản phẩm
-      ...Array(3).fill(categoryName),
-
-      // Tên sản phẩm (lặp 2 lần)
-      ...Array(2).fill(productName),
+      product.name || '',
+      product.category?.name || '',
+      product.brand?.name || '',
+      product.description || '',
+      product.attributes || '',
     ]
       .filter(Boolean)
-      .filter((f) => f.trim().length > 0)
       .join(' ')
+      .toLowerCase()
       .trim();
 
     return features;
@@ -304,7 +296,7 @@ export class RecommendationService implements OnModuleInit {
   async getRecommendedProducts(
     productId: string,
     limit = 5,
-    minSimilarity = 0.25,
+    minSimilarity = 0.1,
   ): Promise<Products[]> {
     if (!productId) {
       throw new BadRequestException('Product ID is required');
@@ -326,10 +318,11 @@ export class RecommendationService implements OnModuleInit {
       .populate('brand', 'name')
       .populate('variants', 'price color')
       .select(
-        'name discount category brand description attributes isActive',
+        'name discount category brand variants description attributes isActive',
       )
       .lean()
       .exec();
+
     if (!targetProduct || targetProduct.isActive === false) {
       return [];
     }
@@ -372,9 +365,8 @@ export class RecommendationService implements OnModuleInit {
             .populate('brand', 'name')
             .populate('variants', 'price color memory ')
             .select(
-              'name category brand discount variants description attributes isActive soldCount averageRating',
+              'name category brand discount variants description attributes isActive',
             )
-
             .lean()
             .exec();
 
@@ -395,7 +387,7 @@ export class RecommendationService implements OnModuleInit {
 
   async getRecommendationsForUser(
     userId: string,
-    limit = 5,
+    limit = 10,
   ): Promise<Products[]> {
     if (!userId) {
       throw new BadRequestException('User ID is required');
@@ -418,7 +410,7 @@ export class RecommendationService implements OnModuleInit {
           const similarProducts = await this.getRecommendedProducts(
             productId,
             limit * 2,
-            0.2,
+            0.05,
           );
 
           return { productId, similarProducts };
@@ -477,12 +469,12 @@ export class RecommendationService implements OnModuleInit {
 
   async getPopularProducts(limit: number): Promise<Products[]> {
     return this.productModel
-      .find({ isActive: { $ne: false }, isDelete: { $ne: true } })
+      .find({ isActive: { $ne: false } })
       .sort({ viewCount: -1, soldCount: -1 })
       .populate('category', 'name')
       .populate('brand', 'name')
       .populate('variants', 'price color')
-      .select('name discount category brand variants description isActive soldCount averageRating')
+      .select('name discount category brand variants description isActive')
       .limit(limit)
       .lean()
       .exec();
@@ -573,7 +565,7 @@ export class RecommendationService implements OnModuleInit {
         const similarProducts = await this.getRecommendedProducts(
           productId,
           limit * 2,
-          0.2,
+          0.05,
         );
 
         // Trả về kết quả (productId, danh sách sản phẩm tương tự và index)
@@ -656,7 +648,6 @@ export class RecommendationService implements OnModuleInit {
       .find({
         brand: brandId,
         isActive: { $ne: false },
-        isDelete: { $ne: true },
         _id: { $nin: excludeIds },
       })
       .sort({ viewCount: -1, soldCount: -1 })

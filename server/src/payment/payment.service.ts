@@ -10,7 +10,6 @@ import { IUser } from 'src/user/interface/user.interface';
 import { PaymentMethod, PaymentStatus } from 'src/constant/payment.enum';
 import { Order, OrderDocument } from 'src/order/schemas/order.schema';
 import { OrderService } from 'src/order/order.service';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PaymentService {
@@ -26,7 +25,7 @@ export class PaymentService {
 
     @InjectModel(Order.name)
     private readonly orderModel: SoftDeleteModel<OrderDocument>,
-    private configService: ConfigService,
+
     private readonly orderService: OrderService,
   ) {}
 
@@ -67,12 +66,7 @@ export class PaymentService {
         };
       }
 
-      // Chỉ tái sử dụng link nếu đang PENDING và chưa quá 15 phút
-      if (
-        existingPayment.status === PaymentStatus.PENDING &&
-        existingPayment.payUrl &&
-        existingPayment.deeplink
-      ) {
+      if (existingPayment.payUrl && existingPayment.deeplink) {
         const now = new Date();
         const diffMinutes =
           (now.getTime() - new Date(existingPayment.updatedAt).getTime()) /
@@ -92,7 +86,7 @@ export class PaymentService {
       const orderInfo = `Thanh toán đơn hàng ${user._id} với đơn giá ${dto.amount} VNĐ`;
       const requestId = `${this.partnerCode}${Date.now()}`;
       const orderId = `${dto.order}-${Date.now()}`;
-      const redirectUrl = `${this.configService.get<string>("BASE_URL")}/api/v1/payment/momo/callback`;
+      const redirectUrl = 'http://localhost:8080/api/v1/payment/momo/callback';
       const ipnUrl =
         'https://your-ngrok.ngrok-free.app/api/v1/payment/momo/notify';
       const extraData = Buffer.from(

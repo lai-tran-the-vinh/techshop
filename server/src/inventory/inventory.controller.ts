@@ -22,7 +22,6 @@ import { Actions, Subjects } from 'src/constant/permission.enum';
 import { User } from 'src/decorator/userDecorator';
 
 import { IUser } from 'src/user/interface/user.interface';
-import { Public } from 'src/decorator/publicDecorator';
 @Controller('api/v1/inventories')
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
@@ -40,7 +39,6 @@ export class InventoryController {
   }
 
   @Get('check-stock')
-  @Public()
   findOne(
     @Query('productId') productId: string,
     @Query('branchId') branchId: string,
@@ -70,37 +68,35 @@ export class InventoryController {
 
   @Post('import')
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) =>
-    ability.can(Actions.Create, Subjects.StockMovement),
-  )
+  @CheckPolicies((ability) => ability.can(Actions.Create, Subjects.Inventory))
   async importStock(@Body() dto: CreateStockMovementDto, @User() user: IUser) {
     return this.inventoryService.importStock(dto, user);
   }
 
   @Get('getimport')
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.StockMovement))
+  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.Inventory))
   async getAllImport(@User() user: IUser) {
     return this.inventoryService.findImport(user);
   }
 
   @Get('getimport/:id')
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.StockMovement))
+  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.Inventory))
   async getImport(@Param('id') id: string) {
     return this.inventoryService.getImportDetail(id);
   }
 
   @Get('getexport')
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.StockMovement))
+  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.Inventory))
   async getAllExport(@User() user: IUser) {
     return this.inventoryService.findExport(user);
   }
 
   @Get('getexport/:id')
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.StockMovement))
+  @CheckPolicies((ability) => ability.can(Actions.Read, Subjects.Inventory))
   async getExport(@Param('id') id: string) {
     return this.inventoryService.getExportDetail(id);
   }
