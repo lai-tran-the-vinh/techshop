@@ -223,9 +223,7 @@ MONGODB_URI=mongodb+srv://VieDev:durNBv9YO1TvPvtJ@cluster0.h4trl.mongodb.net/tec
 
 NODE_ENV=production
 
-```
-
-Lưu ý: Do vấn đề về chi phí triển khai trên máy chủ nên để có thể thực hiện được chức năng trò chuyện với chatbot, xin vui lòng tải mã nguồn về máy cá nhân và thực thi theo hướng dẫn tại https://github.com/lai-tran-the-vinh/chatbot-training.git 
+``` 
 
 ----------
 
