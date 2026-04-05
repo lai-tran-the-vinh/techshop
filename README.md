@@ -8,6 +8,7 @@ Chào mừng đến với **TechShop** 🚀
 -   ⚙️ Backend: NestJS + MongoDB
 
 Link: https://techshop-ctut.netlify.app/
+
 Lưu ý: Do nhóm phát triển gặp vấn đề về chi phí triển khai đối với mô hình chatbot rasa, nếu mọi người muốn trải nghiệm, vui lòng tải dự án techshop, truy cập github https://github.com/lai-tran-the-vinh/chatbot-training.git và làm theo hướng dẫn để rasa về máy tính cá nhân và chạy cục bộ. Chân thành xin lỗi về sự bất tiện này!
 
 ----------
