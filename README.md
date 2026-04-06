@@ -6,7 +6,10 @@ Chào mừng đến với **TechShop** 🚀
 -   🖥️ Frontend: React + Vite
     
 -   ⚙️ Backend: NestJS + MongoDB
-    
+
+Link: https://techshop-ctut.netlify.app/
+
+Lưu ý: Do nhóm phát triển gặp vấn đề về chi phí triển khai đối với mô hình chatbot rasa, nếu mọi người muốn trải nghiệm, vui lòng tải dự án techshop, truy cập github https://github.com/lai-tran-the-vinh/chatbot-training.git và làm theo hướng dẫn để rasa về máy tính cá nhân và chạy cục bộ. Chân thành xin lỗi về sự bất tiện này!
 
 ----------
 
@@ -220,9 +223,7 @@ MONGODB_URI=mongodb+srv://VieDev:durNBv9YO1TvPvtJ@cluster0.h4trl.mongodb.net/tec
 
 NODE_ENV=production
 
-```
-
-Lưu ý: Do vấn đề về chi phí triển khai trên máy chủ nên để có thể thực hiện được chức năng trò chuyện với chatbot, xin vui lòng tải mã nguồn về máy cá nhân và thực thi theo hướng dẫn tại https://github.com/lai-tran-the-vinh/chatbot-training.git 
+``` 
 
 ----------
 
