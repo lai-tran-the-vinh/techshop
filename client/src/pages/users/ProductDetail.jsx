@@ -106,14 +106,14 @@ function ProductDetail() {
 
   useEffect(() => {
     window.scroll(0, 0);
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     document.title = 'TechShop | Chi tiết sản phẩm';
     fetchProductDetail();
     fetchBranchs();
     fetchStats();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (product?._id) {
