@@ -8,13 +8,13 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
-    private configSerive: ConfigService,
+    private configService: ConfigService,
     private userService: UserService,
   ) {
     super({
-      clientID: configSerive.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: configSerive.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: 'http://localhost:8080/api/v1/auth/google/callback',
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
       scope: ['email', 'profile'],
     });
   }
