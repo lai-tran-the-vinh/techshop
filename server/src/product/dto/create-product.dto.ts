@@ -55,7 +55,8 @@ export class CreateProductDto {
   galleryImages?: string[];
 
   @IsString()
-  slug: string;
+  @IsOptional()
+  slug?: string;
 
   // @IsArray()
   // @IsOptional()

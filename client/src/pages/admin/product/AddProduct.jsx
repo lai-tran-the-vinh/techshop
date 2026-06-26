@@ -146,6 +146,26 @@ function AddProduct() {
 
       const productToSubmit = form.getFieldsValue();
 
+      // Đảm bảo isActive có giá trị mặc định
+      if (productToSubmit.isActive === undefined) {
+        productToSubmit.isActive = true;
+      }
+
+      // Auto-generate slug từ name (backend bắt buộc)
+      if (productToSubmit.name) {
+        productToSubmit.slug = productToSubmit.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-');
+      }
+
+      // Đảm bảo discount là số
+      productToSubmit.discount = Number(productToSubmit.discount) || 0;
+
       // Process attributes
       productToSubmit.attributes = {
         ...productToSubmit.attributes,
@@ -198,6 +218,7 @@ function AddProduct() {
         }
       }
 
+      console.log('📦 Payload gửi lên API:', JSON.parse(JSON.stringify(productToSubmit)));
       const addProduct = await Products.add(productToSubmit);
 
       if (addProduct) {
@@ -268,9 +289,9 @@ function AddProduct() {
           </div>
         </div>
         {chunks.map((pair, index) => (
-          <Row key={index} gutter={16}>
+          <Row key={`${group}-row-${index}`} gutter={16}>
             {pair.map((field) => (
-              <Col span={12} key={field.name}>
+              <Col span={12} key={`${group}-${field.name}`}>
                 <Form.Item name={[group, field.name]} label={field.label}>
                   {field.type === 'text' || field.type === 'number' ? (
                     <Input
@@ -409,6 +430,10 @@ function AddProduct() {
                 size="large"
                 loading={loading}
                 onClick={onSubmit}
+                // onClick={() => {
+                //   // console.log(JSON.parse(JSON.stringify(form.getFieldsValue())))
+                //   console.log(JSON.stringify(form.getFieldsValue()))
+                // }}
                 className="min-w-[120px] bg-blue-600 hover:bg-blue-700"
               >
                 {loading ? 'Đang xử lý...' : 'Thêm sản phẩm'}

@@ -126,7 +126,7 @@ export class AuthService {
           secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
         });
       } catch (err) {
-        if (err.name === 'TokenExpiredError') {
+        if ((err as any).name === 'TokenExpiredError') {
           throw new UnauthorizedException(
             'Refresh Token đã hết hạn. Đăng nhập lại.',
           );

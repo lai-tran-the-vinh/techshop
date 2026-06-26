@@ -21,11 +21,11 @@ export class Products {
   })
   name: string;
 
-  // @Prop({
-  //   index: true,
-  //   trim: true,
-  // })
-  // slug: string;
+  @Prop({
+    index: true,
+    trim: true,
+  })
+  slug: string;
 
   // @Prop({
   //   required: true,

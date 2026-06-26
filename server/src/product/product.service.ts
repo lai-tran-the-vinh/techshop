@@ -41,14 +41,14 @@ export class ProductService {
       })),
     );
 
-    // const slug = slugify(createProductDto.name, {
-    //   lower: true,
-    //   strict: true,
-    //   locale: 'vi',
-    // });
+    const slug = slugify(createProductDto.name, {
+      lower: true,
+      strict: true,
+      locale: 'vi',
+    });
     const createdProduct = await this.productModel.create({
       ...createProductDto,
-      // slug: slug,
+      slug: slug,
       variants: createdVariants?.map((variant) => variant._id) || [],
     });
     return createdProduct;
