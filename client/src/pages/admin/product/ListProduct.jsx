@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Actions, Subjects } from '@/constants/permissions';
+import { Actions, Subjects } from '@/constants/permissions.constant';
 import Products from '@services/products';
 import {
   Tag,

@@ -48,7 +48,7 @@ import InboundDetailDrawer from '@/components/admin/warehouse/InboundDetailDrawe
 import InboundSummary from '@/components/admin/warehouse/InboundSummary';
 import InboundConfirmModal from '@/components/admin/warehouse/InboundConfirmModal';
 import { hasPermission } from '@/helpers';
-import { Actions, Subjects } from '@/constants/permissions';
+import { Actions, Subjects } from '@/constants/permissions.constant';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -838,10 +838,10 @@ const WarehouseOutbound = () => {
                           return (
                             v.stock > 0 &&
                             index ===
-                              self.findIndex(
-                                (variant) =>
-                                  variant.variantId._id === v.variantId._id,
-                              )
+                            self.findIndex(
+                              (variant) =>
+                                variant.variantId._id === v.variantId._id,
+                            )
                           );
                         })
                         .map((variant) => (
@@ -905,9 +905,9 @@ const WarehouseOutbound = () => {
                       max={
                         selectedVariant && form.getFieldValue('variantColor')
                           ? getVariantColorInfo(
-                              selectedVariant.variantId._id,
-                              form.getFieldValue('variantColor'),
-                            )?.stock
+                            selectedVariant.variantId._id,
+                            form.getFieldValue('variantColor'),
+                          )?.stock
                           : undefined
                       }
                       placeholder="Nhập số lượng"

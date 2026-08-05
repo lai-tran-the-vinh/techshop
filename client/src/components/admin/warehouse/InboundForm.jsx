@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Select, Input, InputNumber, Button } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { hasPermission } from '@/helpers';
-import { Actions, Subjects } from '@/constants/permissions';
+import { Actions, Subjects } from '@/constants/permissions.constant';
 
 const { Option } = Select;
 const { TextArea } = Input;

@@ -1,0 +1,888 @@
+[
+  {
+    "name": "app",
+    "file": "d:\\techshop\\server\\src\\app.controller.ts",
+    "basePath": "",
+    "methods": [
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "getHello"
+      }
+    ]
+  },
+  {
+    "name": "auth",
+    "file": "d:\\techshop\\server\\src\\auth\\auth.controller.ts",
+    "basePath": "api/v1/auth",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "/login",
+        "functionName": "login"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/register",
+        "functionName": "register"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "google",
+        "functionName": "googleAuth"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "google/callback",
+        "functionName": "await"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/account",
+        "functionName": "findOneByID"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/refresh",
+        "functionName": "handleRefreshToken"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/logout",
+        "functionName": "logout"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "forgot-password",
+        "functionName": "if"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "reset-password",
+        "functionName": "resetPassword"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "resend-otp",
+        "functionName": "log"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "verify-otp",
+        "functionName": "verifyOtp"
+      }
+    ]
+  },
+  {
+    "name": "banner",
+    "file": "d:\\techshop\\server\\src\\banner\\banner.controller.ts",
+    "basePath": "api/v1/banners",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  },
+  {
+    "name": "benefit",
+    "file": "d:\\techshop\\server\\src\\benefit\\benefit.controller.ts",
+    "basePath": "api/v1/benefits",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "promotions",
+        "functionName": "createPromotion"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "promotions",
+        "functionName": "getAllPromotions"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "promotions/:id",
+        "functionName": "getPromotionById"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "promotions/:id",
+        "functionName": "updatePromotion"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": "promotions/:id",
+        "functionName": "deletePromotion"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "warranties",
+        "functionName": "createWarrantyPolicy"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "warranties",
+        "functionName": "getAllWarranties"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "warranties/:id",
+        "functionName": "getWarrantyById"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "warranties/:id",
+        "functionName": "updateWarranty"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": "warranties/:id",
+        "functionName": "deleteWarranty"
+      }
+    ]
+  },
+  {
+    "name": "branch",
+    "file": "d:\\techshop\\server\\src\\branch\\branch.controller.ts",
+    "basePath": "api/v1/branchs",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "can"
+      }
+    ]
+  },
+  {
+    "name": "brand",
+    "file": "d:\\techshop\\server\\src\\brand\\brand.controller.ts",
+    "basePath": "api/v1/brands",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  },
+  {
+    "name": "cart",
+    "file": "d:\\techshop\\server\\src\\cart\\cart.controller.ts",
+    "basePath": "api/v1/carts",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": "remove-all",
+        "functionName": "remove"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": "remove-item",
+        "functionName": "removeItem"
+      }
+    ]
+  },
+  {
+    "name": "category",
+    "file": "d:\\techshop\\server\\src\\category\\category.controller.ts",
+    "basePath": "api/v1/categories",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  },
+  {
+    "name": "chatbot",
+    "file": "d:\\techshop\\server\\src\\chatbot\\chatbot.controller.ts",
+    "basePath": "chat",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "sendMessage"
+      }
+    ]
+  },
+  {
+    "name": "cloundinary",
+    "file": "d:\\techshop\\server\\src\\cloundinary\\cloundinary.controller.ts",
+    "basePath": "api/v1/upload",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "image",
+        "functionName": "if"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "image",
+        "functionName": "getImage"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": "image",
+        "functionName": "deleteImage"
+      }
+    ]
+  },
+  {
+    "name": "dashboard",
+    "file": "d:\\techshop\\server\\src\\dashboard\\dashboard.controller.ts",
+    "basePath": "api/v1/dashboard",
+    "methods": [
+      {
+        "httpMethod": "get",
+        "subPath": "/stats/:period",
+        "functionName": "getStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/stats/:period/current",
+        "functionName": "getCurrentStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "branches/stats/:period",
+        "functionName": "getBranchStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/stats/:period/historical",
+        "functionName": "getHistoricalStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/stats/:period/comparison",
+        "functionName": "getStatsComparison"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/products/top-selling",
+        "functionName": "getTopSellingProducts"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/products/most-viewed",
+        "functionName": "getMostViewedProducts"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/payment-methods",
+        "functionName": "getPaymentMethodStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/overview",
+        "functionName": "getDashboardOverview"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/update/daily",
+        "functionName": "updateDailyStats"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/update/weekly",
+        "functionName": "updateWeeklyStats"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/update/monthly",
+        "functionName": "updateMonthlyStats"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/update/yearly",
+        "functionName": "updateYearlyStats"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/update/all",
+        "functionName": "updateAllStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/stats/custom-range",
+        "functionName": "getCustomRangeStats"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/health",
+        "functionName": "healthCheck"
+      }
+    ]
+  },
+  {
+    "name": "file",
+    "file": "d:\\techshop\\server\\src\\file\\file.controller.ts",
+    "basePath": "api/v1/upload",
+    "methods": [
+      {
+        "httpMethod": "delete",
+        "subPath": "delete/:filename",
+        "functionName": "join"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "excel",
+        "functionName": "readFile"
+      }
+    ]
+  },
+  {
+    "name": "inventory",
+    "file": "d:\\techshop\\server\\src\\inventory\\inventory.controller.ts",
+    "basePath": "api/v1/inventories",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "check-stock",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "import",
+        "functionName": "importStock"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "getimport",
+        "functionName": "findImport"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "getimport/:id",
+        "functionName": "getImportDetail"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "getexport",
+        "functionName": "findExport"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "getexport/:id",
+        "functionName": "getExportDetail"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "export",
+        "functionName": "can"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/transfer",
+        "functionName": "getAllTransfer"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "/transfer",
+        "functionName": "transferStock"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "get_transfer/:id",
+        "functionName": "getTransferDetail"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/transfer/:id",
+        "functionName": "updateTransfer"
+      }
+    ]
+  },
+  {
+    "name": "mail",
+    "file": "d:\\techshop\\server\\src\\mail\\mail.controller.ts",
+    "basePath": "api/v1/mail",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "/send",
+        "functionName": "sendResetPasswordEmail"
+      }
+    ]
+  },
+  {
+    "name": "order",
+    "file": "d:\\techshop\\server\\src\\order\\order.controller.ts",
+    "basePath": "api/v1/orders",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAllByStaff"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "tracking/latest",
+        "functionName": "findLatestTrackingForUser"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "tracking/:id",
+        "functionName": "getOrderTrackingDetails"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "user",
+        "functionName": "findAllByCustomer"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "can"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/cancel/:id",
+        "functionName": "cancelOrder"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/refund/:id",
+        "functionName": "refundOrder"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/request-return/:id",
+        "functionName": "requestReturn"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/confirm-return/:id",
+        "functionName": "confirmReturn"
+      }
+    ]
+  },
+  {
+    "name": "payment",
+    "file": "d:\\techshop\\server\\src\\payment\\payment.controller.ts",
+    "basePath": "api/v1/payment",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "create-payment",
+        "functionName": "createPayment"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "momo/callback",
+        "functionName": "handleMoMoRedirect"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "notify",
+        "functionName": "log"
+      }
+    ]
+  },
+  {
+    "name": "permission",
+    "file": "d:\\techshop\\server\\src\\permission\\permission.controller.ts",
+    "basePath": "api/v1/permissions",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "can"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "can"
+      }
+    ]
+  },
+  {
+    "name": "product",
+    "file": "d:\\techshop\\server\\src\\product\\product.controller.ts",
+    "basePath": "api/v1/products",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "insert",
+        "functionName": "insertManyProduct"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "import-csv",
+        "functionName": "if"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/:id",
+        "functionName": "findOneById"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/search/autocomplete",
+        "functionName": "autocompleteSearch"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":productId/rating-stats",
+        "functionName": "getProductRatingStats"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/:id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/:id/view-count",
+        "functionName": "countViews"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "/:id/order-count",
+        "functionName": "countOrders"
+      }
+    ]
+  },
+  {
+    "name": "recommendation",
+    "file": "d:\\techshop\\server\\src\\recommendation\\recommendation.controller.ts",
+    "basePath": "api/v1",
+    "methods": [
+      {
+        "httpMethod": "get",
+        "subPath": "recommend/:id",
+        "functionName": "getRecommendedProducts"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": "recommend/record-view-history",
+        "functionName": "if"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "recommend/get-by-user/:userId",
+        "functionName": "getRecommendationsForUser"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/recommend/recommendation/get-popular",
+        "functionName": "getPopularProducts"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/recommend/recommendation/get-brand-based",
+        "functionName": "getBrandBasedRecommendations"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "/recommend/recommendation/get-category-based/:id",
+        "functionName": "getCategoryBasedRecommendations"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "if"
+      }
+    ]
+  },
+  {
+    "name": "review",
+    "file": "d:\\techshop\\server\\src\\review\\review.controller.ts",
+    "basePath": "api/v1/review",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":productId",
+        "functionName": "findByProduct"
+      },
+      {
+        "httpMethod": "post",
+        "subPath": ":commentId/reply",
+        "functionName": "addReply"
+      }
+    ]
+  },
+  {
+    "name": "role",
+    "file": "d:\\techshop\\server\\src\\role\\role.controller.ts",
+    "basePath": "/api/v1/roles",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "log"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  },
+  {
+    "name": "tfidf-mode",
+    "file": "d:\\techshop\\server\\src\\tfidf-mode\\tfidf-mode.controller.ts",
+    "basePath": "tfidf-mode",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "create"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  },
+  {
+    "name": "user",
+    "file": "d:\\techshop\\server\\src\\user\\user.controller.ts",
+    "basePath": "api/v1/users",
+    "methods": [
+      {
+        "httpMethod": "post",
+        "subPath": "",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "",
+        "functionName": "findAll"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": "get/all-users-has-permission",
+        "functionName": "findAllUserHasPermission"
+      },
+      {
+        "httpMethod": "get",
+        "subPath": ":id",
+        "functionName": "findOne"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "change-password",
+        "functionName": "changePassword"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": ":id",
+        "functionName": "update"
+      },
+      {
+        "httpMethod": "patch",
+        "subPath": "update-role/:id",
+        "functionName": "updateRole"
+      },
+      {
+        "httpMethod": "delete",
+        "subPath": ":id",
+        "functionName": "remove"
+      }
+    ]
+  }
+]

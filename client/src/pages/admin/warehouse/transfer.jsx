@@ -40,7 +40,7 @@ import Warehouse from '@/services/warehouse';
 import Products from '@/services/products';
 import Inventory from '@/services/inventories';
 import { hasPermission } from '@/helpers';
-import { Actions, Subjects } from '@/constants/permissions';
+import { Actions, Subjects } from '@/constants/permissions.constant';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -220,8 +220,8 @@ const WarehouseTransferManagement = () => {
         </thead>
         <tbody>
           ${transfer.items
-            .map(
-              (item, index) => `
+        .map(
+          (item, index) => `
             <tr>
               <td style="border: 1px solid #ddd; padding: 8px;">${index + 1}</td>
               <td style="border: 1px solid #ddd; padding: 8px;">${item.productId.name}</td>
@@ -229,8 +229,8 @@ const WarehouseTransferManagement = () => {
               <td style="border: 1px solid #ddd; padding: 8px;">${item.unit || 'N/A'}</td>
             </tr>
           `,
-            )
-            .join('')}
+        )
+        .join('')}
         </tbody>
       </table>
       <div style="margin-top: 40px; display: flex; justify-content: space-between;">
@@ -759,7 +759,7 @@ const WarehouseTransferManagement = () => {
             Đóng
           </Button>,
           viewingTransfer?.status === 'approved' ||
-          viewingTransfer?.status === 'completed' ? (
+            viewingTransfer?.status === 'completed' ? (
             <Button
               key="print"
               type="primary"
@@ -888,7 +888,7 @@ const WarehouseTransferManagement = () => {
               ) : null}
 
               {viewingTransfer.status === 'rejected' &&
-              viewingTransfer.rejectNote ? (
+                viewingTransfer.rejectNote ? (
                 <Row gutter={16} className="mt-3">
                   <Col span={8}>
                     <Text strong>Lý do từ chối:</Text>

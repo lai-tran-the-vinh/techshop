@@ -51,7 +51,7 @@ import InboundSummary from '@/components/admin/warehouse/InboundSummary';
 import InboundDetailDrawer from '@/components/admin/warehouse/InboundDetailDrawer';
 import { useAppContext } from '@/contexts';
 import { hasPermission } from '@/helpers';
-import { Actions, Subjects } from '@/constants/permissions';
+import { Actions, Subjects } from '@/constants/permissions.constant';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
