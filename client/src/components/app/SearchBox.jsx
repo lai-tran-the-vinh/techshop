@@ -5,6 +5,7 @@ import {
   ClockIcon,
   XIcon,
   ReceiptCent,
+  ArrowLeft,
 } from 'lucide-react';
 import { List, Spin, Typography, Image } from 'antd';
 import Products from '@/services/products';
@@ -40,6 +41,7 @@ function SearchBox() {
       setLoading(false);
     } catch (error) {
       console.error(error.message);
+      setFilteredResults([]);
       setLoading(false);
     }
   }
@@ -102,11 +104,7 @@ function SearchBox() {
   const handleChange = (event) => {
     const value = event.target.value;
     setQuery(value);
-    if (value.trim() !== '') {
-      setShowResults(true);
-    } else {
-      setShowResults(false);
-    }
+    setShowResults(true);
   };
   const addToRecentSearches = (term) => {
     const updated = [term, ...recentSearches.filter((t) => t !== term)];
@@ -125,13 +123,16 @@ function SearchBox() {
 
   useEffect(() => {
     const fetchRecommendations = async () => {
-      if (user) {
-        try {
+      try {
+        if (user) {
           const res = await Recomment.getRecommendationsByUser(user._id);
           setRecommentProducts(res);
-        } catch (error) {
-          console.error('Error fetching recommendations:', error);
+        } else {
+          const res = await Recomment.getRecommendationsPopular();
+          setRecommentProducts(res);
         }
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
       }
     };
 
@@ -139,16 +140,29 @@ function SearchBox() {
   }, [user]);
 
   return (
-    <div className="w-full relative">
-      <div ref={containerRef}>
-        <div className={'relative  '} onClick={handleFocus}>
-          <div className={'relative bg-white rounded-l-full rounded-r-full'}>
-            <div className="flex items-center px-4 py-4">
-              <SearchIcon
-                className={`w-20 h-20 transition-colors duration-300 ml-5 mr-10 ${
-                  isFocused ? 'text-primary' : 'text-gray-400'
-                }`}
-              />
+    <div className={`w-full relative ${isFocused ? 'max-lg:fixed max-lg:inset-0 max-lg:z-[100] max-lg:bg-gray-50 max-lg:flex max-lg:flex-col' : ''}`}>
+      <div ref={containerRef} className={isFocused ? 'max-lg:flex-1 max-lg:flex max-lg:flex-col' : ''}>
+        <div className={`relative ${isFocused ? 'max-lg:bg-gradient-primary-to-secondary max-lg:px-2 max-lg:py-3 max-lg:flex max-lg:items-center max-lg:gap-2' : ''}`} onClick={handleFocus}>
+          {isFocused && (
+            <button 
+              className="lg:hidden p-1 text-white hover:text-gray-200 transition-colors shrink-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowResults(false);
+                setIsFocused(false);
+                inputRef.current?.blur();
+              }}
+            >
+              <ArrowLeft className="w-[28px] h-[28px]" />
+            </button>
+          )}
+          <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'flex-1 max-lg:w-full' : ''}`}>
+            <div className="flex flex-1 items-center px-4 py-2 lg:py-4">
+              {!isFocused && (
+                <SearchIcon
+                  className={`hidden lg:block w-5 h-5 lg:w-20 lg:h-20 transition-colors duration-300 ml-2 lg:ml-5 mr-4 lg:mr-10 text-gray-400`}
+                />
+              )}
               <input
                 ref={inputRef}
                 type="text"
@@ -157,7 +171,7 @@ function SearchBox() {
                 onFocus={handleFocus}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Tìm kiếm sản phẩm...."
-                className="flex-1 text-lg outline-none placeholder-gray-400 h-[35px] "
+                className={`flex-1 ${isFocused && 'pl-8'} text-sm md:text-base outline-none placeholder-gray-400 h-[35px]`}
               />
               {query && (
                 <button
@@ -169,7 +183,7 @@ function SearchBox() {
               )}
               <button
                 onClick={handleSearch}
-                className=" flex items-center cursor-pointer bg-gradient-to-r bg-[#fee2e2] text-white rounded-full p-8"
+                className="flex items-center justify-center cursor-pointer bg-gradient-to-r bg-[#fee2e2] text-white rounded-full p-[6px] md:p-8 w-[35px] h-[35px] md:w-auto md:h-auto"
               >
                 <SearchIcon className="w-20 h-20 text-primary " />
               </button>
@@ -178,11 +192,11 @@ function SearchBox() {
         </div>
 
         {showResults && (
-          <div className="absolute top-full mt-6 p-10 left-0 right-0 bg-white rounded-xl border border-gray-300 overflow-hidden min-h-1/4 z-50 animate-in slide-in-from-top-2 duration-300">
+          <div className="absolute max-lg:relative max-lg:mt-0 max-lg:shadow-none max-lg:border-none top-full mt-6 left-0 right-0 bg-white lg:rounded-xl lg:border border-gray-300 overflow-y-auto max-lg:flex-1 max-lg:h-[calc(100vh-64px)] z-50 animate-in slide-in-from-top-2 duration-300">
             {!query.trim() && (
-              <div className="p-6">
+              <div className="p-4 lg:p-6">
                 {recommentProducts.length > 0 && (
-                  <div className="mb-6">
+                  <div className="mb-6 p-6">
                     <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                       <TrendingUpIcon className="w-20 h-20 text-primary" />
                       Sản phẩm gợi ý cho bạn
@@ -244,7 +258,7 @@ function SearchBox() {
             )}
 
             {filteredResults.length > 0 && !loading && query.trim() !== '' && (
-              <div className="p-4 max-h-300 overflow-y-auto">
+              <div className="p-4 overflow-y-auto">
                 <div className="text-sm text-gray-500 mb-4 px-2">
                   Tìm thấy {filteredResults.length} sản phẩm
                 </div>
