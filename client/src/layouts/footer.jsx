@@ -6,8 +6,8 @@ const { Title, Text, Link } = Typography;
 
 const FooterComponent = () => {
   return (
-    <Layout.Footer className="print:hidden! py-12! px-0! bg-[#090D14]! flex! justify-center! w-full! mt-20!">
-      <div className="w-5/6">
+    <Layout.Footer className="print:hidden! py-8! sm:py-12! px-0! bg-[#090D14]! flex! justify-center! w-full! mt-10! sm:mt-20!">
+      <div className="w-11/12 lg:w-5/6">
         <Flex vertical gap={6} className="w-full! py-12!">
           <Typography.Text className="text-white! text-lg! font-medium!">
             Về hệ thống TechShop
@@ -18,8 +18,8 @@ const FooterComponent = () => {
           </Typography.Text>
         </Flex>
         <Divider className="border-gray-700! my-8!" />
-        <Flex gap={12} align="start" className="w-full! py-12!">
-          <Flex vertical gap={8} justify="center" className="w-1/4!">
+        <div className="w-full! py-6! sm:py-12! grid! grid-cols-1! sm:grid-cols-2! lg:grid-cols-4! gap-8! lg:gap-12!">
+          <Flex vertical gap={8} justify="start" className="w-full!">
             <Typography.Text className="text-white! uppercase! text-lg! font-medium!">
               Kết nối với TechShop
             </Typography.Text>
@@ -90,7 +90,7 @@ const FooterComponent = () => {
               </Flex>
             </Flex>
           </Flex>
-          <Flex vertical gap={8} justify="center" className="w-1/4!">
+          <Flex vertical gap={8} justify="start" className="w-full!">
             <Typography.Text className="text-white! uppercase! text-lg! font-medium!">
               Về chúng tôi
             </Typography.Text>
@@ -125,7 +125,7 @@ const FooterComponent = () => {
               Câu hỏi thường gặp
             </Typography.Text>
           </Flex>
-          <Flex vertical gap={8} justify="center" className="w-1/4!">
+          <Flex vertical gap={8} justify="start" className="w-full!">
             <Typography.Text className="text-white! uppercase! text-lg! font-medium!">
               Chính sách
             </Typography.Text>
@@ -157,7 +157,7 @@ const FooterComponent = () => {
               Chính sách chương trình khách hàng thân thiết
             </Typography.Text>
           </Flex>
-          <Flex vertical gap={8} justify="center" className="w-1/4!">
+          <Flex vertical gap={8} justify="start" className="w-full!">
             <Typography.Text className="text-white! uppercase! text-lg! font-medium!">
               Hỗ trợ thanh toán
             </Typography.Text>
@@ -266,7 +266,7 @@ const FooterComponent = () => {
               </Flex>
             </Flex>
           </Flex>
-        </Flex>
+        </div>
       </div>
     </Layout.Footer>
   );
