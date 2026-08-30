@@ -59,7 +59,7 @@ function CardProduct({ product = {}, className, loading = false }) {
             />
           </div>
         }
-        className={`group ${className} rounded-xl! min-h-400! overflow-hidden! border! hover:shadow-none!`}
+        className={`group ${className} rounded-xl! min-h-400! overflow-hidden! border-none! hover:shadow-md!`}
       >
         <Tooltip title={product?.name}>
           <Typography.Text className="text-base! line-clamp-1! font-medium!">
@@ -102,9 +102,6 @@ function CardProduct({ product = {}, className, loading = false }) {
             ({stats?.totalComments})
           </Typography.Text>
         </div>
-        <Button type="primary" className="w-full! mt-8! h-40!">
-          Xem ngay
-        </Button>
       </Card>
     </Link>
   );

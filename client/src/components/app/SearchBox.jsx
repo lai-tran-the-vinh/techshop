@@ -210,7 +210,7 @@ function SearchBox() {
                             setShowResults(false);
                             setIsFocused(false);
                           }}
-                          className="flex items-center gap-2 bg-gradient-to-r h-[60px] min-w-[1/5] max-w-[2/5] p-10 rounded-md text-sm hover:from-orange-100 hover:to-red-100 transition-all duration-300 transform hover:scale-105"
+                          className="flex cursor-pointer items-center gap-2 bg-gradient-to-r h-[60px] min-w-[1/5] max-w-[2/5] p-10 rounded-md text-sm hover:from-orange-100 hover:to-red-100 transition-all duration-300 transform hover:scale-105"
                         >
                           <img
                             src={term?.variants[0]?.color[0]?.images[0]}
@@ -241,7 +241,7 @@ function SearchBox() {
                     <div className="text-center">
                       <button
                         onClick={handleClearRecentSearches}
-                        className="text-red-500 text-sm hover:underline"
+                        className="cursor-pointer! font-medium! text-sm hover:underline"
                       >
                         Xóa lịch sử tìm kiếm
                       </button>

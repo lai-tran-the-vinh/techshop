@@ -116,9 +116,8 @@ function Home() {
     <button
       type="button"
       onClick={onClick}
-      className={`absolute -right-5 lg:-right-1 h-[60px] w-[60px] rounded-l-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${
-        isHovered ? 'opacity-100' : 'opacity-0'
-      }`}
+      className={`absolute -right-5 lg:-right-1 h-[60px] w-[60px] rounded-l-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
+        }`}
       aria-label="Next slide"
     >
       <RightOutlined className="text-lg font-bold" />
@@ -129,9 +128,8 @@ function Home() {
     <button
       type="button"
       onClick={onClick}
-      className={`absolute -left-5 lg:-left-1 h-[60px] w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${
-        isHovered ? 'opacity-100' : 'opacity-0'
-      }`}
+      className={`absolute -left-5 lg:-left-1 h-[60px] w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
+        }`}
       aria-label="Previous slide"
     >
       <LeftOutlined className="text-lg font-bold" />
@@ -210,40 +208,18 @@ function Home() {
           </Col>
         </Row>
       </section>
-      {!loading && recommentProducts.length > 0 && (
-        <section className="w-full mb-12 bg-[#ffffff] rounded-xl">
-          <>
-            <div className="flex items-center justify-between pt-12 pl-12 ">
-              <Typography.Title
-                level={3}
-                className="font-inter! uppercase! font-bold! text-primary! mb-0! text-lg! sm:text-xl! lg:text-2xl!"
-              >
-                Sản phẩm có thể phù hợp với bạn
-              </Typography.Title>
-            </div>
-
-            <div className="w-full justify-between flex flex-wrap pb-12 px-4">
-              {recommentProducts?.map((product, index) => {
-                if (index > 4) return;
-                return (
-                  <div
-                    key={index}
-                    className="lg:w-1/5 max-lg:w-1/2 max-sm:w-full max-lg:mt-16 px-8"
-                  >
-                    <CardProduct
-                      product={product}
-                      loading={loading}
-                      className="transform w-full transition-all duration-300"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        </section>
+      {!loading && recommentProducts.length > 0 && (<>
+        <PreviewListProducts
+          key='recommended_products'
+          loading={false}
+          products={recommentProducts}
+          viewAll={false}
+          title={'Sản phẩm có thể phù hợp với bạn'} />
+      </>
       )}
 
-      <section className="w-full">
+      {/* Danh sách danh mục */}
+      <section className="w-full mt-12">
         <div className="mx-auto ">
           <Row justify="center" gutter={[10]} className="flex! flex-1/2">
             {categories?.map((category, index) => {

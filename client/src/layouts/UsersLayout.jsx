@@ -1,12 +1,11 @@
 import { SearchBox } from '@/components/app';
-import { Children, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppContext } from '@contexts';
 import { Login, Signup } from '@pages/app';
 import { ChatBot } from '@components/users';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { UserInformation } from '@components/users';
 import {
-  BsCartFill,
   BsFillBagFill,
   BsGeoAltFill,
   BsSignTurnRightFill,
@@ -111,7 +110,7 @@ function Header() {
   ];
 
   return (
-    <Layout.Header className="print:hidden! font-inter! px-2! lg:px-4! w-full! fixed! top-0! left-0! right-0! z-[99]! py-3! lg:p-10! bg-gradient-primary-to-secondary! xl:h-70! flex! flex-col! lg:flex-row! items-center! justify-center! border-b! border-gray-200! h-auto! min-h-[60px]! lg:h-20!">
+    <Layout.Header className="print:hidden! font-inter! p-8! lg:px-4! w-full! fixed! top-0! left-0! right-0! z-[99]! lg:p-10! bg-gradient-primary-to-secondary! xl:h-70! flex! flex-col! lg:flex-row! items-center! justify-center! border-b! border-gray-200! h-auto! min-h-[60px]! lg:h-20!">
       <div className="w-full lg:w-5/6 flex items-center justify-between gap-2 lg:gap-4 mb-2 lg:mb-0">
 
         {/* HAMBURGER MENU (MOBILE) */}
@@ -203,7 +202,7 @@ function Header() {
         </div>
       </div>
 
-      <div className="lg:hidden w-full px-2">
+      <div className="lg:hidden w-full px-2 mt-8">
         <SearchBox />
       </div>
 

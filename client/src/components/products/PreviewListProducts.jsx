@@ -94,7 +94,7 @@ function PreviewListProducts({
       <div className="flex items-center pt-12 px-12 justify-between">
         <Typography.Title
           level={2}
-          className="font-inter! mb-0! uppercase! text-primary! text-lg! sm:text-xl! lg:text-2xl!"
+          className="mb-0! text-lg! font-semibold! sm:text-xl! lg:text-3xl! lg:pb-10!"
         >
           {title}
         </Typography.Title>
