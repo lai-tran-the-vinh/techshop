@@ -46,12 +46,13 @@ function CardProduct({ product = {}, className, loading = false }) {
   return (
     <Link to={`/product/${product._id}`}>
       <Card
+        styles={{ body: { padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' } }}
         cover={
-          <div className="h-200">
+          <div className="flex items-center justify-center pt-4 sm:pt-6">
             <Image
               preview={false}
               alt="Product Image"
-              className="object-fill! aspect-square! mx-auto! mt-20! min-h-full! w-[50%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
+              className="object-contain! aspect-square! mx-auto! w-[80%]! sm:w-[70%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
               src={
                 product?.variants?.[0]?.color?.[0]?.images?.[0] ||
                 'https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg'
@@ -59,46 +60,46 @@ function CardProduct({ product = {}, className, loading = false }) {
             />
           </div>
         }
-        className={`group ${className} rounded-xl! min-h-400! overflow-hidden! border-none! hover:shadow-md!`}
+        className={`group ${className} rounded-xl! h-full! overflow-hidden! border-none! hover:shadow-md! flex flex-col`}
       >
         <Tooltip title={product?.name}>
-          <Typography.Text className="text-base! line-clamp-1! font-medium!">
+          <Typography.Text className="text-xs sm:text-base! line-clamp-2 sm:line-clamp-1! font-medium!">
             {product.name || 'Sản phẩm mới'}
           </Typography.Text>
         </Tooltip>
-        <div className="mt-8">
-          <div className="flex flex-col items-start gap-4">
-            <Flex gap={8} align="center">
+        <div className="mt-3 sm:mt-6">
+          <div className="flex flex-col items-start gap-1 sm:gap-4">
+            <Flex gap={2} sm:gap={8} align="center" className="flex-nowrap">
               <Typography.Text
                 delete
                 type="secondary"
-                className="text-sm! font-inter!"
+                className="text-[10px] sm:text-sm! font-inter! truncate"
               >
                 {`${formatCurrency(product?.variants?.[0]?.price)}đ` || ''}
               </Typography.Text>
-              <Typography.Text className="font-medium! text-primary! text-sm!">
+              <Typography.Text className="font-medium! text-primary! text-[10px] sm:text-sm! whitespace-nowrap">
                 -{product.discount}%
               </Typography.Text>
             </Flex>
-            <Typography.Text className="text-base! font-bold! font-inter!">
+            <Typography.Text className="text-sm sm:text-base! font-bold! font-inter!">
               {`${formatCurrency(product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100))}đ` ||
                 'Liên hệ'}
             </Typography.Text>
-            <div className="flex items-center gap-8">
-              <Typography.Text className="text-sm! mb-10 font-inter! text-[#059669]!">
+            <div className="flex items-center gap-1 sm:gap-8">
+              <Typography.Text className="text-xs sm:text-sm! mb-0 sm:mb-10 font-inter! text-[#059669]!">
                 Giảm{' '}
                 {`${formatCurrency(product?.variants?.[0]?.price - (product?.variants?.[0]?.price - product?.variants?.[0]?.price * (product?.discount / 100)))}đ`}
               </Typography.Text>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-8 mb-3">
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-8 mt-auto pt-2">
           <Rate
             disabled
             value={stats?.averageRating ? stats?.averageRating : 5}
-            className="text-base!"
+            className="text-[10px]! sm:text-base! [&_.ant-rate-star]:text-[10px]! sm:[&_.ant-rate-star]:text-base! [&_.ant-rate-star]:mr-[2px]! sm:[&_.ant-rate-star]:mr-2!"
           />
-          <Typography.Text type="secondary">
+          <Typography.Text type="secondary" className="text-[10px] sm:text-sm!">
             ({stats?.totalComments})
           </Typography.Text>
         </div>

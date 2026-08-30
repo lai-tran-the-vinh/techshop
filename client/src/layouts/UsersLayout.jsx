@@ -230,7 +230,7 @@ function Header() {
       >
         <div className="flex flex-col gap-3">
           {user ? (
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-100 flex flex-col gap-1">
+            <div className="bg-gray-50 p-12 rounded-md border border-gray-100 flex flex-col gap-1">
               <Text className="font-bold text-lg text-gray-800">{user.name}</Text>
               <Text className="text-gray-500 text-sm">{user.email}</Text>
             </div>
@@ -256,9 +256,7 @@ function Header() {
           )}
         </div>
 
-        <Collapse className='mx-10!' items={drawerBranchItems}>
-
-        </Collapse>
+        <Collapse className='mx-10!' items={drawerBranchItems}></Collapse>
 
       </Drawer>
     </Layout.Header>

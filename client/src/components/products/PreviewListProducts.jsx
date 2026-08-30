@@ -47,15 +47,16 @@ function PreviewListProducts({
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3.5,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 640,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2.1,
           slidesToScroll: 1,
+          arrows: false,
         },
       },
     ],
@@ -90,8 +91,8 @@ function PreviewListProducts({
   }
 
   return (
-    <div className="w-full bg-white rounded-xl mt-8">
-      <div className="flex items-center pt-12 px-12 justify-between">
+    <div className="w-full sm:bg-white sm:rounded-xl mt-4 sm:mt-8">
+      <div className="flex items-center pt-4 sm:pt-12 px-4 sm:px-12 justify-between">
         <Typography.Title
           level={2}
           className="mb-0! text-lg! font-semibold! sm:text-xl! lg:text-3xl! lg:pb-10!"
@@ -133,11 +134,11 @@ function PreviewListProducts({
         >
           <Slider
             {...settings}
-            className="bg-white px-4! py-12! w-full rounded-xl! h-full"
+            className="sm:bg-white px-2! sm:px-4! py-4! sm:py-12! w-full sm:rounded-xl! h-full [&_.slick-track]:!ml-0 [&_.slick-track]:!flex [&_.slick-slide]:!h-auto [&_.slick-slide>div]:!h-full"
           >
             {products.map((product, index) => {
               return (
-                <div key={index} className="px-8 w-1/5">
+                <div key={index} className="px-3 sm:px-8 h-full">
                   <CardProduct
                     product={product}
                     loading={loading}
