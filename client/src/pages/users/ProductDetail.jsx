@@ -803,7 +803,7 @@ function ProductDetail() {
             </Card>
           </Col>
         </Row>
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
               <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 rounded-none sm:rounded-xl">
@@ -851,15 +851,15 @@ function ProductDetail() {
           </div>
           
           <div className="flex items-center justify-between lg:justify-center w-full lg:w-auto flex-1">
-            <span className="lg:hidden text-gray-600 text-base font-medium">Tạm tính:</span>
-            <div className="flex items-center gap-2">
-              <Text className="text-red-600 font-bold text-xl sm:text-2xl">
+            <span className="lg:hidden text-gray-600 text-xs font-medium">Tạm tính:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-red-600! font-bold! text-base! sm:text-lg!">
                 {formatCurrency(selectedVariant?.price - selectedVariant?.price * (product?.discount / 100) || 0)}đ
-              </Text>
+              </span>
               {product?.discount > 0 && (
-                <Text delete type="secondary" className="text-sm hidden sm:inline-block">
+                <span className="line-through text-gray-400! text-sm! hidden sm:inline-block">
                   {formatCurrency(selectedVariant?.price)}đ
-                </Text>
+                </span>
               )}
             </div>
           </div>
@@ -890,7 +890,7 @@ function ProductDetail() {
                   quantity: 1,
                 }]);
               }}
-              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold h-40! flex items-center justify-center text-sm sm:text-base!"
+              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold h-[44px]! text-xs! sm:text-base!"
             >
               <span className="lg:hidden">Thêm vào giỏ</span>
               <ShoppingCartOutlined className="hidden lg:inline-block" />
@@ -899,7 +899,7 @@ function ProductDetail() {
               type="primary"
               size="large"
               disabled={!currentStock || !selectedColor}
-              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8 h-40! flex items-center justify-center text-sm sm:text-base!"
+              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8 h-[44px]! text-xs! sm:text-base!"
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');
