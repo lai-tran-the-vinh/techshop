@@ -3,6 +3,24 @@ import React, { useState } from 'react';
 
 const SliderProduct = ({ images = [] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) nextSlide();
+    if (distance < -minSwipeDistance) prevSlide();
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % images.length);
@@ -26,7 +44,12 @@ const SliderProduct = ({ images = [] }) => {
 
   return (
     <div className="w-full h-full max-w-4xl mx-auto relative rounded-[15px] overflow-hidden">
-      <div className="overflow-hidden">
+      <div 
+        className="overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -36,7 +59,7 @@ const SliderProduct = ({ images = [] }) => {
               <img
                 src={url}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-[300px] sm:h-[400px] object-contain bg-white rounded-[15px] px-8 sm:px-0"
+                className="w-full h-[300px] sm:h-[400px] object-contain bg-white rounded-[15px]"
               />
             </div>
           ))}
@@ -61,15 +84,15 @@ const SliderProduct = ({ images = [] }) => {
       </div>
       <button
         onClick={prevSlide}
-        className="absolute cursor-pointer left-1 sm:left-4 top-[150px] sm:top-1/2 -translate-y-1/2 w-8 h-8 sm:w-[45px] sm:h-[45px] bg-[#090d1466]  shadow-md rounded-full flex items-center justify-center"
+        className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 w-[45px] h-[45px] bg-[#090d1466] shadow-md rounded-full hidden sm:flex items-center justify-center"
       >
-        <LeftOutlined className="font-medium! text-white! text-sm sm:text-xl" />
+        <LeftOutlined className="font-medium! text-white! text-xl" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute cursor-pointer right-1 sm:right-4 top-[150px] sm:top-1/2 -translate-y-1/2 w-8 h-8 sm:w-[45px] sm:h-[45px] bg-[#090d1466] shadow-md rounded-full flex items-center justify-center"
+        className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 w-[45px] h-[45px] bg-[#090d1466] shadow-md rounded-full hidden sm:flex items-center justify-center"
       >
-        <RightOutlined className="font-medium! text-white! text-sm sm:text-xl" />
+        <RightOutlined className="font-medium! text-white! text-xl" />
       </button>
     </div>
   );
