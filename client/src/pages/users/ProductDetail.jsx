@@ -830,8 +830,8 @@ function ProductDetail() {
       </div>
 
       {/* Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-[999]">
-        <div className="w-full lg:w-5/6 mx-auto pl-4 pr-16 lg:px-6 py-3 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 border-t border-gray-200 lg:border-none">
+      <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_30px_rgba(0,0,0,0.15)] z-[999]">
+        <div className="w-full lg:w-5/6 mx-auto pl-6 pr-16 lg:px-6 py-3 pb-5 sm:pb-3 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 border-t border-gray-200 lg:border-none">
           <div className="hidden lg:flex items-center gap-4 flex-1">
             <Image
               src={variantImages?.[0] || product?.thumbnail}
@@ -851,9 +851,9 @@ function ProductDetail() {
           </div>
           
           <div className="flex items-center justify-between lg:justify-center w-full lg:w-auto flex-1">
-            <span className="lg:hidden text-gray-600 text-sm">Tạm tính:</span>
+            <span className="lg:hidden text-gray-600 text-base font-medium">Tạm tính:</span>
             <div className="flex items-center gap-2">
-              <Text className="text-red-600 font-bold text-lg sm:text-xl">
+              <Text className="text-red-600 font-bold text-xl sm:text-2xl">
                 {formatCurrency(selectedVariant?.price - selectedVariant?.price * (product?.discount / 100) || 0)}đ
               </Text>
               {product?.discount > 0 && (
@@ -890,7 +890,7 @@ function ProductDetail() {
                   quantity: 1,
                 }]);
               }}
-              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold"
+              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold h-40! flex items-center justify-center text-sm sm:text-base!"
             >
               <span className="lg:hidden">Thêm vào giỏ</span>
               <ShoppingCartOutlined className="hidden lg:inline-block" />
@@ -899,7 +899,7 @@ function ProductDetail() {
               type="primary"
               size="large"
               disabled={!currentStock || !selectedColor}
-              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8"
+              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8 h-40! flex items-center justify-center text-sm sm:text-base!"
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');
