@@ -52,7 +52,7 @@ function CardProduct({ product = {}, className, loading = false }) {
             <Image
               preview={false}
               alt="Product Image"
-              className="object-contain! aspect-square! mx-auto! w-[80%]! sm:w-[70%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
+              className="object-contain! aspect-square! mx-auto! w-[80%]! sm:w-[70%]! lg:w-[60%]! border-none! transition-all! duration-300! ease-in-out! group-hover:scale-110!"
               src={
                 product?.variants?.[0]?.color?.[0]?.images?.[0] ||
                 'https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-hong-thumb-1-600x600.jpg'

@@ -13,6 +13,7 @@ import {
   Flex,
   Divider,
   Progress,
+  Image,
 } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -185,9 +186,9 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
 
   return (
     <div className={className}>
-      <div className="bg-white p-30 rounded-xl overflow-hidden">
-        <Flex vertical align="" className="mb-8!" gap={0}>
-          <Typography.Title level={2}>
+      <div className="bg-white px-16! py-6! sm:p-8! rounded-none sm:rounded-xl overflow-hidden">
+        <Flex vertical align="" className="mb-4 sm:mb-8!" gap={0}>
+          <Typography.Title level={3} className="sm:text-2xl! mb-6!">
             {loading ? (
               <Skeleton width={200} height={24} />
             ) : (
@@ -197,16 +198,16 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
           <Typography.Text className="text-sm! text-gray-600!">
             {/* {loading ? <Skeleton width={100} /> : `${total} bình luận`} */}
           </Typography.Text>
-          <Row className="my-10!">
-            <Col lg={8}>
+          <Row className="my-6 sm:my-10!">
+            <Col lg={8} xs={24} className="mb-6 lg:mb-0">
               <Flex
                 gap={8}
                 vertical
                 align="center"
                 justify="center"
-                className="mr-30!"
+                className="lg:mr-8"
               >
-                <Typography.Title level={1} className="mb-0!">
+                <Typography.Title level={1} className="mb-0! text-3xl sm:text-4xl!">
                   {stats?.averageRating?.toFixed(1)}
                 </Typography.Title>
                 <Typography.Text>
@@ -229,9 +230,9 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                 </Button>
               </Flex>
             </Col>
-            <Col lg={16}>
+            <Col lg={16} xs={24}>
               {/* Rate row */}
-              <Flex vertical gap={10}>
+              <Flex vertical gap={6} className="px-6! sm:px-0">
                 {Array.from({ length: 5 }, (_, index) => {
                   return (
                     <Flex key={index} gap={8} align="center">
@@ -261,8 +262,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
           </Row>
         </Flex>
 
-        <div className="p-6">
-          <div className="flex items-start gap-8 mt-10">
+        <div className="px-2! sm:p-6!">
+          <div className="flex items-start gap-4 sm:gap-8 mt-6 sm:mt-10">
             <div>
               <AvatarDefault width={40} height={40} />
             </div>
@@ -282,9 +283,9 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                     autoSize={{ minRows: 2, maxRows: 4 }}
                     className="w-full min-h-100! placeholder:text-base! placeholder:text-gray-500! border-gray-400 rounded-md!"
                   />
-                  <div className="flex items-center justify-between mt-8">
-                    <div className="flex items-center gap-8">
-                      <Typography.Text className="text-base! font-medium!">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 sm:mt-8 gap-4 sm:gap-0">
+                    <div className="flex items-center gap-4 sm:gap-8">
+                      <Typography.Text className="text-base! font-medium! whitespace-nowrap">
                         Đánh giá:
                       </Typography.Text>
                       <Rate
@@ -296,11 +297,11 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                         className="text-yellow-400!"
                       />
                     </div>
-                    <div className="flex gap-8">
+                    <div className="flex gap-4 sm:gap-8 w-full sm:w-auto">
                       <Button
                         onClick={() => setComment('')}
                         disabled={submitting}
-                        className="min-w-100! rounded-md! h-40!"
+                        className="flex-1 sm:min-w-100! rounded-md! h-40!"
                       >
                         Hủy
                       </Button>
@@ -309,7 +310,7 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                         onClick={handleSubmitComment}
                         loading={submitting}
                         disabled={!comment.trim()}
-                        className="min-w-100! rounded-md! font-medium! h-40!"
+                        className="flex-1 sm:min-w-100! rounded-md! font-medium! h-40!"
                       >
                         Gửi bình luận
                       </Button>
@@ -320,8 +321,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
             </div>
           </div>
         </div>
-        <Divider />
-        <div className="p-6">
+        <Divider className="my-4 sm:my-6!" />
+        <div className="px-2! sm:p-6!">
           {loading ? (
             <div className="space-y-6">
               {Array(3)
@@ -341,8 +342,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AiOutlineMessage className="text-gray-400 text-3xl" />
+              <div className="">
+                <Image src='/rating.svg' width={150} height={150} preview={false} />
               </div>
               <p className="text-gray-500 text-lg">Chưa có bình luận nào</p>
               <p className="text-gray-400 text-sm mt-2">
@@ -354,9 +355,9 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-white flex items-start p-6 gap-12"
+                  className="bg-white flex items-start py-6! sm:p-6! gap-4 sm:gap-12"
                 >
-                  <div className="flex items-center gap-8 mb-4">
+                  <div className="flex items-center gap-4 sm:gap-8 mb-4">
                     <div>
                       <AvatarDefault width={40} height={40} />
                     </div>
@@ -366,11 +367,11 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                     <div className="mb-4 text-gray-700 w-full leading-relaxed rounded-lg">
                       <div className="flex-1!">
                         <div className="flex! items-center! gap-4! mb-1!">
-                          <Text className="font-semibold! text-gray-800!">
+                          <Text className="font-semibold! text-gray-800! text-xs sm:text-sm!">
                             {review.userId?.name || 'Người dùng'}
                           </Text>
                           <BsDot />
-                          <Typography.Text className="flex! items-center! text-xs!">
+                          <Typography.Text className="flex! items-center! text-[10px] sm:text-xs!">
                             {formatTime(review.createdAt)}
                           </Typography.Text>
                           <BsDot />

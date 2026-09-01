@@ -327,15 +327,15 @@ function ProductDetail() {
   }
 
   return (
-    <div className="w-full h-full font-inter mt-24 rounded-[10px] px-2 sm:px-4 lg:px-6">
+    <div className="w-full h-full font-inter mt-24 px-0 sm:px-4 lg:px-6">
       <div className="mx-auto rounded-[10px]">
-        <Row gutter={[10, 10]}>
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
           <Col xl={14} lg={14} md={24} sm={24} xs={24}>
-            <div className="h-full bg-white rounded-xl p-20 flex! flex-col!">
-              <div className="relative h-[60%] sm:h-[80%]">
+            <div className="h-full bg-white rounded-none sm:rounded-xl p-4 sm:p-20 flex! flex-col!">
+              <div className="relative h-[60%] sm:h-[80%] px-10 sm:px-0">
                 <SliderProduct images={allImages} />
               </div>
-              <div className="sm:p-4 flex-1">
+              <div className="sm:p-4 flex-1 px-4 sm:px-0 mt-4 sm:mt-0">
                 {branchs.length > 0 && (
                   <div className="">
                     <Text
@@ -413,7 +413,7 @@ function ProductDetail() {
           </Col>
 
           <Col xl={10} lg={10} md={24} sm={24} xs={24}>
-            <Card>
+            <Card className="rounded-none! sm:rounded-xl! border-none! sm:border-solid!">
               <div className="mb-4">
                 <Title
                   level={3}
@@ -791,30 +791,32 @@ function ProductDetail() {
           </Col>
         </Row>
 
-        <Row gutter={[10, 10]} className="mt-6 sm:mt-8 lg:mt-10">
-          <Col lg={14}>
-            <Card className="p-10!">
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
+          <Col lg={14} xs={24}>
+            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid!">
               <ProductDescription product={product} loading={loading} />
             </Card>
           </Col>
-          <Col lg={10}>
-            <Card className="p-10!" style={{ position: 'sticky', top: 20 }}>
+          <Col lg={10} xs={24}>
+            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid!" style={{ position: 'sticky', top: 20 }}>
               <ProductSpecification product={product} />
             </Card>
           </Col>
         </Row>
-        <Row gutter={[10, 10]}>
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
-              <PreviewListProducts
-                viewAll={false}
-                title="Sản phẩm liên quan"
-                products={recommnentProducts}
-              />
+              <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 rounded-none sm:rounded-xl">
+                <PreviewListProducts
+                  viewAll={false}
+                  title="Sản phẩm liên quan"
+                  products={recommnentProducts}
+                />
+              </div>
             )}
           </Col>
         </Row>
-        <Row gutter={[10, 10]} className="mt-6 sm:mt-8 lg:mt-10">
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
           <Col span={24} lg={24}>
             <Comments
               stats={stats}
@@ -825,6 +827,106 @@ function ProductDetail() {
             />
           </Col>
         </Row>
+      </div>
+
+      {/* Sticky Bottom Bar */}
+      <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-[999]">
+        <div className="w-full lg:w-5/6 mx-auto pl-4 pr-16 lg:px-6 py-3 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 border-t border-gray-200 lg:border-none">
+          <div className="hidden lg:flex items-center gap-4 flex-1">
+            <Image
+              src={variantImages?.[0] || product?.thumbnail}
+              width={48}
+              height={48}
+              className="object-contain rounded"
+              preview={false}
+            />
+            <div>
+              <Text className="font-medium block text-sm">{product?.name}</Text>
+              <Text type="secondary" className="text-xs">
+                {selectedVariant?.memory?.storage && selectedVariant?.memory?.ram
+                  ? `${selectedVariant.memory.storage} - ${selectedVariant.memory.ram}`
+                  : ''} {selectedColor ? `- ${selectedColor}` : ''}
+              </Text>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between lg:justify-center w-full lg:w-auto flex-1">
+            <span className="lg:hidden text-gray-600 text-sm">Tạm tính:</span>
+            <div className="flex items-center gap-2">
+              <Text className="text-red-600 font-bold text-lg sm:text-xl">
+                {formatCurrency(selectedVariant?.price - selectedVariant?.price * (product?.discount / 100) || 0)}đ
+              </Text>
+              {product?.discount > 0 && (
+                <Text delete type="secondary" className="text-sm hidden sm:inline-block">
+                  {formatCurrency(selectedVariant?.price)}đ
+                </Text>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-4 w-full lg:w-auto flex-1 lg:justify-end">
+            <Button
+              size="large"
+              disabled={!currentStock || !selectedColor}
+              onClick={async () => {
+                if (!user) {
+                  message.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+                  setShowLogin(true);
+                  return;
+                }
+                if (!selectedColor) {
+                  message.warning('Vui lòng chọn màu sắc');
+                  return;
+                }
+                if (!currentStock) {
+                  message.error('Sản phẩm đã hết hàng tại chi nhánh này');
+                  return;
+                }
+                await handleAddItemsToCart([{
+                  product: product._id,
+                  variant: selectedVariant?._id,
+                  branch: selectBranchs,
+                  color: selectedColor,
+                  quantity: 1,
+                }]);
+              }}
+              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold"
+            >
+              <span className="lg:hidden">Thêm vào giỏ</span>
+              <ShoppingCartOutlined className="hidden lg:inline-block" />
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              disabled={!currentStock || !selectedColor}
+              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8"
+              onClick={async () => {
+                if (!user) {
+                  message.warning('Vui lòng đăng nhập để đặt hàng!!');
+                  setShowLogin(true);
+                  return;
+                }
+                if (!selectedColor) {
+                  message.warning('Vui lòng chọn màu sắc');
+                  return;
+                }
+                if (!currentStock) {
+                  message.error('Sản phẩm đã hết hàng tại chi nhánh này');
+                  return;
+                }
+                await handleBuy([{
+                  product: product._id,
+                  variant: selectedVariant._id,
+                  color: selectedColor,
+                  branch: selectBranchs,
+                  quantity: 1,
+                }]);
+              }}
+            >
+              Mua ngay
+            </Button>
+          </div>
+        </div>
       </div>
 
       <Drawer

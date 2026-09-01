@@ -36,7 +36,7 @@ const SliderProduct = ({ images = [] }) => {
               <img
                 src={url}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-[400px] object-contain bg-white rounded-[15px]"
+                className="w-full h-[300px] sm:h-[400px] object-contain bg-white rounded-[15px] px-8 sm:px-0"
               />
             </div>
           ))}
@@ -61,15 +61,15 @@ const SliderProduct = ({ images = [] }) => {
       </div>
       <button
         onClick={prevSlide}
-        className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 w-45 h-45 bg-[#090d1466]  shadow-md rounded-full flex items-center justify-center"
+        className="absolute cursor-pointer left-1 sm:left-4 top-[150px] sm:top-1/2 -translate-y-1/2 w-8 h-8 sm:w-[45px] sm:h-[45px] bg-[#090d1466]  shadow-md rounded-full flex items-center justify-center"
       >
-        <LeftOutlined className="font-medium! text-white! text-xl" />
+        <LeftOutlined className="font-medium! text-white! text-sm sm:text-xl" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 w-45 h-45 bg-[#090d1466] shadow-md rounded-full flex items-center justify-center"
+        className="absolute cursor-pointer right-1 sm:right-4 top-[150px] sm:top-1/2 -translate-y-1/2 w-8 h-8 sm:w-[45px] sm:h-[45px] bg-[#090d1466] shadow-md rounded-full flex items-center justify-center"
       >
-        <RightOutlined className=" font-medium! text-white! text-xl" />
+        <RightOutlined className="font-medium! text-white! text-sm sm:text-xl" />
       </button>
     </div>
   );
