@@ -355,10 +355,10 @@ const Dashboard = () => {
     }
 
     return (
-      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+      <Row gutter={[{ xs: 0, sm: 16 }, { xs: 4, sm: 16 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '16px' }}>
         <Col xs={24} lg={16}>
           <Card
-            className="rounded-xl! h-full!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!"
             title={
               <div className="flex items-center justify-between md:gap-10 max-sm:flex-col max-sm:items-start py-10">
                 <Text strong className="block! py-10! text-lg! text-[#1e293b]!">
@@ -465,7 +465,7 @@ const Dashboard = () => {
 
         <Col xs={24} lg={8}>
           <Card
-            className="rounded-xl! h-full!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!"
             title={
               <div
                 style={{
@@ -809,9 +809,10 @@ const Dashboard = () => {
         padding: '16px',
         minHeight: '100vh',
       }}
+      className="max-md:p-0! max-md:bg-transparent!"
     >
       {/* Header */}
-      <Card className="mb-16! rounded-xl!">
+      <Card className="mb-16! max-md:!mb-[4px] rounded-xl! max-md:rounded-none! max-md:border-x-0!">
         <Row justify="space-between" align="middle">
           <Col>
             <Title level={2} style={{ margin: 0, color: '#111827' }}>
@@ -838,9 +839,9 @@ const Dashboard = () => {
         </Row>
       </Card>
       {/* Stats Cards */}
-      <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
+      <Row gutter={[{ xs: 0, sm: 10 }, { xs: 4, sm: 10 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl! h-full!">
+          <Card className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!">
             <Statistic
               title={
                 <Text
@@ -870,7 +871,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl! h-full!">
+          <Card className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!">
             <Statistic
               title={
                 <Text
@@ -899,7 +900,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={8}>
-          <Card className="rounded-xl! h-full!">
+          <Card className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!">
             <Statistic
               title={
                 <Text
@@ -929,10 +930,10 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
+      <Row gutter={[{ xs: 0, sm: 10 }, { xs: 4, sm: 10 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '10px' }}>
         <Col xs={24} lg={16}>
           <Card
-            className="rounded-xl!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0!"
             title={
               <div className="flex items-center justify-between md:gap-10 max-sm:flex-col max-sm:items-start py-10">
                 <Text
@@ -1078,7 +1079,7 @@ const Dashboard = () => {
 
         <Col xs={24} lg={8}>
           <Card
-            className="rounded-xl! h-full!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!"
             title={
               <div className="flex items-center gap-3 py-2 h-[50px]">
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
@@ -1163,10 +1164,10 @@ const Dashboard = () => {
       {/* Branch Overview */}
       <BranchOverview />
       {/* Product Tables */}
-      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+      <Row gutter={[{ xs: 0, sm: 16 }, { xs: 4, sm: 16 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '24px' }}>
         <Col xs={24} lg={12}>
           <Card
-            className="rounded-xl! h-full!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!"
             title={
               <div className="flex items-center gap-3 py-3">
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>
@@ -1188,7 +1189,7 @@ const Dashboard = () => {
 
         <Col xs={24} lg={12}>
           <Card
-            className="rounded-xl! h-full!"
+            className="rounded-xl! max-md:rounded-none! max-md:border-x-0! h-full!"
             title={
               <div className="flex items-center gap-3 py-3">
                 <Text strong style={{ fontSize: '18px', color: '#1f2937' }}>

@@ -488,8 +488,7 @@ function AdminLayout() {
         >
           <Content
             style={{
-              // margin: isMobile ? '16px' : '24px',
-              padding: isMobile ? '5x' : '10px',
+              padding: isMobile ? '0px' : '10px',
               background: '#f5f5f5',
               // borderRadius: 10,
               // boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
