@@ -21,6 +21,8 @@ import CartServices from '@services/carts';
 import { useAppContext } from '@/contexts';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import Recomment from '@/services/recommend';
+import { PreviewListProducts } from '@components/products';
 
 function Cart() {
   const { Title, Text } = Typography;
@@ -33,6 +35,7 @@ function Cart() {
   const [deleteType, setDeleteType] = useState('item');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [recommentProducts, setRecommentProducts] = useState([]);
 
   const getCart = async () => {
     try {
@@ -54,7 +57,22 @@ function Cart() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Giỏ hàng';
-  }, []);
+    
+    const fetchRecommendations = async () => {
+      try {
+        if (user) {
+          const res = await Recomment.getRecommendationsByUser(user._id);
+          setRecommentProducts(res);
+        } else {
+          const res = await Recomment.getRecommendationsPopular();
+          setRecommentProducts(res);
+        }
+      } catch (error) {
+        console.error('Lỗi lấy gợi ý:', error);
+      }
+    };
+    fetchRecommendations();
+  }, [user]);
 
   // Fixed: Update quantity function
   const updateQuantity = async (productId, variantId, newQuantity) => {
@@ -346,7 +364,7 @@ function Cart() {
   }
 
   return (
-    <div className="px-6 py-8 mt-24 w-full">
+    <div className="max-lg:p-0 lg:px-6 lg:py-8 lg:mt-24 w-full">
       <Modal
         centered
         open={open}
@@ -368,37 +386,41 @@ function Cart() {
 
       {/* Fixed: Check cartItems length instead of cartData */}
       {cartItems.length === 0 || !cartData ? (
-        <Flex justify="space-between" className="bg-white rounded-xl p-30!">
-          <Flex vertical gap={20}>
-            <Title level={1} className="font-medium! mb-0!">
+        <div className="bg-white lg:rounded-xl max-lg:-mt-[60px] max-lg:pt-[100px] max-lg:pb-16 p-8 lg:p-20 flex flex-col lg:flex-row items-center justify-center lg:gap-[200px] gap-1 text-center lg:text-left w-full max-w-[1200px] mx-auto lg:my-8 relative z-0">
+          {/* Mobile: Image first (order-1), Desktop: Image second (order-2) */}
+          <div className="w-[300px] lg:w-[450px] order-1 lg:order-2">
+            <Image
+              className="w-full h-auto"
+              preview={false}
+              src="https://fptshop.com.vn/img/empty_cart.png?w=1920&q=75"
+            />
+          </div>
+          
+          <div className="flex flex-col gap-6 lg:gap-6 items-center lg:items-start order-2 lg:order-1 px-2 mt-2 lg:mt-0">
+            <Title level={5} className="font-semibold! mb-0! text-[16px]! text-gray-800! lg:text-3xl!">
               Chưa có sản phẩm nào trong giỏ hàng
             </Title>
-            <Text className="text-[#6b7280]! text-base!">
+            <Text className="text-[#6b7280]! text-[13px]! lg:text-base!">
               Cùng mua sắm hàng ngàn sản phẩm tại TechShop nhé!
             </Text>
-            <Link to="/">
-              <Button type="primary" className="rounded-full! h-40! w-150!">
+            <Link to="/" className="mt-4 lg:mt-4">
+              <Button type="primary" className="rounded-full! h-[40px]! px-12! lg:h-[48px]! lg:px-14! bg-[#cb1c22]! hover:bg-[#a1161b]! border-none! text-[14px]! font-medium!">
                 Mua hàng
               </Button>
             </Link>
-          </Flex>
-          <Image
-            width={500}
-            preview={false}
-            src="https://fptshop.com.vn/img/empty_cart.png?w=1920&q=75"
-          />
-        </Flex>
+          </div>
+        </div>
       ) : (
-        <Row gutter={[10, 10]} className="w-full!">
-          <Col span={17}>
-            <Card className="shadow-none!">
+        <Row gutter={[10, 10]} className="w-full! max-lg:px-2 max-lg:pt-4">
+          <Col xs={24} lg={17}>
+            <Card className="shadow-none! max-lg:px-0! max-lg:py-2!">
               <div className="flex justify-between items-center mb-6">
                 <Flex
                   align="center"
                   justify="space-between"
-                  className="w-full!"
+                  className="w-full! max-lg:flex-col max-lg:items-start max-lg:gap-4"
                 >
-                  <Flex className="mb-10!" align="center" gap={8}>
+                  <Flex className="lg:mb-10!" align="center" gap={8}>
                     <Title
                       level={3}
                       className="text-gray-900! flex! items-center! mb-0! gap-3!"
@@ -455,6 +477,7 @@ function Cart() {
                 dataSource={variantItem}
                 bordered
                 className="w-full! rounded-md!"
+                scroll={{ x: 800 }}
                 rowSelection={Object.assign({ type: 'checkbox' }, rowSelection)}
                 locale={{
                   emptyText: <Empty description="Giỏ hàng trống" />,
@@ -463,8 +486,8 @@ function Cart() {
             </Card>
           </Col>
 
-          <Col span={7}>
-            <Card className=" sticky ">
+          <Col xs={24} lg={7}>
+            <Card className="lg:sticky lg:top-24">
               <div className="mb-6">
                 <Title level={4} className="text-gray-900 font-semibold mb-0">
                   Tóm tắt đơn hàng
@@ -521,6 +544,16 @@ function Cart() {
             </Card>
           </Col>
         </Row>
+      )}
+
+      {!loading && recommentProducts.length > 0 && (
+        <div className="mt-2 lg:mt-12 w-full max-w-[1200px] mx-auto max-lg:bg-white max-lg:pb-8">
+          <PreviewListProducts
+            title="Sản phẩm có thể bạn quan tâm"
+            products={recommentProducts}
+            viewAll={false}
+          />
+        </div>
       )}
     </div>
   );
