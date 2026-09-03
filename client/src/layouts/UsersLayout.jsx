@@ -21,6 +21,7 @@ import {
   Drawer,
   Image,
   Collapse,
+  Menu,
 } from 'antd';
 import FooterComponent from './footer';
 import '@styles/users-layout.css';
@@ -28,7 +29,7 @@ import ForgotPasswordModal from '@/pages/app/forgotPassword';
 import Branchs from '@/services/branches';
 function Header() {
   const { Panel } = Collapse;
-  const { setShowLogin, setShowSignup, user, message, setShowForgotPassword } =
+  const { setShowLogin, setShowSignup, user, message, setShowForgotPassword, logout } =
     useAppContext();
   const navigate = useNavigate();
   const [allBrands, setAllBrands] = useState([]);
@@ -230,10 +231,39 @@ function Header() {
       >
         <div className="flex flex-col gap-3">
           {user ? (
-            <div className="bg-gray-50 p-12 rounded-md border border-gray-100 flex flex-col gap-1">
-              <Text className="font-bold text-lg text-gray-800">{user.name}</Text>
-              <Text className="text-gray-500 text-sm">{user.email}</Text>
-            </div>
+            <>
+              <div className="bg-gray-50 p-12 rounded-md border border-gray-100 flex flex-col gap-1">
+                <Text className="font-bold text-lg text-gray-800">{user.name}</Text>
+                <Text className="text-gray-500 text-sm">{user.email}</Text>
+              </div>
+              <Menu
+                className="bg-transparent! border-none!"
+                mode="inline"
+                onClick={() => setMobileMenuOpen(false)}
+                items={[
+                  {
+                    key: 'account',
+                    label: <Link to="/account-info">Tài khoản của tôi</Link>,
+                  },
+                  {
+                    key: 'admin',
+                    label: <Link to="/admin/dashboard">Quản trị viên</Link>,
+                  },
+                  {
+                    key: 'cart',
+                    label: <Link to="/cart">Giỏ hàng</Link>,
+                  },
+                  {
+                    key: 'logout',
+                    label: 'Đăng xuất',
+                    onClick: () => {
+                      setMobileMenuOpen(false);
+                      logout();
+                    },
+                  },
+                ]}
+              />
+            </>
           ) : (
             <div className="flex items-center gap-16 p-12">
               <Flex vertical gap={10}>

@@ -576,7 +576,7 @@ const AccountInfoPage = () => {
   ];
 
   const renderPersonalInfo = () => (
-    <Card className="p-12!">
+    <Card className="p-4 lg:p-12! max-lg:rounded-none!">
       <Typography.Title level={5}>Thông tin cá nhân</Typography.Title>
       <div style={{ marginBottom: '10px' }}>
         <label
@@ -629,6 +629,7 @@ const AccountInfoPage = () => {
       <Card
         title="Địa chỉ"
         size="small"
+        className="mt-2 lg:mt-6 max-lg:rounded-none!"
         extra={
           <Button
             type="primary"
@@ -659,7 +660,7 @@ const AccountInfoPage = () => {
           renderItem={(item, index) => {
             return (
               <List.Item
-                className="flex! items-center!"
+                className="flex! flex-col lg:flex-row items-start lg:items-center! gap-4 max-lg:!items-start"
                 actions={[
                   <Button
                     type="text"
@@ -912,7 +913,7 @@ const AccountInfoPage = () => {
 
   const renderOrderList = () => (
     <div>
-      <Card className="p-12!">
+      <Card className="p-2 lg:p-12! max-lg:rounded-none!">
         <Typography.Title level={5}>Danh sách đơn hàng</Typography.Title>
         <Tabs
           activeKey={activeOrderTab}
@@ -927,6 +928,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -940,6 +942,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -953,6 +956,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -979,6 +983,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -992,6 +997,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -1005,6 +1011,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -1018,6 +1025,7 @@ const AccountInfoPage = () => {
                   columns={orderColumns}
                   rowKey="id"
                   bordered
+                  scroll={{ x: 800 }}
                   pagination={{ pageSize: 10 }}
                 />
               ),
@@ -1044,11 +1052,11 @@ const AccountInfoPage = () => {
   };
 
   return (
-    <div className="w-full mt-24 min-h-screen">
-      <div className="flex gap-24 my-0 mx-auto">
+    <div className="w-full max-lg:p-0 lg:mt-24 min-h-screen">
+      <div className="flex flex-col lg:flex-row gap-2 lg:gap-24 my-0 mx-auto bg-[#f3f4f6]">
         {/* Khối bên trái */}
-        <div className="bg-[#f3f4f6]" style={{ flex: '0 0 300px' }}>
-          <Card className="p-12!" style={{ marginBottom: '16px' }}>
+        <div className="bg-[#f3f4f6] w-full lg:w-[300px] flex-shrink-0">
+          <Card className="p-4 lg:p-12! max-lg:rounded-none!" style={{ marginBottom: '8px' }}>
             <div className="flex items-center mb-16">
               <div className="w-48 h-48 bg-[#ff6b35] rounded-full flex items-center justify-center mr-12">
                 <UserOutlined className="text-2xl! text-white!" />
@@ -1067,7 +1075,7 @@ const AccountInfoPage = () => {
             </div>
           </Card>
 
-          <Card>
+          <Card className="max-lg:rounded-none!">
             <Menu
               mode="inline"
               selectedKeys={[selectedMenu]}
@@ -1310,7 +1318,7 @@ const AccountInfoPage = () => {
           </Card>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div className="flex-1 w-full overflow-hidden">
           {selectedMenu === 'personal' && renderPersonalInfo()}
           {selectedMenu === 'orders' && renderOrderList()}
         </div>

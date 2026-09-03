@@ -168,10 +168,10 @@ function SearchBox() {
             </button>
           )}
           <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
-            <div className="flex flex-1 min-w-0 items-center px-4 py-2 lg:py-4">
+            <div className="flex flex-1 min-w-0 items-center pl-4 pr-1.5 py-1.5 lg:pl-6 lg:pr-2 lg:py-2">
               {!isFocused && (
                 <SearchIcon
-                  className={`hidden lg:block w-5 h-5 lg:w-20 lg:h-20 transition-colors duration-300 ml-2 lg:ml-5 mr-4 lg:mr-10 text-gray-400`}
+                  className={`hidden lg:block w-5 h-5 lg:w-[20px] lg:h-[20px] transition-colors duration-300 ml-2 lg:ml-5 mr-4 lg:mr-10 text-gray-400`}
                 />
               )}
               <input
@@ -182,21 +182,21 @@ function SearchBox() {
                 onFocus={handleFocus}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Tìm kiếm sản phẩm...."
-                className={`flex-1 min-w-0 ${isFocused && 'pl-8'} text-sm md:text-base outline-none placeholder-gray-400 h-[35px]`}
+                className={`flex-1 min-w-0 pl-2 lg:pl-2 text-sm md:text-base outline-none placeholder-gray-400 h-[32px] bg-transparent`}
               />
               {query && (
                 <button
                   onClick={handleClearSearch}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors mr-1"
                 >
-                  <XIcon className="w-20 h-20 text-gray-400" />
+                  <XIcon className="w-5 h-5 text-gray-400" />
                 </button>
               )}
               <button
                 onClick={handleSearch}
-                className="flex items-center justify-center cursor-pointer bg-gradient-to-r bg-[#fee2e2] text-white rounded-full p-[6px] md:p-8 w-[35px] h-[35px] md:w-auto md:h-auto shrink-0"
+                className="flex items-center justify-center cursor-pointer bg-[#fee2e2] text-white rounded-full w-[32px] h-[32px] lg:w-[42px] lg:h-[42px] shrink-0"
               >
-                <SearchIcon className="w-[80%] h-[80%] lg:w-20 lg:h-20 text-primary" />
+                <SearchIcon className="w-[16px] h-[16px] lg:w-[20px] lg:h-[20px] text-primary" />
               </button>
             </div>
           </div>
