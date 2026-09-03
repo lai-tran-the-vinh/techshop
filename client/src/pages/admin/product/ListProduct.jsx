@@ -371,9 +371,9 @@ function ListProduct() {
         <Card className="mb-4! max-md:!mb-[4px] rounded-xl! border-none! shadow-none! bg-transparent! px-0!">
           <Row justify="space-between" align="middle">
             <Col>
-              <div className="text-2xl md:text-[30px] font-semibold text-[#111827]! m-0!">
+              <Title level={2} className="text-2xl md:text-[30px] font-semibold text-[#111827]! m-0!">
                 Danh sách sản phẩm
-              </div>
+              </Title>
               <div className="text-xs md:text-sm text-[#6b7280]! mt-1!">
                 Quản lý, thêm, sửa, xóa sản phẩm trong hệ thống
               </div>

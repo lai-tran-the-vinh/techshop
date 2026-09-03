@@ -14,6 +14,7 @@ createRoot(document.getElementById('root')).render(
         token: {
           fontFamily: 'Inter, sans-serif',
           colorPrimary: '#dc2626',
+          controlHeight: 40,
         },
         components: {
           Input: {
@@ -25,7 +26,6 @@ createRoot(document.getElementById('root')).render(
             activeBorderColor: '#dc2626',
             hoverBorderColor: '#dc2626',
             activeShadow: '0',
-            controlHeight: 40,
           },
           Card: {
             padding: 0,

@@ -264,8 +264,8 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
 
   return (
     <div className="flex flex-col gap-6 mt-8">
-      <div className="flex gap-4 items-center mb-10 relative">
-        <span className="text-sm text-primary font-semibold">
+      <div className="flex gap-4 items-center mb-6 relative">
+        <span className="text-sm text-gray-800 font-semibold whitespace-nowrap">
           Thông tin biến thể
         </span>
         <div className="flex-1 border-t border-gray-300 opacity-60 mx-4"></div>
@@ -296,8 +296,8 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                   }
                 >
                   {/* Basic Info */}
-                  <Row gutter={[10, 10]}>
-                    <Col span={12}>
+                  <Row gutter={[16, 0]}>
+                    <Col xs={24} md={12}>
                       <Form.Item
                         {...restField}
                         label="Tên biến thể"
@@ -312,7 +312,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                         <Input placeholder="VD: iPhone 15 Pro Max" />
                       </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} md={12}>
                       <Form.Item
                         {...restField}
                         label="Giá (VNĐ)"
@@ -420,7 +420,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                                   }
                                 >
                                   <Row gutter={[16, 0]}>
-                                    <Col span={8}>
+                                    <Col xs={24} md={12}>
                                       <Form.Item
                                         {...colorRestField}
                                         label="Tên màu"
@@ -429,7 +429,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                                         <Input placeholder="VD: Xanh Titan" />
                                       </Form.Item>
                                     </Col>
-                                    <Col span={8}>
+                                    <Col xs={24} md={12}>
                                       <Form.Item
                                         {...colorRestField}
                                         label="Chọn màu"
@@ -445,6 +445,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                                           defaultValue="#1677ff"
                                           showText
                                           allowClear
+                                          className="w-full"
                                           onChange={(color) =>
                                             handleColorPickerChange(
                                               color,
@@ -521,7 +522,7 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                               })
                             }
                             icon={<PlusOutlined />}
-                            className="mb-4"
+                            className="mb-4! mt-8!"
                           >
                             Thêm màu
                           </Button>
@@ -555,7 +556,6 @@ function Variants({ product, setProduct, form, setImagesToDelete }) {
                 }
                 icon={<PlusOutlined />}
                 block
-                size="large"
               >
                 Thêm biến thể mới
               </Button>

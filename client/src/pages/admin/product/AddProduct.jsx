@@ -278,9 +278,9 @@ function AddProduct() {
 
     return (
       <>
-        <div className="flex gap-4 items-center mb-10 relative">
+        <div className="flex gap-4 items-center mb-6 relative">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-primary font-semibold tracking-wide uppercase letter-spacing-0.5 relative">
+            <span className="text-sm text-gray-800 font-semibold tracking-wide uppercase letter-spacing-0.5 relative whitespace-nowrap">
               {groupTitles[group] || 'Thông tin bổ sung'}
             </span>
           </div>
@@ -323,11 +323,14 @@ function AddProduct() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
+      <div className="mb-16">
+        <div className="text-2xl md:text-[30px] font-semibold text-[#111827]! m-0! leading-tight">
           Thêm sản phẩm mới
-        </h1>
+        </div>
+        <div className="text-xs md:text-sm text-[#6b7280]! mt-1!">
+          Điền thông tin chi tiết để thêm sản phẩm mới vào hệ thống
+        </div>
       </div>
 
       <Form form={form} layout="vertical" autoComplete="off">
@@ -355,7 +358,7 @@ function AddProduct() {
         <div className="mb-8">
           <div className="flex gap-4 items-center mb-6 relative">
             <div className="flex items-center gap-3">
-              <span className="text-sm text-primary font-semibold tracking-wide uppercase letter-spacing-0.5 relative">
+              <span className="text-sm text-gray-800 font-semibold tracking-wide uppercase letter-spacing-0.5 relative whitespace-nowrap">
                 Hình ảnh quảng bá
               </span>
             </div>
@@ -416,25 +419,19 @@ function AddProduct() {
 
         <div className="px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-end">
-            <div className="flex gap-3">
+            <div className="flex gap-3 w-full sm:w-auto">
               <Button
-                size="large"
                 disabled={loading}
                 onClick={() => navigate(-1)}
-                className="min-w-[120px] border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-800"
+                className="flex-1 sm:flex-none min-w-[120px] border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-800"
               >
                 Hủy bỏ
               </Button>
               <Button
                 type="primary"
-                size="large"
                 loading={loading}
                 onClick={onSubmit}
-                // onClick={() => {
-                //   // console.log(JSON.parse(JSON.stringify(form.getFieldsValue())))
-                //   console.log(JSON.stringify(form.getFieldsValue()))
-                // }}
-                className="min-w-[120px] bg-blue-600 hover:bg-blue-700"
+                className="flex-1 sm:flex-none min-w-[120px] bg-blue-600 hover:bg-blue-700"
               >
                 {loading ? 'Đang xử lý...' : 'Thêm sản phẩm'}
               </Button>

@@ -42,39 +42,37 @@ function CommonInformation({
 
   return (
     <>
-      <div className="flex gap-4 items-center mb-10 relative">
+      <div className="flex gap-4 items-center mb-6 relative">
         <div className="flex items-center gap-3">
-          <span className="text-sm text-primary font-semibold tracking-wide uppercase letter-spacing-0.5 relative">
+          <span className="text-sm text-gray-800 font-semibold tracking-wide uppercase letter-spacing-0.5 relative whitespace-nowrap">
             Thông tin kết nối
           </span>
         </div>
         <div className="flex-1 relative">
-          <div className="border-t border-r-300 opacity-60 text-primary"></div>
+          <div className="border-t border-gray-300"></div>
         </div>
       </div>
 
-      <Row gutter={[10, 0]}>
-        <Col span={5}>
+      <Row gutter={[16, 0]}>
+        <Col xs={24} md={12} lg={6}>
           <Form.Item name="name" label="Tên sản phẩm">
-            <Input placeholder="Nhập tên sản phẩm" size="large" />
+            <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
         </Col>
 
-        <Col span={5}>
-          <Form.Item name="discount" label="Giảm giá">
+        <Col xs={24} md={12} lg={6}>
+          <Form.Item name="discount" label="Giảm giá (%)">
             <Input
               type="number"
               min={0}
               placeholder="Nhập phần trăm giảm giá"
-              size="large"
             />
           </Form.Item>
         </Col>
-        <Col span={5}>
+        <Col xs={24} md={12} lg={6}>
           <Form.Item name="category" label="Thể loại">
             <Select
               placeholder="Chọn thể loại"
-              size="large"
               onChange={onCategoryChange}
             >
               {categories.map((category) => (
@@ -86,9 +84,9 @@ function CommonInformation({
           </Form.Item>
         </Col>
 
-        <Col span={5}>
+        <Col xs={24} md={12} lg={6}>
           <Form.Item name="brand" label="Thương hiệu">
-            <Select placeholder="Chọn thương hiệu" size="large">
+            <Select placeholder="Chọn thương hiệu">
               {brands.map((brand) => (
                 <Option key={brand._id} value={brand._id}>
                   {brand.name}
@@ -98,14 +96,14 @@ function CommonInformation({
           </Form.Item>
         </Col>
 
-        <Col span={4}>
+        <Col xs={24} md={12} lg={6}>
           <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
             <Switch />
           </Form.Item>
         </Col>
       </Row>
 
-      <Form.Item name="description" label="Mô tả">
+      <Form.Item name="description" label="Mô tả" className="mt-6">
         <Editor
           product={product}
           setProduct={(val) => form.setFieldValue('description', val)}
