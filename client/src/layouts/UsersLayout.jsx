@@ -268,7 +268,7 @@ function UsersLayout() {
     useAppContext();
 
   return (
-    <Layout className="font-inter! relative! flex! flex-col! items-center!">
+    <Layout className="font-inter! relative! flex! flex-col! items-center! overflow-x-hidden!">
       <Header />
 
       {loading ? (
