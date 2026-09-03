@@ -375,7 +375,7 @@ function AdminLayout() {
   );
 
   return (
-    <Layout className="w-full ">
+    <Layout className="w-full max-w-[100vw] overflow-x-hidden">
       <Header
         className="font-inter! bg-gradient-primary-to-secondary!"
         style={{
@@ -436,7 +436,7 @@ function AdminLayout() {
               left: 0,
               top: 64,
               background: 'rgb(255, 255, 255)',
-              // borderRight: `1px solid #E2E8F0`,
+              borderRight: `1px solid #e5e7eb`,
               transition: 'all 0.3s ease',
 
               zIndex: 1000,
@@ -489,12 +489,13 @@ function AdminLayout() {
           <Content
             style={{
               padding: isMobile ? '0px' : '10px',
-              background: '#f5f5f5',
+              background: '#ffffff',
               // borderRadius: 10,
               // boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
               minHeight: 'calc(100vh - 64px - 48px)', // Tính toán chính xác
               // border: `1px solid #E2E8F0`,
-              overflow: 'auto', // Cho phép scroll nội dung chính
+              overflowX: 'hidden',
+              overflowY: 'auto',
             }}
           >
             <Outlet />

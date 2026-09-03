@@ -52,7 +52,7 @@ import {
   BsTagFill,
 } from 'react-icons/bs';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 const { Option } = Select;
 
 function ListProduct() {
@@ -234,7 +234,6 @@ function ListProduct() {
       title: 'Sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      fixed: 'left',
       width: 280,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => (
@@ -246,7 +245,7 @@ function ListProduct() {
             style={{
               objectFit: 'cover',
               borderRadius: 12,
-              border: `2px solid #E2E8F0"`,
+              border: `2px solid #E2E8F0`,
             }}
             fallback="/fallback.jpg"
             preview={false}
@@ -349,6 +348,7 @@ function ListProduct() {
           minHeight: '100vh',
           borderRadius: '8px',
         }}
+        className="max-md:p-[8px]! max-md:bg-transparent! overflow-hidden w-full max-w-full"
       >
         <Modal
           title="Xác nhận"
@@ -366,7 +366,22 @@ function ListProduct() {
         >
           <p>{modalText}</p>
         </Modal>
-        <Row gutter={16} style={{ marginBottom: '10px' }}>
+
+        {/* Header */}
+        <Card className="mb-4! max-md:!mb-[4px] rounded-xl! border-none! shadow-none! bg-transparent! px-0!">
+          <Row justify="space-between" align="middle">
+            <Col>
+              <div className="text-2xl md:text-[30px] font-semibold text-[#111827]! m-0!">
+                Danh sách sản phẩm
+              </div>
+              <div className="text-xs md:text-sm text-[#6b7280]! mt-1!">
+                Quản lý, thêm, sửa, xóa sản phẩm trong hệ thống
+              </div>
+            </Col>
+          </Row>
+        </Card>
+
+        <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
           <Col xs={12} sm={6}>
             <Card>
               <span className="text-[#475569]!">Tổng sản phẩm</span>
@@ -416,7 +431,7 @@ function ListProduct() {
           style={{
             marginBottom: 10,
             borderRadius: 16,
-            border: `1px solid #E2E8F0"`,
+            border: `1px solid #E2E8F0`,
           }}
         >
           <Row gutter={[10, 16]} align="middle">
@@ -477,7 +492,7 @@ function ListProduct() {
             </Col>
 
             <Col xs={24} md={8}>
-              <Flex gap={8} wrap="nowrap" justify="end">
+              <Flex gap={8} wrap="wrap" className="max-md:justify-start! md:justify-end!">
                 <Button
                   disabled={!canCreateProduct}
                   type="primary"
@@ -521,9 +536,9 @@ function ListProduct() {
           </Row>
         </Card>
         <Card
+          className="border-none! [&>.ant-card-body]:!px-0"
           style={{
             borderRadius: 16,
-            border: `1px solid #E2E8F0"`,
           }}
         >
           {filteredProducts.length === 0 ? (
@@ -543,6 +558,7 @@ function ListProduct() {
               columns={columns}
               bordered
               dataSource={filteredProducts}
+              scroll={{ x: 1000 }}
               expandable={{
                 expandedRowRender: (record) => (
                   <ExpandedRowRender record={record} />
