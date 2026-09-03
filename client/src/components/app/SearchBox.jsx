@@ -153,7 +153,7 @@ function SearchBox() {
   return (
     <div className={`w-full relative ${isFocused ? 'max-lg:fixed max-lg:inset-0 max-lg:z-[100] max-lg:bg-gray-50 max-lg:flex max-lg:flex-col' : ''}`}>
       <div ref={containerRef} className={isFocused ? 'max-lg:flex-1 max-lg:flex max-lg:flex-col' : ''}>
-        <div className={`relative w-full ${isFocused ? 'max-lg:bg-gradient-primary-to-secondary max-lg:px-4 max-lg:py-3 max-lg:flex max-lg:items-center max-lg:gap-3' : ''}`} onClick={handleFocus}>
+        <div className={`relative w-full ${isFocused ? 'max-lg:bg-gradient-primary-to-secondary max-lg:px-3 max-lg:py-3 max-lg:flex max-lg:items-center max-lg:gap-3' : ''}`} onClick={handleFocus}>
           {isFocused && (
             <button 
               className="lg:hidden p-1 text-white! hover:text-gray-200 transition-colors shrink-0"
@@ -167,7 +167,7 @@ function SearchBox() {
               <ArrowLeft className="w-[28px] h-[28px]" />
             </button>
           )}
-          <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'w-[calc(100%-48px)]' : ''}`}>
+          <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
             <div className="flex flex-1 min-w-0 items-center px-4 py-2 lg:py-4">
               {!isFocused && (
                 <SearchIcon
