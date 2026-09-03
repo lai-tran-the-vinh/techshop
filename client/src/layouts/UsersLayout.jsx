@@ -255,7 +255,7 @@ function Header() {
                   },
                   {
                     key: 'logout',
-                    label: 'Đăng xuất',
+                    label: <span className='text-primary'>Đăng xuất</span>,
                     onClick: () => {
                       setMobileMenuOpen(false);
                       logout();

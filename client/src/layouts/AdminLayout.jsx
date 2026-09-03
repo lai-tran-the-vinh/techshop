@@ -20,6 +20,7 @@ import {
   SafetyOutlined,
   SlidersOutlined,
   BranchesOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 import '@styles/admin-layout.css';
 import { useEffect, useMemo, useState } from 'react';
@@ -352,23 +353,31 @@ function AdminLayout() {
           theme="light"
         />
       </div>
-      {/* <div className="mt-auto pl-24!">
+      <div className="mt-auto px-4 pb-8 pt-8 border-t border-gray-200">
         <Button
           type="default"
-          className="w-full! border-none! flex! items-center! justify-start!"
-          icon={<BsArrowUpLeftCircleFill className='text-xl! text-primary!' />}
+          className="w-full! border-none! flex! items-center! shadow-none! bg-transparent! mb-8! py-4! h-auto!"
+          onClick={() => navigate('/')}
+          style={{ justifyContent: collapsed && !isMobile ? 'center' : 'flex-start' }}
+        >
+          {collapsed && !isMobile ? null : 'Về trang chủ'}
+        </Button>
+        <Button
+          type="default"
+          className="w-full! border-none! flex! items-center! text-primary! shadow-none! bg-transparent! py-4! h-auto!"
           onClick={handleLogout}
+          style={{ justifyContent: collapsed && !isMobile ? 'center' : 'flex-start' }}
         >
           {collapsed && !isMobile ? null : 'Đăng xuất'}
         </Button>
-      </div> */}
+      </div>
     </div>
   );
 
   return (
     <Layout className="w-full ">
       <Header
-        className="font-inter!"
+        className="font-inter! bg-gradient-primary-to-secondary!"
         style={{
           padding: isMobile ? '0 16px' : '0 24px',
           width: '100%',
@@ -388,15 +397,14 @@ function AdminLayout() {
         <div className="flex items-center space-x-4">
           <Button
             type="default"
-            className="shadow-none! bg-gray-100! rounded-lg! mr-10!"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            className="shadow-none! border-none! bg-transparent! text-white! mr-10!"
+            // icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            icon={<MenuOutlined />}
             onClick={handleMenuToggle}
             style={{
               fontSize: isMobile ? '16px' : '20px',
               width: isMobile ? 40 : 50,
               height: isMobile ? 40 : 50,
-              border: `1px solid rgba(255, 255, 255, 0.25)`,
-              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -405,9 +413,9 @@ function AdminLayout() {
 
           <Link to="/admin/dashboard">
             <div className="flex items-end space-x-3 cursor-pointer">
-              <Title level={1} className="font-bold! m-0! text-[#dc2626]!">
+              <Text className="font-bold! text-2xl! lg:text-3xl! m-0! text-white!">
                 TechShop
-              </Title>
+              </Text>
             </div>
           </Link>
         </div>
@@ -495,29 +503,6 @@ function AdminLayout() {
         </Layout>
       </Layout>
 
-      <FloatButton.Group
-        trigger="click"
-        size={isMobile ? 'small' : 'medium'}
-        style={{
-          insetInlineEnd: isMobile ? 16 : 24,
-          insetBlockEnd: isMobile ? 16 : 24,
-          transform: isMobile ? 'scale(0.9)' : 'scale(1.1)',
-        }}
-        icon={<BsTools />}
-        type="primary"
-      >
-        <FloatButton
-          shape="circle"
-          icon={<BsFillHouseFill className="text-primary!" />}
-          type="default"
-          onClick={() => navigate('/')}
-        />
-        <FloatButton
-          shape="circle"
-          icon={<BsArrowRightCircleFill className="text-primary!" />}
-          onClick={handleLogout}
-        />
-      </FloatButton.Group>
     </Layout>
   );
 }
