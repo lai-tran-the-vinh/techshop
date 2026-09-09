@@ -720,27 +720,15 @@ const WarehouseOutbound = () => {
   }
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       {/* Header */}
-      <div
-        style={{
-          background: '#fff',
-          padding: '24px 32px',
-          borderRadius: '12px',
-          marginBottom: '24px',
-        }}
-      >
-        <Space align="center" size="large">
-          <Avatar size={48} icon={<InboxOutlined />} />
-          <div>
-            <Title level={2} style={{ margin: 0, color: '#2c3e50' }}>
-              Quản lý xuất kho
-            </Title>
-            <Text type="secondary" style={{ fontSize: '16px' }}>
-              Tạo phiếu xuất kho và quản lý lịch sử xuất hàng
-            </Text>
-          </div>
-        </Space>
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý xuất kho
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Tạo phiếu xuất kho và quản lý lịch sử xuất hàng
+        </div>
       </div>
 
       <Row gutter={[10, 10]}>
@@ -768,7 +756,6 @@ const WarehouseOutbound = () => {
                     <Select
                       placeholder="Chọn chi nhánh"
                       onChange={handleBranchChange}
-                      size="large"
                     >
                       {branches.map((branch) => (
                         <Option key={branch._id} value={branch._id}>
@@ -793,7 +780,6 @@ const WarehouseOutbound = () => {
                     <Select
                       placeholder="Chọn sản phẩm"
                       onChange={handleProductChange}
-                      size="large"
                       showSearch
                       optionFilterProp="children"
                       disabled={!selectedBranch}
@@ -828,7 +814,6 @@ const WarehouseOutbound = () => {
                   >
                     <Select
                       placeholder="Chọn biến thể"
-                      size="large"
                       disabled={!selectedInventory}
                       onChange={handleVariantChange}
                     >
@@ -868,7 +853,6 @@ const WarehouseOutbound = () => {
                   >
                     <Select
                       placeholder="Chọn màu sắc"
-                      size="large"
                       disabled={!selectedVariant}
                     >
                       {getAvailableColors().map((colorInfo, index) => (
@@ -912,7 +896,6 @@ const WarehouseOutbound = () => {
                       }
                       placeholder="Nhập số lượng"
                       style={{ width: '100%' }}
-                      size="large"
                       onKeyPress={(event) => {
                         if (!/[0-9]/.test(event.key)) {
                           event.preventDefault(); // chặn nhập nếu không phải số
@@ -935,7 +918,6 @@ const WarehouseOutbound = () => {
                       }
                       icon={<PlusOutlined />}
                       onClick={handleAddItem}
-                      size="large"
                       block
                     >
                       Thêm vào danh sách
@@ -958,9 +940,9 @@ const WarehouseOutbound = () => {
 
           <Card
             title={
-              <Space>
-                <Text strong>Danh sách sản phẩm</Text>
-                <Text type="secondary">({outboundItems.length})</Text>
+              <Space className="py-10!">
+                <Text strong className="text-[16px]!">Danh sách sản phẩm</Text>
+                <Text type="secondary" className="text-[16px]!">({outboundItems.length})</Text>
               </Space>
             }
             style={{ marginTop: '16px' }}
@@ -1057,8 +1039,8 @@ const WarehouseOutbound = () => {
       {outboundItems.length > 0 && (
         <Card
           title={
-            <Space>
-              <Text strong>Chi tiết sản phẩm xuất kho</Text>
+            <Space className="py-10!">
+              <Text strong className="text-[16px]!">Chi tiết sản phẩm xuất kho</Text>
             </Space>
           }
           style={{ marginTop: '24px' }}
@@ -1079,68 +1061,73 @@ const WarehouseOutbound = () => {
       {hasPermission(permissions, Subjects.StockMovement, Actions.Read) && (
         <Card
           title={
-            <Space>
-              <Text strong>Lịch sử xuất kho</Text>
+            <Space className="py-10!">
+              <Text strong className="text-[16px]!">Lịch sử xuất kho</Text>
             </Space>
           }
           style={{ marginTop: '24px' }}
         >
           {/* Bộ lọc */}
-          <Row gutter={16} style={{ marginBottom: '16px' }}>
-            <Col span={8}>
-              <Input
-                placeholder="Tìm kiếm theo tên sản phẩm, chi nhánh, người tạo..."
-                prefix={<SearchOutlined />}
-                value={filters.searchText}
-                onChange={(e) =>
-                  setFilters({ ...filters, searchText: e.target.value })
-                }
-                allowClear
-              />
-            </Col>
+          <Row gutter={[10, 10]} style={{ marginBottom: '16px' }}>
+            <Col span={24}>
+              <Row gutter={[10, 10]}>
+                <Col xs={{ span: 24, order: 1 }} md={{ span: 8, order: 1 }}>
+                  <Input
+                    placeholder="Tìm kiếm theo tên sản phẩm, chi nhánh, người tạo..."
+                    prefix={<SearchOutlined />}
+                    value={filters.searchText}
+                    onChange={(e) =>
+                      setFilters({ ...filters, searchText: e.target.value })
+                    }
+                    allowClear
+                  />
+                </Col>
 
-            <Col span={6}>
-              <Select
-                placeholder="Chọn chi nhánh"
-                style={{ width: '100%' }}
-                value={filters.branch}
-                onChange={(value) => setFilters({ ...filters, branch: value })}
-                allowClear
-              >
-                {branches.map((branch) => (
-                  <Option key={branch._id} value={branch._id}>
-                    {branch.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
+                <Col xs={{ span: 16, order: 2 }} md={{ span: 5, order: 2 }}>
+                  <Select
+                    placeholder="Chọn chi nhánh"
+                    style={{ width: '100%' }}
+                    value={filters.branch}
+                    onChange={(value) => setFilters({ ...filters, branch: value })}
+                    allowClear
+                  >
+                    {branches.map((branch) => (
+                      <Option key={branch._id} value={branch._id}>
+                        {branch.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
 
-            <Col span={7}>
-              <RangePicker
-                style={{ width: '100%' }}
-                placeholder={['Từ ngày', 'Đến ngày']}
-                value={filters.dateRange}
-                onChange={(dates) =>
-                  setFilters({ ...filters, dateRange: dates })
-                }
-                format="DD/MM/YYYY"
-              />
-            </Col>
+                <Col xs={{ span: 24, order: 4 }} md={{ span: 8, order: 3 }}>
+                  <RangePicker
+                    style={{ width: '100%' }}
+                    placeholder={['Từ ngày', 'Đến ngày']}
+                    value={filters.dateRange}
+                    onChange={(dates) =>
+                      setFilters({ ...filters, dateRange: dates })
+                    }
+                    format="DD/MM/YYYY"
+                  />
+                </Col>
 
-            <Col span={3}>
-              <Button
-                icon={<ReloadOutlined />}
-                onClick={() =>
-                  setFilters({
-                    branch: '',
-                    searchText: '',
-                    dateRange: null,
-                  })
-                }
-                title="Làm mới bộ lọc"
-              >
-                Reset
-              </Button>
+                <Col xs={{ span: 8, order: 3 }} md={{ span: 3, order: 4 }}>
+                  <Button
+                    icon={<ReloadOutlined />}
+                    onClick={() =>
+                      setFilters({
+                        branch: '',
+                        searchText: '',
+                        dateRange: null,
+                      })
+                    }
+                    title="Làm mới bộ lọc"
+                    style={{ width: '100%' }}
+                  >
+                    Làm mới
+                  </Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
 

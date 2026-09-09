@@ -588,7 +588,7 @@ const WarehouseInbound = () => {
 
   return (
     <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
-      <div className="mb-12 lg:mb-16">
+      <div className="mb-12 lg:mb-16 ml-12">
         <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
           Quản lý nhập kho
         </div>

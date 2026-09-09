@@ -154,7 +154,7 @@ const CategoryManagement = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       <Modal
         title="Xóa danh mục"
         open={openModalDelete}
@@ -175,35 +175,32 @@ const CategoryManagement = () => {
             Xác nhận xóa danh mục
           </span>
         </div>
-        <div>
-          <p>
-            Bạn có chắc là muốn xóa {selectedRowKeys.length} danh mục đã chọn?
+        <div style={{ paddingLeft: 30 }}>
+          <p style={{ margin: 0, color: '#666' }}>
+            Bạn có chắc chắn muốn xóa danh mục đã chọn không? Hành động này
+            không thể hoàn tác.
           </p>
         </div>
       </Modal>
 
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <AppstoreOutlined style={{ marginRight: 8 }} />
-              Danh sách các danh mục
-            </Title>
-          </Col>
-        </Row>
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý danh mục
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Danh sách và hệ thống phân loại nhóm hàng hóa, sản phẩm
+        </div>
+      </div>
+
+      <Card>
 
         <Row
           justify="space-between"
           align="middle"
+          gutter={[16, 16]}
           style={{ marginBottom: 16 }}
         >
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} md={10} lg={8}>
             <Input
               placeholder="Tìm kiếm danh mục..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
@@ -217,17 +214,11 @@ const CategoryManagement = () => {
             />
           </Col>
 
-          <Col xs={24} sm={12} md={12}>
+          <Col xs={24} md={14} lg={16}>
             <Flex gap={8} wrap="wrap" justify="end">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
-                style={{
-                  backgroundColor: 'rgb(11, 162, 36)',
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)',
-                }}
                 onClick={() => {
                   setOpenModal(true);
                 }}
@@ -243,14 +234,6 @@ const CategoryManagement = () => {
                   setDataInit(selectedRows[0]);
                   setOpenModal(true);
                 }}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow:
-                    selectedRowKeys.length === 1
-                      ? '0 2px 8px rgba(79, 70, 229, 0.2)'
-                      : 'none',
-                }}
               >
                 Sửa ({selectedRowKeys.length})
               </Button>
@@ -262,16 +245,6 @@ const CategoryManagement = () => {
                 }}
                 disabled={selectedRowKeys.length === 0}
                 icon={<DeleteOutlined />}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  borderColor:
-                    selectedRowKeys.length > 0 ? '#EF4444' : undefined,
-                  boxShadow:
-                    selectedRowKeys.length > 0
-                      ? '0 2px 8px rgba(239, 68, 68, 0.2)'
-                      : 'none',
-                }}
               >
                 Xóa ({selectedRowKeys.length})
               </Button>
@@ -293,6 +266,7 @@ const CategoryManagement = () => {
             pageSizeOptions: ['10', '20', '50'],
             showTotal: (total) => `Total ${total} categories`,
           }}
+          scroll={{ x: 'max-content' }}
         />
 
         <ModalCategory
@@ -304,7 +278,7 @@ const CategoryManagement = () => {
           visible={openModal}
         />
       </Card>
-    </>
+    </div>
   );
 };
 

@@ -495,26 +495,30 @@ const WarehouseTransferManagement = () => {
   }
 
   return (
-    <div>
-      <Card>
-        <div className="flex justify-between items-center mb-6">
-          <Title level={2} className="m-0! ">
-            <SwapOutlined className="mr-4!" />
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 lg:mb-16 gap-4">
+        <div>
+          <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
             Quản lý chuyển kho hàng hóa
-          </Title>
-
-          <Button
-            type="primary"
-            disabled={
-              !hasPermission(permissions, Subjects.Transfer, Actions.Create)
-            }
-            icon={<PlusOutlined />}
-            onClick={handleAddTransfer}
-            size="large"
-          >
-            Tạo phiếu chuyển
-          </Button>
+          </div>
+          <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+            Theo dõi và quản lý các phiếu luân chuyển hàng hóa giữa các chi nhánh
+          </div>
         </div>
+
+        <Button
+          type="primary"
+          disabled={
+            !hasPermission(permissions, Subjects.Transfer, Actions.Create)
+          }
+          icon={<PlusOutlined />}
+          onClick={handleAddTransfer}
+        >
+          Tạo phiếu chuyển
+        </Button>
+      </div>
+
+      <Card>
 
         <Table
           columns={columns}
@@ -527,6 +531,7 @@ const WarehouseTransferManagement = () => {
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} phiếu`,
           }}
+          scroll={{ x: 'max-content' }}
         />
       </Card>
 

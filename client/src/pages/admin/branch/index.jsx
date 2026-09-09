@@ -238,7 +238,7 @@ const BranchManagement = () => {
   }
 
   return (
-    <div style={{}}>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       <Modal
         title="Xóa danh mục"
         open={openModalDelete}
@@ -259,34 +259,31 @@ const BranchManagement = () => {
             Xác nhận xóa chi nhánh này
           </span>
         </div>
-        <div>
-          <p>
-            Bạn có chắc là muốn xóa {selectedRowKeys.length} chi nhánh đã chọn?
+        <div style={{ paddingLeft: 30 }}>
+          <p style={{ margin: 0, color: '#666' }}>
+            Bạn có chắc chắn muốn xóa chi nhánh đã chọn không? Hành động này
+            không thể hoàn tác.
           </p>
         </div>
       </Modal>
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <AppstoreOutlined style={{ marginRight: 8 }} />
-              Danh sách các chi nhánh
-            </Title>
-          </Col>
-        </Row>
 
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý chi nhánh
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Danh sách và thông tin liên hệ của các chi nhánh trong hệ thống
+        </div>
+      </div>
+
+      <Card>
         <Row
           justify="space-between"
           align="middle"
+          gutter={[16, 16]}
           style={{ marginBottom: 16 }}
         >
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} md={10} lg={8}>
             <Input
               placeholder="Tìm kiếm danh mục..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
@@ -300,17 +297,11 @@ const BranchManagement = () => {
             />
           </Col>
 
-          <Col xs={24} sm={12} md={12}>
+          <Col xs={24} md={14} lg={16}>
             <Flex gap={8} wrap="wrap" justify="end">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
-                style={{
-                  backgroundColor: 'rgb(11, 162, 36)',
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)',
-                }}
                 onClick={() => {
                   setOpenModal(true);
                 }}
@@ -326,14 +317,6 @@ const BranchManagement = () => {
                   setDataInit(selectedRows[0]);
                   setOpenModal(true);
                 }}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow:
-                    selectedRowKeys.length === 1
-                      ? '0 2px 8px rgba(79, 70, 229, 0.2)'
-                      : 'none',
-                }}
               >
                 Sửa ({selectedRowKeys.length})
               </Button>
@@ -345,16 +328,6 @@ const BranchManagement = () => {
                 }}
                 disabled={selectedRowKeys.length === 0}
                 icon={<DeleteOutlined />}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  borderColor:
-                    selectedRowKeys.length > 0 ? '#EF4444' : undefined,
-                  boxShadow:
-                    selectedRowKeys.length > 0
-                      ? '0 2px 8px rgba(239, 68, 68, 0.2)'
-                      : 'none',
-                }}
               >
                 Xóa ({selectedRowKeys.length})
               </Button>
@@ -378,7 +351,7 @@ const BranchManagement = () => {
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} chi nhánh`,
           }}
-          scroll={{ x: 800 }}
+          scroll={{ x: 'max-content' }}
         />
         <ModalBranch
           openModal={openModal}

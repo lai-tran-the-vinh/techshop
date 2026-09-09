@@ -356,16 +356,13 @@ const WarehouseManagement = () => {
 
   return (
     <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
-      <div className="mb-5">
-        <Card>
-          <Title level={2} className="mb-5! flex! items-center! gap-2!">
-            
-            Quản lý kho hàng
-          </Title>
-          <Text type="secondary">
-            Quản lý kho: {uniqueBranchNames.join(', ')}{' '}
-          </Text>
-        </Card>
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý kho hàng
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý kho: {uniqueBranchNames.join(', ')}
+        </div>
       </div>
       <Row gutter={[10, 10]} style={{ marginBottom: '10px' }}>
         <Col xs={24} sm={12} md={8}>

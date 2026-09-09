@@ -184,7 +184,7 @@ const ModalCategory = (props) => {
         </Form.Item>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <Form.Item
               name="isActive"
               label="Trạng thái"
@@ -193,7 +193,7 @@ const ModalCategory = (props) => {
               <Switch />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <Form.Item label="Logo">
               <Upload
                 name="logo"
@@ -231,71 +231,82 @@ const ModalCategory = (props) => {
         <Divider orientation="left">Trường bổ sung</Divider>
 
         {extraFields.map((field, index) => (
-          <Space
-            key={index}
-            style={{ display: 'flex', marginBottom: 8 }}
-            align="baseline"
-          >
-            <Input
-              placeholder="Label"
-              value={field.label}
-              onChange={(e) => {
-                const updated = [...extraFields];
-                updated[index].label = e.target.value;
-                setExtraFields(updated);
-              }}
-            />
-            <Input
-              placeholder="Tên (name)"
-              value={field.name}
-              onChange={(e) => {
-                const updated = [...extraFields];
-                updated[index].name = e.target.value;
-                setExtraFields(updated);
-              }}
-            />
-            <Select
-              placeholder="Kiểu"
-              value={field.type}
-              style={{ width: 120 }}
-              onChange={(value) => {
-                const updated = [...extraFields];
-                updated[index].type = value;
-                setExtraFields(updated);
-              }}
-              options={fieldTypes}
-            />
-            <Select
-              placeholder="Thuộc nhóm"
-              value={field.group}
-              style={{ width: 160 }}
-              onChange={(value) => {
-                const updated = [...extraFields];
-                updated[index].group = value;
-                setExtraFields(updated);
-              }}
-              options={groupOptions}
-            />
-            <Checkbox
-              checked={field.filterable}
-              onChange={(e) => {
-                const updated = [...extraFields];
-                updated[index].filterable = e.target.checked;
-                setExtraFields(updated);
-              }}
-            >
-              Lọc được
-            </Checkbox>
-            <Button
-              danger
-              onClick={() => {
-                const updated = extraFields.filter((_, i) => i !== index);
-                setExtraFields(updated);
-              }}
-            >
-              Xoá
-            </Button>
-          </Space>
+          <div key={index} className="mb-4">
+            <Row gutter={[10, 10]} align="middle">
+              <Col xs={24} sm={12} md={4}>
+                <Input
+                  placeholder="Label"
+                  value={field.label}
+                  onChange={(e) => {
+                    const updated = [...extraFields];
+                    updated[index].label = e.target.value;
+                    setExtraFields(updated);
+                  }}
+                />
+              </Col>
+              <Col xs={24} sm={12} md={4}>
+                <Input
+                  placeholder="Tên (name)"
+                  value={field.name}
+                  onChange={(e) => {
+                    const updated = [...extraFields];
+                    updated[index].name = e.target.value;
+                    setExtraFields(updated);
+                  }}
+                />
+              </Col>
+              <Col xs={24} sm={8} md={4}>
+                <Select
+                  placeholder="Kiểu"
+                  value={field.type}
+                  style={{ width: '100%' }}
+                  onChange={(value) => {
+                    const updated = [...extraFields];
+                    updated[index].type = value;
+                    setExtraFields(updated);
+                  }}
+                  options={fieldTypes}
+                />
+              </Col>
+              <Col xs={24} sm={8} md={5}>
+                <Select
+                  placeholder="Thuộc nhóm"
+                  value={field.group}
+                  style={{ width: '100%' }}
+                  onChange={(value) => {
+                    const updated = [...extraFields];
+                    updated[index].group = value;
+                    setExtraFields(updated);
+                  }}
+                  options={groupOptions}
+                />
+              </Col>
+              <Col xs={12} sm={4} md={4}>
+                <Checkbox
+                  checked={field.filterable}
+                  onChange={(e) => {
+                    const updated = [...extraFields];
+                    updated[index].filterable = e.target.checked;
+                    setExtraFields(updated);
+                  }}
+                >
+                  Lọc được
+                </Checkbox>
+              </Col>
+              <Col xs={12} sm={4} md={3}>
+                <Button
+                  danger
+                  block
+                  onClick={() => {
+                    const updated = extraFields.filter((_, i) => i !== index);
+                    setExtraFields(updated);
+                  }}
+                >
+                  Xoá
+                </Button>
+              </Col>
+            </Row>
+          </div>
         ))}
 
         <Button
