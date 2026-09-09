@@ -355,11 +355,11 @@ const WarehouseManagement = () => {
   );
 
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       <div className="mb-5">
         <Card>
           <Title level={2} className="mb-5! flex! items-center! gap-2!">
-            <FaWarehouse className="mr-2" />
+            
             Quản lý kho hàng
           </Title>
           <Text type="secondary">

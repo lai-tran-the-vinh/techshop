@@ -587,30 +587,14 @@ const WarehouseInbound = () => {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-      }}
-    >
-      <div
-        style={{
-          background: '#fff',
-          padding: '24px 32px',
-          borderRadius: '12px',
-          marginBottom: '10px',
-        }}
-      >
-        <Space align="center" size="large">
-          <Avatar size={48} icon={<InboxOutlined />} />
-          <div>
-            <Title level={2} style={{ margin: 0, color: '#2c3e50' }}>
-              Quản lý nhập kho
-            </Title>
-            <Text type="secondary" style={{ fontSize: '16px' }}>
-              Tạo phiếu nhập kho và quản lý lịch sử nhập hàng
-            </Text>
-          </div>
-        </Space>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý nhập kho
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Tạo phiếu nhập kho và quản lý lịch sử nhập hàng
+        </div>
       </div>
 
       <Row gutter={[10, 10]}>
@@ -785,9 +769,10 @@ const WarehouseInbound = () => {
           }}
         >
           <Row gutter={[10, 10]}>
-            <Col span={8}>
+            <Col span={24}>
+              <Row gutter={[10, 10]}>
+            <Col xs={{ span: 24, order: 1 }} md={{ span: 8, order: 1 }}>
               <Input
-                size="large"
                 placeholder="Tìm kiếm theo tên sản phẩm, chi nhánh, người tạo..."
                 prefix={<SearchOutlined />}
                 value={filters.searchText}
@@ -798,9 +783,8 @@ const WarehouseInbound = () => {
               />
             </Col>
 
-            <Col span={5}>
+            <Col xs={{ span: 16, order: 2 }} md={{ span: 5, order: 2 }}>
               <Select
-                size="large"
                 placeholder="Chọn chi nhánh"
                 style={{ width: '100%' }}
                 value={filters.branch}
@@ -816,9 +800,8 @@ const WarehouseInbound = () => {
               </Select>
             </Col>
 
-            <Col span={8}>
+            <Col xs={{ span: 24, order: 4 }} md={{ span: 8, order: 3 }}>
               <RangePicker
-                size="large"
                 style={{ width: '100%' }}
                 placeholder={['Từ ngày', 'Đến ngày']}
                 value={filters.dateRange}
@@ -828,9 +811,8 @@ const WarehouseInbound = () => {
               />
             </Col>
 
-            <Col span={3}>
+            <Col xs={{ span: 8, order: 3 }} md={{ span: 3, order: 4 }}>
               <Button
-                size="large"
                 icon={<ReloadOutlined />}
                 onClick={() =>
                   setFilters({
@@ -843,6 +825,8 @@ const WarehouseInbound = () => {
               >
                 Làm mới
               </Button>
+            </Col>
+              </Row>
             </Col>
             <Divider className="my-5!" />
             <Col span={24}>
@@ -861,6 +845,7 @@ const WarehouseInbound = () => {
                   pagination={{
                     pageSize: 10,
                   }}
+                  scroll={{ x: 'max-content' }}
                 />
               </Card>
             </Col>
