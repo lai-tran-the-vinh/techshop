@@ -456,17 +456,20 @@ function AdminLayout() {
         {isMobile && (
           <Drawer
             title={
-              <div className="flex items-center space-x-3">
-                <Title level={4} style={{ margin: 0, color: '#dc2626' }}>
+              <div className="flex items-end space-x-2">
+                <Text className="font-bold! text-2xl! m-0! text-white!">
                   TechShop
-                </Title>
-                <Text type="secondary">Admin</Text>
+                </Text>
               </div>
             }
             placement="left"
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
             width={280}
+            closeIcon={<span className="text-white text-lg font-bold">✕</span>}
+            classNames={{
+              header: 'bg-gradient-primary-to-secondary! border-none!',
+            }}
             styles={{
               body: {
                 padding: 0, // Loại bỏ padding mặc định

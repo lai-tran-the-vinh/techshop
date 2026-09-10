@@ -339,11 +339,11 @@ const RoleManagement = () => {
 
       <div className="mb-12 lg:mb-16">
         <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
-          Quản lý Role
+          Quản lý vai trò
         </div>
         <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
           Quản lý các vai trò trong hệ thống. Tổng cộng:{' '}
-          <strong>{roles.length}</strong> roles
+          <strong>{roles.length}</strong> vai trò
         </div>
       </div>
 
