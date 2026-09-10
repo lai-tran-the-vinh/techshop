@@ -232,9 +232,9 @@ const CreateOrderModal = ({
       width={1000}
     >
       <div>
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col span={8}>
-            <div style={{ marginBottom: 8 }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+          <div>
+            <div className="mb-8">
               <Text strong>Khách hàng</Text>
             </div>
             <Input
@@ -244,11 +244,11 @@ const CreateOrderModal = ({
                 setOrderData({ ...orderData, name: e.target.value })
               }
             />
-          </Col>
-          <Col span={8}>
-            <div style={{ marginBottom: 8 }}>
+          </div>
+          <div>
+            <div className="mb-8">
               <Text strong>Số điện thoại</Text>
-              <Text style={{ color: '#ff4d4f' }}> *</Text>
+              <Text className="text-[#ff4d4f]"> *</Text>
             </div>
             <Input
               placeholder="Nhập số điện thoại"
@@ -257,13 +257,13 @@ const CreateOrderModal = ({
                 setOrderData({ ...orderData, phone: e.target.value })
               }
             />
-          </Col>
-          <Col span={8}>
-            <div style={{ marginBottom: 8 }}>
+          </div>
+          <div>
+            <div className="mb-8">
               <Text strong>Phương thức thanh toán</Text>
             </div>
             <Select
-              style={{ width: '100%' }}
+              className="w-full"
               value={orderData.paymentMethod}
               onChange={(value) =>
                 setOrderData({ ...orderData, paymentMethod: value })
@@ -275,25 +275,25 @@ const CreateOrderModal = ({
                 </Option>
               ))}
             </Select>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         <Divider>Chọn sản phẩm</Divider>
 
         <Card
           size="small"
-          style={{ marginBottom: 16, backgroundColor: '#fafafa' }}
+          className="mb-16 bg-[#fafafa]"
         >
-          <Row gutter={[10, 10]} align="bottom">
-            <Col span={12}>
-              <div style={{ marginBottom: 8 }}>
+          <div className="grid grid-cols-12 gap-10 items-end">
+            <div className="col-span-12 md:col-span-6">
+              <div className="mb-8">
                 <Text strong>Sản phẩm</Text>
-                <Text style={{ color: '#ff4d4f' }}> *</Text>
+                <Text className="text-[#ff4d4f]"> *</Text>
               </div>
               <Select
                 showSearch
                 placeholder="Tìm và chọn sản phẩm"
-                style={{ width: '100%' }}
+                className="w-full"
                 value={selectedProduct?.product?._id}
                 onChange={(value) => {
                   const product = productsInInventory?.find(
@@ -311,16 +311,16 @@ const CreateOrderModal = ({
                   </Option>
                 ))}
               </Select>
-            </Col>
+            </div>
 
-            <Col span={12}>
-              <div style={{ marginBottom: 8 }}>
+            <div className="col-span-12 md:col-span-6">
+              <div className="mb-8">
                 <Text strong>Phân loại</Text>
-                <Text style={{ color: '#ff4d4f' }}> *</Text>
+                <Text className="text-[#ff4d4f]"> *</Text>
               </div>
               <Select
                 placeholder="Chọn biến thể"
-                style={{ width: '100%' }}
+                className="w-full"
                 value={selectedVariant?.variantId?._id}
                 onChange={(value) => {
                   const variant = selectedProduct?.variants?.find(
@@ -343,66 +343,59 @@ const CreateOrderModal = ({
                   </Option>
                 ))}
               </Select>
-            </Col>
+            </div>
 
-            <Col span={8}>
-              <div style={{ marginBottom: 8 }}>
+            <div className="col-span-12 md:col-span-4">
+              <div className="mb-8">
                 <Text strong>Màu sắc</Text>
-                <Text style={{ color: '#ff4d4f' }}> *</Text>
+                <Text className="text-[#ff4d4f]"> *</Text>
               </div>
               <Select
                 placeholder="Chọn màu"
-                style={{ width: '100%' }}
+                className="w-full"
                 value={selectedColor}
                 onChange={(value) => setSelectedColor(value)}
                 disabled={!selectedVariant}
               >
                 {variantColors.map((color) => (
                   <Option key={color} value={color}>
-                    <div
-                      style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                    >
+                    <div className="flex items-center gap-8">
                       <div
-                        style={{
-                          width: 16,
-                          height: 16,
-                          borderRadius: '50%',
-                          backgroundColor: color?.toLowerCase(),
-                          border: '1px solid #d9d9d9',
-                        }}
+                        className="w-16 h-16 rounded-full border border-[#d9d9d9]"
+                        style={{ backgroundColor: color?.toLowerCase() }}
                       />
                       {color}
                     </div>
                   </Option>
                 ))}
               </Select>
-            </Col>
+            </div>
 
-            <Col span={7}>
-              <div style={{ marginBottom: 8 }}>
+            <div className="col-span-12 md:col-span-3">
+              <div className="mb-8">
                 <Text strong>Số lượng</Text>
-                <Text style={{ color: '#ff4d4f' }}> *</Text>
+                <Text className="text-[#ff4d4f]"> *</Text>
               </div>
               <InputNumber
                 min={1}
-                style={{ width: '100%' }}
+                className="w-full"
                 value={quantity}
                 onChange={(value) => setQuantity(value || 1)}
               />
-            </Col>
+            </div>
 
-            <Col span={7}>
-              <div style={{ marginBottom: 8 }}>
+            <div className="col-span-12 md:col-span-3">
+              <div className="mb-8">
                 <Text strong>Giá bán</Text>
               </div>
               <Input
                 value={formatCurrency(getPriceForSelectedVariant) || '0'}
                 disabled
-                style={{ width: '100%' }}
+                className="w-full"
               />
-            </Col>
+            </div>
 
-            <Col span={2}>
+            <div className="col-span-12 md:col-span-2">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -410,21 +403,17 @@ const CreateOrderModal = ({
                 disabled={
                   !selectedProduct || !selectedVariant || !selectedColor
                 }
-                style={{ width: '100%' }}
+                className="w-full"
               />
-            </Col>
-          </Row>
+            </div>
+          </div>
         </Card>
 
         <Divider>Giỏ hàng ({orderData.items.length} sản phẩm)</Divider>
 
         {orderData.items.length === 0 ? (
-          <div
-            style={{ textAlign: 'center', padding: '40px 0', color: '#999' }}
-          >
-            <ShoppingCartOutlined
-              style={{ fontSize: '48px', marginBottom: '16px' }}
-            />
+          <div className="text-center py-[40px] text-[#999]">
+            <ShoppingCartOutlined className="text-[48px] mb-16" />
             <div>Chưa có sản phẩm nào trong giỏ hàng</div>
             <div>Vui lòng chọn sản phẩm ở trên để thêm vào đơn hàng</div>
           </div>
@@ -433,6 +422,7 @@ const CreateOrderModal = ({
             dataSource={orderData.items}
             pagination={false}
             size="small"
+            scroll={{ x: 600 }}
             rowKey={(record, index) =>
               `${record.product}-${record.variant}-${record.variantColor}-${index}`
             }
@@ -441,33 +431,14 @@ const CreateOrderModal = ({
                 title: 'Sản phẩm',
                 render: (_, item) => (
                   <div>
-                    <div style={{ fontWeight: 500 }}>{item.productName}</div>
-                    <div
-                      style={{
-                        fontSize: '12px',
-                        color: '#666',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                      }}
-                    >
+                    <div className="font-medium">{item.productName}</div>
+                    <div className="text-[12px] text-[#666] flex items-center gap-8">
                       <span>{item.variantName}</span>
                       <Tag color={item.variantColor?.toLowerCase()}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 4,
-                          }}
-                        >
+                        <div className="flex items-center gap-4">
                           <div
-                            style={{
-                              width: 10,
-                              height: 10,
-                              borderRadius: '50%',
-                              backgroundColor: item.variantColor?.toLowerCase(),
-                              border: '1px solid #fff',
-                            }}
+                            className="w-10 h-10 rounded-full border border-white"
+                            style={{ backgroundColor: item.variantColor?.toLowerCase() }}
                           />
                           {item.variantColor}
                         </div>
@@ -486,13 +457,7 @@ const CreateOrderModal = ({
               {
                 title: 'Số lượng',
                 render: (_, item, index) => (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <div className="flex items-center justify-center">
                     <Button
                       size="small"
                       icon={<MinusOutlined />}
@@ -508,7 +473,7 @@ const CreateOrderModal = ({
                       onChange={(value) =>
                         updateCartItemQuantity(index, value || 1)
                       }
-                      style={{ width: '60px', margin: '0 8px' }}
+                      className="w-[60px] mx-8"
                     />
                     <Button
                       size="small"
@@ -525,7 +490,7 @@ const CreateOrderModal = ({
               {
                 title: 'Thành tiền',
                 render: (_, item) => (
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong className="text-[#1890ff]!">
                     {formatCurrency(item.price * item.quantity)}
                   </Text>
                 ),
@@ -556,16 +521,8 @@ const CreateOrderModal = ({
         )}
 
         {orderData.items.length > 0 && (
-          <div
-            style={{
-              marginTop: 16,
-              padding: 16,
-              backgroundColor: '#f5f5f5',
-              borderRadius: 6,
-              textAlign: 'right',
-            }}
-          >
-            <Text strong style={{ fontSize: '18px', color: '#1890ff' }}>
+          <div className="mt-16 p-16 bg-[#f5f5f5] rounded-lg text-right">
+            <Text strong className="text-[18px] text-[#1890ff]!">
               Tổng cộng: {formatCurrency(calculateTotal())}
             </Text>
           </div>

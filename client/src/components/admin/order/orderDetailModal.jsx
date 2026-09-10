@@ -245,9 +245,9 @@ const OrderDetailsModal = ({
             />
           )}
 
-        <Row gutter={[10, 10]}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Order Information */}
-          <Col span={24}>
+          <div className="col-span-1 md:col-span-2">
             <Card title="Thông tin đơn hàng" size="small">
               <Descriptions column={2} size="small">
                 <Descriptions.Item label="Mã đơn hàng" span={2}>
@@ -306,10 +306,10 @@ const OrderDetailsModal = ({
                 </Descriptions.Item>
               </Descriptions>
             </Card>
-          </Col>
+          </div>
 
           {/* Customer Information */}
-          <Col span={12}>
+          <div>
             <Card
               title={
                 <>
@@ -332,10 +332,10 @@ const OrderDetailsModal = ({
                 </Descriptions.Item>
               </Descriptions>
             </Card>
-          </Col>
+          </div>
 
           {/* Recipient Information */}
-          <Col span={12}>
+          <div>
             <Card
               title={
                 <>
@@ -343,6 +343,7 @@ const OrderDetailsModal = ({
                 </>
               }
               size="small"
+              className="h-full!"
             >
               <Descriptions column={1} size="small">
                 <Descriptions.Item label="Người nhận">
@@ -377,14 +378,14 @@ const OrderDetailsModal = ({
                 </Descriptions.Item>
               </Descriptions>
             </Card>
-          </Col>
+          </div>
 
           {/* Status Management */}
-          <Col span={24}>
+          <div className="col-span-1 md:col-span-2">
             <Card title="Quản lý trạng thái" size="small">
-              <Row gutter={16}>
-                <Col span={8}>
-                  <div style={{ marginBottom: 8 }}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div>
+                  <div className="mb-8">
                     <Text strong>Trạng thái đơn hàng:</Text>
                   </div>
                   <Select
@@ -401,10 +402,10 @@ const OrderDetailsModal = ({
                       </Option>
                     ))}
                   </Select>
-                </Col>
+                </div>
 
-                <Col span={8}>
-                  <div style={{ marginBottom: 8 }}>
+                <div>
+                  <div className="mb-8">
                     <Text strong>Trạng thái thanh toán:</Text>
                   </div>
                   <Select
@@ -425,11 +426,11 @@ const OrderDetailsModal = ({
                       </Option>
                     ))}
                   </Select>
-                </Col>
-              </Row>
+                </div>
+              </div>
             </Card>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         <Divider
           orientation="left"
@@ -443,6 +444,7 @@ const OrderDetailsModal = ({
             dataSource={editableOrder.items}
             pagination={false}
             size="small"
+            scroll={{ x: 600 }}
             rowKey={(record, index) =>
               `${record.product?._id}-${record.variant?._id}-${index}`
             }

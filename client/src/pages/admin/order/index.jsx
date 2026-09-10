@@ -286,98 +286,92 @@ const OrderStatistics = ({ orders, filters, branches }) => {
   }, [orders, filters.branch, branches]);
 
   return (
-    <Row gutter={10} style={{ marginBottom: '10px' }}>
-      <Col span={filters.branch ? 5 : 4}>
-        <Card>
-          <Statistic
-            title={filters.branch ? 'Đơn hàng (Chi nhánh)' : 'Tổng đơn hàng'}
-            value={stats.totalOrders}
-            prefix={<ShoppingCartOutlined />}
-          />
-        </Card>
-      </Col>
-      <Col span={filters.branch ? 5 : 6}>
-        <Card>
-          <Statistic
-            title={'Tổng doanh thu'}
-            value={stats.totalRevenue}
-            formatter={(value) => `${formatCurrency(value)} VND`}
-          />
-        </Card>
-      </Col>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-10">
+      <Card className="shadow-none!">
+        <Statistic
+          title={filters.branch ? 'Đơn hàng (Chi nhánh)' : 'Tổng đơn hàng'}
+          value={stats.totalOrders}
+          prefix={<ShoppingCartOutlined />}
+        />
+      </Card>
+      
+      <Card className="shadow-none!">
+        <Statistic
+          title={'Tổng doanh thu'}
+          value={stats.totalRevenue}
+          formatter={(value) => `${formatCurrency(value)} VND`}
+        />
+      </Card>
+      
       {filters.branch && stats.branchRevenue !== null && (
-        <Col span={5}>
-          <Card>
-            <Statistic
-              title={`Doanh thu ${stats.branchName}`}
-              value={stats.branchRevenue}
-              formatter={(value) => `${formatCurrency(value)} VND`}
-              valueStyle={{ color: '#52c41a' }}
-            />
-          </Card>
-        </Col>
+        <Card className="shadow-none!">
+          <Statistic
+            title={`Doanh thu ${stats.branchName}`}
+            value={stats.branchRevenue}
+            formatter={(value) => `${formatCurrency(value)} VND`}
+            valueStyle={{ color: '#52c41a' }}
+          />
+        </Card>
       )}
-      <Col span={filters.branch ? 3 : 5}>
-        <Card>
-          <Statistic
-            title="Đơn chờ xử lý"
-            value={stats.pendingOrders}
-            valueStyle={{ color: '#faad14' }}
-            prefix={<Badge status="warning" />}
-          />
-        </Card>
-      </Col>
-      <Col span={filters.branch ? 3 : 5}>
-        <Card>
-          <Statistic
-            title="Chưa thanh toán"
-            value={stats.unpaidOrders}
-            valueStyle={{ color: '#ff4d4f' }}
-            prefix={<Badge status="error" />}
-          />
-        </Card>
-      </Col>
-      <Col span={filters.branch ? 3 : 4}>
-        <Card>
-          <Statistic
-            title="Đơn trả hàng"
-            value={
-              orders.filter(
-                (order) =>
-                  order.isReturned ||
-                  order.returnStatus === 'requested' ||
-                  order.status === 'RETURNED',
-              ).length
-            }
-            valueStyle={{ color: '#722ed1' }}
-            prefix={<ReloadOutlined />}
-          />
-        </Card>
-      </Col>
-    </Row>
+      
+      <Card className="shadow-none!">
+        <Statistic
+          title="Đơn chờ xử lý"
+          value={stats.pendingOrders}
+          valueStyle={{ color: '#faad14' }}
+          prefix={<Badge status="warning" />}
+        />
+      </Card>
+      
+      <Card className="shadow-none!">
+        <Statistic
+          title="Chưa thanh toán"
+          value={stats.unpaidOrders}
+          valueStyle={{ color: '#ff4d4f' }}
+          prefix={<Badge status="error" />}
+        />
+      </Card>
+      
+      <Card className="shadow-none!">
+        <Statistic
+          title="Đơn trả hàng"
+          value={
+            orders.filter(
+              (order) =>
+                order.isReturned ||
+                order.returnStatus === 'requested' ||
+                order.status === 'RETURNED',
+            ).length
+          }
+          valueStyle={{ color: '#722ed1' }}
+          prefix={<ReloadOutlined />}
+        />
+      </Card>
+    </div>
   );
 };
 
 const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
-  <Card style={{ marginBottom: '10px' }}>
-    <Row gutter={10} align="middle">
-      <Col span={6}>
+  <Card className="mb-10 shadow-none!">
+    <div className="flex flex-col lg:flex-row gap-10 items-stretch lg:items-center">
+      <div className="w-full lg:flex-1">
         <Input
-          className="h-[40px] w-full"
+          className="h-40 w-full"
           placeholder="Tìm kiếm theo tên, SĐT, sản phẩm..."
-          prefix={<SearchOutlined />}
+          prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
           value={filters.searchText}
           onChange={(e) =>
             setFilters({ ...filters, searchText: e.target.value })
           }
+          allowClear
         />
-      </Col>
-      <Col span={4}>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:flex lg:w-auto gap-10">
         <Select
           placeholder="Trạng thái"
-          style={{ width: '100%' }}
-          value={filters.status}
-          onChange={(value) => setFilters({ ...filters, status: value })}
+          className="w-full lg:w-[150px]"
+          value={filters.status || undefined}
+          onChange={(value) => setFilters({ ...filters, status: value || '' })}
           allowClear
         >
           {STATUS_OPTIONS.map((option) => (
@@ -386,14 +380,11 @@ const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
             </Option>
           ))}
         </Select>
-      </Col>
-      <Col span={4}>
         <Select
           placeholder="Chi nhánh"
-          style={{ width: '100%' }}
-          value={filters.branch}
-          defaultValue={filters.branch}
-          onChange={(value) => setFilters({ ...filters, branch: value })}
+          className="w-full lg:w-[150px]"
+          value={filters.branch || undefined}
+          onChange={(value) => setFilters({ ...filters, branch: value || '' })}
           allowClear
         >
           {branches.map((branch) => (
@@ -402,41 +393,22 @@ const OrderFilters = ({ filters, setFilters, branches, onCreateOrder }) => (
             </Option>
           ))}
         </Select>
-      </Col>
-      <Col span={4}>
         <RangePicker
-          className="h-[40px] w-full"
+          className="h-40 w-full lg:w-[260px] col-span-2 md:col-span-1"
           placeholder={['Từ ngày', 'Đến ngày']}
           value={filters.dateRange}
           onChange={(dates) => setFilters({ ...filters, dateRange: dates })}
         />
-      </Col>
-      <Col span={2}>
-        {/* <Button
-          icon={<ReloadOutlined />}
-          onClick={() =>
-            setFilters({
-              status: '',
-              branch: '',
-              searchText: '',
-              dateRange: null,
-            })
-          }
-        >
-          Reset
-        </Button> */}
-      </Col>
-      <Col span={4}>
         <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={onCreateOrder}
-          className="w-full! h-[40px]!"
+          className="w-full lg:w-auto h-40! shadow-none! col-span-2 md:col-span-3 lg:col-span-1"
         >
-          Tạo Đơn Hàng Tại Quầy
+          Tạo Đơn Tại Quầy
         </Button>
-      </Col>
-    </Row>
+      </div>
+    </div>
   </Card>
 );
 
@@ -643,22 +615,16 @@ const OrderManagement = () => {
           return 'Không có sản phẩm';
 
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="flex flex-col gap-6">
             {record.items.map((item, index) => (
               <div
                 key={`${item.product?._id}-${item.variant?._id}-${index}`}
                 className="px-4 py-8"
-                // style={{
-                //   padding: '4px 8px',
-                //   backgroundColor: '#f9f9f9',
-                //   borderRadius: 4,
-                //   border: '1px solid #eee',
-                // }}
               >
-                <div style={{ fontWeight: 500 }}>
+                <div className="font-medium">
                   {item.product?.name || 'Không có tên'}
                 </div>
-                <div style={{ fontSize: '12px', color: '#666' }}>
+                <div className="text-[12px] text-[#666]">
                   <Text code>{item.variant?.name || 'Không có phân loại'}</Text>
                   <Text>{item.variantColor || ''}</Text> x{' '}
                   <Text code>{item.quantity || 0}</Text>
@@ -675,7 +641,7 @@ const OrderManagement = () => {
       key: 'totalPrice',
       width: 120,
       render: (price) => (
-        <Text strong style={{ color: '#1890ff' }}>
+        <Text strong className="text-[#1890ff]!">
           {formatCurrency(price || 0)}
         </Text>
       ),
@@ -698,7 +664,7 @@ const OrderManagement = () => {
               {statusOption?.label || record.status}
             </Text>
             {hasReturnRequest && (
-              <div style={{ fontSize: 12, color: '#fa8c16', marginTop: 2 }}>
+              <div className="text-[12px] text-[#fa8c16] mt-2">
                 Có yêu cầu trả hàng
               </div>
             )}
@@ -750,19 +716,15 @@ const OrderManagement = () => {
   }
 
   return (
-    <div style={{ padding: '0px' }}>
-      <Card className="mb-10!">
-        <Title
-          level={3}
-          style={{ margin: 0, display: 'flex', alignItems: 'center' }}
-        >
-          <BsCartCheck style={{ marginRight: '8px' }} />
+    <div className="p-16 md:p-24">
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
           Quản lý đơn hàng
-        </Title>
-        <p style={{ margin: '8px 0 0 0', color: '#666' }}>
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
           Quản lý các đơn hàng và thêm đơn hàng mới
-        </p>
-      </Card>
+        </div>
+      </div>
 
       <OrderStatistics orders={orders} filters={filters} branches={branches} />
 
@@ -781,6 +743,7 @@ const OrderManagement = () => {
           pagination={{
             pageSize: 10,
           }}
+          scroll={{ x: 1000 }}
           locale={{
             emptyText: (
               <Empty

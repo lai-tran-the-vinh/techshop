@@ -101,7 +101,6 @@ const PermissionsManagement = () => {
     try {
       const response = await callFetchPermission();
       setPermissions(response.data.data);
-      message.success('Permissions đã làm mới thành công');
     } catch (error) {
       console.error('Failed to reload permissions:', error);
     } finally {
@@ -321,7 +320,6 @@ const PermissionsManagement = () => {
           module: values.module,
           isActive: values.isActive ?? true,
         });
-        message.success('Tạo quyền mới thành công');
       }
 
       handleCancel();
