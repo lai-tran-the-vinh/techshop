@@ -306,7 +306,7 @@ const RoleManagement = () => {
   const moduleKeys = Object.keys(groupedPermissions).sort();
 
   return (
-    <>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       <Modal
         title="Xóa role"
         open={openModalDelete}
@@ -327,127 +327,88 @@ const RoleManagement = () => {
             Xác nhận xóa role
           </span>
         </div>
-        <div>
-          <p>Bạn có chắc là muốn xóa {selectedRowKeys.length} role đã chọn?</p>
-          <p style={{ color: '#ff4d4f', fontSize: '12px' }}>
+        <div style={{ paddingLeft: 30 }}>
+          <p style={{ margin: 0, color: '#666' }}>
+            Bạn có chắc chắn muốn xóa role đã chọn không?
+          </p>
+          <p style={{ color: '#ff4d4f', fontSize: '12px', marginTop: 8 }}>
             Lưu ý: Không thể xóa role đang được sử dụng bởi user
           </p>
         </div>
       </Modal>
 
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: 24 }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <TeamOutlined style={{ marginRight: 8 }} />
-              Quản lý Role
-            </Title>
-            <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý các vai trò trong hệ thống. Tổng cộng:{' '}
-              <strong>{roles.length}</strong> roles
-            </p>
-          </Col>
-        </Row>
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý Role
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý các vai trò trong hệ thống. Tổng cộng:{' '}
+          <strong>{roles.length}</strong> roles
+        </div>
+      </div>
 
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: 16 }}
-        >
-          <Col xs={24} sm={12} md={6}>
+      <Card>
+
+        <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
+          <div className="w-full lg:w-1/3">
             <Input
               placeholder="Tìm kiếm role, mô tả..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
-              style={{
-                borderRadius: 8,
-                border: `1px solid #CBD5E1`,
-              }}
+              className="w-full rounded-lg"
             />
-          </Col>
+          </div>
 
-          <Col xs={24} sm={12} md={12}>
-            <Flex gap={8} wrap="wrap" justify="end">
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                style={{
-                  backgroundColor: 'rgb(11, 162, 36)',
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)',
-                }}
-                onClick={() => {
-                  setDataInit(null);
-                  setOpenModal(true);
-                }}
-              >
-                Tạo Role mới
-              </Button>
+          <div className="w-full lg:w-2/3 grid grid-cols-2 md:grid-cols-4 lg:flex lg:justify-end gap-3">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              className="shadow-none w-full lg:w-auto"
+              onClick={() => {
+                setDataInit(null);
+                setOpenModal(true);
+              }}
+            >
+              Tạo Role mới
+            </Button>
 
-              <Button
-                type="primary"
-                disabled={selectedRowKeys.length !== 1}
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setDataInit(selectedRows[0]);
-                  setOpenModal(true);
-                }}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow:
-                    selectedRowKeys.length === 1
-                      ? '0 2px 8px rgba(79, 70, 229, 0.2)'
-                      : 'none',
-                }}
-              >
-                Sửa ({selectedRowKeys.length})
-              </Button>
+            <Button
+              type="primary"
+              disabled={selectedRowKeys.length !== 1}
+              icon={<EditOutlined />}
+              className="shadow-none w-full lg:w-auto"
+              onClick={() => {
+                setDataInit(selectedRows[0]);
+                setOpenModal(true);
+              }}
+            >
+              Sửa ({selectedRowKeys.length})
+            </Button>
 
-              <Button
-                danger
-                onClick={() => setOpenModalDelete(true)}
-                disabled={selectedRowKeys.length === 0}
-                icon={<DeleteOutlined />}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  borderColor:
-                    selectedRowKeys.length > 0 ? '#EF4444' : undefined,
-                  boxShadow:
-                    selectedRowKeys.length > 0
-                      ? '0 2px 8px rgba(239, 68, 68, 0.2)'
-                      : 'none',
-                }}
-              >
-                Xóa ({selectedRowKeys.length})
-              </Button>
+            <Button
+              danger
+              className="shadow-none w-full lg:w-auto"
+              onClick={() => setOpenModalDelete(true)}
+              disabled={selectedRowKeys.length === 0}
+              icon={<DeleteOutlined />}
+            >
+              Xóa ({selectedRowKeys.length})
+            </Button>
 
-              <Button
-                icon={<ReloadOutlined />}
-                onClick={reloadTable}
-                loading={loading}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                }}
-              >
-                Làm mới
-              </Button>
-            </Flex>
-          </Col>
-        </Row>
+            <Button
+              icon={<ReloadOutlined />}
+              className="shadow-none w-full lg:w-auto"
+              onClick={reloadTable}
+              loading={loading}
+            >
+              Làm mới
+            </Button>
+          </div>
+        </div>
 
-        <Table
+          <Table
           loading={loading}
           rowKey={(record) => record._id}
           rowSelection={rowSelection}
@@ -466,6 +427,7 @@ const RoleManagement = () => {
               />
             ),
           }}
+          scroll={{ x: 1000 }}
         />
       </Card>
 
@@ -734,7 +696,7 @@ const RoleManagement = () => {
           </>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 

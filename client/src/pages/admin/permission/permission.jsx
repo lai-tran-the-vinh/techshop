@@ -371,7 +371,7 @@ const PermissionsManagement = () => {
   ];
 
   return (
-    <>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
       <Modal
         title="Xóa quyền"
         open={openModalDelete}
@@ -392,59 +392,53 @@ const PermissionsManagement = () => {
             Xác nhận xóa quyền
           </span>
         </div>
-        <div>
-          <p>Bạn có chắc là muốn xóa {selectedRowKeys.length} quyền đã chọn?</p>
+        <div style={{ paddingLeft: 30 }}>
+          <p style={{ margin: 0, color: '#666' }}>
+            Bạn có chắc chắn muốn xóa quyền đã chọn không?
+          </p>
         </div>
       </Modal>
 
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <SafetyOutlined style={{ marginRight: 8 }} />
-              Quản lý quyền hạn
-            </Title>
-            <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý các quyền hạn trong hệ thống.
-              {hasActiveFilters() ? (
-                <>
-                  Hiển thị: <strong>{filteredPermissions.length}</strong> /{' '}
-                  <strong>{permissions.length}</strong> quyền
-                </>
-              ) : (
-                <>
-                  Tổng cộng: <strong>{permissions.length}</strong> quyền
-                </>
-              )}
-            </p>
-          </Col>
-        </Row>
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý quyền hạn
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý các quyền hạn trong hệ thống.
+          {hasActiveFilters() ? (
+            <>
+              {' '}Hiển thị: <strong>{filteredPermissions.length}</strong> /{' '}
+              <strong>{permissions.length}</strong> quyền
+            </>
+          ) : (
+            <>
+              {' '}Tổng cộng: <strong>{permissions.length}</strong> quyền
+            </>
+          )}
+        </div>
+      </div>
 
-        <Row gutter={[10]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8}>
+      <Card>
+
+        <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
+          <div className="w-full lg:w-1/3">
             <Input
               placeholder="Tìm kiếm quyền, mô tả..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
-              className="p-8! w-full"
+              className="w-full rounded-lg"
             />
-          </Col>
-          <Col xs={24} sm={12} md={4}>
+          </div>
+          <div className="w-full lg:w-2/3 grid grid-cols-2 md:grid-cols-4 lg:flex lg:flex-nowrap lg:justify-end gap-2">
             <Select
               showSearch
               placeholder="Mô đun"
               value={filters.module}
               onChange={(value) => setFilters({ ...filters, module: value })}
               allowClear
-              style={{ width: '100%' }}
+              className="w-full lg:w-[130px]"
               suffixIcon={<FilterOutlined />}
             >
               {moduleOptions.map((option) => (
@@ -453,14 +447,12 @@ const PermissionsManagement = () => {
                 </Select.Option>
               ))}
             </Select>
-          </Col>
-          <Col xs={24} sm={12} md={4}>
             <Select
               placeholder="Thao tác"
               value={filters.action}
               onChange={(value) => setFilters({ ...filters, action: value })}
               allowClear
-              style={{ width: '100%' }}
+              className="w-full lg:w-[130px]"
               suffixIcon={<FilterOutlined />}
             >
               {actionOptions.map((option) => (
@@ -469,14 +461,12 @@ const PermissionsManagement = () => {
                 </Select.Option>
               ))}
             </Select>
-          </Col>
-          <Col xs={24} sm={12} md={4}>
             <Select
               placeholder="Trạng thái"
               value={filters.status}
               onChange={(value) => setFilters({ ...filters, status: value })}
               allowClear
-              style={{ width: '100%' }}
+              className="w-full lg:w-[130px]"
               suffixIcon={<FilterOutlined />}
             >
               {statusOptions.map((option) => (
@@ -485,107 +475,64 @@ const PermissionsManagement = () => {
                 </Select.Option>
               ))}
             </Select>
-          </Col>
-          <Col xs={24} sm={12} md={4}>
             {hasActiveFilters() && (
               <Button
                 icon={<ClearOutlined />}
                 onClick={clearAllFilters}
-                type="default"
-                className="px-10! h-full! w-full!"
+                className="shadow-none w-full lg:w-auto"
               >
                 Xóa bộ lọc
               </Button>
             )}
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: 16 }}
-        >
-          <Col>
-            {hasActiveFilters() && (
-              <Text type="secondary">
-                <FilterOutlined style={{ marginRight: 4 }} />
-                Đang áp dụng bộ lọc
-              </Text>
-            )}
-          </Col>
-          <Col>
-            <Flex gap={8} wrap="wrap" justify="end">
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                style={{
-                  backgroundColor: 'rgb(11, 162, 36)',
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)',
-                }}
-                onClick={() => {
-                  setDataInit(null);
-                  setOpenModal(true);
-                }}
-              >
-                Tạo quyền mới
-              </Button>
-              <Button
-                type="primary"
-                disabled={selectedRowKeys.length !== 1}
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setDataInit(selectedRows[0]);
-                  setOpenModal(true);
-                }}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  boxShadow:
-                    selectedRowKeys.length === 1
-                      ? '0 2px 8px rgba(79, 70, 229, 0.2)'
-                      : 'none',
-                }}
-              >
-                Sửa ({selectedRowKeys.length})
-              </Button>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:flex lg:justify-end gap-3 mb-4 mt-4">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            className="shadow-none w-full lg:w-auto"
+            onClick={() => {
+              setDataInit(null);
+              setOpenModal(true);
+            }}
+          >
+            Tạo quyền mới
+          </Button>
+          <Button
+            type="primary"
+            disabled={selectedRowKeys.length !== 1}
+            icon={<EditOutlined />}
+            className="shadow-none w-full lg:w-auto"
+            onClick={() => {
+              setDataInit(selectedRows[0]);
+              setOpenModal(true);
+            }}
+          >
+            Sửa ({selectedRowKeys.length})
+          </Button>
 
-              <Button
-                danger
-                onClick={() => setOpenModalDelete(true)}
-                disabled={selectedRowKeys.length === 0}
-                icon={<DeleteOutlined />}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  borderColor:
-                    selectedRowKeys.length > 0 ? '#EF4444' : undefined,
-                  boxShadow:
-                    selectedRowKeys.length > 0
-                      ? '0 2px 8px rgba(239, 68, 68, 0.2)'
-                      : 'none',
-                }}
-              >
-                Xóa ({selectedRowKeys.length})
-              </Button>
+          <Button
+            danger
+            className="shadow-none w-full lg:w-auto"
+            onClick={() => setOpenModalDelete(true)}
+            disabled={selectedRowKeys.length === 0}
+            icon={<DeleteOutlined />}
+          >
+            Xóa ({selectedRowKeys.length})
+          </Button>
 
-              <Button
-                icon={<ReloadOutlined />}
-                onClick={reloadTable}
-                loading={loading}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                }}
-              >
-                Làm mới
-              </Button>
-            </Flex>
-          </Col>
-        </Row>
+          <Button
+            icon={<ReloadOutlined />}
+            className="shadow-none w-full lg:w-auto"
+            onClick={reloadTable}
+            loading={loading}
+          >
+            Làm mới
+          </Button>
+        </div>
 
-        <Table
+          <Table
           loading={loading}
           rowKey={(record) => record._id}
           rowSelection={rowSelection}
@@ -597,6 +544,7 @@ const PermissionsManagement = () => {
             defaultPageSize: 10,
             showSizeChanger: true,
           }}
+          scroll={{ x: 1000 }}
           locale={{
             emptyText: (
               <Empty
@@ -835,7 +783,7 @@ const PermissionsManagement = () => {
           </Row>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 

@@ -333,50 +333,34 @@ const UserRoleManagement = () => {
   };
 
   return (
-    <>
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <TeamOutlined style={{ marginRight: 8 }} />
-              Quản lý vai trò người dùng
-            </Title>
-            <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý phân quyền cho từng người dùng.
-            </p>
-          </Col>
-        </Row>
+    <div className="min-h-screen px-8 py-6 sm:px-12 sm:py-8 lg:px-16 lg:py-10 max-w-7xl mx-auto">
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý vai trò người dùng
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý phân quyền cho từng người dùng.
+        </div>
+      </div>
 
-        <Row
-          gutter={10}
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: 14 }}
-        >
-          <Col xs={24} sm={12} md={6}>
+      <Card>
+
+        <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
+          <div className="w-full lg:w-1/3">
             <Input
               placeholder="Tìm kiếm user, email..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
-              style={{
-                borderRadius: 8,
-                height: '40px',
-                border: `1px solid #CBD5E1`,
-              }}
+              className="w-full rounded-lg"
             />
-          </Col>
-          <Col xs={24} sm={12} md={4}>
+          </div>
+
+          <div className="w-full lg:w-2/3 flex flex-col md:flex-row items-stretch md:items-center justify-start lg:justify-end gap-3">
             <Select
               placeholder="Vai trò"
-              style={{ width: '100%' }}
+              className="w-full md:w-[150px]"
               value={filters.role}
               onChange={(value) => setFilters({ ...filters, role: value })}
               allowClear
@@ -390,36 +374,28 @@ const UserRoleManagement = () => {
                 </Option>
               ))}
             </Select>
-          </Col>
-          <Col xs={24} sm={12} md={14}>
-            <Flex gap={8} wrap="wrap" justify="end">
+            <div className="grid grid-cols-2 md:flex md:justify-end gap-3 w-full md:w-auto">
               <Button
                 type="primary"
                 icon={<UserAddOutlined />}
+                className="shadow-none w-full md:w-auto"
                 onClick={() => setOpenAddUserModal(true)}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                }}
               >
-                Thêm từ người dùng
+                Thêm từ user
               </Button>
               <Button
                 icon={<ReloadOutlined />}
+                className="shadow-none w-full md:w-auto"
                 onClick={reloadTable}
                 loading={loading}
-                style={{
-                  borderRadius: 8,
-                  fontWeight: 500,
-                }}
               >
                 Làm mới
               </Button>
-            </Flex>
-          </Col>
-        </Row>
+            </div>
+          </div>
+        </div>
 
-        <Table
+          <Table
           loading={loading}
           rowKey={(record) => record._id}
           dataSource={filteredUsers}
@@ -437,6 +413,7 @@ const UserRoleManagement = () => {
               />
             ),
           }}
+          scroll={{ x: 1000 }}
         />
       </Card>
 
@@ -804,7 +781,7 @@ const UserRoleManagement = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 
