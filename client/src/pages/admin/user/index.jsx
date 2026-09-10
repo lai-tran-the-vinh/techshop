@@ -515,84 +515,71 @@ const UserManagement = () => {
   }
 
   return (
-    <>
-      <Card
-        style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)' }}
-      >
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '20px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <UserOutlined style={{ marginRight: 8 }} />
-              Quản lý người dùng
-            </Title>
-            <p style={{ margin: '8px 0 0 0', color: '#666' }}>
-              Quản lý thông tin và phân quyền người dùng trong hệ thống.
-            </p>
-          </Col>
-        </Row>
+    <div className="p-16 md:p-24">
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý người dùng
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý thông tin và phân quyền người dùng trong hệ thống.
+        </div>
+      </div>
 
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: 16 }}
-          gutter={[16, 16]}
-        >
-          <Col xs={24} sm={12} md={8}>
+      <Card className="shadow-none!">
+        <div className="flex flex-col lg:flex-row gap-10 items-stretch lg:items-center mb-16">
+          
+          <div className="w-full lg:flex-1">
             <Input
               placeholder="Tìm kiếm tên, email..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
-              style={{ borderRadius: 8, height: 40 }}
+              className="h-40 w-full"
             />
-          </Col>
+          </div>
 
-          <Col xs={24} sm={12} md={6}>
-            <Select
-              placeholder="Trạng thái"
-              style={{ width: '100%' }}
-              value={filters.status}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, status: value }))
-              }
-              allowClear
-            >
-              <Option value="">Tất cả</Option>
-              <Option value="active">Hoạt động</Option>
-              <Option value="inactive">Ngưng hoạt động</Option>
-            </Select>
-          </Col>
-
-          <Col xs={24} sm={12} md={4}></Col>
-
-          <Col xs={24} sm={12} md={6}>
-            <Flex gap={8} wrap="wrap" justify="end">
+          <div className="grid grid-cols-2 lg:flex gap-10 w-full lg:w-auto">
+            <div className="col-span-1 w-full lg:w-[180px]">
+              <Select
+                placeholder="Trạng thái"
+                className="w-full h-40"
+                value={filters.status || undefined}
+                onChange={(value) =>
+                  setFilters((prev) => ({ ...prev, status: value || '' }))
+                }
+                allowClear
+              >
+                <Option value="">Tất cả</Option>
+                <Option value="active">Hoạt động</Option>
+                <Option value="inactive">Ngưng hoạt động</Option>
+              </Select>
+            </div>
+            <div className="col-span-1 w-full lg:w-auto">
               <Button
                 icon={<ReloadOutlined />}
                 onClick={reloadTable}
                 loading={loading}
-                style={{ borderRadius: 8, fontWeight: 500 }}
+                className="w-full h-40! shadow-none!"
               >
                 Làm mới
               </Button>
+            </div>
+            <div className="col-span-2 lg:col-span-1 w-full lg:w-auto">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
                 onClick={handleCreateUser}
-                style={{ borderRadius: 8, fontWeight: 500 }}
+                className="w-full h-40! shadow-none!"
               >
                 Thêm người dùng
               </Button>
-            </Flex>
-          </Col>
-        </Row>
+            </div>
+          </div>
+        </div>
 
         <Table
+          scroll={{ x: 1000 }}
           loading={loading}
           rowKey={(record) => record._id}
           dataSource={filteredUsers}
@@ -1288,7 +1275,7 @@ const UserManagement = () => {
           </Row>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 
