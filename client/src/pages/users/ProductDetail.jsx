@@ -74,7 +74,7 @@ function ProductDetail() {
   const [drawerAddressVisible, setDrawerAddessVisible] = useState(false);
   const [recommnentProducts, setRecommentProducts] = useState([]);
   const [branchStocks, setBranchStocks] = useState({});
-  const { message, setShowLogin } = useAppContext();
+  const { message } = useAppContext();
   const [stats, setStats] = useState({});
   const navigate = useNavigate();
 
@@ -678,7 +678,7 @@ function ProductDetail() {
                       onClick={async () => {
                         if (!user) {
                           message.warning('Vui lòng đăng nhập để đặt hàng!!');
-                          setShowLogin(true);
+                          navigate('/login');
                           return;
                         }
 
@@ -720,7 +720,7 @@ function ProductDetail() {
                           message.warning(
                             'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng',
                           );
-                          setShowLogin(true);
+                          navigate('/login');
                           return;
                         }
 
@@ -871,7 +871,7 @@ function ProductDetail() {
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
-                  setShowLogin(true);
+                  navigate('/login');
                   return;
                 }
                 if (!selectedColor) {
@@ -903,7 +903,7 @@ function ProductDetail() {
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');
-                  setShowLogin(true);
+                  navigate('/login');
                   return;
                 }
                 if (!selectedColor) {

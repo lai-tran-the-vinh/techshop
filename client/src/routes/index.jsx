@@ -28,6 +28,8 @@ import BannerManagement from '@/pages/admin/banner';
 import PermissionsManagement from '@/pages/admin/permission/permission';
 import WarehouseTransferManagement from '@/pages/admin/warehouse/transfer';
 import ForgotPasswordPage from '@/pages/app/forgotPassword';
+import Login from '@/pages/app/Login';
+import Signup from '@/pages/app/Signup';
 import GoogleSuccess from '@/pages/app/googleSucces';
 import WarrantyPolicyManagement from '@/pages/admin/Policy/warrantyPolicy';
 import PromotionManagement from '@/pages/admin/Policy/promotion';
@@ -78,11 +80,20 @@ const router = createBrowserRouter([
         path: 'search/:query',
         element: <SearchProductResult />,
       },
-      {
-        path: 'forgot-password',
-        element: <ForgotPasswordPage />,
-      },
+
     ],
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/signup',
+    element: <Signup />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPasswordPage />,
   },
 
   {

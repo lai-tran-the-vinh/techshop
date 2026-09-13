@@ -30,6 +30,7 @@ import {
   callReplyReview,
 } from '@/services/apis';
 import { useAppContext } from '@/contexts';
+import { useNavigate } from 'react-router-dom';
 import { BsDot } from 'react-icons/bs';
 import { AvatarDefault } from '../app';
 import { StarFilled } from '@ant-design/icons';
@@ -50,7 +51,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
   const [replyLoading, setReplyLoading] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [rating, setRating] = useState(5);
-  const { user, message, setShowLogin } = useAppContext();
+  const { user, message } = useAppContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!product?._id) return;
@@ -90,7 +92,7 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
     }
     if (!user) {
       message.warning('Vui lòng đăng nhập để đánh giá!!');
-      setShowLogin(true);
+      navigate('/login');
       return;
     }
 

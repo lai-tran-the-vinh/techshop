@@ -8,9 +8,6 @@ function AppProvider({ children }) {
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [toastLoading, setToastLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingSuccess, setLoadingSuccess] = useState(false);
@@ -87,10 +84,7 @@ function AppProvider({ children }) {
     query,
     loading,
     message,
-    showLogin,
-    showSignup,
     permissions,
-    showForgotPassword,
     loadingError,
     toastLoading,
     loadingSuccess,
@@ -104,15 +98,12 @@ function AppProvider({ children }) {
     setQuery,
     setLoading,
     setPermissions,
-    setShowLogin,
-    setShowSignup,
     setLoadingError,
     isAuthenticated,
     setToastLoading,
     setLoadingSuccess,
     setCurrentCategory,
     setSideBarSelectedTab,
-    setShowForgotPassword,
   };
 
   return (

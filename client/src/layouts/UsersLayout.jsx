@@ -1,7 +1,6 @@
 import { SearchBox } from '@/components/app';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@contexts';
-import { Login, Signup } from '@pages/app';
 import { ChatBot } from '@components/users';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { UserInformation } from '@components/users';
@@ -25,12 +24,10 @@ import {
 } from 'antd';
 import FooterComponent from './footer';
 import '@styles/users-layout.css';
-import ForgotPasswordModal from '@/pages/app/forgotPassword';
 import Branchs from '@/services/branches';
 function Header() {
   const { Panel } = Collapse;
-  const { setShowLogin, setShowSignup, user, message, setShowForgotPassword, logout } =
-    useAppContext();
+  const { user, message, logout } = useAppContext();
   const navigate = useNavigate();
   const [allBrands, setAllBrands] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -170,12 +167,12 @@ function Header() {
                     {
                       key: 'login',
                       label: 'Đăng nhập',
-                      onClick: () => setShowLogin(true),
+                      onClick: () => navigate('/login'),
                     },
                     {
                       key: 'signup',
                       label: 'Đăng ký',
-                      onClick: () => setShowSignup(true),
+                      onClick: () => navigate('/signup'),
                     },
                   ],
                 }}
@@ -187,7 +184,7 @@ function Header() {
           <Button
             onClick={() => {
               if (!user) {
-                setShowLogin(true);
+                navigate('/login');
                 message.warning('Vui lòng đăng nhập để mở giỏ hàng');
               } else {
                 navigate('/cart');
@@ -274,7 +271,7 @@ function Header() {
                   type="primary"
                   size="large"
                   className="bg-gradient-primary-to-secondary! w-fit! px-16! hover:bg-[#a1161b] lg:text-base! rounded-lg! text-[14px]! font-medium! h-40!"
-                  onClick={() => { setMobileMenuOpen(false); setShowLogin(true); }}
+                  onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
                 >
                   Đăng nhập
                 </Button>
@@ -294,8 +291,7 @@ function Header() {
 }
 
 function UsersLayout() {
-  const { showLogin, showSignup, loading, showForgotPassword } =
-    useAppContext();
+  const { loading } = useAppContext();
 
   return (
     <Layout className="font-inter! relative! flex! flex-col! items-center! overflow-x-hidden!">
@@ -306,9 +302,6 @@ function UsersLayout() {
       ) : (
         <Layout.Content className="w-5/6! max-lg:w-full! bg-[#f3f4f6]! min-h-screen!  mt-[120px]!  lg:mt-[60px]!  flex flex-col items-center rounded-none! sm:rounded-[10px]">
           <Outlet />
-          {showLogin && <Login />}
-          {showSignup && <Signup />}
-          {showForgotPassword && <ForgotPasswordModal />}
           <ChatBot />
         </Layout.Content>
       )}

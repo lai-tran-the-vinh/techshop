@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function useLogin(message) {
   const navigate = useNavigate();
-  const { setShowLogin, notification } = useAppContext();
+  const { notification } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Đăng nhập';
@@ -22,7 +22,7 @@ function useLogin(message) {
         message.success({ content: 'Đăng nhập thành công', key: 'login' });
 
         localStorage.setItem('access_token', res.data.data.access_token);
-        setShowLogin(false);
+        navigate('/');
         window.location.reload();
         if (response.data.data.role === 'admin') {
           message.success('Đăng nhập thành công');

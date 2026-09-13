@@ -5,12 +5,11 @@ import { useAppContext } from '@/contexts';
 import { Button, Result, Spin } from 'antd';
 
 const UnauthenticatedContent = () => {
-  const { setShowLogin, loading } = useAppContext();
+  const { loading } = useAppContext();
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/');
-    setShowLogin(true);
+    navigate('/login');
   };
 
   if (loading) return <Spin />;

@@ -168,7 +168,7 @@ function SearchBox() {
             </button>
           )}
           <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
-            <div className="flex flex-1 min-w-0 items-center pl-4 pr-1.5 py-1.5 lg:pl-6 lg:pr-2 lg:py-2">
+            <div className="flex flex-1 min-w-0 items-center pl-4 pr-3 py-3 lg:pl-6 lg:pr-6 lg:py-3">
               {!isFocused && (
                 <SearchIcon
                   className={`hidden lg:block w-5 h-5 lg:w-[20px] lg:h-[20px] transition-colors duration-300 ml-2 lg:ml-5 mr-4 lg:mr-10 text-gray-400`}
@@ -182,7 +182,7 @@ function SearchBox() {
                 onFocus={handleFocus}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Tìm kiếm sản phẩm...."
-                className={`flex-1 min-w-0 pl-2 lg:pl-2 text-sm md:text-base outline-none placeholder-gray-400 h-[32px] bg-transparent`}
+                className={`flex-1 min-w-0 pl-2 lg:pl-2 text-sm md:text-base outline-none placeholder-gray-400 h-[32px] lg:h-[42px] bg-transparent`}
               />
               {query && (
                 <button
@@ -194,9 +194,9 @@ function SearchBox() {
               )}
               <button
                 onClick={handleSearch}
-                className="flex items-center justify-center cursor-pointer bg-[#fee2e2] text-white rounded-full w-[32px] h-[32px] lg:w-[42px] lg:h-[42px] shrink-0"
+                className="flex items-center justify-center cursor-pointer bg-[#fee2e2] text-white rounded-full w-[32px] h-[32px] lg:w-[36px] lg:h-[36px] shrink-0"
               >
-                <SearchIcon className="w-[16px] h-[16px] lg:w-[20px] lg:h-[20px] text-primary" />
+                <SearchIcon className="w-[16px] h-[16px] lg:w-[18px] lg:h-[18px] text-primary" />
               </button>
             </div>
           </div>

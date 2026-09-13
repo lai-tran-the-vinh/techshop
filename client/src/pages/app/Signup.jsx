@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Modal,
   Form,
   Input,
   Button,
@@ -17,7 +16,7 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   GoogleOutlined,
-  CloseOutlined,
+  ArrowLeftOutlined,
   UserOutlined,
   LockOutlined,
   MailOutlined,
@@ -52,7 +51,7 @@ function Signup() {
   const [selectedPlace, setSelectedPlace] = useState('Tỉnh/Thành phố');
 
   const places = ['Tỉnh/Thành phố', 'Quận/Huyện', 'Xã/Phường'];
-  const { setShowLogin, setShowSignup, message } = useAppContext();
+  const { message } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Đăng ký';
@@ -168,19 +167,31 @@ function Signup() {
     setShowAddressDropdown(false);
   };
   return (
-    <Modal
-      open={true}
-      onCancel={() => setShowSignup(false)}
-      footer={null}
-      width={900}
-      closeIcon={
-        <CloseOutlined
-          style={{
-            fontSize: 20,
-          }}
-        />
-      }
-    >
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Left side - Marketing/Branding */}
+      <div className="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center text-white p-12 relative overflow-hidden">
+        <div className="absolute top-8 left-8 cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={() => navigate('/')}>
+          <ArrowLeftOutlined className="text-xl" /> <span className="text-lg font-medium">Trở về</span>
+        </div>
+        <div className="max-w-md z-10">
+          <Title level={1} className="text-white! mb-6!">TechShop</Title>
+          <Title level={2} className="text-white! mb-6!">Đăng ký tài khoản mới</Title>
+          <ul className="space-y-4 text-lg">
+            <li className="flex items-center gap-3">✨ Trải nghiệm mua sắm tuyệt vời</li>
+            <li className="flex items-center gap-3">🚀 Nhận ngay các ưu đãi đặc quyền</li>
+            <li className="flex items-center gap-3">🛡️ Quản lý đơn hàng dễ dàng</li>
+          </ul>
+        </div>
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+        <div className="absolute top-32 -left-32 w-72 h-72 bg-white opacity-10 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Right side - Form */}
+      <div className="flex-1 flex flex-col py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white relative max-h-screen overflow-y-auto">
+        <div className="absolute top-8 left-8 lg:hidden cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={() => navigate('/')}>
+          <ArrowLeftOutlined className="text-xl text-gray-500" /> <span className="text-lg font-medium text-gray-500">Trở về</span>
+        </div>
+        <div className="mx-auto w-full max-w-2xl my-auto mt-12 lg:mt-auto">
       <Steps
         className="py-24! px-40!"
         current={currentStep}
@@ -191,15 +202,15 @@ function Signup() {
           <Title level={2} className="text-primary! text-center!">
             Tạo tài khoản mới
           </Title>
-          <div className="py-24 px-40 max-h-[70vh] overflow-y-auto">
+          <div className="py-24 px-40">
             <Form
+              form={form}
               layout="vertical"
               onFinish={handleSignup}
               onValuesChange={(_, values) => {
                 setUser(values);
               }}
               autoComplete="off"
-              size="large"
             >
               <Row gutter={16}>
                 <Col span={12}>
@@ -225,9 +236,8 @@ function Signup() {
                     ]}
                   >
                     <Input
-                      prefix={<UserOutlined style={{ color: '#8c8c8c' }} />}
                       placeholder="Nhập họ và tên"
-                      style={{ borderRadius: 8, padding: '10px 12px' }}
+                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -251,9 +261,8 @@ function Signup() {
                     ]}
                   >
                     <Input
-                      prefix={<MailOutlined style={{ color: '#8c8c8c' }} />}
                       placeholder="Nhập email"
-                      style={{ borderRadius: 8, padding: '10px 12px' }}
+                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -274,7 +283,6 @@ function Signup() {
                 ]}
               >
                 <Input.Password
-                  prefix={<LockOutlined style={{ color: '#8c8c8c' }} />}
                   placeholder="Nhập mật khẩu"
                   iconRender={(visible) =>
                     visible ? (
@@ -310,9 +318,8 @@ function Signup() {
                     ]}
                   >
                     <Input
-                      prefix={<PhoneOutlined style={{ color: '#8c8c8c' }} />}
                       placeholder="Nhập SĐT"
-                      style={{ borderRadius: 8, padding: '10px 12px' }}
+                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -333,7 +340,8 @@ function Signup() {
                   >
                     <Select
                       placeholder="Chọn giới tính"
-                      style={{ borderRadius: 8 }}
+                      className="[&_.ant-select-selector]:rounded-lg! [&_.ant-select-selection-item]:text-[14px]! [&_.ant-select-selection-placeholder]:text-[14px]!"
+                      style={{ borderRadius: 8, height: 42 }}
                     >
                       <Option value="male">Nam</Option>
                       <Option value="female">Nữ</Option>
@@ -366,7 +374,8 @@ function Signup() {
                   >
                     <InputNumber
                       placeholder="Nhập tuổi"
-                      style={{ width: '100%', borderRadius: 8 }}
+                      className="w-full! rounded-lg! [&_input]:text-[14px]! [&_input]:placeholder:text-[14px]!"
+                      style={{ height: 42, padding: '4px 0px' }}
                     />
                   </Form.Item>
                 </Col>
@@ -391,13 +400,7 @@ function Signup() {
                         onClick={() =>
                           setShowAddressDropdown(!showAddressDropdown)
                         }
-                        prefix={<HomeOutlined style={{ color: '#8c8c8c' }} />}
-                        style={{
-                          borderRadius: 8,
-                          padding: '10px 12px',
-                          cursor: 'pointer',
-                          backgroundColor: '#fff',
-                        }}
+                        className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all! cursor-pointer! bg-white!"
                       />
 
                       {showAddressDropdown && (
@@ -538,7 +541,7 @@ function Signup() {
                   loading={loading}
                   block
                   style={{
-                    height: 48,
+                    height: 44,
                     borderRadius: 8,
                     fontSize: 16,
                     fontWeight: 600,
@@ -558,16 +561,18 @@ function Signup() {
               </Divider>
 
               <Button
-                icon={<GoogleOutlined style={{ fontSize: 18 }} />}
+                icon={<img src="/google-icon.svg" alt="Google" className="w-[18px] h-[18px]" />}
                 onClick={handleGoogleSignup}
                 block
                 style={{
-                  height: 48,
+                  height: 44,
                   borderRadius: 8,
                   fontSize: 16,
                   fontWeight: 600,
                   border: '1px solid #e0e0e0',
-                  color: '#e53935',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   backgroundColor: '#fff',
                 }}
               >
@@ -584,7 +589,7 @@ function Signup() {
           <div className="relative mb-20!">
             <Input
               value={otp}
-              className="py-8! px-12!"
+              className="py-[10px]! px-[14px]! rounded-lg! text-[14px]! placeholder:text-[14px]! border-[#e0e0e0]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               placeholder="Nhập mã OTP đã gửi đến email của bạn"
               onChange={(event) => {
                 setOtp(event.target.value);
@@ -626,8 +631,7 @@ function Signup() {
                 if (response.status === 201) {
                   message.destroy();
                   message.success('Đăng ký thành công!');
-                  setShowSignup(false);
-                  setShowLogin(true);
+                  navigate('/login');
                 }
               } catch (error) {
                 message.error('Xác nhận OTP thất bại. Vui lòng thử lại!');
@@ -644,17 +648,16 @@ function Signup() {
         <Text style={{ color: '#8c8c8c', fontSize: 14 }}>
           Đã có tài khoản?{' '}
           <Link
-            onClick={() => {
-              setShowSignup(false);
-              setShowLogin(true);
-            }}
+            onClick={() => navigate('/login')}
             className="font-semibold! text-primary!"
           >
             Đăng nhập ngay
           </Link>
         </Text>
       </div>
-    </Modal>
+        </div>
+      </div>
+    </div>
   );
 }
 

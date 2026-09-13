@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal,
   Form,
   Input,
   Button,
@@ -15,6 +14,7 @@ import {
   Col,
   Progress,
 } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import {
   EyeTwoTone,
   LockOutlined,
@@ -45,8 +45,8 @@ const ForgotPasswordModal = () => {
   const [timeLeft, setTimeLeft] = useState(300);
   const [form] = Form.useForm();
 
-  const { showForgotPassword, setShowForgotPassword, message } =
-    useAppContext();
+  const { message } = useAppContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let interval = null;
@@ -109,7 +109,7 @@ const ForgotPasswordModal = () => {
     setConfirmPassword('');
     setTimeLeft(0);
     form.resetFields();
-    setShowForgotPassword(false);
+    navigate('/login');
   };
 
   const formatTime = (seconds) => {
@@ -153,22 +153,31 @@ const ForgotPasswordModal = () => {
   ];
 
   return (
-    <Modal
-      open={showForgotPassword}
-      onCancel={handleClose}
-      footer={null}
-      width={700}
-      centered
-      closeIcon={
-        <CloseOutlined
-          style={{
-            fontSize: 20,
-            transition: 'all 0.3s ease',
-          }}
-        />
-      }
-    >
-      <div style={{ padding: '32px 24px' }}>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Left side - Marketing/Branding */}
+      <div className="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center text-white p-12 relative overflow-hidden">
+        <div className="absolute top-8 left-8 cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={handleClose}>
+          <ArrowLeftOutlined className="text-xl" /> <span className="text-lg font-medium">Trở về</span>
+        </div>
+        <div className="max-w-md z-10">
+          <Title level={1} className="text-white! mb-6!">TechShop</Title>
+          <Title level={2} className="text-white! mb-6!">Khôi phục mật khẩu</Title>
+          <ul className="space-y-4 text-lg">
+            <li className="flex items-center gap-3">✨ Lấy lại quyền truy cập nhanh chóng</li>
+            <li className="flex items-center gap-3">🚀 Bảo mật thông tin tuyệt đối</li>
+            <li className="flex items-center gap-3">🛡️ Hỗ trợ 24/7</li>
+          </ul>
+        </div>
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+        <div className="absolute top-32 -left-32 w-72 h-72 bg-white opacity-10 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Right side - Form */}
+      <div className="flex-1 flex flex-col py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white relative max-h-screen overflow-y-auto">
+        <div className="absolute top-8 left-8 lg:hidden cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={handleClose}>
+          <ArrowLeftOutlined className="text-xl text-gray-500" /> <span className="text-lg font-medium text-gray-500">Trở về</span>
+        </div>
+        <div className="mx-auto w-full max-w-xl mt-12 lg:mt-auto my-auto">
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Title
             level={2}
@@ -184,7 +193,7 @@ const ForgotPasswordModal = () => {
           ))}
         </Steps>
         {currentStep === 0 && (
-          <Form form={form} layout="vertical" size="large">
+          <Form form={form} layout="vertical">
             <Form.Item
               label={
                 <span
@@ -200,16 +209,10 @@ const ForgotPasswordModal = () => {
               ]}
             >
               <Input
-                prefix={<MailOutlined />}
                 placeholder="Nhập email của bạn"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  borderRadius: 8,
-                  padding: '12px 16px',
-                  border: '1px solid #e0e0e0',
-                  fontSize: 15,
-                }}
+                className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               />
             </Form.Item>
 
@@ -267,7 +270,7 @@ const ForgotPasswordModal = () => {
               </div>
             </div>
 
-            <Form layout="vertical" size="large">
+            <Form layout="vertical">
               <Form.Item
                 label={
                   <span
@@ -279,19 +282,11 @@ const ForgotPasswordModal = () => {
                 required
               >
                 <Input
-                  prefix={<SafetyOutlined />}
                   placeholder="Nhập mã 6 chữ số"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                   maxLength={6}
-                  style={{
-                    borderRadius: 8,
-                    padding: '12px 16px',
-                    border: '1px solid #e0e0e0',
-                    fontSize: 18,
-                    textAlign: 'center',
-                    letterSpacing: '4px',
-                  }}
+                  className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[18px]! text-center! tracking-[4px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                 />
               </Form.Item>
 
@@ -346,7 +341,7 @@ const ForgotPasswordModal = () => {
         )}
 
         {currentStep === 2 && (
-          <Form layout="vertical" size="large">
+          <Form layout="vertical">
             <Form.Item
               label={
                 <span
@@ -358,19 +353,13 @@ const ForgotPasswordModal = () => {
               required
             >
               <Input.Password
-                prefix={<LockOutlined />}
                 placeholder="Nhập mật khẩu mới"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
-                style={{
-                  borderRadius: 8,
-                  padding: '12px 16px',
-                  border: '1px solid #e0e0e0',
-                  fontSize: 15,
-                }}
+                className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               />
               {newPassword && (
                 <div style={{ marginTop: 8 }}>
@@ -400,19 +389,13 @@ const ForgotPasswordModal = () => {
               required
             >
               <Input.Password
-                prefix={<LockOutlined />}
                 placeholder="Nhập lại mật khẩu mới"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
-                style={{
-                  borderRadius: 8,
-                  padding: '12px 16px',
-                  border: '1px solid #e0e0e0',
-                  fontSize: 15,
-                }}
+                className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               />
               {confirmPassword && newPassword !== confirmPassword && (
                 <Text style={{ color: '#ff4d4f', fontSize: 12 }}>
@@ -515,7 +498,8 @@ const ForgotPasswordModal = () => {
           </div>
         )}
       </div>
-    </Modal>
+    </div>
+  </div>
   );
 };
 
