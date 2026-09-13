@@ -169,21 +169,25 @@ function Signup() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Left side - Marketing/Branding */}
-      <div className="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center text-white p-12 relative overflow-hidden">
-        <div className="absolute top-8 left-8 cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={() => navigate('/')}>
+      <div className="hidden lg:flex lg:w-[45%] bg-white border-r border-gray-200 flex-col justify-center items-start text-gray-800 p-12 xl:p-24 relative overflow-hidden">
+        <div className="absolute top-8 left-8 cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1 text-gray-600 hover:text-gray-900 z-20" onClick={() => navigate('/')}>
           <ArrowLeftOutlined className="text-xl" /> <span className="text-lg font-medium">Trở về</span>
         </div>
-        <div className="max-w-md z-10">
-          <Title level={1} className="text-white! mb-6!">TechShop</Title>
-          <Title level={2} className="text-white! mb-6!">Đăng ký tài khoản mới</Title>
-          <ul className="space-y-4 text-lg">
-            <li className="flex items-center gap-3">✨ Trải nghiệm mua sắm tuyệt vời</li>
-            <li className="flex items-center gap-3">🚀 Nhận ngay các ưu đãi đặc quyền</li>
-            <li className="flex items-center gap-3">🛡️ Quản lý đơn hàng dễ dàng</li>
-          </ul>
+        <div className="z-10 w-full max-w-3xl mx-auto flex flex-row items-center justify-between gap-8">
+          <h1 className="text-[40px] xl:text-[60px] font-black text-black leading-[1.05] tracking-tighter [-webkit-text-stroke:1px_black] shrink-0">
+            Trải<br />
+            nghiệm<br />
+            mua sắm<br />
+            <span className="text-[#e53935] [-webkit-text-stroke:1px_#e53935]">tuyệt</span><br />
+            <span className="text-[#e53935] [-webkit-text-stroke:1px_#e53935]">vời.</span>
+          </h1>
+          <div className="flex-1 flex justify-center">
+            {/* Thay src bằng file SVG của bạn */}
+            <img src="/illustration.svg" alt="Illustration" className="w-full max-w-[350px] object-contain" />
+          </div>
         </div>
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
-        <div className="absolute top-32 -left-32 w-72 h-72 bg-white opacity-10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute top-32 -left-32 w-72 h-72 bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Right side - Form */}
