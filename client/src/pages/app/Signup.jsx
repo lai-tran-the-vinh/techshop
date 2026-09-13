@@ -237,7 +237,7 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập họ và tên"
-                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -262,7 +262,7 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập email"
-                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -319,7 +319,7 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập SĐT"
-                      className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
@@ -341,7 +341,7 @@ function Signup() {
                     <Select
                       placeholder="Chọn giới tính"
                       className="[&_.ant-select-selector]:rounded-lg! [&_.ant-select-selection-item]:text-[14px]! [&_.ant-select-selection-placeholder]:text-[14px]!"
-                      style={{ borderRadius: 8, height: 42 }}
+                      style={{ borderRadius: 8, height: 44 }}
                     >
                       <Option value="male">Nam</Option>
                       <Option value="female">Nữ</Option>
@@ -375,7 +375,7 @@ function Signup() {
                     <InputNumber
                       placeholder="Nhập tuổi"
                       className="w-full! rounded-lg! [&_input]:text-[14px]! [&_input]:placeholder:text-[14px]!"
-                      style={{ height: 42, padding: '4px 0px' }}
+                      style={{ height: 44, padding: '4px 0px' }}
                     />
                   </Form.Item>
                 </Col>
@@ -400,7 +400,7 @@ function Signup() {
                         onClick={() =>
                           setShowAddressDropdown(!showAddressDropdown)
                         }
-                        className="rounded-lg! py-[10px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all! cursor-pointer! bg-white!"
+                        className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all! cursor-pointer! bg-white!"
                       />
 
                       {showAddressDropdown && (
@@ -589,7 +589,7 @@ function Signup() {
           <div className="relative mb-20!">
             <Input
               value={otp}
-              className="py-[10px]! px-[14px]! rounded-lg! text-[14px]! placeholder:text-[14px]! border-[#e0e0e0]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+              className="h-[44px]! px-[14px]! rounded-lg! text-[14px]! placeholder:text-[14px]! border-[#e0e0e0]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               placeholder="Nhập mã OTP đã gửi đến email của bạn"
               onChange={(event) => {
                 setOtp(event.target.value);
