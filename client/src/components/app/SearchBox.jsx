@@ -164,11 +164,11 @@ function SearchBox() {
                 inputRef.current?.blur();
               }}
             >
-              <ArrowLeft className="w-[28px] h-[28px]" />
+              <ArrowLeft className="w-24 h-24" />
             </button>
           )}
-          <div className={`relative bg-white rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
-            <div className="flex flex-1 min-w-0 items-center pl-4 pr-3 py-3 lg:pl-6 lg:pr-6 lg:py-3">
+          <div className={`relative bg-white my-2 rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
+            <div className="flex flex-1 min-w-0 items-center pl-4 pr-3 py-3 lg:pl-6 lg:pr-6 lg:py-2">
               {!isFocused && (
                 <SearchIcon
                   className={`hidden lg:block w-5 h-5 lg:w-[20px] lg:h-[20px] transition-colors duration-300 ml-2 lg:ml-5 mr-4 lg:mr-10 text-gray-400`}

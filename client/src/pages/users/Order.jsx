@@ -313,10 +313,10 @@ function Order() {
   }
 
   return (
-    <Flex gap={12} className="w-full! py-20!">
-      <Flex vertical gap={12} className="print:hidden! w-[55%]!">
+    <Flex gap={12} className="w-full! py-20! flex-col! lg:flex-row!">
+      <Flex vertical gap={12} className="print:hidden! w-full! lg:w-[60%]!">
         {/* Card 1: Sản phẩm */}
-        <Card className="w-full! rounded-md border-none!">
+        <Card className="w-full! rounded-none! lg:rounded-md! border-none!">
           <Typography.Title level={5} className="m-0! mb-8!">
             {`Sản phẩm trong đơn (${cartItems.length})`}
           </Typography.Title>
@@ -331,49 +331,54 @@ function Order() {
 
             return (
               <Card key={index} className="rounded-xl! border-none!">
-                <div className="flex gap-12 items-center">
-                  <Image
-                    width={70}
-                    height={70}
-                    preview={false}
-                    src={imageUrl}
-                    className=" ! flex! items-center! justify-center!"
-                  />
-                  <div className="flex-1">
-                    <Typography.Text className="font-bold  text-[12px] flex! gap-8 items-center! text-base leading-5">
-                      {item.variant.name}
-                    </Typography.Text>
-                    <Flex
-                      align="start"
-                      className="mt-4 flex! flex-col!"
-                      gap={4}
-                    >
-                      <Typography.Text type="secondary">
-                        Số lượng: {item?.quantity}
-                      </Typography.Text>
-                      <Typography.Text type="secondary">
-                        {`Màu sắc: ${item.color}`}
-                      </Typography.Text>
-                      {item.variant.memory && (
-                        <Typography.Text type="secondary">
-                          {`Biến thể: ${item.variant.memory.ram}, ${item.variant.memory.storage}`}
-                        </Typography.Text>
-                      )}
-                      {item.warranty && (
-                        <Typography.Text
-                          type="secondary"
-                          className="text-orange-500!"
-                        >
-                          {`Bảo hành: ${item.warranty.name} (+${formatCurrency(
-                            item.warrantyPrice || 0,
-                          )}đ)`}
-                        </Typography.Text>
-                      )}
-                    </Flex>
+                <div className="flex gap-12 items-start">
+                  <div className="shrink-0">
+                    <Image
+                      width={70}
+                      height={70}
+                      preview={false}
+                      src={imageUrl}
+                      className=" ! flex! items-center! justify-center!"
+                    />
                   </div>
-                  <div className="text-right">
-                    <div className="text-red-600 font-semibold text-lg">
-                      {`${formatCurrency(item.price * item?.quantity)}đ`}
+                  <div className="flex-1 min-w-0 flex flex-col! md:flex-row! gap-4 md:gap-12 md:items-center!">
+                    <div className="flex-1 min-w-0">
+                      <Typography.Text className="font-bold text-[14px] leading-snug break-words line-clamp-2">
+                        {item.variant.name}
+                      </Typography.Text>
+                      <Flex
+                        align="start"
+                        className="mt-4"
+                        gap={4}
+                        vertical
+                      >
+                        <Typography.Text type="secondary" className="text-[12px]">
+                          Số lượng: {item?.quantity}
+                        </Typography.Text>
+                        <Typography.Text type="secondary" className="text-[12px]">
+                          {`Màu sắc: ${item.color}`}
+                        </Typography.Text>
+                        {item.variant.memory && (
+                          <Typography.Text type="secondary" className="text-[12px]">
+                            {`Biến thể: ${item.variant.memory.ram}, ${item.variant.memory.storage}`}
+                          </Typography.Text>
+                        )}
+                        {item.warranty && (
+                          <Typography.Text
+                            type="secondary"
+                            className="text-orange-500! text-[12px]"
+                          >
+                            {`Bảo hành: ${item.warranty.name} (+${formatCurrency(
+                              item.warrantyPrice || 0,
+                            )}đ)`}
+                          </Typography.Text>
+                        )}
+                      </Flex>
+                    </div>
+                    <div className="text-left md:text-right shrink-0 mt-4 md:mt-0">
+                      <div className="text-red-600 font-semibold text-[15px]">
+                        {`${formatCurrency(item.price * item?.quantity)}đ`}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -383,7 +388,7 @@ function Order() {
         </Card>
 
         {/* Card 2: Thông tin người nhận */}
-        <Card className="w-full! rounded-md border-none!">
+        <Card className="w-full! rounded-none! lg:rounded-md! border-none!">
           <Typography.Title level={5} className="m-0! mb-8!">
             Thông tin người nhận hàng
           </Typography.Title>
@@ -446,8 +451,8 @@ function Order() {
               />
             </Flex>
             <Flex gap={4} vertical justify="center" className="w-full! mt-4!">
-              <Flex gap={8}>
-                <Flex vertical className="w-1/3!">
+              <Flex gap={8} className="flex-col! md:flex-row!">
+                <Flex vertical className="w-full! md:w-1/3!">
                   <Typography.Text strong className="mb-4">
                     Tỉnh/Thành phố
                   </Typography.Text>
@@ -470,7 +475,7 @@ function Order() {
                     }}
                   />
                 </Flex>
-                <Flex vertical className="w-1/3!">
+                <Flex vertical className="w-full! md:w-1/3!">
                   <Typography.Text strong className="mb-4">
                     Quận/Huyện
                   </Typography.Text>
@@ -493,7 +498,7 @@ function Order() {
                     }}
                   />
                 </Flex>
-                <Flex vertical className="flex-1!">
+                <Flex vertical className="w-full! md:flex-1!">
                   <Typography.Text strong className="mb-4">
                     Xã/Phường
                   </Typography.Text>
@@ -538,7 +543,7 @@ function Order() {
         </Card>
 
         {/* Card 3: Hình thức nhận hàng & Thanh toán */}
-        <Card className="w-full! rounded-md border-none!">
+        <Card className="w-full! rounded-none! lg:rounded-md! border-none!">
           <Typography.Title level={5} className="m-0! mb-8!">
             Thông tin nhận hàng
           </Typography.Title>
@@ -680,8 +685,8 @@ function Order() {
       </Flex>
 
       {/* Cột phải: Thông tin đơn hàng (Không đổi) */}
-      <Flex vertical className="flex-1! items-start">
-        <Card className="print:p-0! w-full! border-none!">
+      <Flex vertical className="w-full! lg:flex-1! items-start">
+        <Card className="print:p-0! w-full! border-none! rounded-none! lg:rounded-md!">
           <Typography.Title level={5} className="m-0! mb-16!">
             Thông tin đơn hàng
           </Typography.Title>
