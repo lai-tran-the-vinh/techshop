@@ -27,6 +27,7 @@ import Users from '@services/users';
 import Address from '@services/address';
 import { useAppContext } from '@contexts';
 import { useNavigate } from 'react-router-dom';
+import { BsArrowLeft } from 'react-icons/bs';
 
 const { Title, Link, Text } = Typography;
 const { Option } = Select;
@@ -169,11 +170,11 @@ function Signup() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Left side - Marketing/Branding */}
-      <div className="hidden lg:flex lg:w-[45%] bg-white border-r border-gray-200 flex-col justify-center items-start text-gray-800 p-12 xl:p-24 relative overflow-hidden">
-        <div className="absolute top-8 left-8 cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1 text-gray-600 hover:text-gray-900 z-20" onClick={() => navigate('/')}>
-          <ArrowLeftOutlined className="text-xl" /> <span className="text-lg font-medium">Trở về</span>
+      <div className="hidden lg:flex lg:w-[45%] bg-white border-r border-gray-200 flex-col justify-center items-start text-gray-800 p-48 xl:p-96 relative overflow-hidden">
+        <div className="absolute top-32 left-32 cursor-pointer flex items-center gap-8 transition-transform hover:-translate-x-4 text-gray-600 hover:text-gray-900 z-20" onClick={() => navigate('/')}>
+          <BsArrowLeft className="text-2xl" /> <span className="text-lg font-medium">Trở về</span>
         </div>
-        <div className="z-10 w-full max-w-3xl mx-auto flex flex-row items-center justify-between gap-8">
+        <div className="z-10 w-full max-w-3xl mx-auto flex flex-row items-center justify-between gap-32">
           <h1 className="text-[40px] xl:text-[60px] font-black text-black leading-[1.05] tracking-tighter [-webkit-text-stroke:1px_black] shrink-0">
             Trải<br />
             nghiệm<br />
@@ -183,30 +184,40 @@ function Signup() {
           </h1>
           <div className="flex-1 flex justify-center">
             {/* Thay src bằng file SVG của bạn */}
-            <img src="/illustration.svg" alt="Illustration" className="w-full max-w-[350px] object-contain" />
+            <img src="/sign-up.svg" alt="Illustration" className="w-full max-w-[350px] object-contain" />
           </div>
         </div>
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
-        <div className="absolute top-32 -left-32 w-72 h-72 bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-[128px] -right-[128px] w-[384px] h-[384px] bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute top-[128px] -left-[128px] w-[288px] h-[288px] bg-[#e53935] opacity-5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex flex-col py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white relative max-h-screen overflow-y-auto">
-        <div className="absolute top-8 left-8 lg:hidden cursor-pointer flex items-center gap-2 transition-transform hover:-translate-x-1" onClick={() => navigate('/')}>
-          <ArrowLeftOutlined className="text-xl text-gray-500" /> <span className="text-lg font-medium text-gray-500">Trở về</span>
+      <div className="flex-1 flex flex-col bg-white relative max-h-screen overflow-y-auto">
+        {/* Mobile Header */}
+        <div className="lg:hidden shrink-0 sticky top-0 left-0 w-full h-46 bg-gradient-primary-to-secondary flex items-center justify-between px-16 sm:px-24 shadow-md z-50">
+          <div className="cursor-pointer flex items-center text-white" onClick={() => navigate('/')}>
+            <BsArrowLeft className="text-2xl" />
+          </div>
+          <div className="text-white text-2xl font-bold">
+            TechShop
+          </div>
+          <div className="w-6"></div> {/* Spacer for centering */}
         </div>
-        <div className="mx-auto w-full max-w-2xl my-auto mt-12 lg:mt-auto">
+
+        {/* Content Wrapper */}
+        <div className="flex-1 flex flex-col pt-16 lg:pt-48 pb-48 px-24 sm:px-48 md:px-64 lg:px-96 xl:px-120">
+          <div className="mx-auto w-full max-w-2xl my-auto mt-8 lg:mt-auto">
       <Steps
-        className="py-24! px-40!"
+        className="pt-16 pb-32 md:py-48"
         current={currentStep}
         items={[{ title: 'Đăng ký' }, { title: 'Nhập OTP' }]}
       />
       {currentStep === 0 ? (
         <>
-          <Title level={2} className="text-primary! text-center!">
+          <Title level={2} className="text-primary! text-center! mt-16 hidden! lg:block! mb-32">
             Tạo tài khoản mới
           </Title>
-          <div className="py-24 px-40">
+          <div className="pb-48">
             <Form
               form={form}
               layout="vertical"
@@ -217,7 +228,7 @@ function Signup() {
               autoComplete="off"
             >
               <Row gutter={16}>
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label={
                       <span
@@ -245,7 +256,7 @@ function Signup() {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label={
                       <span
@@ -300,7 +311,7 @@ function Signup() {
               </Form.Item>
 
               <Row gutter={16}>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                   <Form.Item
                     label={
                       <span
@@ -327,7 +338,7 @@ function Signup() {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                   <Form.Item
                     label={
                       <span
@@ -353,7 +364,7 @@ function Signup() {
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                   <Form.Item
                     label={
                       <span
@@ -648,7 +659,7 @@ function Signup() {
           </Button>
         </>
       )}
-      <div className="text-center pt-16 pb-20 px-40 border-t border-t-[#f0f0f0]">
+      <div className="text-center pt-8 pb-12 px-4 border-t border-t-[#f0f0f0]">
         <Text style={{ color: '#8c8c8c', fontSize: 14 }}>
           Đã có tài khoản?{' '}
           <Link
@@ -659,6 +670,7 @@ function Signup() {
           </Link>
         </Text>
       </div>
+        </div>
         </div>
       </div>
     </div>
