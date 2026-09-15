@@ -92,9 +92,9 @@ const SpeechToTextButton = ({ onTranscript, onListeningChange, className }) => {
       danger={isListening} // Tự động chuyển sang màu đỏ khi isListening = true
       icon={
         isListening ? (
-          <LoadingOutlined size={20} />
+          <LoadingOutlined style={{ fontSize: '20px' }} />
         ) : (
-          <AudioOutlined size={20} />
+          <AudioOutlined style={{ fontSize: '20px' }} />
         )
       }
       onClick={handleClick}

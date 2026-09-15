@@ -783,13 +783,11 @@ function ProductDetail() {
         <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
-              <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 rounded-none sm:rounded-xl sm:border sm:border-gray-200">
-                <PreviewListProducts
-                  viewAll={false}
-                  title="Sản phẩm liên quan"
-                  products={recommnentProducts}
-                />
-              </div>
+              <PreviewListProducts
+                viewAll={false}
+                title="Sản phẩm liên quan"
+                products={recommnentProducts}
+              />
             )}
           </Col>
         </Row>

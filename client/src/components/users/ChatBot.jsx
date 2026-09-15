@@ -1,18 +1,15 @@
-import rehypeRaw from 'rehype-raw';
-import ReactMarkdown from 'react-markdown';
 import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
 import {
   Send,
-
   X,
   RefreshCw,
   Loader,
   Maximize2,
   Minimize2,
-  Bot,
 } from 'lucide-react';
 import axiosInstance, { callFreshToken } from '@/services/apis';
+import { Typography } from 'antd';
 import { jwtDecode } from 'jwt-decode';
 import { useAppContext } from '@/contexts';
 
@@ -238,25 +235,22 @@ const Chatbot = () => {
     <>
       {visible && (
         <div
-          className={`fixed z-[1000] bg-white shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 ${
+          className={`fixed z-[1000] bg-white flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom-5 duration-300 ${
             isFullScreen
               ? 'top-[80px] left-0 right-0 bottom-0 w-full rounded-none border-t border-gray-300'
-              : 'bottom-20 right-6 w-[550px] h-[650px] rounded-2xl'
+              : 'bottom-20 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[550px] h-[75vh] md:h-[650px] rounded-2xl'
           }`}
         >
           <div
-            className={`bg-gradient-to-r from-pink-200 to-pink-100 px-6 py-6 ${
+            className={`bg-gradient-primary-to-secondary px-6 py-6 ${
               isFullScreen ? '' : 'rounded-t-2xl'
             }`}
           >
             <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center  gap-3">
-                <div className='w-[45px] h-[45px] bg-transparent text-white'>
-                  <img src="/chatbot_2.png" alt="Chatbot" className="w-full h-full object-contain rounded-full" />
-                </div>
-                <h2 className="text-[24px] font-bold text-gray-800 leading-none flex items-center">
-                  Trợ lý AI
-                </h2>
+              <div className="flex items-center gap-3">
+                <Typography.Title level={3} className="text-white! m-0!">
+                  TechShop AI
+                </Typography.Title>
               </div>
               <div className="flex gap-2">
                 <button
@@ -265,9 +259,9 @@ const Chatbot = () => {
                   title={isFullScreen ? 'Thu nhỏ' : 'Phóng to'}
                 >
                   {isFullScreen ? (
-                    <Minimize2 size={19} className="text-gray-600" />
+                    <Minimize2 size={19} className="text-white" />
                   ) : (
-                    <Maximize2 size={19} className="text-gray-600" />
+                    <Maximize2 size={19} className="text-white" />
                   )}
                 </button>
                 <button
@@ -275,14 +269,14 @@ const Chatbot = () => {
                   className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
                   title="Làm mới đoạn chat"
                 >
-                  <RefreshCw size={19} className="text-gray-600" />
+                  <RefreshCw size={19} className="text-white" />
                 </button>
                 <button
                   onClick={toggleChat}
                   className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition"
                   title="Đóng"
                 >
-                  <X size={20} className="text-gray-600" />
+                  <X size={20} className="text-white" />
                 </button>
               </div>
             </div>
@@ -360,12 +354,12 @@ const Chatbot = () => {
             ))}
           </div>
 
-          <div className="p-4 border-t border-gray-200 bg-white rounded-b-xl h-[50px]">
-            <div className="flex gap-2 items-center bg-gray-100 rounded-xl px-5 py-2">
+          <div className="p-2 bg-white border-t border-gray-200 rounded-b-2xl shrink-0">
+            <div className="flex items-center bg-gray-100 border border-gray-200 rounded-xl pl-2 pr-1 py-1 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#cb1c22]/20 focus-within:border-[#cb1c22]/50 transition-all shadow-inner">
               <SpeechToTextButton
                 onTranscript={handleTranscript}
                 onListeningChange={handleListeningChange}
-                className="flex items-center justify-center rounded-full bg-transparent border-none shadow-none text-gray-500 hover:text-blue-500 transition"
+                className="flex items-center justify-center rounded-lg bg-transparent border-none text-gray-500 hover:text-[#cb1c22] transition-colors w-9 h-9 flex-shrink-0"
               />
               <input
                 ref={inputRef}
@@ -373,16 +367,29 @@ const Chatbot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Bạn cần hỗ trợ gì?"
+                placeholder="Nhập tin nhắn..."
                 disabled={loading || isRecording}
-                className="flex-1 bg-transparent focus:outline-none text-sm text-gray-800 placeholder-gray-400"
+                className="flex-1 bg-transparent focus:outline-none text-[14px] text-gray-800 placeholder-gray-500 px-2 py-1.5"
               />
               <button
                 onClick={() => handleSend()}
                 disabled={loading || !input.trim() || isRecording}
-                className="p-4 text-white rounded-full transition flex-shrink-0"
+                className="flex-shrink-0 ml-1 transition-all"
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  minWidth: '36px',
+                  backgroundColor: (loading || !input.trim() || isRecording) ? '#e5e7eb' : '#cb1c22',
+                  color: (loading || !input.trim() || isRecording) ? '#9ca3af' : 'white',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: 'none',
+                  cursor: (loading || !input.trim() || isRecording) ? 'not-allowed' : 'pointer'
+                }}
               >
-                <Send size={19} />
+                <Send size={18} className="ml-0.5" />
               </button>
             </div>
           </div>
