@@ -91,7 +91,7 @@ function PreviewListProducts({
   }
 
   return (
-    <div className="w-full bg-white rounded-xl border border-gray-200 mt-4 sm:mt-8 sm:pb-8 overflow-hidden">
+    <div className="w-full sm:bg-white rounded-none sm:rounded-xl sm:border sm:border-gray-200 mt-4 sm:mt-8 sm:pb-8 overflow-hidden">
       <div className="flex items-center pt-4 sm:pt-12 px-4 sm:px-12 justify-between">
         <Typography.Title
           level={2}

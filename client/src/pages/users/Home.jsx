@@ -150,7 +150,7 @@ function Home() {
   }
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen px-4 sm:px-8 lg:px-0">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
           <Col xs={24} md={24} lg={18} xl={19}>
@@ -239,7 +239,7 @@ function Home() {
                       const id = category._id;
                       navigate(`/product/all/${id}`);
                     }}
-                    className={`bg-white group cursor-pointer flex w-full h-full p-16 rounded-xl border border-gray-200 hover:shadow-md transition-shadow`}
+                    className={`bg-white group cursor-pointer flex w-full h-full p-16 rounded-xl sm:border sm:border-gray-200 hover:shadow-md transition-shadow`}
                   >
                     <div className="w-[50%] flex justify-start">
                       <Typography.Text

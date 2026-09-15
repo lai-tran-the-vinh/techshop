@@ -188,7 +188,7 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
 
   return (
     <div className={className}>
-      <div className="bg-white px-4 py-6 sm:p-12 lg:p-16 rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white px-4 py-6 sm:p-12 lg:p-16 rounded-none sm:rounded-xl sm:border sm:border-gray-200 overflow-hidden">
         <Flex vertical align="" className="mb-4 sm:mb-8!" gap={0}>
           <Typography.Title level={3} className="sm:text-2xl! mb-6!">
             {loading ? (

@@ -331,7 +331,7 @@ function ProductDetail() {
       <div className="mx-auto rounded-[10px]">
         <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
           <Col xl={14} lg={14} md={24} sm={24} xs={24}>
-            <div className="h-full bg-white rounded-xl border border-gray-200 p-4 sm:p-20 flex! flex-col!">
+            <div className="h-full bg-white rounded-none sm:rounded-xl sm:border sm:border-gray-200 p-4 sm:p-20 flex! flex-col!">
               <div className="relative h-[60%] sm:h-[80%] px-10 sm:px-0">
                 <SliderProduct images={allImages} />
               </div>
@@ -392,7 +392,7 @@ function ProductDetail() {
           </Col>
 
           <Col xl={10} lg={10} md={24} sm={24} xs={24}>
-            <Card className="rounded-xl! border-solid! border-gray-200!">
+            <Card className="rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
               <div className="mb-4">
                 <Title
                   level={3}
@@ -770,12 +770,12 @@ function ProductDetail() {
 
         <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
           <Col lg={14} xs={24}>
-            <Card className="p-4! sm:p-10! rounded-xl! border-solid! border-gray-200!">
+            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
               <ProductDescription product={product} loading={loading} />
             </Card>
           </Col>
           <Col lg={10} xs={24}>
-            <Card className="p-4! sm:p-10! rounded-xl! border-solid! border-gray-200!" style={{ position: 'sticky', top: 20 }}>
+            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!" style={{ position: 'sticky', top: 20 }}>
               <ProductSpecification product={product} />
             </Card>
           </Col>
@@ -783,7 +783,7 @@ function ProductDetail() {
         <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
-              <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 rounded-xl border border-gray-200">
+              <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 rounded-none sm:rounded-xl sm:border sm:border-gray-200">
                 <PreviewListProducts
                   viewAll={false}
                   title="Sản phẩm liên quan"
