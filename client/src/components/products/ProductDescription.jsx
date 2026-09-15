@@ -99,24 +99,10 @@ function ProductDescription({ className, product = {}, loading = false }) {
             )}
           </>
         ) : (
-          <div className="text-center py-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <p className="text-gray-500 font-medium">Sản phẩm chưa có mô tả</p>
-            <p className="text-gray-400 text-sm mt-1">
+          <div className="text-center py-8 flex flex-col items-center justify-center">
+            <img src="/describe.svg" alt="No description" className="w-180 h-180 mb-4 object-contain opacity-80" />
+            <p className="text-black font-medium">Sản phẩm chưa có mô tả</p>
+            <p className="text-black text-sm mt-1">
               Thông tin mô tả sẽ được cập nhật sớm
             </p>
           </div>

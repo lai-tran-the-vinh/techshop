@@ -337,72 +337,51 @@ function ProductDetail() {
               </div>
               <div className="sm:p-4 flex-1 px-4 sm:px-0 mt-4 sm:mt-0">
                 {branchs.length > 0 && (
-                  <div className="">
-                    <Text
-                      level={5}
-                      className="text-primary! text-lg! font-medium! sm:text-lg"
-                    >
-                      Danh sách cửa hàng
-                    </Text>
+                  <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100">
+                    <h3 className="text-[18px] font-semibold text-gray-900 mb-5">
+                      Chọn cửa hàng có sẵn
+                    </h3>
 
-                    <div className="grid grid-cols-1 gap-10 mt-10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {branchs.map((branch) => {
                         const inStock = branchStocks[branch._id];
+                        const isSelected = selectBranchs === branch._id;
+                        
                         return (
-                          <Card
+                          <div
                             key={branch._id}
-                            size="small"
-                            onClick={() => {
-                              setSelectBranchs(branch._id);
-                            }}
-                            className="hover:shadow-none! rounded-md! border-gray-300! cursor-default! transition-shadow"
+                            onClick={() => setSelectBranchs(branch._id)}
+                            className={`flex flex-col p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
+                              isSelected 
+                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                                : 'border-gray-300 hover:border-gray-400 bg-white'
+                            }`}
                           >
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Text strong className="text-sm sm:text-base">
-                                    {branch.name}
-                                  </Text>
-                                </div>
-
-                                <div className="space-y-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-gray-500 text-sm">
-                                      <BsFillGeoAltFill />
-                                    </span>
-                                    <Text className="text-xs sm:text-sm text-gray-600">
-                                      {branch.address}
-                                    </Text>
-                                  </div>
-
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-gray-500 text-sm">
-                                      <BsFillTelephoneFill />
-                                    </span>
-                                    <Text className="text-xs sm:text-sm text-gray-600">
-                                      {branch.phone || 'Chưa cập nhật'}
-                                    </Text>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-col items-end gap-2">
+                            <div className="flex justify-between items-start mb-2 gap-3">
+                              <Text className={`font-semibold text-[15px] leading-snug ${isSelected ? 'text-[#cb1c22]' : 'text-gray-900'}`}>
+                                {branch.name}
+                              </Text>
+                              <div className="shrink-0">
                                 {inStock === undefined ? (
-                                  <Text className="text-gray-400 text-xs sm:text-sm">
-                                    Đang kiểm tra...
-                                  </Text>
+                                  <span className="text-gray-500 text-[12px] font-medium bg-gray-100 px-2 py-1 rounded-md">Đang tra...</span>
                                 ) : inStock ? (
-                                  <Text className="text-xs! sm:text-sm! font-medium! text-green-500!">
-                                    Còn hàng
-                                  </Text>
+                                  <span className="text-green-700 text-[12px] font-medium bg-green-50 px-2 py-1 rounded-md">Còn hàng</span>
                                 ) : (
-                                  <Text className="text-xs! sm:text-sm! font-medium! bg-primary! rounded-full! text-white! px-8! py-4!">
-                                    Hết hàng
-                                  </Text>
+                                  <span className="text-red-600 text-[12px] font-medium bg-red-50 px-2 py-1 rounded-md">Hết hàng</span>
                                 )}
                               </div>
                             </div>
-                          </Card>
+                            
+                            <Text className="text-[13px] text-gray-500 leading-relaxed mb-4 flex-1">
+                              {branch.address}
+                            </Text>
+                            
+                            {branch.phone && (
+                              <Text className="text-[13px] font-medium text-gray-700">
+                                {branch.phone}
+                              </Text>
+                            )}
+                          </div>
                         );
                       })}
                     </div>
