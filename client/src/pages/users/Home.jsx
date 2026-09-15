@@ -239,7 +239,7 @@ function Home() {
                       const id = category._id;
                       navigate(`/product/all/${id}`);
                     }}
-                    className={`bg-white group cursor-pointer flex w-full h-full p-16 rounded-xl hover:shadow-md transition-shadow`}
+                    className={`bg-white group cursor-pointer flex w-full h-full p-16 rounded-xl border border-gray-200 hover:shadow-md transition-shadow`}
                   >
                     <div className="w-[50%] flex justify-start">
                       <Typography.Text
