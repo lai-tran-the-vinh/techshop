@@ -673,8 +673,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className="bg-red-600 hover:bg-red-700 border-red-600 font-semibold hover:shadow-md shadow-md h-40! rounded-md! py-2 sm:py-3 text-xs sm:text-sm"
-                      icon={<ShoppingCartOutlined />}
+                      className="bg-red-600 hover:bg-red-700 border-red-600 font-semibold hover:shadow-md shadow-md h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning('Vui lòng đăng nhập để đặt hàng!!');
@@ -713,8 +712,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className=" py-2! sm:py-3! rounded-md! text-xs! h-40! sm:text-sm!"
-                      icon={<BsCartPlusFill />}
+                      className="font-semibold h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning(
@@ -830,8 +828,8 @@ function ProductDetail() {
       </div>
 
       {/* Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_30px_rgba(0,0,0,0.15)] z-[999]">
-        <div className="w-full lg:w-5/6 mx-auto pl-6 pr-16 lg:px-6 py-3 pb-5 sm:pb-3 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 border-t border-gray-200 lg:border-none">
+      <div className="fixed bottom-0 left-0 py-6 w-full bg-white shadow-[0_-4px_30px_rgba(0,0,0,0.15)] z-[999]">
+        <div className="w-full lg:w-5/6 mx-auto pl-6 pr-16 lg:px-6 py-3 pb-5 sm:pb-3 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4">
           <div className="hidden lg:flex items-center gap-4 flex-1">
             <Image
               src={variantImages?.[0] || product?.thumbnail}
@@ -841,8 +839,8 @@ function ProductDetail() {
               preview={false}
             />
             <div>
-              <Text className="font-medium block text-sm">{product?.name}</Text>
-              <Text type="secondary" className="text-xs">
+              <Text className="font-medium block text-sm! lg:text-[14px]!">{product?.name}</Text>
+              <Text className="text-xs!">
                 {selectedVariant?.memory?.storage && selectedVariant?.memory?.ram
                   ? `${selectedVariant.memory.storage} - ${selectedVariant.memory.ram}`
                   : ''} {selectedColor ? `- ${selectedColor}` : ''}
@@ -850,7 +848,7 @@ function ProductDetail() {
             </div>
           </div>
           
-          <div className="flex items-center justify-between lg:justify-center w-full lg:w-auto flex-1">
+          <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto lg:mr-4">
             <span className="lg:hidden text-gray-600 text-xs font-medium">Tạm tính:</span>
             <div className="flex items-center gap-3">
               <span className="text-red-600! font-bold! text-base! sm:text-lg!">
@@ -864,7 +862,7 @@ function ProductDetail() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 w-full lg:w-auto flex-1 lg:justify-end">
+          <div className="flex items-center gap-2 sm:gap-4 w-full lg:w-auto lg:justify-end">
             <Button
               size="large"
               disabled={!currentStock || !selectedColor}
@@ -890,7 +888,7 @@ function ProductDetail() {
                   quantity: 1,
                 }]);
               }}
-              className="flex-1 lg:flex-none border-primary! text-primary! hover:bg-blue-50! font-semibold h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 lg:flex-none border-primary! text-primary! disabled:border-gray-200! disabled:text-gray-400! disabled:bg-gray-50! hover:bg-blue-50! font-semibold h-[44px]! text-xs! sm:text-base!"
             >
               <span className="lg:hidden">Thêm vào giỏ</span>
               <ShoppingCartOutlined className="hidden lg:inline-block" />
@@ -899,7 +897,7 @@ function ProductDetail() {
               type="primary"
               size="large"
               disabled={!currentStock || !selectedColor}
-              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! border-none! font-semibold lg:px-8 h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! disabled:bg-gray-200! disabled:text-gray-400! border-none! font-semibold lg:px-8 h-[44px]! text-xs! sm:text-base!"
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');

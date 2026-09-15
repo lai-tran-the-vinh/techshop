@@ -347,8 +347,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
               <div className="">
                 <Image src='/rating.svg' width={150} height={150} preview={false} />
               </div>
-              <p className="text-gray-500 text-lg">Chưa có bình luận nào</p>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-black text-lg block mb-0">Chưa có bình luận nào</p>
+              <p className="text-gray-600 text-sm">
                 Hãy là người đầu tiên chia sẻ nhận xét!
               </p>
             </div>
