@@ -436,48 +436,55 @@ function Cart() {
 
             <Col xs={24} lg={7} className="max-lg:px-0!">
               <div 
-                className="lg:sticky lg:top-[120px] bg-white rounded-none lg:rounded-xl lg:border lg:border-gray-200 relative lg:pb-24 border-t border-gray-100 lg:border-t-gray-200" 
+                className="lg:sticky lg:top-[120px] bg-white rounded-none lg:rounded-t-xl relative lg:pb-16 lg:border-t lg:border-l lg:border-r lg:border-gray-200 max-lg:border-t max-lg:border-gray-100" 
               >
-
-                <div className="p-[24px]">
+                {/* Receipt jagged torn bottom border for Desktop */}
+                <div className="absolute bottom-[-8px] left-[-1px] right-[-1px] h-[8px] hidden lg:block overflow-visible z-10">
+                  <svg width="100%" height="100%" className="overflow-visible">
+                    <defs>
+                      <pattern id="torn-edge" x="0" y="0" width="16" height="8" patternUnits="userSpaceOnUse">
+                        <path d="M 0,0 L 8,8 L 16,0" fill="#ffffff" stroke="#e5e7eb" strokeWidth="1" strokeLinejoin="round"/>
+                      </pattern>
+                    </defs>
+                    <rect x="0" y="0" width="100%" height="100%" fill="url(#torn-edge)"/>
+                  </svg>
+                </div>
+                <div className="p-20 flex flex-col gap-12">
                   {/* Summary Details */}
                   <div>
-                    <h3 className="text-gray-900 font-semibold text-[16px] m-0 mb-4 pb-4 border-b border-gray-100">
+                    <h3 className="text-gray-900 font-bold text-[16px] m-0 mb-12">
                       Thông tin đơn hàng
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-12">
                       <Flex justify="space-between" align="center">
                         <Text className="text-gray-500! text-[14px]!">Tổng tiền</Text>
-                        <Text className="text-gray-900! font-medium! text-[15px]!">
+                        <Text className="text-gray-900! font-semibold! text-[15px]!">
                           {total?.toLocaleString()}đ
                         </Text>
                       </Flex>
                       
-                      <Flex justify="space-between" align="start" className="flex-col gap-3">
+                      <Flex justify="space-between" align="start" className="flex-col gap-6">
                         <div className="flex justify-between w-full">
                           <Text className="text-gray-500! text-[14px]!">Tổng khuyến mãi</Text>
-                          <Text className="text-gray-900! font-medium! text-[15px]!">
+                          <Text className="text-gray-900! font-semibold! text-[15px]!">
                             -{totalDiscount?.toLocaleString()}đ
                           </Text>
                         </div>
-                        <div className="w-full space-y-3 pl-4">
-                          <div className="flex justify-between w-full text-[13px] items-center">
-                            <Text className="text-gray-400! flex items-center gap-2 text-[13px]!">
-                              <span className="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
+                        <div className="w-full space-y-4 pl-4">
+                          <div className="flex justify-between w-full items-center">
+                            <Text className="text-gray-400! text-[13px]!">
                               Giảm giá sản phẩm
                             </Text>
                             <Text className="text-gray-400! text-[13px]!">{totalDiscount?.toLocaleString()}đ</Text>
                           </div>
-                          <div className="flex justify-between w-full text-[13px] items-center">
-                            <Text className="text-gray-400! flex items-center gap-2 text-[13px]!">
-                              <span className="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
+                          <div className="flex justify-between w-full items-center">
+                            <Text className="text-gray-400! text-[13px]!">
                               Voucher
                             </Text>
                             <Text className="text-gray-400! text-[13px]!">0đ</Text>
                           </div>
-                          <div className="flex justify-between w-full text-[13px] items-center">
-                            <Text className="text-gray-400! flex items-center gap-2 text-[13px]!">
-                              <span className="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
+                          <div className="flex justify-between w-full items-center">
+                            <Text className="text-gray-400! text-[13px]!">
                               Phí vận chuyển
                             </Text>
                             <Text className="text-gray-400! text-[13px]!">0đ</Text>
@@ -487,9 +494,9 @@ function Cart() {
                     </div>
                   </div>
                   
-                  <div className="pt-6 mt-6 border-t border-dashed border-gray-200">
+                  <div className="pt-4 mt-2">
                     <Flex justify="space-between" align="center">
-                      <Text className="text-gray-800! font-semibold! text-[15px]!">Cần thanh toán</Text>
+                      <Text className="text-gray-900! font-bold! text-[16px]!">Cần thanh toán</Text>
                       <Text className="text-[#cb1c22]! font-bold! text-[20px]!">
                         {finalTotal?.toLocaleString()}đ
                       </Text>
@@ -497,11 +504,11 @@ function Cart() {
                   </div>
 
                   {/* Desktop Checkout Button */}
-                  <div className="hidden lg:block mt-8">
+                  <div className="hidden lg:block mt-16">
                     <Link to="/order" className="text-white! hover:text-white!">
                       <button
                         disabled={selectedItems.length === 0}
-                        className="w-full bg-[#cb1c22] hover:bg-[#a1161b] text-white! font-semibold rounded-xl h-[52px] text-[16px] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5"
+                        className="w-full bg-[#cb1c22] hover:bg-[#a1161b] text-white! font-semibold rounded-lg h-[44px] text-[15px] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
                         Xác nhận đơn
                       </button>
@@ -521,7 +528,7 @@ function Cart() {
             <Link to="/order" className="w-[150px] text-white! hover:text-white!">
               <button
                 disabled={selectedItems.length === 0}
-                className="w-full bg-[#cb1c22] hover:bg-[#a1161b] text-white! font-semibold rounded-xl h-[44px] text-[14px] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-md shadow-red-500/20"
+                className="w-full bg-[#cb1c22] hover:bg-[#a1161b] text-white! font-semibold rounded-lg h-[44px] text-[14px] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 Xác nhận đơn
               </button>
