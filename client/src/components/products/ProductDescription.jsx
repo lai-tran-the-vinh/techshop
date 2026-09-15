@@ -60,38 +60,31 @@ function ProductDescription({ className, product = {}, loading = false }) {
 
               {/* Gradient overlay khi collapsed */}
               {isOverflow && !expanded && (
-                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
               )}
             </div>
 
             {isOverflow && (
-              <div className="flex justify-center mt-4">
+              <div className={`flex justify-center ${expanded ? 'mt-6' : '-mt-6 relative z-10'}`}>
                 <Button
-                  type="primary"
                   onClick={() => setExpanded(!expanded)}
-                  className=" w-full!
-                    bg-[#f3f4f6]! hover:bg-[#e3e5e9]!
-                    
-                    text-black! font-medium! px-6! py-2! 
-                    rounded-lg! transition-all! duration-200!
-                    flex! items-center! justify-center! gap-4!
-                  
-                    
+                  className="
+                    bg-white! border! border-gray-300! text-gray-700!
+                    hover:border-primary! hover:text-primary! hover:bg-white!
+                    font-medium! px-10! py-2! h-[40px]!
+                    rounded-full! transition-colors! duration-300!
+                    flex! items-center! justify-center! gap-2!
                   "
                 >
                   {expanded ? (
                     <>
-                      <UpOutlined />
-                      <Typography.Text className=" font-medium!">
-                        Thu gọn
-                      </Typography.Text>
+                      Thu gọn
+                      <UpOutlined className="text-[12px]" />
                     </>
                   ) : (
                     <>
-                      <DownOutlined />
-                      <Typography.Text className=" font-medium!">
-                        Xem thêm
-                      </Typography.Text>
+                      Xem thêm
+                      <DownOutlined className="text-[12px]" />
                     </>
                   )}
                 </Button>

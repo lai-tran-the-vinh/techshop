@@ -291,7 +291,6 @@ const OrderStatistics = ({ orders, filters, branches }) => {
         <Statistic
           title={filters.branch ? 'Đơn hàng (Chi nhánh)' : 'Tổng đơn hàng'}
           value={stats.totalOrders}
-          prefix={<ShoppingCartOutlined />}
         />
       </Card>
       
@@ -319,7 +318,6 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           title="Đơn chờ xử lý"
           value={stats.pendingOrders}
           valueStyle={{ color: '#faad14' }}
-          prefix={<Badge status="warning" />}
         />
       </Card>
       
@@ -328,7 +326,6 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           title="Chưa thanh toán"
           value={stats.unpaidOrders}
           valueStyle={{ color: '#ff4d4f' }}
-          prefix={<Badge status="error" />}
         />
       </Card>
       
@@ -344,7 +341,6 @@ const OrderStatistics = ({ orders, filters, branches }) => {
             ).length
           }
           valueStyle={{ color: '#722ed1' }}
-          prefix={<ReloadOutlined />}
         />
       </Card>
     </div>

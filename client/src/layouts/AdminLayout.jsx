@@ -468,7 +468,7 @@ function AdminLayout() {
             width={280}
             closeIcon={<span className="text-white text-lg font-bold">✕</span>}
             classNames={{
-              header: 'bg-gradient-primary-to-secondary! border-none!',
+              header: 'bg-gradient-primary-to-secondary! border-none! h-[56px]! min-h-[56px]! max-h-[56px]! py-0! px-4!',
             }}
             styles={{
               body: {

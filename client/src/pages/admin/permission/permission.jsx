@@ -418,117 +418,131 @@ const PermissionsManagement = () => {
 
       <Card>
 
-        <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
-          <div className="w-full lg:w-1/3">
+        <Row
+          justify="space-between"
+          align="middle"
+          gutter={[16, 16]}
+          style={{ marginBottom: 16 }}
+        >
+          <Col xs={24} md={10} lg={8}>
             <Input
               placeholder="Tìm kiếm quyền, mô tả..."
               prefix={<SearchOutlined style={{ color: '#94A3B8' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
-              className="w-full rounded-lg"
+              style={{
+                borderRadius: 8,
+                border: `1px solid #CBD5E1`,
+              }}
             />
-          </div>
-          <div className="w-full lg:w-2/3 grid grid-cols-2 md:grid-cols-4 lg:flex lg:flex-nowrap lg:justify-end gap-2">
-            <Select
-              showSearch
-              placeholder="Mô đun"
-              value={filters.module}
-              onChange={(value) => setFilters({ ...filters, module: value })}
-              allowClear
-              className="w-full lg:w-[130px]"
-              suffixIcon={<FilterOutlined />}
-            >
-              {moduleOptions.map((option) => (
-                <Select.Option key={option.value} value={option.value}>
-                  {option.label}
-                </Select.Option>
-              ))}
-            </Select>
-            <Select
-              placeholder="Thao tác"
-              value={filters.action}
-              onChange={(value) => setFilters({ ...filters, action: value })}
-              allowClear
-              className="w-full lg:w-[130px]"
-              suffixIcon={<FilterOutlined />}
-            >
-              {actionOptions.map((option) => (
-                <Select.Option key={option.value} value={option.value}>
-                  {option.label}
-                </Select.Option>
-              ))}
-            </Select>
-            <Select
-              placeholder="Trạng thái"
-              value={filters.status}
-              onChange={(value) => setFilters({ ...filters, status: value })}
-              allowClear
-              className="w-full lg:w-[130px]"
-              suffixIcon={<FilterOutlined />}
-            >
-              {statusOptions.map((option) => (
-                <Select.Option key={String(option.value)} value={option.value}>
-                  {option.label}
-                </Select.Option>
-              ))}
-            </Select>
-            {hasActiveFilters() && (
-              <Button
-                icon={<ClearOutlined />}
-                onClick={clearAllFilters}
-                className="shadow-none w-full lg:w-auto"
+          </Col>
+          <Col xs={24} md={14} lg={16}>
+            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+              <Select
+                showSearch
+                placeholder="Mô đun"
+                value={filters.module}
+                onChange={(value) => setFilters({ ...filters, module: value })}
+                allowClear
+                style={{ width: 130 }}
+                suffixIcon={<FilterOutlined />}
               >
-                Xóa bộ lọc
+                {moduleOptions.map((option) => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                placeholder="Thao tác"
+                value={filters.action}
+                onChange={(value) => setFilters({ ...filters, action: value })}
+                allowClear
+                style={{ width: 130 }}
+                suffixIcon={<FilterOutlined />}
+              >
+                {actionOptions.map((option) => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                placeholder="Trạng thái"
+                value={filters.status}
+                onChange={(value) => setFilters({ ...filters, status: value })}
+                allowClear
+                style={{ width: 130 }}
+                suffixIcon={<FilterOutlined />}
+              >
+                {statusOptions.map((option) => (
+                  <Select.Option key={String(option.value)} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
+              {hasActiveFilters() && (
+                <Button
+                  icon={<ClearOutlined />}
+                  onClick={clearAllFilters}
+                  className="shadow-none"
+                >
+                  Xóa bộ lọc
+                </Button>
+              )}
+            </Flex>
+          </Col>
+        </Row>
+
+        <Row justify="end" align="middle" style={{ marginBottom: 16 }}>
+          <Col xs={24}>
+            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                className="shadow-none"
+                onClick={() => {
+                  setDataInit(null);
+                  setOpenModal(true);
+                }}
+              >
+                Tạo quyền mới
               </Button>
-            )}
-          </div>
-        </div>
+              <Button
+                type="primary"
+                disabled={selectedRowKeys.length !== 1}
+                icon={<EditOutlined />}
+                className="shadow-none"
+                onClick={() => {
+                  setDataInit(selectedRows[0]);
+                  setOpenModal(true);
+                }}
+              >
+                Sửa ({selectedRowKeys.length})
+              </Button>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:flex lg:justify-end gap-3 mb-4 mt-4">
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            className="shadow-none w-full lg:w-auto"
-            onClick={() => {
-              setDataInit(null);
-              setOpenModal(true);
-            }}
-          >
-            Tạo quyền mới
-          </Button>
-          <Button
-            type="primary"
-            disabled={selectedRowKeys.length !== 1}
-            icon={<EditOutlined />}
-            className="shadow-none w-full lg:w-auto"
-            onClick={() => {
-              setDataInit(selectedRows[0]);
-              setOpenModal(true);
-            }}
-          >
-            Sửa ({selectedRowKeys.length})
-          </Button>
+              <Button
+                danger
+                className="shadow-none"
+                onClick={() => setOpenModalDelete(true)}
+                disabled={selectedRowKeys.length === 0}
+                icon={<DeleteOutlined />}
+              >
+                Xóa ({selectedRowKeys.length})
+              </Button>
 
-          <Button
-            danger
-            className="shadow-none w-full lg:w-auto"
-            onClick={() => setOpenModalDelete(true)}
-            disabled={selectedRowKeys.length === 0}
-            icon={<DeleteOutlined />}
-          >
-            Xóa ({selectedRowKeys.length})
-          </Button>
-
-          <Button
-            icon={<ReloadOutlined />}
-            className="shadow-none w-full lg:w-auto"
-            onClick={reloadTable}
-            loading={loading}
-          >
-            Làm mới
-          </Button>
-        </div>
+              <Button
+                icon={<ReloadOutlined />}
+                className="shadow-none"
+                onClick={reloadTable}
+                loading={loading}
+              >
+                Làm mới
+              </Button>
+            </Flex>
+          </Col>
+        </Row>
 
           <Table
           loading={loading}

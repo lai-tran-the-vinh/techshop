@@ -363,11 +363,11 @@ function ProductDetail() {
                               </Text>
                               <div className="shrink-0">
                                 {inStock === undefined ? (
-                                  <span className="text-gray-500 text-[12px] font-medium bg-gray-100 px-2 py-1 rounded-md">Đang tra...</span>
+                                  <span className="text-gray-500 text-[12px] font-medium bg-gray-100 border border-gray-200 px-6 py-4 rounded-md">Đang tra...</span>
                                 ) : inStock ? (
-                                  <span className="text-green-700 text-[12px] font-medium bg-green-50 px-2 py-1 rounded-md">Còn hàng</span>
+                                  <span className="text-green-700 text-[12px] font-medium bg-green-50 border border-green-200 px-6 py-4 rounded-md">Còn hàng</span>
                                 ) : (
-                                  <span className="text-red-600 text-[12px] font-medium bg-red-50 px-2 py-1 rounded-md">Hết hàng</span>
+                                  <span className="text-red-600 text-[12px] font-medium bg-red-50 border border-red-200 px-6 py-4 rounded-md">Hết hàng</span>
                                 )}
                               </div>
                             </div>
