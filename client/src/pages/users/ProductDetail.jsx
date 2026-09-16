@@ -392,7 +392,10 @@ function ProductDetail() {
           </Col>
 
           <Col xl={10} lg={10} md={24} sm={24} xs={24}>
-            <Card className="rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
+            <Card 
+              className="h-full! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200! flex! flex-col!"
+              styles={{ body: { display: 'flex', flexDirection: 'column', flex: 1 } }}
+            >
               <div className="mb-4">
                 <Title
                   level={3}
@@ -441,7 +444,7 @@ function ProductDetail() {
                   <Title level={5} className="mb-2 text-sm sm:text-base">
                     Bộ nhớ
                   </Title>
-                  <Row gutter={[8, 8]}>
+                  <div className="flex flex-wrap gap-3">
                     {[
                       // Tạo map để loại trùng theo `ram-storage`
                       ...new Map(
@@ -458,29 +461,29 @@ function ProductDetail() {
                         selectedMemory?.storage === variant.memory?.storage;
 
                       return (
-                        <Col xs={12} lg={12} xl={8} key={`memory-${index}`}>
-                          <Button
-                            block
-                            className={`py-[20px]! sm:py-[25px]! px-8! sm:px-4! rounded-md! h-40! text-xs! sm:text-sm! ${
-                              isSelected ? 'border! border-primary!' : ''
-                            }`}
-                            onClick={() => {
-                              setSelectedMemory(variant.memory);
-                              setSelectedColor(variant.color[0]?.colorName);
-                            }}
-                          >
-                            <Text className="text-sm! sm:text-sm!">
-                              {variant.memory?.storage && variant.memory?.ram
-                                ? `${variant.memory.storage} - ${variant.memory.ram}`
-                                : variant.memory?.storage ||
-                                  variant.memory?.ram ||
-                                  'Không có thông số'}
-                            </Text>
-                          </Button>
-                        </Col>
+                        <div
+                          key={`memory-${index}`}
+                          onClick={() => {
+                            setSelectedMemory(variant.memory);
+                            setSelectedColor(variant.color[0]?.colorName);
+                          }}
+                          className={`flex items-center justify-center px-6 h-[40px] sm:h-[42px] rounded-lg border cursor-pointer transition-all duration-200 ${
+                            isSelected 
+                              ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                              : 'border-gray-300 hover:border-gray-400 bg-white'
+                          }`}
+                        >
+                          <Text className={`text-sm! sm:text-sm! font-medium! ${isSelected ? 'text-[#cb1c22]!' : 'text-gray-800!'}`}>
+                            {variant.memory?.storage && variant.memory?.ram
+                              ? `${variant.memory.storage} - ${variant.memory.ram}`
+                              : variant.memory?.storage ||
+                                variant.memory?.ram ||
+                                'Không có thông số'}
+                          </Text>
+                        </div>
                       );
                     })}
-                  </Row>
+                  </div>
                 </div>
               )}
 
@@ -496,13 +499,12 @@ function ProductDetail() {
                       return (
                         <Col span={12} key={`color-${index}`}>
                           <div
-                            className={
-                              'flex items-center gap-4 py-10 sm:py-4 px-8 sm:px-4 text-xs bg-white! rounded-md! sm:text-sm cursor-pointer hover:bg-gray-50 ' +
-                              (isSelected
-                                ? 'border border-primary bg-blue-50'
-                                : 'border border-gray-200')
-                            }
                             onClick={() => setSelectedColor(color.colorName)}
+                            className={`flex items-center gap-4 p-8 sm:p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
+                              isSelected 
+                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                                : 'border-gray-300 hover:border-gray-400 bg-white'
+                            }`}
                           >
                             <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                               <Image
@@ -514,23 +516,23 @@ function ProductDetail() {
                                 className="w-full! h-full! object-contain!"
                               />
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 flex flex-col justify-center">
                               <Typography.Text
                                 strong
-                                className="block text-xs sm:text-sm truncate"
+                                className={`block text-xs sm:text-sm truncate mb-1 ${isSelected ? 'text-[#cb1c22]' : 'text-gray-900'}`}
                               >
                                 {color.colorName}
                               </Typography.Text>
-                              <Typography.Text
-                                type="secondary"
-                                className="text-xs sm:text-sm"
-                              >
-                                {formatCurrency(selectedVariant.price)}đ
+                              <Typography.Text className="text-gray-500! text-[11px] sm:text-xs block mb-0.5">
+                                {formatCurrency(
+                                  selectedVariant?.price -
+                                    selectedVariant?.price * (product?.discount / 100),
+                                )}
+                                đ
                               </Typography.Text>
-                              {/* Hiển thị thông tin memory */}
                               <Typography.Text
                                 type="secondary"
-                                className="block text-xs mt-1"
+                                className="block text-[11px] sm:text-xs text-gray-400!"
                               >
                                 {selectedVariant.memory?.storage &&
                                 selectedVariant.memory?.ram
@@ -644,7 +646,7 @@ function ProductDetail() {
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 mt-auto!">
                 <Row gutter={[8, 8]}>
                   <Col span={12}>
                     <Button
@@ -747,7 +749,7 @@ function ProductDetail() {
                   )}
                   <Col span={24}>
                     <Card
-                      className="shadow-none! rounded-md! hover:border-gray-300! cursor-pointer! mt-10!"
+                      className="shadow-none! rounded-md! hover:border-gray-300! cursor-pointer!"
                       style={{ borderRadius: 8 }}
                       onClick={() => setDrawerAddessVisible(true)}
                     >
