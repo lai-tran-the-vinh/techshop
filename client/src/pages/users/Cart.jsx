@@ -543,6 +543,7 @@ function Cart() {
             title="Sản phẩm có thể bạn quan tâm"
             products={recommentProducts}
             viewAll={false}
+            className="mt-4 sm:mt-8"
           />
         </div>
       )}

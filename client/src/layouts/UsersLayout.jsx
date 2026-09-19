@@ -108,7 +108,7 @@ function Header() {
   ];
 
   return (
-    <Layout.Header className="print:hidden! font-inter! p-8! lg:px-4! w-full! fixed! top-0! left-0! right-0! z-[99]! lg:p-10! bg-gradient-primary-to-secondary! xl:h-70! flex! flex-col! lg:flex-row! items-center! justify-center! border-b! border-gray-200! h-auto! min-h-[60px]! lg:h-20!">
+    <Layout.Header id="main-header" className="print:hidden! font-inter! p-8! lg:px-4! w-full! fixed! top-0! left-0! right-0! z-[99]! lg:p-10! bg-gradient-primary-to-secondary! xl:h-70! flex! flex-col! lg:flex-row! items-center! justify-center! border-b! border-gray-200! h-auto! min-h-[60px]! lg:h-20!">
       <div className="w-full lg:w-5/6 flex items-center justify-between gap-2 lg:gap-4 mb-2 lg:mb-0">
 
         {/* HAMBURGER MENU (MOBILE) */}
@@ -292,15 +292,31 @@ function Header() {
 
 function UsersLayout() {
   const { loading } = useAppContext();
+  const [headerHeight, setHeaderHeight] = useState(80);
+
+  useEffect(() => {
+    const header = document.getElementById('main-header');
+    if (!header) return;
+
+    const observer = new ResizeObserver(() => {
+      setHeaderHeight(header.offsetHeight);
+    });
+
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <Layout className="font-inter! relative! flex! flex-col! items-center! overflow-x-hidden!">
       <Header />
 
       {loading ? (
-        <Spin size="large" fullscreen />
+        <Spin size="large" />
       ) : (
-        <Layout.Content className="w-5/6! max-lg:w-full! bg-[#f3f4f6]! min-h-screen!  mt-[120px]!  lg:mt-[60px]!  flex flex-col items-center rounded-none! sm:rounded-[10px]">
+        <Layout.Content 
+          className="w-5/6! max-lg:w-full! bg-[#f3f4f6]! min-h-screen! flex flex-col items-center rounded-none! sm:rounded-[10px]"
+          style={{ marginTop: headerHeight }}
+        >
           <Outlet />
           <ChatBot />
         </Layout.Content>

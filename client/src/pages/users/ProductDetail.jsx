@@ -327,7 +327,7 @@ function ProductDetail() {
   }
 
   return (
-    <div className="w-full h-full font-inter mt-24 px-0 sm:px-4 lg:px-6">
+    <div className="w-full h-full font-inter md:mt-10 px-0 sm:px-4 md:px-10">
       <div className="mx-auto rounded-[10px]">
         <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
           <Col xl={14} lg={14} md={24} sm={24} xs={24}>
@@ -770,19 +770,20 @@ function ProductDetail() {
           </Col>
         </Row>
 
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 10, sm: 10}]} className="mt-10!">
           <Col lg={14} xs={24}>
             <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
               <ProductDescription product={product} loading={loading} />
             </Card>
           </Col>
           <Col lg={10} xs={24}>
-            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!" style={{ position: 'sticky', top: 20 }}>
+            <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
               <ProductSpecification product={product} />
             </Card>
           </Col>
         </Row>
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
+
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-10!">
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
               <PreviewListProducts
@@ -793,7 +794,8 @@ function ProductDetail() {
             )}
           </Col>
         </Row>
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-2 sm:mt-8 lg:mt-10">
+
+        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-10!">
           <Col span={24} lg={24}>
             <Comments
               stats={stats}

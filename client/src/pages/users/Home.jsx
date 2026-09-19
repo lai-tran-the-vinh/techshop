@@ -214,7 +214,9 @@ function Home() {
           loading={false}
           products={recommentProducts}
           viewAll={false}
-          title={'Sản phẩm có thể phù hợp với bạn'} />
+          title={'Sản phẩm có thể phù hợp với bạn'}
+          className="mt-4 sm:mt-8"
+        />
       </>
       )}
 
@@ -280,6 +282,7 @@ function Home() {
                 category={category}
                 products={filteredProducts}
                 title={category.name}
+                className="mt-4 sm:mt-8"
               />
             );
           })}
