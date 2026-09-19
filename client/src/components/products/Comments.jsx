@@ -107,7 +107,6 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
       };
 
       await callCreateReview(reviewData);
-      message.success('Bình luận đã được thêm thành công');
       setComment('');
       setPage(1);
       fetchReviews(1);
@@ -135,7 +134,6 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
       };
 
       await callReplyReview(commentId, replyData);
-      message.success('Trả lời đã được thêm thành công');
       setReplyInputs((prev) => ({ ...prev, [commentId]: '' }));
       setShowReplyInput((prev) => ({ ...prev, [commentId]: false }));
 
@@ -191,11 +189,7 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
       <div className="bg-white px-4 py-6 sm:p-12 lg:p-16 rounded-none sm:rounded-xl sm:border sm:border-gray-200 overflow-hidden">
         <Flex vertical align="" className="mb-4 sm:mb-8!" gap={0}>
           <Typography.Title level={3} className="sm:text-2xl! mb-6!">
-            {loading ? (
-              <Skeleton width={200} height={24} />
-            ) : (
-              'Bình luận và đánh giá'
-            )}
+            Bình luận và đánh giá
           </Typography.Title>
           <Typography.Text className="text-sm! text-gray-600!">
             {/* {loading ? <Skeleton width={100} /> : `${total} bình luận`} */}
@@ -271,20 +265,18 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
             </div>
 
             <div className="flex-1">
-              {loading ? (
-                <Skeleton height={100} />
-              ) : (
-                <div className="space-y-4">
-                  <TextArea
-                    value={comment}
-                    ref={commentInputRef}
-                    maxLength={1000}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm này..."
-                    rows={6}
-                    autoSize={{ minRows: 2, maxRows: 4 }}
-                    className="w-full min-h-100! placeholder:text-base! placeholder:text-gray-500! border-gray-400 rounded-md!"
-                  />
+              <div className="space-y-4">
+                <TextArea
+                  value={comment}
+                  ref={commentInputRef}
+                  maxLength={1000}
+                  onChange={(e) => setComment(e.target.value)}
+                  disabled={submitting}
+                  placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm này..."
+                  rows={6}
+                  autoSize={{ minRows: 2, maxRows: 4 }}
+                  className="w-full min-h-100! placeholder:text-base! placeholder:text-gray-500! border-gray-400 rounded-md!"
+                />
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 sm:mt-8 gap-4 sm:gap-0">
                     <div className="flex items-center gap-4 sm:gap-8">
                       <Typography.Text className="text-base! font-medium! whitespace-nowrap">
@@ -311,21 +303,20 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                         type="primary"
                         onClick={handleSubmitComment}
                         loading={submitting}
-                        disabled={!comment.trim()}
+                        disabled={!comment.trim() || submitting}
                         className="flex-1 sm:min-w-100! rounded-md! font-medium! h-40!"
                       >
-                        Gửi bình luận
+                        {submitting ? 'Đang gửi bình luận...' : 'Gửi bình luận'}
                       </Button>
                     </div>
                   </div>
                 </div>
-              )}
             </div>
           </div>
         </div>
         <Divider className="my-4 sm:my-6!" />
         <div className="px-2! sm:p-6!">
-          {loading ? (
+          {loading && reviews.length === 0 ? (
             <div className="space-y-6">
               {Array(3)
                 .fill(0)

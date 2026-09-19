@@ -82,18 +82,15 @@ const UserManagement = () => {
 
   const addressDropdownRef = useRef(null);
   const [addressStates, setAddressStates] = useState({
-    selectedWard: {},
-    selectedProvince: {},
-    selectedDistrict: {},
+    selectedCommune: {},
     provinces: [],
-    districts: [],
-    wards: [],
+    communes: [],
     showAddressDropdown: {},
     activeAddressKey: null,
     selectedPlace: 'Tỉnh/Thành phố',
   });
 
-  const places = ['Tỉnh/Thành phố', 'Quận/Huyện', 'Xã/Phường'];
+  const places = ['Tỉnh/Thành phố', 'Quận/Huyện'];
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -161,11 +158,11 @@ const UserManagement = () => {
     }
   }, [message]);
 
-  const fetchDistricts = useCallback(
+  const fetchCommunes = useCallback(
     async (provinceCode) => {
       try {
-        const districtsData = await Address.getDistricts(provinceCode);
-        setAddressStates((prev) => ({ ...prev, districts: districtsData }));
+        const communesData = await Address.getCommunes(provinceCode);
+        setAddressStates((prev) => ({ ...prev, communes: communesData }));
       } catch (error) {
         message.error('Không thể tải danh sách quận/huyện');
       }
@@ -173,17 +170,6 @@ const UserManagement = () => {
     [message],
   );
 
-  const fetchWards = useCallback(
-    async (districtCode) => {
-      try {
-        const wardsData = await Address.getWards(districtCode);
-        setAddressStates((prev) => ({ ...prev, wards: wardsData }));
-      } catch (error) {
-        message.error('Không thể tải danh sách xã/phường');
-      }
-    },
-    [message],
-  );
 
   const handleProvinceSelect = useCallback(
     async (provinceData, fieldKey) => {
@@ -203,21 +189,19 @@ const UserManagement = () => {
         ...prev,
         selectedProvince: provinceData,
         selectedPlace: 'Quận/Huyện',
-        selectedDistrict: {},
-        selectedWard: {},
-        wards: [],
+        selectedCommune: {},
       }));
 
-      await fetchDistricts(provinceData.code);
+      await fetchCommunes(provinceData.code);
     },
-    [form, fetchDistricts],
+    [form, fetchCommunes],
   );
 
-  const handleDistrictSelect = useCallback(
-    async (districtData, fieldKey) => {
+  const handleCommuneSelect = useCallback(
+    (communeData, fieldKey) => {
       const currentAddressDetail =
         form.getFieldValue(['addresses', fieldKey, 'addressDetail']) || '';
-      const newAddressDetail = currentAddressDetail + ', ' + districtData.name;
+      const newAddressDetail = currentAddressDetail + ', ' + communeData.name;
 
       const currentAddresses = form.getFieldValue('addresses') || [];
       const updatedAddresses = [...currentAddresses];
@@ -229,42 +213,19 @@ const UserManagement = () => {
         form.setFieldsValue({ addresses: updatedAddresses });
       }
 
-      setAddressStates((prev) => ({
-        ...prev,
-        selectedDistrict: districtData,
-        selectedPlace: 'Xã/Phường',
-        selectedWard: {},
-      }));
+      setAddressStates((prev) => {
+        const newShowAddressDropdown = { ...prev.showAddressDropdown };
+        newShowAddressDropdown[fieldKey] = false;
 
-      await fetchWards(districtData.code);
-    },
-    [form, fetchWards],
-  );
-
-  const handleWardSelect = useCallback(
-    (wardData, fieldKey) => {
-      const currentAddressDetail =
-        form.getFieldValue(['addresses', fieldKey, 'addressDetail']) || '';
-      const newAddressDetail = currentAddressDetail + ', ' + wardData.name;
-
-      const currentAddresses = form.getFieldValue('addresses') || [];
-      const updatedAddresses = [...currentAddresses];
-      if (updatedAddresses[fieldKey]) {
-        updatedAddresses[fieldKey] = {
-          ...updatedAddresses[fieldKey],
-          addressDetail: newAddressDetail,
+        return {
+          ...prev,
+          selectedCommune: communeData,
+          showAddressDropdown: newShowAddressDropdown,
+          activeAddressKey: null,
         };
-        form.setFieldsValue({ addresses: updatedAddresses });
-      }
-
-      setAddressStates((prev) => ({
-        ...prev,
-        selectedWard: wardData,
-        showAddressDropdown: { ...prev.showAddressDropdown, [fieldKey]: false },
-        activeAddressKey: null,
-      }));
+      });
     },
-    [form],
+    [form, addressStates.selectedProvince],
   );
 
   // Initialize data
@@ -319,9 +280,7 @@ const UserManagement = () => {
       selectedPlace: 'Tỉnh/Thành phố',
       selectedProvince: {},
       selectedDistrict: {},
-      selectedWard: {},
       districts: [],
-      wards: [],
     }));
   }, [selectedUser, form]);
 
@@ -388,10 +347,8 @@ const UserManagement = () => {
       activeAddressKey: null,
       selectedPlace: 'Tỉnh/Thành phố',
       selectedProvince: {},
-      selectedDistrict: {},
-      selectedWard: {},
-      districts: [],
-      wards: [],
+      selectedCommune: {},
+      communes: [],
     }));
   }, [form]);
 
@@ -944,10 +901,8 @@ const UserManagement = () => {
                                     : null,
                                   selectedPlace: 'Tỉnh/Thành phố',
                                   selectedProvince: {},
-                                  selectedDistrict: {},
-                                  selectedWard: {},
-                                  districts: [],
-                                  wards: [],
+                                  selectedCommune: {},
+                                  communes: [],
                                 }));
                               }}
                               prefix={
@@ -1000,7 +955,7 @@ const UserManagement = () => {
                                         }))
                                       }
                                       style={{
-                                        width: '33.33%',
+                                        width: '50%',
                                         cursor: 'pointer',
                                         padding: '12px 8px',
                                         textAlign: 'center',
@@ -1079,12 +1034,12 @@ const UserManagement = () => {
 
                                   {addressStates.selectedPlace ===
                                     'Quận/Huyện' &&
-                                    addressStates.districts.map(
-                                      (district, index) => (
+                                    addressStates.communes.map(
+                                      (commune, index) => (
                                         <div
                                           key={index}
                                           onClick={() =>
-                                            handleDistrictSelect(district, key)
+                                            handleCommuneSelect(commune, key)
                                           }
                                           style={{
                                             padding: '8px 12px',
@@ -1092,16 +1047,16 @@ const UserManagement = () => {
                                             borderRadius: 6,
                                             fontSize: 14,
                                             backgroundColor:
-                                              addressStates.selectedDistrict
-                                                .name === district.name
+                                              addressStates.selectedCommune
+                                                .name === commune.name
                                                 ? '#f6f6f6'
                                                 : 'transparent',
                                             transition: 'background-color 0.2s',
                                           }}
                                           onMouseEnter={(e) => {
                                             if (
-                                              addressStates.selectedDistrict
-                                                .name !== district.name
+                                              addressStates.selectedCommune
+                                                .name !== commune.name
                                             ) {
                                               e.target.style.backgroundColor =
                                                 '#f9f9f9';
@@ -1109,61 +1064,18 @@ const UserManagement = () => {
                                           }}
                                           onMouseLeave={(e) => {
                                             if (
-                                              addressStates.selectedDistrict
-                                                .name !== district.name
+                                              addressStates.selectedCommune
+                                                .name !== commune.name
                                             ) {
                                               e.target.style.backgroundColor =
                                                 'transparent';
                                             }
                                           }}
                                         >
-                                          {district.name}
+                                          {commune.name}
                                         </div>
                                       ),
                                     )}
-
-                                  {addressStates.selectedPlace ===
-                                    'Xã/Phường' &&
-                                    addressStates.wards.map((ward, index) => (
-                                      <div
-                                        key={index}
-                                        onClick={() =>
-                                          handleWardSelect(ward, key)
-                                        }
-                                        style={{
-                                          padding: '8px 12px',
-                                          margin: '4px 0',
-                                          borderRadius: 6,
-                                          fontSize: 14,
-                                          backgroundColor:
-                                            addressStates.selectedWard.name ===
-                                            ward.name
-                                              ? '#f6f6f6'
-                                              : 'transparent',
-                                          transition: 'background-color 0.2s',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                          if (
-                                            addressStates.selectedWard.name !==
-                                            ward.name
-                                          ) {
-                                            e.target.style.backgroundColor =
-                                              '#f9f9f9';
-                                          }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          if (
-                                            addressStates.selectedWard.name !==
-                                            ward.name
-                                          ) {
-                                            e.target.style.backgroundColor =
-                                              'transparent';
-                                          }
-                                        }}
-                                      >
-                                        {ward.name}
-                                      </div>
-                                    ))}
                                 </div>
                               </div>
                             )}

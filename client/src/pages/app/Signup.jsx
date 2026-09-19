@@ -37,28 +37,24 @@ function Signup() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-  const [wards, setWards] = useState([]);
   const [otp, setOtp] = useState('');
   const addressDropdownRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
+  const [communes, setCommunes] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [addressValue, setAddressValue] = useState('');
-  const [selectedWard, setSelectedWard] = useState({});
   const [selectedProvince, setSelectedProvince] = useState({});
-  const [selectedDistrict, setSelectedDistrict] = useState({});
+  const [selectedCommune, setSelectedCommune] = useState({});
   const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState('Tỉnh/Thành phố');
 
-  const places = ['Tỉnh/Thành phố', 'Quận/Huyện', 'Xã/Phường'];
+  const places = ['Tỉnh/Thành phố', 'Quận/Huyện'];
   const { message } = useAppContext();
 
   useEffect(() => {
     document.title = 'TechShop | Đăng ký';
     fetchProvinces();
-    fetchDistricts();
-    fetchWards();
   }, []);
 
   const fetchProvinces = async () => {
@@ -70,21 +66,12 @@ function Signup() {
     }
   };
 
-  const fetchDistricts = async (provinceCode) => {
+  const fetchCommunes = async (provinceCode) => {
     try {
-      const districtsData = await Address.getDistricts(provinceCode);
-      setDistricts(districtsData);
+      const communesData = await Address.getCommunes(provinceCode);
+      setCommunes(communesData);
     } catch (error) {
       message.error('Không thể tải danh sách quận/huyện');
-    }
-  };
-
-  const fetchWards = async (districtCode) => {
-    try {
-      const wardsData = await Address.getWards(districtCode);
-      setWards(wardsData);
-    } catch (error) {
-      message.error('Không thể tải danh sách xã/phường');
     }
   };
 
@@ -131,40 +118,17 @@ function Signup() {
     setAddressValue(newAddress);
     setSelectedProvince(province);
     setSelectedPlace('Quận/Huyện');
-    setSelectedDistrict({});
-    setSelectedWard({});
+    setSelectedCommune({});
 
-    await fetchDistricts(province.code);
+    await fetchCommunes(province.code);
   };
 
-  const handleDistrictSelect = async (district, event) => {
-    const districtName = event.target.textContent;
-    const newAddress =
-      selectedDistrict.name === district.name
-        ? selectedProvince.name + ', ' + districtName
-        : addressValue + ', ' + districtName;
+  const handleCommuneSelect = async (commune, event) => {
+    const communeName = event.target.textContent;
+    const newAddress = communeName + ', ' + selectedProvince.name;
 
     setAddressValue(newAddress);
-    setSelectedDistrict(district);
-    setSelectedPlace('Xã/Phường');
-    setSelectedWard({});
-
-    await fetchWards(district.code);
-  };
-
-  const handleWardSelect = (ward, event) => {
-    const wardName = event.target.textContent;
-    const newAddress =
-      selectedWard.name === ward.name
-        ? selectedProvince.name + ', ' + selectedDistrict.name + ', ' + wardName
-        : selectedProvince.name +
-          ', ' +
-          selectedDistrict.name +
-          ', ' +
-          wardName;
-
-    setAddressValue(newAddress);
-    setSelectedWard(ward);
+    setSelectedCommune(commune);
     setShowAddressDropdown(false);
   };
   return (
@@ -446,7 +410,7 @@ function Signup() {
                                 key={index}
                                 onClick={() => setSelectedPlace(place)}
                                 style={{
-                                  width: '33.33%',
+                                  width: '50%',
                                   cursor: 'pointer',
                                   padding: '12px 8px',
                                   textAlign: 'center',
@@ -500,11 +464,11 @@ function Signup() {
                               ))}
 
                             {selectedPlace === 'Quận/Huyện' &&
-                              districts.map((district, index) => (
+                              communes.map((commune, index) => (
                                 <div
                                   key={index}
                                   onClick={(event) =>
-                                    handleDistrictSelect(district, event)
+                                    handleCommuneSelect(commune, event)
                                   }
                                   style={{
                                     padding: '8px 12px',
@@ -512,34 +476,12 @@ function Signup() {
                                     borderRadius: 6,
                                     fontSize: 14,
                                     backgroundColor:
-                                      selectedDistrict.name === district.name
+                                      selectedCommune.name === commune.name
                                         ? '#f6f6f6'
                                         : 'transparent',
                                   }}
                                 >
-                                  {district.name}
-                                </div>
-                              ))}
-
-                            {selectedPlace === 'Xã/Phường' &&
-                              wards.map((ward, index) => (
-                                <div
-                                  key={index}
-                                  onClick={(event) =>
-                                    handleWardSelect(ward, event)
-                                  }
-                                  style={{
-                                    padding: '8px 12px',
-                                    margin: '4px 0',
-                                    borderRadius: 6,
-                                    fontSize: 14,
-                                    backgroundColor:
-                                      selectedWard.name === ward.name
-                                        ? '#f6f6f6'
-                                        : 'transparent',
-                                  }}
-                                >
-                                  {ward.name}
+                                  {commune.name}
                                 </div>
                               ))}
                           </div>

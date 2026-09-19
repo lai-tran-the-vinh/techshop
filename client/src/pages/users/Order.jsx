@@ -36,10 +36,8 @@ function Order() {
   const [userInfo, setUserInfo] = useState(null);
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [provinces, setProvinces] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [selectedWard, setSelectedWard] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [communes, setCommunes] = useState([]);
+  const [selectedCommune, setSelectedCommune] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [order, setOrder] = useState(null);
   const [userTypeAddress, setUserTypeAddress] = useState({
@@ -136,32 +134,15 @@ function Order() {
 
   useEffect(() => {
     if (selectedProvince) {
-      fetchDistricts(selectedProvince.code);
+      fetchCommunes(selectedProvince.code);
     }
-    setSelectedDistrict(null);
-    setSelectedWard(null);
+    setSelectedCommune(null);
   }, [selectedProvince]);
 
-  useEffect(() => {
-    if (selectedDistrict) {
-      fetchWards(selectedDistrict.code);
-    }
-    setSelectedWard(null);
-  }, [selectedDistrict]);
-
-  const fetchDistricts = async (provinceCode) => {
+  const fetchCommunes = async (provinceCode) => {
     try {
-      const districtsData = await Address.getDistricts(provinceCode);
-      setDistricts(districtsData);
-    } catch (error) {
-      message.error('Không thể tải danh sách quận/huyện');
-    }
-  };
-
-  const fetchWards = async (districtCode) => {
-    try {
-      const wardsData = await Address.getWards(districtCode);
-      setWards(wardsData);
+      const communesData = await Address.getCommunes(provinceCode);
+      setCommunes(communesData);
     } catch (error) {
       message.error('Không thể tải danh sách xã/phường');
     }
@@ -185,11 +166,11 @@ function Order() {
     let finalAddress = '';
     if (shippingMethod === 'Giao hàng tận nơi') {
       if (canChooseAddress) {
-        finalAddress = `${userTypeAddress.specificAddress}${
-          userTypeAddress.addressDetail
-            ? ', ' + userTypeAddress.addressDetail
-            : ''
-        }`;
+        if (userTypeAddress.specificAddress?.trim() && selectedProvince && selectedCommune) {
+          finalAddress = `${userTypeAddress.specificAddress.trim()}, ${userTypeAddress.addressDetail}`;
+        } else {
+          finalAddress = '';
+        }
       } else {
         finalAddress = selectedAddress || '';
       }
@@ -452,7 +433,7 @@ function Order() {
             </Flex>
             <Flex gap={4} vertical justify="center" className="w-full! mt-4!">
               <Flex gap={8} className="flex-col! md:flex-row!">
-                <Flex vertical className="w-full! md:w-1/3!">
+                <Flex vertical className="w-full! md:flex-1!">
                   <Typography.Text strong className="mb-4">
                     Tỉnh/Thành phố
                   </Typography.Text>
@@ -475,47 +456,25 @@ function Order() {
                     }}
                   />
                 </Flex>
-                <Flex vertical className="w-full! md:w-1/3!">
-                  <Typography.Text strong className="mb-4">
-                    Quận/Huyện
-                  </Typography.Text>
-                  <Select
-                    disabled={!canChooseAddress || !selectedProvince}
-                    className="w-full!"
-                    value={selectedDistrict?.code}
-                    placeholder="Chọn Quận/Huyện"
-                    options={districts.map((district) => ({
-                      label: district.name,
-                      value: district.code,
-                    }))}
-                    onChange={(value) => {
-                      const district = districts.find((d) => d.code === value);
-                      setSelectedDistrict(district);
-                      setUserTypeAddress({
-                        ...userTypeAddress,
-                        addressDetail: `${selectedProvince.name}, ${district.name}`,
-                      });
-                    }}
-                  />
-                </Flex>
                 <Flex vertical className="w-full! md:flex-1!">
                   <Typography.Text strong className="mb-4">
                     Xã/Phường
                   </Typography.Text>
                   <Select
-                    disabled={!canChooseAddress || !selectedDistrict}
-                    value={selectedWard?.code}
+                    disabled={!canChooseAddress || !selectedProvince}
+                    className="w-full!"
+                    value={selectedCommune?.code}
                     placeholder="Chọn Xã/Phường"
-                    options={wards.map((ward) => ({
-                      label: ward.name,
-                      value: ward.code,
+                    options={communes.map((commune) => ({
+                      label: commune.name,
+                      value: commune.code,
                     }))}
                     onChange={(value) => {
-                      const ward = wards.find((w) => w.code === value);
-                      setSelectedWard(ward);
+                      const commune = communes.find((c) => c.code === value);
+                      setSelectedCommune(commune);
                       setUserTypeAddress({
                         ...userTypeAddress,
-                        addressDetail: `${selectedProvince.name}, ${selectedDistrict.name}, ${ward.name}`,
+                        addressDetail: `${commune.name}, ${selectedProvince.name}`,
                       });
                     }}
                   />
@@ -721,15 +680,10 @@ function Order() {
                 Địa chỉ
               </Typography.Text>
               <Typography.Text className="text-sm! text-right! flex-1!">
-                {shippingMethod === 'Giao hàng tận nơi'
-                  ? canChooseAddress
-                    ? `${userTypeAddress.specificAddress}${
-                        userTypeAddress.addressDetail
-                          ? ', ' + userTypeAddress.addressDetail
-                          : ''
-                      }`
-                    : selectedAddress || 'Chưa chọn địa chỉ'
-                  : selectedAddress || 'Chưa chọn cửa hàng'}
+                {order?.recipient?.address ||
+                  (shippingMethod === 'Nhận tại cửa hàng'
+                    ? 'Chưa chọn cửa hàng'
+                    : 'Chưa nhập đầy đủ địa chỉ')}
               </Typography.Text>
             </Flex>
             <Divider className="my-0!" />

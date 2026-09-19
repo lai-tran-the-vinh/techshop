@@ -308,7 +308,7 @@ function Cart() {
             </Link>
           </div>
 
-          <Row gutter={[24, 24]} className="w-full! m-0! max-lg:px-0 max-lg:pt-0">
+          <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="w-full! m-0! max-lg:px-0 max-lg:pt-0">
             <Col xs={24} lg={17} className="max-lg:px-0!">
               <div className="bg-white rounded-none lg:rounded-xl lg:border lg:border-gray-200 overflow-hidden">
                 {/* Header Actions */}

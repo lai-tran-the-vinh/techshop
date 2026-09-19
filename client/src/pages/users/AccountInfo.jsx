@@ -47,15 +47,13 @@ import OrderTrackingMap from '@/components/app/ordertrackingmap';
 
 const AccountInfoPage = () => {
   const { user, message, logout } = useAppContext();
-  const [wards, setWards] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [discount, setDiscount] = useState(null);
   const [editingAddressIndex, setEditingAddressIndex] = useState(null);
   const [selectedProvince, setSelectedProvince] = useState(null);
-  const [selectedWard, setSelectedWard] = useState([]);
   const [deleteAddressIndex, setDeleteAddressIndex] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [districts, setDistricts] = useState([]);
+  const [selectedCommune, setSelectedCommune] = useState(null);
+  const [communes, setCommunes] = useState([]);
   const [isDeleteAddressModalOpen, setIsDeleteAddressModalOpen] =
     useState(false);
   const [selectedMenu, setSelectedMenu] = useState('personal');
@@ -112,23 +110,13 @@ const AccountInfoPage = () => {
     }
   };
 
-  const fetchDistricts = async (provinceCode) => {
+  const fetchCommunes = async (provinceCode) => {
     try {
-      const districtsData = await Address.getDistricts(provinceCode);
-      setDistricts(districtsData);
-      return districtsData;
+      const communesData = await Address.getCommunes(provinceCode);
+      setCommunes(communesData);
+      return communesData;
     } catch (error) {
       message.error('Không thể tải danh sách quận/huyện');
-    }
-  };
-
-  const fetchWards = async (districtCode) => {
-    try {
-      const wardsData = await Address.getWards(districtCode);
-      setWards(wardsData);
-      return wardsData;
-    } catch (error) {
-      message.error('Không thể tải danh sách xã/phường');
     }
   };
 
@@ -281,24 +269,26 @@ const AccountInfoPage = () => {
 
   const getAddress = async (editingAddress) => {
     if (editingAddress) {
-      await fetchProvinces();
-      const editingProvince = editingAddress.addressDetail.split(', ')[0];
-      const selectedProvince = provinces.find(
+      const provincesData = await Address.getAllProvinces();
+      setProvinces(provincesData);
+      const addressDetailParts = editingAddress.addressDetail
+        ? editingAddress.addressDetail.split(', ')
+        : [];
+      const editingProvince = addressDetailParts[1] || '';
+      const editingCommune = addressDetailParts[0] || '';
+
+      const selectedProvince = provincesData.find(
         (province) => province.name === editingProvince,
       );
       setSelectedProvince(selectedProvince);
 
-      const districtsData = await fetchDistricts(selectedProvince.code);
-      const editingDistrict = editingAddress.addressDetail.split(', ')[1];
-      const selectedDistrict = districtsData.find(
-        (district) => district.name === editingDistrict,
-      );
-      setSelectedDistrict(selectedDistrict);
-
-      const wardsData = await fetchWards(selectedDistrict.code);
-      const editingWard = editingAddress.addressDetail.split(', ')[2];
-      const selectedWard = wardsData.find((ward) => ward.name === editingWard);
-      setSelectedWard(selectedWard);
+      if (selectedProvince) {
+        const communesData = await fetchCommunes(selectedProvince.code);
+        const selectedCommune = communesData.find(
+          (commune) => commune.name === editingCommune,
+        );
+        setSelectedCommune(selectedCommune);
+      }
     }
   };
 
@@ -646,8 +636,7 @@ const AccountInfoPage = () => {
               setEditingAddressIndex(null); // báo đây là "thêm mới" chứ không phải sửa
               await fetchProvinces();
               setSelectedProvince(null);
-              setSelectedDistrict(null);
-              setSelectedWard(null);
+              setSelectedCommune(null);
               setIsAddressModalVisible(true);
             }}
           >
@@ -776,10 +765,9 @@ const AccountInfoPage = () => {
                 onChange={(value) => {
                   const province = provinces.find((p) => p.code === value);
                   setSelectedProvince(province);
-                  // Reset District/Ward khi chọn Tỉnh mới
-                  setSelectedDistrict(null);
-                  setSelectedWard(null);
-                  fetchDistricts(value);
+                  // Reset Commune khi chọn Tỉnh mới
+                  setSelectedCommune(null);
+                  fetchCommunes(value);
                 }}
               />
             </Flex>
@@ -787,31 +775,14 @@ const AccountInfoPage = () => {
             <Flex vertical>
               <label className="mb-4">Quận/Huyện</label>
               <Select
-                value={selectedDistrict?.code}
+                value={selectedCommune?.code}
                 placeholder="Chọn Quận/Huyện"
-                options={districts.map((district) => {
-                  return { label: district.name, value: district.code };
+                options={communes.map((commune) => {
+                  return { label: commune.name, value: commune.code };
                 })}
                 onChange={(value) => {
-                  const district = districts.find((d) => d.code === value);
-                  setSelectedDistrict(district);
-                  setSelectedWard(null);
-                  fetchWards(value);
-                }}
-              />
-            </Flex>
-
-            <Flex vertical>
-              <label className="mb-4">Xã/Phường</label>
-              <Select
-                value={selectedWard?.code}
-                placeholder="Chọn Xã/Phường"
-                options={wards.map((ward) => {
-                  return { label: ward.name, value: ward.code };
-                })}
-                onChange={(value) => {
-                  const ward = wards.find((w) => w.code === value);
-                  setSelectedWard(ward);
+                  const commune = communes.find((c) => c.code === value);
+                  setSelectedCommune(commune);
                 }}
               />
             </Flex>
@@ -851,8 +822,7 @@ const AccountInfoPage = () => {
             onClick={async () => {
               if (
                 !selectedProvince ||
-                !selectedDistrict ||
-                !selectedWard ||
+                !selectedCommune ||
                 !editingAddress?.specificAddress
               ) {
                 return message.warning(
@@ -862,7 +832,7 @@ const AccountInfoPage = () => {
 
               const newAddress = {
                 specificAddress: editingAddress.specificAddress,
-                addressDetail: `${selectedProvince.name}, ${selectedDistrict.name}, ${selectedWard.name}`,
+                addressDetail: `${selectedCommune.name}, ${selectedProvince.name}`,
                 default: false, // tạm để false, lát set lại
                 isDeleted: false,
                 deletedAt: null,

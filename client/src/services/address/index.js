@@ -1,10 +1,10 @@
 import getWards from './getWards';
-import getDistricts from './getDistricts';
+import getCommunes from './getCommunes';
 import getAllProvinces from './getAllProvinces';
 
 class Address {
   static getWards = getWards;
-  static getDistricts = getDistricts;
+  static getCommunes = getCommunes;
   static getAllProvinces = getAllProvinces;
 }
 
