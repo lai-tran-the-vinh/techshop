@@ -168,10 +168,8 @@ export class CartService {
 
   async remove(@User() user: IUser) {
     const cart = await this.cartModel.findOne({ user: user._id });
-    if (cart.items.length === 0) {
-      throw new NotFoundException(
-        `Giỏ hàng của người dùng đang rỗng or chưa có giỏ hàng!`,
-      );
+    if (!cart || cart.items.length === 0) {
+      return { message: 'Giỏ hàng đã trống sẵn' };
     }
     return await this.cartModel.updateOne(
       { user: user._id },

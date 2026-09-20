@@ -109,10 +109,10 @@ export class OrderService {
 
     // 2. Lấy items từ giỏ hàng hoặc từ POS (tạo tại quầy)
     let itemsToOrder = [];
-    const orderSource =
-      createOrderDto.items && createOrderDto.items.length > 0
+    const orderSource = createOrderDto.source ||
+      (createOrderDto.items && createOrderDto.items.length > 0
         ? OrderSource.POS
-        : OrderSource.ONLINE;
+        : OrderSource.ONLINE);
     if (!createOrderDto.items || createOrderDto.items.length === 0) {
       const userCart = await this.cartModel.findOne({ user: user._id });
       if (!userCart || userCart.items.length === 0) {
