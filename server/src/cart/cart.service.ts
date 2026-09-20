@@ -54,12 +54,11 @@ export class CartService {
       const variant = await this.variantModel.findById(newItem.variant);
 
       // Tìm xem item trong giỏ hàng đã có sản phẩm + biến thể
-      const itemIndex = cart.items.findIndex(
-        (item) =>
-          item.product.toString() === newItem.product &&
-          item.variant.toString() === newItem.variant &&
-          item.color === newItem.color,
-      );
+      const itemIndex = cart.items.findIndex((item) => {
+        const pId = item.product?._id ? item.product._id.toString() : item.product?.toString();
+        const vId = item.variant?._id ? item.variant._id.toString() : item.variant?.toString();
+        return pId === newItem.product && vId === newItem.variant && item.color === newItem.color;
+      });
 
       if (itemIndex > -1) {
         cart.items[itemIndex].quantity += newItem.quantity;
@@ -74,8 +73,7 @@ export class CartService {
           quantity: newItem.quantity,
           color: newItem.color,
           price:
-            variant.price -
-            ((variant.price * product.discount) / 100) * newItem.quantity,
+            variant.price - (variant.price * product.discount) / 100,
           branch: new Types.ObjectId(newItem.branch),
         });
       }
@@ -147,11 +145,11 @@ export class CartService {
       throw new NotFoundException(`Không tìm thấy giỏ hàng của người dùng.`);
     }
 
-    const itemIndex = cart.items.findIndex(
-      (item) =>
-        item.product.toString() === productId &&
-        item.variant.toString() === variantId,
-    );
+    const itemIndex = cart.items.findIndex((item: any) => {
+      const pId = item.product?._id ? item.product._id.toString() : item.product?.toString();
+      const vId = item.variant?._id ? item.variant._id.toString() : item.variant?.toString();
+      return pId === productId && vId === variantId;
+    });
 
     if (itemIndex === -1) {
       throw new NotFoundException(`Không tìm thấy sản phẩm trong giỏ hàng.`);
@@ -162,7 +160,7 @@ export class CartService {
       (acc, item) => acc + item.quantity,
       0,
     );
-    cart.totalPrice = cart.items.reduce((acc, item) => acc + item.price, 0);
+    cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
     await cart.save();
     return cart;

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import * as crypto from 'crypto';
+import * as querystring from 'querystring';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,284 +13,200 @@ import { OrderService } from 'src/order/order.service';
 
 @Injectable()
 export class PaymentService {
-  private readonly partnerCode = 'MOMO';
-  private readonly accessKey = 'F8BBA842ECF85';
-  private readonly secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
-  private readonly endpoint =
-    'https://test-payment.momo.vn/v2/gateway/api/create';
+  private readonly vnp_TmnCode = process.env.VNPAY_TMN_CODE || 'MOCK_TMN_CODE';
+  private readonly vnp_HashSecret = process.env.VNPAY_HASH_SECRET || 'MOCK_HASH_SECRET';
+  private readonly vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+  private readonly vnp_ReturnUrl = 'http://localhost:8080/api/v1/payment/vnpay/callback';
 
   constructor(
     @InjectModel(Payment.name)
     private readonly paymentModel: SoftDeleteModel<PaymentDocument>,
-
     @InjectModel(Order.name)
     private readonly orderModel: SoftDeleteModel<OrderDocument>,
-
     private readonly orderService: OrderService,
   ) {}
 
+  private formatVNPayDate(date: Date): string {
+    const pad = (n: number) => (n < 10 ? `0${n}` : n.toString());
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hour = pad(date.getHours());
+    const minute = pad(date.getMinutes());
+    const second = pad(date.getSeconds());
+    return `${year}${month}${day}${hour}${minute}${second}`;
+  }
+
+  private sortObject(obj: any) {
+    let sorted: any = {};
+    let str = [];
+    let key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        str.push(encodeURIComponent(key));
+      }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+      sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+    }
+    return sorted;
+  }
+
   async createPayment(dto: CreatePaymentDto, user: IUser) {
-    try {
-      if (!dto.amount || dto.amount <= 0) {
-        throw new Error('Invalid amount');
-      }
+    if (!dto.amount || dto.amount <= 0) {
+      throw new Error('Invalid amount');
+    }
+    if (!dto.order) {
+      throw new Error('Order ID is required');
+    }
 
-      if (!dto.order) {
-        throw new Error('Order ID is required');
-      }
+    const existingOrder = await this.orderModel.findById(dto.order);
+    if (!existingOrder) throw new Error('Order not found');
 
-      const existingOrder = await this.orderModel.findById(dto.order);
-      if (!existingOrder) throw new Error('Order not found');
+    let existingPayment = await this.paymentModel.findOne({
+      user: user._id,
+      order: dto.order,
+    });
 
-      let existingPayment = await this.paymentModel.findOne({
+    if (!existingPayment) {
+      existingPayment = await this.paymentModel.create({
         user: user._id,
         order: dto.order,
-      });
-
-      // CASE 1: Nếu chưa có payment record, tạo mới
-      if (!existingPayment) {
-        // Tạo payment record mới trước khi gọi MoMo
-        existingPayment = await this.paymentModel.create({
-          user: user._id,
-          order: dto.order,
-          amount: dto.amount,
-          method: PaymentMethod.MOMO,
-          status: PaymentStatus.PENDING,
-        });
-      }
-
-      if (existingPayment.status === PaymentStatus.COMPLETED) {
-        return {
-          resultCode: 9001,
-          message: 'Đơn hàng đã thanh toán trước đó',
-        };
-      }
-
-      if (existingPayment.payUrl && existingPayment.deeplink) {
-        const now = new Date();
-        const diffMinutes =
-          (now.getTime() - new Date(existingPayment.updatedAt).getTime()) /
-          (1000 * 60);
-
-        if (diffMinutes < 15) {
-          return {
-            resultCode: 9000,
-            message: 'Payment đã được tạo trước đó',
-            payUrl: existingPayment.payUrl,
-            deeplink: existingPayment.deeplink,
-          };
-        }
-      }
-
-      // Tạo request mới đến MoMo
-      const orderInfo = `Thanh toán đơn hàng ${user._id} với đơn giá ${dto.amount} VNĐ`;
-      const requestId = `${this.partnerCode}${Date.now()}`;
-      const orderId = `${dto.order}-${Date.now()}`;
-      const redirectUrl = 'http://localhost:8080/api/v1/payment/momo/callback';
-      const ipnUrl =
-        'https://your-ngrok.ngrok-free.app/api/v1/payment/momo/notify';
-      const extraData = Buffer.from(
-        JSON.stringify({ userId: user._id }),
-      ).toString('base64');
-      const requestType = 'captureWallet';
-
-      const rawSignature = `accessKey=${this.accessKey}&amount=${dto.amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${this.partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
-
-      const signature = crypto
-        .createHmac('sha256', this.secretKey)
-        .update(rawSignature)
-        .digest('hex');
-
-      const body = {
-        partnerCode: this.partnerCode,
-        accessKey: this.accessKey,
-        requestId,
         amount: dto.amount,
-        orderId,
-        orderInfo,
-        redirectUrl,
-        ipnUrl,
-        extraData,
-        requestType,
-        signature,
-        lang: 'vi',
-      };
-
-      const response = await axios.post(this.endpoint, body, {
-        headers: { 'Content-Type': 'application/json' },
+        payType: PaymentMethod.VNPAY, // Mongoose schema may use payType
+        status: PaymentStatus.PENDING,
       });
-
-      const momoResponse = response.data;
-
-      if (momoResponse.resultCode === 0) {
-        // Bây giờ chắc chắn existingPayment tồn tại
-        await this.paymentModel.findByIdAndUpdate(existingPayment._id, {
-          momoOrderId: orderId,
-          requestId,
-          payUrl: momoResponse.payUrl,
-          deeplink: momoResponse.deeplink,
-          updatedAt: new Date(),
-        });
-
-        return momoResponse;
-      } else {
-        const errorMessages = {
-          1000: 'Giao dịch thất bại',
-          1001: 'Giao dịch bị từ chối',
-          1002: 'Giao dịch bị hủy',
-          1003: 'Giao dịch hết hạn',
-          1004: 'Số dư không đủ',
-          1005: 'Giao dịch không hợp lệ',
-          1006: 'Người dùng hủy giao dịch',
-          2001: 'Giao dịch thất bại do lỗi hệ thống',
-          7000: 'Người dùng chưa đăng ký dịch vụ MoMo',
-          7002: 'Mã OTP không chính xác',
-          9998: 'Giao dịch đang được xử lý',
-          9999: 'Giao dịch thất bại không xác định',
-        };
-
-        const errorMessage =
-          errorMessages[momoResponse.resultCode] ||
-          'Lỗi không xác định từ MoMo';
-
-        throw new Error(errorMessage);
-      }
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED') {
-        throw new Error('Không thể kết nối đến MoMo. Vui lòng thử lại sau.');
-      }
-
-      if (error.code === 'ENOTFOUND') {
-        throw new Error('Lỗi DNS. Không thể tìm thấy máy chủ MoMo.');
-      }
-
-      if (error.code === 'ETIMEDOUT') {
-        throw new Error('Timeout khi kết nối MoMo. Vui lòng thử lại.');
-      }
-
-      if (error.response?.status === 500) {
-        throw new Error('Lỗi hệ thống MoMo. Vui lòng thử lại sau.');
-      }
-
-      if (error.response?.status === 400) {
-        throw new Error('Dữ liệu gửi đến MoMo không hợp lệ.');
-      }
-
-      // Database errors
-      if (error.name === 'MongoError' || error.name === 'MongooseError') {
-        throw new Error('Lỗi cơ sở dữ liệu. Vui lòng thử lại.');
-      }
-
-      // Re-throw custom errors
-      if (
-        error.message.includes('Invalid amount') ||
-        error.message.includes('Order ID is required') ||
-        error.message.includes('Order not found') ||
-        error.message.includes('Order already paid')
-      ) {
-        throw error;
-      }
-
-      // Generic error
-      throw new Error(
-        `Lỗi thanh toán MoMo: ${error.response?.data?.message || error.message || 'Lỗi không xác định'}`,
-      );
     }
+
+    if (existingPayment.status === PaymentStatus.COMPLETED) {
+      return {
+        resultCode: 9001,
+        message: 'Đơn hàng đã thanh toán trước đó',
+      };
+    }
+
+    if (existingPayment.payUrl) {
+      const now = new Date();
+      const diffMinutes = (now.getTime() - new Date(existingPayment.updatedAt).getTime()) / (1000 * 60);
+      if (diffMinutes < 15) {
+        return {
+          resultCode: 9000,
+          message: 'Payment đã được tạo trước đó',
+          payUrl: existingPayment.payUrl,
+        };
+      }
+    }
+
+    const ipAddr = '127.0.0.1'; // Mock IP
+    const createDate = new Date();
+    const expireDate = new Date(createDate.getTime() + 15 * 60000);
+    
+    const vnp_CreateDate = this.formatVNPayDate(createDate);
+    const vnp_ExpireDate = this.formatVNPayDate(expireDate);
+
+    const orderId = `${dto.order}-${createDate.getTime()}`;
+    const amount = dto.amount * 100;
+    const orderInfo = `Thanh toan don hang ${dto.order}`;
+
+    let vnp_Params: any = {
+      vnp_Version: '2.1.0',
+      vnp_Command: 'pay',
+      vnp_TmnCode: this.vnp_TmnCode,
+      vnp_Locale: 'vn',
+      vnp_CurrCode: 'VND',
+      vnp_TxnRef: orderId,
+      vnp_OrderInfo: orderInfo,
+      vnp_OrderType: 'other',
+      vnp_Amount: amount,
+      vnp_ReturnUrl: this.vnp_ReturnUrl,
+      vnp_IpAddr: ipAddr,
+      vnp_CreateDate: vnp_CreateDate,
+      vnp_ExpireDate: vnp_ExpireDate
+    };
+
+    vnp_Params = this.sortObject(vnp_Params);
+
+    const signData = querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+    const hmac = crypto.createHmac('sha512', this.vnp_HashSecret);
+    const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+    
+    vnp_Params['vnp_SecureHash'] = signed;
+    const payUrl = this.vnp_Url + '?' + querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+
+    await this.paymentModel.findByIdAndUpdate(existingPayment._id, {
+      vnpayTxnRef: orderId,
+      payUrl: payUrl,
+      updatedAt: new Date(),
+    });
+
+    return { payUrl };
   }
-  async handleMoMoRedirect(query: any) {
+
+  async handleVNPayRedirect(query: any) {
     try {
+      let vnp_Params = { ...query };
+      const secureHash = vnp_Params['vnp_SecureHash'];
+
+      delete vnp_Params['vnp_SecureHash'];
+      delete vnp_Params['vnp_SecureHashType'];
+
+      vnp_Params = this.sortObject(vnp_Params);
+
+      const signData = querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+      const hmac = crypto.createHmac('sha512', this.vnp_HashSecret);
+      const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+
+      const isSuccess = secureHash === signed && vnp_Params['vnp_ResponseCode'] === '00';
+
       const payment = await this.paymentModel.findOne({
-        momoOrderId: query.orderId,
-        requestId: query.requestId,
+        vnpayTxnRef: vnp_Params['vnp_TxnRef'],
       });
 
       if (!payment) {
-        console.error('Payment not found:', {
-          momoOrderId: query.orderId,
-          requestId: query.requestId,
-        });
-
-        // Thử tìm bằng orderId pattern (loại bỏ timestamp)
-        const baseOrderId = query.orderId.split('-')[0];
-        const fallbackPayment = await this.paymentModel.findOne({
-          order: baseOrderId,
-          user: payment.user,
-        });
-
-        if (!fallbackPayment) {
-          throw new Error('Không tìm thấy giao dịch tương ứng');
-        }
-
-        // Update payment với thông tin MoMo
-        await this.paymentModel.findByIdAndUpdate(fallbackPayment._id, {
-          momoOrderId: query.orderId,
-          requestId: query.requestId,
-        });
-
-        // Sử dụng fallbackPayment cho logic tiếp theo
-        return this.processPaymentResult(fallbackPayment, query);
+        const baseOrderId = vnp_Params['vnp_TxnRef'].split('-')[0];
+        const fallbackPayment = await this.paymentModel.findOne({ order: baseOrderId });
+        if (!fallbackPayment) throw new Error('Không tìm thấy giao dịch tương ứng');
+        return this.processPaymentResult(fallbackPayment, isSuccess, vnp_Params);
       }
 
-      // 3. Check if already completed
       if (payment.status === PaymentStatus.COMPLETED) {
-        return {
-          success: true,
-          message: 'Giao dịch đã hoàn tất trước đó',
-        };
+        return { success: true, message: 'Giao dịch đã hoàn tất trước đó' };
       }
 
-      // 4. Process payment result
-      return this.processPaymentResult(payment, query);
+      return this.processPaymentResult(payment, isSuccess, vnp_Params);
     } catch (error) {
-      console.error('Redirect Error:', error);
-      return {
-        success: false,
-        message: error.message || 'Lỗi không xác định khi xử lý redirect',
-      };
+      console.error('VNPay Redirect Error:', error);
+      return { success: false, message: (error as Error).message || 'Lỗi xử lý redirect VNPay' };
     }
   }
 
-  // Helper method để xử lý kết quả thanh toán
-  private async processPaymentResult(payment: any, query: any) {
+  private async processPaymentResult(payment: any, isSuccess: boolean, query: any) {
     try {
-      if (query.resultCode === '0') {
-        // Payment successful
+      if (isSuccess) {
         await this.paymentModel.findByIdAndUpdate(payment._id, {
           status: PaymentStatus.COMPLETED,
           completedAt: new Date(),
-          momoTransId: query.transId,
+          vnpayTransactionNo: query.vnp_TransactionNo,
           redirectData: query,
         });
 
-        // Update order status
         const order = await this.orderModel.findById(payment.order);
-
         await this.orderService.update(
           payment.order,
           { paymentStatus: PaymentStatus.COMPLETED },
           order.user,
         );
 
-        return {
-          success: true,
-          message: 'Thanh toán thành công',
-          paymentId: payment._id,
-          orderId: payment.order,
-        };
+        return { success: true, message: 'Thanh toán thành công' };
       } else {
-        // Payment failed
         await this.paymentModel.findByIdAndUpdate(payment._id, {
           status: PaymentStatus.FAILED,
           failedAt: new Date(),
-          failureReason: query.message || 'Thanh toán thất bại',
+          failureReason: 'Thanh toán thất bại',
           redirectData: query,
         });
-
-        return {
-          success: false,
-          message: `Thanh toán thất bại: ${query.message || 'Lỗi không xác định'}`,
-          resultCode: query.resultCode,
-        };
+        return { success: false, message: 'Thanh toán thất bại' };
       }
     } catch (error) {
       console.error('Process payment result error:', error);
@@ -298,77 +214,6 @@ export class PaymentService {
     }
   }
 
-  // async handleMoMoIPN(ipnData: any, user: IUser) {
-  //   try {
-  //     const { signature, ...dataToVerify } = ipnData;
-  //     const rawSignature = Object.keys(dataToVerify)
-  //       .sort()
-  //       .map((key) => `${key}=${dataToVerify[key]}`)
-  //       .join('&');
-
-  //     const expectedSignature = crypto
-  //       .createHmac('sha256', this.secretKey)
-  //       .update(rawSignature)
-  //       .digest('hex');
-
-  //     if (signature !== expectedSignature) {
-  //       throw new Error('Invalid signature');
-  //     }
-
-  //     // 2. Process payment result
-  //     const payment = await this.paymentModel.findOne({
-  //       momoOrderId: ipnData.orderId,
-  //       requestId: ipnData.requestId,
-  //     });
-
-  //     if (!payment) {
-  //       throw new Error('Payment not found');
-  //     }
-
-  //     if (payment.status === PaymentStatus.COMPLETED) {
-  //       return { resultCode: 0, message: 'Already processed' };
-  //     }
-
-  //     // 3. Update payment status based on result
-  //     if (ipnData.resultCode === 0) {
-  //       // Payment successful
-  //       await this.paymentModel.findOneAndUpdate(
-  //         { _id: payment._id },
-  //         {
-  //           status: PaymentStatus.COMPLETED,
-  //           completedAt: new Date(),
-  //           momoTransId: ipnData.transId,
-  //           ipnData: ipnData,
-  //         },
-  //       );
-
-  //       // Update order status
-  //       await this.orderService.update(
-  //         payment.order,
-  //         { paymentStatus: PaymentStatus.COMPLETED },
-  //         user,
-  //       );
-
-  //       return { resultCode: 0, message: 'Payment completed successfully' };
-  //     } else {
-  //       // Payment failed
-  //       await this.paymentModel.findOneAndUpdate(
-  //         { _id: payment._id },
-  //         {
-  //           status: PaymentStatus.FAILED,
-  //           failedAt: new Date(),
-  //           failureReason: ipnData.message || 'Payment failed',
-  //           ipnData: ipnData,
-  //         },
-  //       );
-
-  //       return { resultCode: 0, message: 'Payment failed processed' };
-  //     }
-  //   } catch (error) {
-  //     console.error('MoMo IPN Error:', error);
-  //     throw error;
-  //   }
-  // }
   create(createPaymentDto: CreatePaymentDto) {
     return this.paymentModel.create(createPaymentDto);
   }
@@ -382,9 +227,7 @@ export class PaymentService {
   }
 
   async update(id: string, updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentModel
-      .findByIdAndUpdate(id, updatePaymentDto, { new: true })
-      .exec();
+    return this.paymentModel.findByIdAndUpdate(id, updatePaymentDto, { new: true }).exec();
   }
 
   async remove(id: string) {

@@ -54,7 +54,7 @@ const CreateOrderModal = ({
 
   const PAYMENT_METHODS = [
     { value: 'cash', label: 'Thanh toán tiền mặt' },
-    { value: 'momo', label: 'Thanh toán qua MOMO' },
+    { value: 'vnpay', label: 'Thanh toán qua VNPAY' },
     { value: 'bank', label: 'Thanh toán qua chuyển khoản' },
     { value: 'cod', label: 'Thanh toán khi nhận hàng' },
   ];

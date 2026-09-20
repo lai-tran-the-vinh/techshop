@@ -42,10 +42,10 @@ export class PaymentController {
     };
   }
 
-  @Get('momo/callback')
+  @Get('vnpay/callback')
   @Public()
-  async handleMomoRedirect(@Query() query: any, @Res() res: any) {
-    const result = await this.paymentService.handleMoMoRedirect(query);
+  async handleVNPayRedirect(@Query() query: any, @Res() res: any) {
+    const result = await this.paymentService.handleVNPayRedirect(query);
 
     if (result.success) {
       return res.redirect(

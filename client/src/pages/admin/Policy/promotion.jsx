@@ -202,7 +202,7 @@ const PromotionManagement = () => {
   const getPaymentMethodLabel = (method) => {
     const methods = {
       CASH: 'Tiền mặt',
-      MOMO: 'MoMo',
+      VNPAY: 'VNPay',
       BANK: 'Chuyển khoản',
       COD: 'Thanh toán khi nhận hàng',
     };
@@ -621,7 +621,7 @@ const PromotionManagement = () => {
                     allowClear
                   >
                     <Option value="CASH">Tiền mặt</Option>
-                    <Option value="MOMO">MoMo</Option>
+                    <Option value="VNPAY">VNPay</Option>
                     <Option value="BANK">Chuyển khoản</Option>
                     <Option value="COD">Thanh toán khi nhận hàng</Option>
                   </Select>

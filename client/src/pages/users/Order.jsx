@@ -636,7 +636,7 @@ function Order() {
               value={paymentMethod}
               options={[
                 { value: 'cash', label: 'Thanh toán khi nhận hàng' },
-                { value: 'momo', label: 'Thanh toán qua Momo' },
+                { value: 'vnpay', label: 'Thanh toán qua VNPay' },
               ]}
             />
           </Flex>

@@ -252,7 +252,7 @@ function Cart() {
   }
 
   return (
-    <div className="bg-[#f3f4f6] min-h-screen max-lg:p-0 lg:px-24 lg:py-32 lg:pt-48 w-full pb-[150px] lg:pb-32 relative">
+    <div className="bg-[#f3f4f6] min-h-screen max-lg:p-0 lg:px-24 min-md:mt-10 w-full relative">
       <Modal
         centered
         open={open}
@@ -273,7 +273,7 @@ function Cart() {
       </Modal>
 
       {cartItems.length === 0 || !cartData ? (
-        <div className="bg-white lg:rounded-xl max-lg:pt-[100px] max-lg:pb-64 p-32 lg:p-80 flex flex-col lg:flex-row items-center justify-center lg:gap-[200px] gap-4 text-center lg:text-left w-full max-w-[1200px] mx-auto lg:my-32">
+        <div className="bg-white lg:rounded-xl lg:border lg:border-gray-200 lg:py-40 p-30 flex flex-col lg:flex-row items-center justify-center lg:gap-[200px] gap-4 text-center lg:text-left w-full max-w-[1200px] mx-auto">
           <div className="w-[300px] lg:w-[450px] order-1 lg:order-2">
             <Image
               className="w-full h-auto"
@@ -538,7 +538,7 @@ function Cart() {
       )}
 
       {!loading && recommentProducts.length > 0 && (
-        <div className="mt-8 lg:mt-32 w-full max-w-[1200px] mx-auto max-lg:bg-white max-lg:pb-32 lg:px-0">
+        <div className="mt-8 lg:mt-10 w-full max-w-[1200px] mx-auto max-lg:bg-white max-lg:pb-32 lg:px-0">
           <PreviewListProducts
             title="Sản phẩm có thể bạn quan tâm"
             products={recommentProducts}

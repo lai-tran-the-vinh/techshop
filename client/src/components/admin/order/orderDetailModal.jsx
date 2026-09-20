@@ -87,7 +87,7 @@ const OrderDetailsModal = ({
 
   const PAYMENT_METHOD_LABELS = {
     cash: 'Thanh toán tiền mặt',
-    momo: 'Thanh toán qua MoMo',
+    vnpay: 'Thanh toán qua VNPay',
     bank_transfer: 'Thanh toán qua chuyển khoản',
     cod: 'Thanh toán khi nhận hàng',
   };

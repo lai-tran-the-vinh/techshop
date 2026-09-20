@@ -1261,7 +1261,7 @@ const AccountInfoPage = () => {
                       </Button>
                     )}
 
-                    {orderData?.paymentMethod === 'momo' &&
+                    {orderData?.paymentMethod === 'vnpay' &&
                       orderData?.status !== 'DELIVERED' &&
                       orderData?.paymentStatus !== 'COMPLETED' && (
                         <Button

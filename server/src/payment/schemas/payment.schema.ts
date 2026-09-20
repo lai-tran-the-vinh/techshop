@@ -27,16 +27,10 @@ export class Payment {
   user: string;
 
   @Prop()
-  momoOrderId?: string;
+  vnpayTxnRef?: string;
 
   @Prop()
-  momoRequestId?: string;
-
-  @Prop()
-  requestId?: string;
-
-  @Prop()
-  momoTransId: string;
+  vnpayTransactionNo?: string;
 
   @Prop()
   completedAt: Date;

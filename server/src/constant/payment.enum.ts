@@ -1,6 +1,7 @@
 export enum PaymentMethod {
   CASH = 'cash',
-  MOMO = 'momo',
+  VNPAY = 'vnpay',
+  MOMO = 'momo', // Giữ lại cho các đơn hàng cũ
   BANK_TRANSFER = 'bank_transfer',
 }
 
