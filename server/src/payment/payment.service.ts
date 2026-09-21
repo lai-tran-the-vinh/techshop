@@ -206,6 +206,19 @@ export class PaymentService {
           failureReason: 'Thanh toán thất bại',
           redirectData: query,
         });
+
+        const order = await this.orderModel.findById(payment.order);
+        if (order) {
+          await this.orderService.update(
+            payment.order,
+            { 
+              paymentStatus: PaymentStatus.FAILED,
+              status: 'CANCELLED' // Dùng chuỗi 'CANCELLED' tương ứng OrderStatus.CANCELLED
+            },
+            order.user,
+          );
+        }
+
         return { success: false, message: 'Thanh toán thất bại' };
       }
     } catch (error) {

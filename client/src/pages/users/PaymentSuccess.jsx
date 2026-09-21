@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { Flex, Typography, Button } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '@/contexts';
@@ -10,6 +10,13 @@ function PaymentSuccess() {
   const { Title, Text } = Typography;
   const { user } = useAppContext();
   const [recommentProducts, setRecommentProducts] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Chặn người dùng tự gõ URL truy cập trực tiếp vào trang
+  if (!location.search) {
+    return <Navigate to="/" replace />;
+  }
 
   useEffect(() => {
     const fetchRecommendations = async () => {

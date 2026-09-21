@@ -49,7 +49,7 @@ export class PaymentController {
 
     if (result.success) {
       return res.redirect(
-        `${this.configService.get<string>('URL_REACT_FRONTEND')}/payment-success`,
+        `${this.configService.get<string>('URL_REACT_FRONTEND')}/payment-success?status=success`,
       );
     } else {
       return res.redirect(

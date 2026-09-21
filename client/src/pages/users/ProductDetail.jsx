@@ -244,21 +244,31 @@ function ProductDetail() {
   // Tìm thông tin màu được chọn
 
   const handleBuy = async (items) => {
-    const cartServices = new CartServices();
     try {
-      // Thêm warranty vào items
-      const itemsWithWarranty = items.map((item) => ({
+      const populatedBuyNowItems = items.map((item) => ({
         ...item,
-        warranty: selectedWarranty,
+        product: {
+          _id: product._id,
+          name: product.name,
+          images: product.images,
+          discount: product.discount || 0,
+        },
+        variant: {
+          _id: selectedVariant._id,
+          name: selectedVariant.name,
+          price: selectedVariant.price,
+          memory: selectedVariant.memory,
+          color: selectedVariant.color,
+        },
+        price: selectedVariant.price, // Dùng giá gốc, Order page sẽ tự tính discount nếu cần
+        warranty: warranties?.find((w) => w._id === selectedWarranty),
+        warrantyPrice: warranties?.find((w) => w._id === selectedWarranty)?.price || 0,
       }));
 
-      const response = await cartServices.add(itemsWithWarranty);
-      if (response.status === 201) {
-        navigate('/order');
-      }
+      navigate('/order', { state: { buyNowItems: populatedBuyNowItems } });
     } catch (error) {
-      console.error('Error adding items to cart:', error);
-      message.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
+      console.error('Lỗi khi mua ngay:', error);
+      message.error('Đã có lỗi xảy ra');
     }
   };
 

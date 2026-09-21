@@ -112,7 +112,7 @@ export class OrderService {
     const orderSource = createOrderDto.source ||
       (createOrderDto.items && createOrderDto.items.length > 0
         ? OrderSource.POS
-        : OrderSource.ONLINE);
+        : OrderSource.FROM_CART);
     if (!createOrderDto.items || createOrderDto.items.length === 0) {
       const userCart = await this.cartModel.findOne({ user: user._id });
       if (!userCart || userCart.items.length === 0) {
@@ -310,7 +310,7 @@ export class OrderService {
 
     // 8. Nếu là đặt hàng online thì xoá giỏ hàng
 
-    if (orderSource === OrderSource.ONLINE) {
+    if (orderSource === OrderSource.ONLINE || orderSource === OrderSource.FROM_CART) {
       await this.cartService.remove(user);
     }
 
@@ -419,7 +419,7 @@ export class OrderService {
 
     const userEmail = userInfor.email;
     const userName = userInfor.name;
-    if ((updateOrderDto.status = OrderStatus.DELIVERED)) {
+    if (updateOrderDto.status === OrderStatus.DELIVERED) {
       for (const item of orderExist.items) {
         await this.productModel.updateOne(
           { _id: item.product },

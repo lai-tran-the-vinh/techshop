@@ -17,7 +17,7 @@ import {
 import '@styles/order.css';
 import { formatCurrency } from '@helpers';
 import { useAppContext } from '@contexts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import UserService from '@services/users';
 import CartServices from '@services/carts';
 import Products from '@/services/products';
@@ -27,8 +27,11 @@ import MapPickerModal from '@/components/app/MapPickerModal';
 
 function Order() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { message, user } = useAppContext();
   const [loading, setLoading] = useState(true);
+  const buyNowItems = location.state?.buyNowItems;
+  const isBuyNow = !!buyNowItems;
   const [fullName, setFullName] = useState(user?.name || '');
   const [canChooseAddress, setCanChooseAddress] = useState(false);
   const [phone, setPhone] = useState(user?.phone || '');
@@ -89,6 +92,10 @@ function Order() {
   };
 
   const getCart = async () => {
+    if (isBuyNow) {
+      setCartItems(buyNowItems);
+      return;
+    }
     try {
       const response = await CartServices.get();
       if (response.status === 200) {
@@ -205,7 +212,7 @@ function Order() {
       },
       items: items,
       paymentMethod: paymentMethod,
-      source: 'ONLINE',
+      source: isBuyNow ? 'buy_now' : 'from_cart',
       paymentStatus: 'PENDING',
       recipientLocation: selectedCoords,
     });

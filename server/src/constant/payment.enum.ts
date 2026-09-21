@@ -22,5 +22,7 @@ export enum RefundStatus {
 }
 export enum OrderSource {
   ONLINE = 'online',
+  FROM_CART = 'from_cart',
+  BUY_NOW = 'buy_now',
   POS = 'pos',
 }
