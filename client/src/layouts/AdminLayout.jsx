@@ -188,6 +188,18 @@ function AdminLayout() {
           setDrawerVisible(false);
         },
       },
+      (hasPermission(permissions, Subjects.Banner, Actions.Read) ||
+        hasPermission(permissions, Subjects.Banner, Actions.Create) ||
+        hasPermission(permissions, Subjects.Banner, Actions.Update) ||
+        hasPermission(permissions, Subjects.Banner, Actions.Delete)) && {
+        key: 'banner',
+        label: 'Banner',
+        icon: <BsFillImageFill className="text-primary! text-xl!" />,
+        onClick: () => {
+          navigate('/admin/banner/management');
+          setDrawerVisible(false);
+        },
+      },
 
       hasPermission(permissions, Subjects.User, Actions.Read) &&
         ({
@@ -491,7 +503,7 @@ function AdminLayout() {
         >
           <Content
             style={{
-              padding: isMobile ? '0px' : '10px',
+              padding: isMobile ? '16px' : '24px',
               background: '#ffffff',
               // borderRadius: 10,
               // boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',

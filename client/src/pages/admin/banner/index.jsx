@@ -48,6 +48,21 @@ export const BannerPosition = {
   SIDEBAR_BANNER: 'SIDEBAR_BANNER',
 };
 
+export const BannerPositionLabels = {
+  [BannerPosition.HOME_MAIN]: 'Trang chủ - Banner chính (1200 x 600px)',
+  [BannerPosition.HOME_PROMO]: 'Trang chủ - Khuyến mãi (600 x 400px)',
+  [BannerPosition.HOME_FEATURE]: 'Trang chủ - Nổi bật',
+  [BannerPosition.HORIZONTAL_BANNER]: 'Trang chủ - Banner ngang (1200 x 300px)',
+  [BannerPosition.CATEGORY_TOP]: 'Danh mục - Đầu trang',
+  [BannerPosition.CATEGORY_SIDEBAR]: 'Danh mục - Cột bên',
+  [BannerPosition.PRODUCT_DETAIL_TOP]: 'Chi tiết SP - Đầu trang',
+  [BannerPosition.PRODUCT_DETAIL_BOTTOM]: 'Chi tiết SP - Cuối trang',
+  [BannerPosition.CART_PAGE]: 'Trang Giỏ hàng',
+  [BannerPosition.CHECKOUT_PAGE]: 'Trang Thanh toán',
+  [BannerPosition.FOOTER_BANNER]: 'Banner cuối trang (Footer)',
+  [BannerPosition.SIDEBAR_BANNER]: 'Banner cột bên (Chung)',
+};
+
 const BannerManagement = () => {
   const [banners, setBanners] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -131,20 +146,7 @@ const BannerManagement = () => {
       title: 'Vị trí',
       dataIndex: 'position',
       key: 'position',
-      render: (position) => {
-        switch (position) {
-          case 'HOME_MAIN':
-            return 'Trang chủ - chính';
-          case 'HOME_PROMO':
-            return 'Trang chủ - khuyến mãi';
-          case 'HOME_FEATURE':
-            return 'Trang chủ - nổi bật';
-          case 'HORIZONTAL_BANNER':
-            return 'Trang chủ - banner ngang';
-          default:
-            return position;
-        }
-      },
+      render: (position) => BannerPositionLabels[position] || position,
     },
     {
       title: 'Trạng thái',
@@ -230,28 +232,35 @@ const BannerManagement = () => {
         </div>
       </Modal>
 
+      <div className="mb-12 lg:mb-16">
+        <div className="text-[28px] md:text-[32px] font-semibold text-[#111827]! m-0! leading-tight">
+          Quản lý Banner
+        </div>
+        <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
+          Quản lý các banner hiển thị trên website.
+          {searchText ? (
+            <>
+              {' '}Hiển thị: <strong>{filteredData.length}</strong> /{' '}
+              <strong>{banners.length}</strong> banner
+            </>
+          ) : (
+            <>
+              {' '}Tổng cộng: <strong>{banners.length}</strong> banner
+            </>
+          )}
+        </div>
+      </div>
+
       <Card
         style={{ borderRadius: 8, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}
       >
         <Row
           justify="space-between"
           align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Col>
-            <Title level={4} style={{ margin: 0 }}>
-              <AppstoreOutlined style={{ marginRight: 8 }} />
-              Quản lý Banner
-            </Title>
-          </Col>
-        </Row>
-
-        <Row
-          justify="space-between"
-          align="middle"
+          gutter={[16, 16]}
           style={{ marginBottom: 16 }}
         >
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} md={10} lg={8}>
             <Input
               placeholder="Tìm kiếm banner..."
               prefix={<SearchOutlined />}
@@ -262,8 +271,8 @@ const BannerManagement = () => {
             />
           </Col>
 
-          <Col>
-            <Flex gap={8} wrap="wrap" justify="end">
+          <Col xs={24} md={14} lg={16}>
+            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -306,13 +315,13 @@ const BannerManagement = () => {
           rowKey="_id"
           rowSelection={rowSelection}
           loading={loading}
+          scroll={{ x: 'max-content' }}
           pagination={{
             pageSize: 10,
             showQuickJumper: true,
             total: filteredData.length,
             showTotal: (total) => `Tổng cộng ${total} banner`,
           }}
-          scroll={{ x: 800 }}
         />
       </Card>
 

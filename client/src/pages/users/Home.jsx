@@ -153,7 +153,7 @@ function Home() {
     <div className="w-full min-h-screen px-4 sm:px-8 lg:px-0">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
-          <Col xs={24} md={24} lg={18} xl={19}>
+          <Col xs={24} md={24} lg={promoBanners?.length > 0 ? 18 : 24} xl={promoBanners?.length > 0 ? 19 : 24}>
             <div
               className="relative rounded-lg overflow-hidden"
               onMouseEnter={() => setIsHovered(true)}
@@ -179,7 +179,7 @@ function Home() {
                     <img
                       src={banner.imageUrl}
                       alt={`Banner ${index}`}
-                      className="w-full h-full object-fit"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 ))}
@@ -187,7 +187,8 @@ function Home() {
             </div>
           </Col>
 
-          <Col xs={0} md={0} lg={6} xl={5} className="p-0! ">
+          {promoBanners?.length > 0 && (
+            <Col xs={0} md={0} lg={6} xl={5} className="p-0! ">
             <div className="flex flex-col h-full gap-6">
               {promoBanners.slice(0, 3).map((banner, index) => (
                 <div
@@ -199,13 +200,14 @@ function Home() {
                     <img
                       src={banner.imageUrl}
                       alt={banner.title}
-                      className="w-full! h-full! object-fit! cursor-pointer"
+                      className="w-full! h-full! object-cover! cursor-pointer"
                     />
                   </div>
                 </div>
               ))}
             </div>
           </Col>
+          )}
         </Row>
       </section>
       {!loading && recommentProducts.length > 0 && (<>

@@ -15,7 +15,7 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { callCreateBanners, callUpdateBanners } from '@/services/apis';
-import { BannerPosition } from '@/pages/admin/banner';
+import { BannerPosition, BannerPositionLabels } from '@/pages/admin/banner';
 import { useAppContext } from '@/contexts';
 import Files from '@/services/files';
 import { set } from 'react-hook-form';
@@ -150,10 +150,10 @@ const ModalBanner = (props) => {
               label="Vị trí hiển thị"
               rules={[{ required: true, message: 'Vui lòng chọn vị trí!' }]}
             >
-              <Select>
+              <Select placeholder="Chọn vị trí">
                 {Object.values(BannerPosition).map((item) => (
                   <Option key={item} value={item}>
-                    {item}
+                    {BannerPositionLabels[item] || item}
                   </Option>
                 ))}
               </Select>
