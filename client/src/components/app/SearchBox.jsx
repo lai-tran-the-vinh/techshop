@@ -151,11 +151,19 @@ function SearchBox() {
   }, [user]);
 
   return (
-    <div className={`w-full relative ${isFocused ? 'max-lg:fixed max-lg:inset-0 max-lg:z-[100] max-lg:bg-gray-50 max-lg:flex max-lg:flex-col' : ''}`}>
-      <div ref={containerRef} className={isFocused ? 'max-lg:flex-1 max-lg:flex max-lg:flex-col' : ''}>
-        <div className={`relative w-full ${isFocused ? 'max-lg:bg-gradient-primary-to-secondary max-lg:px-3 max-lg:py-3 max-lg:flex max-lg:items-center max-lg:gap-3' : ''}`} onClick={handleFocus}>
+    <div
+      className={`w-full relative ${isFocused ? 'max-lg:fixed max-lg:inset-0 max-lg:z-[100] max-lg:bg-gray-50 max-lg:flex max-lg:flex-col' : ''}`}
+    >
+      <div
+        ref={containerRef}
+        className={isFocused ? 'max-lg:flex-1 max-lg:flex max-lg:flex-col' : ''}
+      >
+        <div
+          className={`relative w-full ${isFocused ? 'max-lg:bg-gradient-primary-to-secondary max-lg:px-3 max-lg:py-3 max-lg:flex max-lg:items-center max-lg:gap-3' : ''}`}
+          onClick={handleFocus}
+        >
           {isFocused && (
-            <button 
+            <button
               className="lg:hidden p-1 text-white! hover:text-gray-200 transition-colors shrink-0"
               onClick={(e) => {
                 e.stopPropagation();
@@ -167,7 +175,9 @@ function SearchBox() {
               <ArrowLeft className="w-24 h-24" />
             </button>
           )}
-          <div className={`relative bg-white my-2 rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}>
+          <div
+            className={`relative bg-white my-2 rounded-full flex items-center ${isFocused ? 'flex-1' : ''}`}
+          >
             <div className="flex flex-1 min-w-0 items-center pl-4 pr-3 py-3 lg:pl-6 lg:pr-6 lg:py-2">
               {!isFocused && (
                 <SearchIcon

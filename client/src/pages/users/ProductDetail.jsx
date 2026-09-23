@@ -262,7 +262,8 @@ function ProductDetail() {
         },
         price: selectedVariant.price, // Dùng giá gốc, Order page sẽ tự tính discount nếu cần
         warranty: warranties?.find((w) => w._id === selectedWarranty),
-        warrantyPrice: warranties?.find((w) => w._id === selectedWarranty)?.price || 0,
+        warrantyPrice:
+          warranties?.find((w) => w._id === selectedWarranty)?.price || 0,
       }));
 
       navigate('/order', { state: { buyNowItems: populatedBuyNowItems } });
@@ -339,7 +340,12 @@ function ProductDetail() {
   return (
     <div className="w-full h-full font-inter md:mt-10 px-0 sm:px-4 md:px-10">
       <div className="mx-auto rounded-[10px]">
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]}>
+        <Row
+          gutter={[
+            { xs: 0, sm: 10 },
+            { xs: 0, sm: 10 },
+          ]}
+        >
           <Col xl={14} lg={14} md={24} sm={24} xs={24}>
             <div className="h-full bg-white rounded-none sm:rounded-xl sm:border sm:border-gray-200 p-4 sm:p-20 flex! flex-col!">
               <div className="relative h-[60%] sm:h-[80%] px-10 sm:px-0">
@@ -356,36 +362,44 @@ function ProductDetail() {
                       {branchs.map((branch) => {
                         const inStock = branchStocks[branch._id];
                         const isSelected = selectBranchs === branch._id;
-                        
+
                         return (
                           <div
                             key={branch._id}
                             onClick={() => setSelectBranchs(branch._id)}
                             className={`flex flex-col p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
-                              isSelected 
-                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                              isSelected
+                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
                                 : 'border-gray-300 hover:border-gray-400 bg-white'
                             }`}
                           >
                             <div className="flex justify-between items-start mb-2 gap-3">
-                              <Text className={`font-semibold text-[15px] leading-snug ${isSelected ? 'text-[#cb1c22]' : 'text-gray-900'}`}>
+                              <Text
+                                className={`font-semibold text-[15px] leading-snug ${isSelected ? 'text-[#cb1c22]' : 'text-gray-900'}`}
+                              >
                                 {branch.name}
                               </Text>
                               <div className="shrink-0">
                                 {inStock === undefined ? (
-                                  <span className="text-gray-500 text-[12px] font-medium bg-gray-100 border border-gray-200 px-6 py-4 rounded-md">Đang tra...</span>
+                                  <span className="text-gray-500 text-[12px] font-medium bg-gray-100 border border-gray-200 px-6 py-4 rounded-md">
+                                    Đang tra...
+                                  </span>
                                 ) : inStock ? (
-                                  <span className="text-green-700 text-[12px] font-medium bg-green-50 border border-green-200 px-6 py-4 rounded-md">Còn hàng</span>
+                                  <span className="text-green-700 text-[12px] font-medium bg-green-50 border border-green-200 px-6 py-4 rounded-md">
+                                    Còn hàng
+                                  </span>
                                 ) : (
-                                  <span className="text-red-600 text-[12px] font-medium bg-red-50 border border-red-200 px-6 py-4 rounded-md">Hết hàng</span>
+                                  <span className="text-red-600 text-[12px] font-medium bg-red-50 border border-red-200 px-6 py-4 rounded-md">
+                                    Hết hàng
+                                  </span>
                                 )}
                               </div>
                             </div>
-                            
+
                             <Text className="text-[13px] text-gray-500 leading-relaxed mb-4 flex-1">
                               {branch.address}
                             </Text>
-                            
+
                             {branch.phone && (
                               <Text className="text-[13px] font-medium text-gray-700">
                                 {branch.phone}
@@ -402,9 +416,11 @@ function ProductDetail() {
           </Col>
 
           <Col xl={10} lg={10} md={24} sm={24} xs={24}>
-            <Card 
+            <Card
               className="h-full! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200! flex! flex-col!"
-              styles={{ body: { display: 'flex', flexDirection: 'column', flex: 1 } }}
+              styles={{
+                body: { display: 'flex', flexDirection: 'column', flex: 1 },
+              }}
             >
               <div className="mb-4">
                 <Title
@@ -478,12 +494,14 @@ function ProductDetail() {
                             setSelectedColor(variant.color[0]?.colorName);
                           }}
                           className={`flex items-center justify-center px-6 h-[40px] sm:h-[42px] rounded-lg border cursor-pointer transition-all duration-200 ${
-                            isSelected 
-                              ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                            isSelected
+                              ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
                               : 'border-gray-300 hover:border-gray-400 bg-white'
                           }`}
                         >
-                          <Text className={`text-sm! sm:text-sm! font-medium! ${isSelected ? 'text-[#cb1c22]!' : 'text-gray-800!'}`}>
+                          <Text
+                            className={`text-sm! sm:text-sm! font-medium! ${isSelected ? 'text-[#cb1c22]!' : 'text-gray-800!'}`}
+                          >
                             {variant.memory?.storage && variant.memory?.ram
                               ? `${variant.memory.storage} - ${variant.memory.ram}`
                               : variant.memory?.storage ||
@@ -511,8 +529,8 @@ function ProductDetail() {
                           <div
                             onClick={() => setSelectedColor(color.colorName)}
                             className={`flex items-center gap-4 p-8 sm:p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
-                              isSelected 
-                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]' 
+                              isSelected
+                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
                                 : 'border-gray-300 hover:border-gray-400 bg-white'
                             }`}
                           >
@@ -536,7 +554,8 @@ function ProductDetail() {
                               <Typography.Text className="text-gray-500! text-[11px] sm:text-xs block mb-0.5">
                                 {formatCurrency(
                                   selectedVariant?.price -
-                                    selectedVariant?.price * (product?.discount / 100),
+                                    selectedVariant?.price *
+                                      (product?.discount / 100),
                                 )}
                                 đ
                               </Typography.Text>
@@ -780,7 +799,13 @@ function ProductDetail() {
           </Col>
         </Row>
 
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 10, sm: 10}]} className="mt-10!">
+        <Row
+          gutter={[
+            { xs: 0, sm: 10 },
+            { xs: 10, sm: 10 },
+          ]}
+          className="mt-10!"
+        >
           <Col lg={14} xs={24}>
             <Card className="p-4! sm:p-10! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200!">
               <ProductDescription product={product} loading={loading} />
@@ -793,7 +818,13 @@ function ProductDetail() {
           </Col>
         </Row>
 
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-10!">
+        <Row
+          gutter={[
+            { xs: 0, sm: 10 },
+            { xs: 0, sm: 10 },
+          ]}
+          className="mt-10!"
+        >
           <Col lg={24} md={24} sm={24} xs={24}>
             {recommnentProducts && recommnentProducts.length > 0 && (
               <PreviewListProducts
@@ -805,7 +836,13 @@ function ProductDetail() {
           </Col>
         </Row>
 
-        <Row gutter={[{xs: 0, sm: 10}, {xs: 0, sm: 10}]} className="mt-10!">
+        <Row
+          gutter={[
+            { xs: 0, sm: 10 },
+            { xs: 0, sm: 10 },
+          ]}
+          className="mt-10!"
+        >
           <Col span={24} lg={24}>
             <Comments
               stats={stats}
@@ -830,20 +867,30 @@ function ProductDetail() {
               preview={false}
             />
             <div>
-              <Text className="font-medium block text-sm! lg:text-[14px]!">{product?.name}</Text>
+              <Text className="font-medium block text-sm! lg:text-[14px]!">
+                {product?.name}
+              </Text>
               <Text className="text-xs!">
-                {selectedVariant?.memory?.storage && selectedVariant?.memory?.ram
+                {selectedVariant?.memory?.storage &&
+                selectedVariant?.memory?.ram
                   ? `${selectedVariant.memory.storage} - ${selectedVariant.memory.ram}`
-                  : ''} {selectedColor ? `- ${selectedColor}` : ''}
+                  : ''}{' '}
+                {selectedColor ? `- ${selectedColor}` : ''}
               </Text>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto lg:mr-4">
-            <span className="lg:hidden text-gray-600 text-xs font-medium">Tạm tính:</span>
+            <span className="lg:hidden text-gray-600 text-xs font-medium">
+              Tạm tính:
+            </span>
             <div className="flex items-center gap-3">
               <span className="text-red-600! font-bold! text-base! sm:text-lg!">
-                {formatCurrency(selectedVariant?.price - selectedVariant?.price * (product?.discount / 100) || 0)}đ
+                {formatCurrency(
+                  selectedVariant?.price -
+                    selectedVariant?.price * (product?.discount / 100) || 0,
+                )}
+                đ
               </span>
               {product?.discount > 0 && (
                 <span className="line-through text-gray-400! text-sm! hidden sm:inline-block">
@@ -859,7 +906,9 @@ function ProductDetail() {
               disabled={!currentStock || !selectedColor}
               onClick={async () => {
                 if (!user) {
-                  message.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+                  message.warning(
+                    'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng',
+                  );
                   navigate('/login');
                   return;
                 }
@@ -871,13 +920,15 @@ function ProductDetail() {
                   message.error('Sản phẩm đã hết hàng tại chi nhánh này');
                   return;
                 }
-                await handleAddItemsToCart([{
-                  product: product._id,
-                  variant: selectedVariant?._id,
-                  branch: selectBranchs,
-                  color: selectedColor,
-                  quantity: 1,
-                }]);
+                await handleAddItemsToCart([
+                  {
+                    product: product._id,
+                    variant: selectedVariant?._id,
+                    branch: selectBranchs,
+                    color: selectedColor,
+                    quantity: 1,
+                  },
+                ]);
               }}
               className="flex-1 lg:flex-none border-primary! text-primary! disabled:border-gray-200! disabled:text-gray-400! disabled:bg-gray-50! hover:bg-blue-50! font-bold! h-[44px]! text-xs! sm:text-base!"
             >
@@ -902,13 +953,15 @@ function ProductDetail() {
                   message.error('Sản phẩm đã hết hàng tại chi nhánh này');
                   return;
                 }
-                await handleBuy([{
-                  product: product._id,
-                  variant: selectedVariant._id,
-                  color: selectedColor,
-                  branch: selectBranchs,
-                  quantity: 1,
-                }]);
+                await handleBuy([
+                  {
+                    product: product._id,
+                    variant: selectedVariant._id,
+                    color: selectedColor,
+                    branch: selectBranchs,
+                    quantity: 1,
+                  },
+                ]);
               }}
             >
               Mua ngay

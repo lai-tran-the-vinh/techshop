@@ -193,7 +193,6 @@ const CategoryManagement = () => {
       </div>
 
       <Card>
-
         <Row
           justify="space-between"
           align="middle"
@@ -215,7 +214,11 @@ const CategoryManagement = () => {
           </Col>
 
           <Col xs={24} md={14} lg={16}>
-            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+            <Flex
+              gap={8}
+              wrap="wrap"
+              className="justify-start md:justify-end mt-3 md:mt-0"
+            >
               <Button
                 type="primary"
                 icon={<PlusOutlined />}

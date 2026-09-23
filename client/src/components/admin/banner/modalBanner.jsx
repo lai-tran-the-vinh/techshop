@@ -212,7 +212,9 @@ const ModalBanner = (props) => {
             <Form.Item
               name="startDate"
               label="Ngày bắt đầu"
-              rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}
+              rules={[
+                { required: true, message: 'Vui lòng chọn ngày bắt đầu!' },
+              ]}
             >
               <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
             </Form.Item>
@@ -221,7 +223,9 @@ const ModalBanner = (props) => {
             <Form.Item
               name="endDate"
               label="Ngày kết thúc"
-              rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
+              rules={[
+                { required: true, message: 'Vui lòng chọn ngày kết thúc!' },
+              ]}
             >
               <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
             </Form.Item>

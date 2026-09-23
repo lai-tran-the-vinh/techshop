@@ -355,7 +355,14 @@ const Dashboard = () => {
     }
 
     return (
-      <Row gutter={[{ xs: 0, sm: 16 }, { xs: 4, sm: 16 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '16px' }}>
+      <Row
+        gutter={[
+          { xs: 0, sm: 16 },
+          { xs: 4, sm: 16 },
+        ]}
+        className="max-md:!mb-[4px]"
+        style={{ marginBottom: '16px' }}
+      >
         <Col xs={24} lg={16}>
           <Card
             className="rounded-xl! h-full!"
@@ -839,7 +846,14 @@ const Dashboard = () => {
         </Row>
       </Card>
       {/* Stats Cards */}
-      <Row gutter={[{ xs: 0, sm: 10 }, { xs: 4, sm: 10 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '10px' }}>
+      <Row
+        gutter={[
+          { xs: 0, sm: 10 },
+          { xs: 4, sm: 10 },
+        ]}
+        className="max-md:!mb-[4px]"
+        style={{ marginBottom: '10px' }}
+      >
         <Col xs={24} sm={8}>
           <Card className="rounded-xl! h-full!">
             <Statistic
@@ -930,7 +944,14 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <Row gutter={[{ xs: 0, sm: 10 }, { xs: 4, sm: 10 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '10px' }}>
+      <Row
+        gutter={[
+          { xs: 0, sm: 10 },
+          { xs: 4, sm: 10 },
+        ]}
+        className="max-md:!mb-[4px]"
+        style={{ marginBottom: '10px' }}
+      >
         <Col xs={24} lg={16}>
           <Card
             className="rounded-xl!"
@@ -1164,7 +1185,14 @@ const Dashboard = () => {
       {/* Branch Overview */}
       <BranchOverview />
       {/* Product Tables */}
-      <Row gutter={[{ xs: 0, sm: 16 }, { xs: 4, sm: 16 }]} className="max-md:!mb-[4px]" style={{ marginBottom: '24px' }}>
+      <Row
+        gutter={[
+          { xs: 0, sm: 16 },
+          { xs: 4, sm: 16 },
+        ]}
+        className="max-md:!mb-[4px]"
+        style={{ marginBottom: '24px' }}
+      >
         <Col xs={24} lg={12}>
           <Card
             className="rounded-xl! h-full!"

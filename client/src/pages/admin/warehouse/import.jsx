@@ -771,61 +771,63 @@ const WarehouseInbound = () => {
           <Row gutter={[10, 10]}>
             <Col span={24}>
               <Row gutter={[10, 10]}>
-            <Col xs={{ span: 24, order: 1 }} md={{ span: 8, order: 1 }}>
-              <Input
-                placeholder="Tìm kiếm theo tên sản phẩm, chi nhánh, người tạo..."
-                prefix={<SearchOutlined />}
-                value={filters.searchText}
-                onChange={(e) =>
-                  setFilters({ ...filters, searchText: e.target.value })
-                }
-                style={{ borderRadius: '8px' }}
-              />
-            </Col>
+                <Col xs={{ span: 24, order: 1 }} md={{ span: 8, order: 1 }}>
+                  <Input
+                    placeholder="Tìm kiếm theo tên sản phẩm, chi nhánh, người tạo..."
+                    prefix={<SearchOutlined />}
+                    value={filters.searchText}
+                    onChange={(e) =>
+                      setFilters({ ...filters, searchText: e.target.value })
+                    }
+                    style={{ borderRadius: '8px' }}
+                  />
+                </Col>
 
-            <Col xs={{ span: 16, order: 2 }} md={{ span: 5, order: 2 }}>
-              <Select
-                placeholder="Chọn chi nhánh"
-                style={{ width: '100%' }}
-                value={filters.branch}
-                onChange={(value) => setFilters({ ...filters, branch: value })}
-                allowClear
-              >
-                <Option value="">Tất cả chi nhánh</Option>
-                {branches.map((branch) => (
-                  <Option key={branch._id} value={branch._id}>
-                    {branch.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
+                <Col xs={{ span: 16, order: 2 }} md={{ span: 5, order: 2 }}>
+                  <Select
+                    placeholder="Chọn chi nhánh"
+                    style={{ width: '100%' }}
+                    value={filters.branch}
+                    onChange={(value) =>
+                      setFilters({ ...filters, branch: value })
+                    }
+                    allowClear
+                  >
+                    <Option value="">Tất cả chi nhánh</Option>
+                    {branches.map((branch) => (
+                      <Option key={branch._id} value={branch._id}>
+                        {branch.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
 
-            <Col xs={{ span: 24, order: 4 }} md={{ span: 8, order: 3 }}>
-              <RangePicker
-                style={{ width: '100%' }}
-                placeholder={['Từ ngày', 'Đến ngày']}
-                value={filters.dateRange}
-                onChange={(dates) =>
-                  setFilters({ ...filters, dateRange: dates })
-                }
-              />
-            </Col>
+                <Col xs={{ span: 24, order: 4 }} md={{ span: 8, order: 3 }}>
+                  <RangePicker
+                    style={{ width: '100%' }}
+                    placeholder={['Từ ngày', 'Đến ngày']}
+                    value={filters.dateRange}
+                    onChange={(dates) =>
+                      setFilters({ ...filters, dateRange: dates })
+                    }
+                  />
+                </Col>
 
-            <Col xs={{ span: 8, order: 3 }} md={{ span: 3, order: 4 }}>
-              <Button
-                icon={<ReloadOutlined />}
-                onClick={() =>
-                  setFilters({
-                    branch: '',
-                    searchText: '',
-                    dateRange: null,
-                  })
-                }
-                style={{ width: '100%' }}
-              >
-                Làm mới
-              </Button>
-            </Col>
+                <Col xs={{ span: 8, order: 3 }} md={{ span: 3, order: 4 }}>
+                  <Button
+                    icon={<ReloadOutlined />}
+                    onClick={() =>
+                      setFilters({
+                        branch: '',
+                        searchText: '',
+                        dateRange: null,
+                      })
+                    }
+                    style={{ width: '100%' }}
+                  >
+                    Làm mới
+                  </Button>
+                </Col>
               </Row>
             </Col>
             <Divider className="my-5!" />

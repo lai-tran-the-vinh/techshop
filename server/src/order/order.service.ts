@@ -39,8 +39,8 @@ import {
 } from 'src/benefit/schemas/warrantypolicy.schema';
 import { UserService } from 'src/user/user.service';
 import { Branch, BranchDocument } from 'src/branch/schemas/branch.schema';
-import { HttpService } from '@nestjs/axios'; 
-import { firstValueFrom } from 'rxjs'; 
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class OrderService {
   constructor(
@@ -81,7 +81,6 @@ export class OrderService {
       const response = await firstValueFrom(this.httpService.get(url));
       const features = response.data.features;
 
-    
       if (features && features.length > 0) {
         return features[0].geometry.coordinates;
       }
@@ -109,7 +108,8 @@ export class OrderService {
 
     // 2. Lấy items từ giỏ hàng hoặc từ POS (tạo tại quầy)
     let itemsToOrder = [];
-    const orderSource = createOrderDto.source ||
+    const orderSource =
+      createOrderDto.source ||
       (createOrderDto.items && createOrderDto.items.length > 0
         ? OrderSource.POS
         : OrderSource.FROM_CART);
@@ -163,18 +163,18 @@ export class OrderService {
 
     // Chuẩn bị dữ liệu tracking ban đầu
     const initialLocation = orderBranch.location;
-    const initialAddress = orderBranch.address || orderBranch.name; 
+    const initialAddress = orderBranch.address || orderBranch.name;
     const initialTrackingEntry = {
       location: initialLocation,
       address: initialAddress,
-      status: OrderStatus.PENDING, 
+      status: OrderStatus.PENDING,
       timestamp: new Date(),
     };
     let recipientLocationData = null;
     const recipientAddress = createOrderDto.recipient?.address;
     if (recipientAddress) {
       const coordinates = await this.geocodeAddress(recipientAddress);
-      
+
       if (coordinates) {
         recipientLocationData = {
           type: 'Point',
@@ -285,7 +285,7 @@ export class OrderService {
         name: user.name,
         email: user.email,
       },
-     
+
       source: orderSource,
       currentLocation: initialLocation,
       trackingHistory: [initialTrackingEntry],
@@ -310,7 +310,10 @@ export class OrderService {
 
     // 8. Nếu là đặt hàng online thì xoá giỏ hàng
 
-    if (orderSource === OrderSource.ONLINE || orderSource === OrderSource.FROM_CART) {
+    if (
+      orderSource === OrderSource.ONLINE ||
+      orderSource === OrderSource.FROM_CART
+    ) {
       await this.cartService.remove(user);
     }
 

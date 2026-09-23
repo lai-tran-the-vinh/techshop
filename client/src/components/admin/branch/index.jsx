@@ -110,7 +110,7 @@ const ModalBranch = (props) => {
 
     try {
       const res = dataInit?._id
-        ? await callUpdateBranch(branchData) 
+        ? await callUpdateBranch(branchData)
         : await callCreateBranch(branchData);
 
       if (res.data) {

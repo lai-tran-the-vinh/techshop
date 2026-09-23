@@ -170,7 +170,6 @@ const UserManagement = () => {
     [message],
   );
 
-
   const handleProvinceSelect = useCallback(
     async (provinceData, fieldKey) => {
       const currentAddresses = form.getFieldValue('addresses') || [];
@@ -484,7 +483,6 @@ const UserManagement = () => {
 
       <Card className="shadow-none!">
         <div className="flex flex-col lg:flex-row gap-10 items-stretch lg:items-center mb-16">
-          
           <div className="w-full lg:flex-1">
             <Input
               placeholder="Tìm kiếm tên, email..."

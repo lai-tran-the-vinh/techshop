@@ -348,7 +348,6 @@ const RoleManagement = () => {
       </div>
 
       <Card>
-
         <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
           <div className="w-full lg:w-1/3">
             <Input
@@ -408,7 +407,7 @@ const RoleManagement = () => {
           </div>
         </div>
 
-          <Table
+        <Table
           loading={loading}
           rowKey={(record) => record._id}
           rowSelection={rowSelection}

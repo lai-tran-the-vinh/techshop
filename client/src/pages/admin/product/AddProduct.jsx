@@ -218,7 +218,10 @@ function AddProduct() {
         }
       }
 
-      console.log('📦 Payload gửi lên API:', JSON.parse(JSON.stringify(productToSubmit)));
+      console.log(
+        '📦 Payload gửi lên API:',
+        JSON.parse(JSON.stringify(productToSubmit)),
+      );
       const addProduct = await Products.add(productToSubmit);
 
       if (addProduct) {

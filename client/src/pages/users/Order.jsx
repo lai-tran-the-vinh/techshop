@@ -173,7 +173,11 @@ function Order() {
     let finalAddress = '';
     if (shippingMethod === 'Giao hàng tận nơi') {
       if (canChooseAddress) {
-        if (userTypeAddress.specificAddress?.trim() && selectedProvince && selectedCommune) {
+        if (
+          userTypeAddress.specificAddress?.trim() &&
+          selectedProvince &&
+          selectedCommune
+        ) {
           finalAddress = `${userTypeAddress.specificAddress.trim()}, ${userTypeAddress.addressDetail}`;
         } else {
           finalAddress = '';
@@ -334,20 +338,24 @@ function Order() {
                       <Typography.Text className="font-bold text-[14px] leading-snug break-words line-clamp-2">
                         {item.variant.name}
                       </Typography.Text>
-                      <Flex
-                        align="start"
-                        className="mt-4"
-                        gap={4}
-                        vertical
-                      >
-                        <Typography.Text type="secondary" className="text-[12px]">
+                      <Flex align="start" className="mt-4" gap={4} vertical>
+                        <Typography.Text
+                          type="secondary"
+                          className="text-[12px]"
+                        >
                           Số lượng: {item?.quantity}
                         </Typography.Text>
-                        <Typography.Text type="secondary" className="text-[12px]">
+                        <Typography.Text
+                          type="secondary"
+                          className="text-[12px]"
+                        >
                           {`Màu sắc: ${item.color}`}
                         </Typography.Text>
                         {item.variant.memory && (
-                          <Typography.Text type="secondary" className="text-[12px]">
+                          <Typography.Text
+                            type="secondary"
+                            className="text-[12px]"
+                          >
                             {`Biến thể: ${item.variant.memory.ram}, ${item.variant.memory.storage}`}
                           </Typography.Text>
                         )}

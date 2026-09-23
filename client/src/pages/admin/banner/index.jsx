@@ -240,12 +240,14 @@ const BannerManagement = () => {
           Quản lý các banner hiển thị trên website.
           {searchText ? (
             <>
-              {' '}Hiển thị: <strong>{filteredData.length}</strong> /{' '}
+              {' '}
+              Hiển thị: <strong>{filteredData.length}</strong> /{' '}
               <strong>{banners.length}</strong> banner
             </>
           ) : (
             <>
-              {' '}Tổng cộng: <strong>{banners.length}</strong> banner
+              {' '}
+              Tổng cộng: <strong>{banners.length}</strong> banner
             </>
           )}
         </div>
@@ -272,7 +274,11 @@ const BannerManagement = () => {
           </Col>
 
           <Col xs={24} md={14} lg={16}>
-            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+            <Flex
+              gap={8}
+              wrap="wrap"
+              className="justify-start md:justify-end mt-3 md:mt-0"
+            >
               <Button
                 type="primary"
                 icon={<PlusOutlined />}

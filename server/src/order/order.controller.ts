@@ -26,7 +26,6 @@ export class OrderController {
 
   @Post()
   create(@Body() createOrderDto: CreateOrderDto, @User() user: IUser) {
-   
     return this.orderService.create(createOrderDto, user);
   }
 
@@ -39,7 +38,7 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @Get('tracking/latest')
   async getLatestOrderTracking(@Req() req) {
-    const userId = req.user._id; 
+    const userId = req.user._id;
 
     const trackingData =
       await this.orderService.findLatestTrackingForUser(userId);
@@ -47,10 +46,7 @@ export class OrderController {
     return trackingData;
   }
   @Get('tracking/:id')
-
-  async getOrderTrackingDetails(
-    @Param('id') id: string,
-  ) {
+  async getOrderTrackingDetails(@Param('id') id: string) {
     const trackingData = await this.orderService.findTrackingDetails(id);
     return {
       statusCode: 200,

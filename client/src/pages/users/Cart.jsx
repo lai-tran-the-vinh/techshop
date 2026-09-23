@@ -57,7 +57,11 @@ function Cart() {
           const data = response.data.data;
           setCartData(data);
           if (data?.items) {
-            setSelectedRowKeys(data.items.map(item => `${item.product._id}-${item.variant._id}`));
+            setSelectedRowKeys(
+              data.items.map(
+                (item) => `${item.product._id}-${item.variant._id}`,
+              ),
+            );
           }
           setLoading(false);
         }
@@ -72,7 +76,7 @@ function Cart() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Giỏ hàng';
-    
+
     const fetchRecommendations = async () => {
       try {
         if (user) {
@@ -190,7 +194,7 @@ function Cart() {
   };
 
   const cartItems = cartData?.items || [];
-  
+
   const variantItem = cartItems.map((item) => {
     const selectedColor = item.variant?.color?.find(
       (color) => color.colorName === item.color,
@@ -202,13 +206,15 @@ function Cart() {
     };
   });
 
-  const selectedItems = variantItem.filter(item => selectedRowKeys.includes(item.itemKey));
+  const selectedItems = variantItem.filter((item) =>
+    selectedRowKeys.includes(item.itemKey),
+  );
 
   const total = selectedItems.reduce(
     (sum, item) => sum + (item.variant?.price || 0) * item.quantity,
     0,
   );
-  
+
   const calculateDiscountedPrice = (item) => {
     const originalPrice = item?.variant?.price * item.quantity;
     const discountAmount =
@@ -220,14 +226,14 @@ function Cart() {
     (sum, item) => sum + calculateDiscountedPrice(item),
     0,
   );
-  
+
   const totalDiscount = total - discountedTotal;
   const shippingFee = 0;
   const finalTotal = discountedTotal + shippingFee;
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedRowKeys(variantItem.map(item => item.itemKey));
+      setSelectedRowKeys(variantItem.map((item) => item.itemKey));
     } else {
       setSelectedRowKeys([]);
     }
@@ -237,7 +243,7 @@ function Cart() {
     if (checked) {
       setSelectedRowKeys([...selectedRowKeys, itemKey]);
     } else {
-      setSelectedRowKeys(selectedRowKeys.filter(k => k !== itemKey));
+      setSelectedRowKeys(selectedRowKeys.filter((k) => k !== itemKey));
     }
   };
 
@@ -281,16 +287,22 @@ function Cart() {
               src="https://fptshop.com.vn/img/empty_cart.png?w=1920&q=75"
             />
           </div>
-          
+
           <div className="flex flex-col gap-24 lg:gap-24 items-center lg:items-start order-2 lg:order-1 px-8 mt-8 lg:mt-0">
-            <Title level={5} className="font-semibold! mb-0! text-[16px]! text-gray-800! lg:text-[24px]!">
+            <Title
+              level={5}
+              className="font-semibold! mb-0! text-[16px]! text-gray-800! lg:text-[24px]!"
+            >
               Chưa có sản phẩm nào trong giỏ hàng
             </Title>
             <Text className="text-[#6b7280]! text-[13px]! lg:text-[16px]!">
               Cùng mua sắm hàng ngàn sản phẩm tại TechShop nhé!
             </Text>
             <Link to="/" className="mt-16 lg:mt-16">
-              <Button type="primary" className="rounded-full! h-[40px]! px-48! lg:h-[48px]! lg:px-56! bg-[#cb1c22]! hover:bg-[#a1161b]! border-none! text-[14px]! font-medium!">
+              <Button
+                type="primary"
+                className="rounded-full! h-[40px]! px-48! lg:h-[48px]! lg:px-56! bg-[#cb1c22]! hover:bg-[#a1161b]! border-none! text-[14px]! font-medium!"
+              >
                 Mua hàng
               </Button>
             </Link>
@@ -300,34 +312,67 @@ function Cart() {
         <div className="w-full max-w-[1200px] mx-auto">
           {/* Mobile Back to Shop Link */}
           <div className="lg:hidden px-16 py-12 bg-white flex items-center shadow-sm sticky top-0 z-40">
-            <Link to="/" className="text-primary! text-sm font-medium flex items-center gap-4">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <Link
+              to="/"
+              className="text-primary! text-sm font-medium flex items-center gap-4"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15 18L9 12L15 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               Tiếp tục mua sắm
             </Link>
           </div>
 
-          <Row gutter={[{xs: 0, lg: 10}, {xs: 10, lg: 10}]} className="w-full! m-0! max-lg:px-0 max-lg:pt-0">
+          <Row
+            gutter={[
+              { xs: 0, lg: 10 },
+              { xs: 10, lg: 10 },
+            ]}
+            className="w-full! m-0! max-lg:px-0 max-lg:pt-0"
+          >
             <Col xs={24} lg={17} className="max-lg:px-0!">
               <div className="bg-white rounded-none lg:rounded-xl lg:border lg:border-gray-200 overflow-hidden">
                 {/* Header Actions */}
                 <div className="px-16 py-12 flex justify-between items-center border-b border-gray-100">
-                  <Checkbox 
-                    checked={selectedRowKeys.length === cartItems.length && cartItems.length > 0}
+                  <Checkbox
+                    checked={
+                      selectedRowKeys.length === cartItems.length &&
+                      cartItems.length > 0
+                    }
                     onChange={handleSelectAll}
                     className="custom-checkbox"
                   >
-                    <span className="ml-8 font-medium text-gray-800 text-[15px]">Chọn tất cả ({cartItems.length})</span>
+                    <span className="ml-8 font-medium text-gray-800 text-[15px]">
+                      Chọn tất cả ({cartItems.length})
+                    </span>
                   </Checkbox>
-                  
+
                   <button
                     onClick={() => {
-                      setModalText('Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng không?');
+                      setModalText(
+                        'Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng không?',
+                      );
                       setOpen(true);
                       setDeleteType('all');
                     }}
-                    disabled={!(selectedRowKeys.length === cartItems.length && cartItems.length > 0)}
+                    disabled={
+                      !(
+                        selectedRowKeys.length === cartItems.length &&
+                        cartItems.length > 0
+                      )
+                    }
                     className="text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <DeleteOutlined className="text-[18px]" />
@@ -340,18 +385,26 @@ function Cart() {
                     const originalPrice = item?.variant?.price * item.quantity;
                     const discountedPrice = calculateDiscountedPrice(item);
                     const hasDiscount = (item.product?.discount || 0) > 0;
-                    
+
                     return (
-                      <div key={item.itemKey} className={`p-16 flex items-start gap-12 relative group ${index !== variantItem.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                        <Checkbox 
+                      <div
+                        key={item.itemKey}
+                        className={`p-16 flex items-start gap-12 relative group ${index !== variantItem.length - 1 ? 'border-b border-gray-100' : ''}`}
+                      >
+                        <Checkbox
                           checked={selectedRowKeys.includes(item.itemKey)}
-                          onChange={(e) => handleSelectItem(item.itemKey, e.target.checked)}
+                          onChange={(e) =>
+                            handleSelectItem(item.itemKey, e.target.checked)
+                          }
                           className="mt-4 custom-checkbox"
                         />
-                        
+
                         <div className="w-[80px] h-[80px] border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
                           <Image
-                            src={item?.color?.images?.[0] || '/placeholder-image.jpg'}
+                            src={
+                              item?.color?.images?.[0] ||
+                              '/placeholder-image.jpg'
+                            }
                             alt={item?.variant?.name}
                             width="100%"
                             height="100%"
@@ -360,11 +413,14 @@ function Cart() {
                             preview={false}
                           />
                         </div>
-                        
+
                         <div className="flex-1 flex flex-col lg:flex-row lg:items-center lg:justify-between min-w-0">
                           {/* Item Info */}
                           <div className="flex flex-col gap-4 lg:gap-6 lg:w-[45%]">
-                            <Link to={`/product/${item.product._id}`} className="hover:text-primary transition-colors">
+                            <Link
+                              to={`/product/${item.product._id}`}
+                              className="hover:text-primary transition-colors"
+                            >
                               <h3 className="font-medium text-gray-800 text-[14px] leading-snug line-clamp-2">
                                 {item?.product?.name} {item?.variant?.name}
                               </h3>
@@ -375,7 +431,7 @@ function Cart() {
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Mobile Price & Actions grouped, Desktop horizontal */}
                           <div className="flex flex-col lg:flex-row lg:items-center lg:w-[55%] mt-12 lg:mt-0">
                             {/* Price */}
@@ -389,12 +445,18 @@ function Cart() {
                                 </span>
                               )}
                             </div>
-                            
+
                             {/* Quantity & Trash */}
                             <div className="flex items-center justify-between lg:justify-end w-full lg:w-[65%]">
                               <div className="flex items-center border border-gray-300 rounded overflow-hidden bg-white lg:mr-24">
                                 <button
-                                  onClick={() => updateQuantity(item.product._id, item.variant._id, item.quantity - 1)}
+                                  onClick={() =>
+                                    updateQuantity(
+                                      item.product._id,
+                                      item.variant._id,
+                                      item.quantity - 1,
+                                    )
+                                  }
                                   disabled={item.quantity <= 1}
                                   className="w-[32px] h-[32px] flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:bg-gray-50 disabled:text-gray-300 transition-colors cursor-pointer"
                                 >
@@ -407,13 +469,19 @@ function Cart() {
                                   className="w-[40px] h-[32px] text-center text-[14px] font-medium border-x border-gray-300 focus:outline-none"
                                 />
                                 <button
-                                  onClick={() => updateQuantity(item.product._id, item.variant._id, item.quantity + 1)}
+                                  onClick={() =>
+                                    updateQuantity(
+                                      item.product._id,
+                                      item.variant._id,
+                                      item.quantity + 1,
+                                    )
+                                  }
                                   className="w-[32px] h-[32px] flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer"
                                 >
                                   <PlusOutlined className="text-[12px]" />
                                 </button>
                               </div>
-                              
+
                               <button
                                 onClick={() => {
                                   setDeleteType('item');
@@ -435,18 +503,35 @@ function Cart() {
             </Col>
 
             <Col xs={24} lg={7} className="max-lg:px-0!">
-              <div 
-                className="lg:sticky lg:top-[120px] bg-white rounded-none lg:rounded-t-xl relative lg:pb-16 lg:border-t lg:border-l lg:border-r lg:border-gray-200 max-lg:border-t max-lg:border-gray-100" 
-              >
+              <div className="lg:sticky lg:top-[120px] bg-white rounded-none lg:rounded-t-xl relative lg:pb-16 lg:border-t lg:border-l lg:border-r lg:border-gray-200 max-lg:border-t max-lg:border-gray-100">
                 {/* Receipt jagged torn bottom border for Desktop */}
                 <div className="absolute bottom-[-8px] left-[-1px] right-[-1px] h-[8px] hidden lg:block overflow-visible z-10">
                   <svg width="100%" height="100%" className="overflow-visible">
                     <defs>
-                      <pattern id="torn-edge" x="0" y="0" width="16" height="8" patternUnits="userSpaceOnUse">
-                        <path d="M 0,0 L 8,8 L 16,0" fill="#ffffff" stroke="#e5e7eb" strokeWidth="1" strokeLinejoin="round"/>
+                      <pattern
+                        id="torn-edge"
+                        x="0"
+                        y="0"
+                        width="16"
+                        height="8"
+                        patternUnits="userSpaceOnUse"
+                      >
+                        <path
+                          d="M 0,0 L 8,8 L 16,0"
+                          fill="#ffffff"
+                          stroke="#e5e7eb"
+                          strokeWidth="1"
+                          strokeLinejoin="round"
+                        />
                       </pattern>
                     </defs>
-                    <rect x="0" y="0" width="100%" height="100%" fill="url(#torn-edge)"/>
+                    <rect
+                      x="0"
+                      y="0"
+                      width="100%"
+                      height="100%"
+                      fill="url(#torn-edge)"
+                    />
                   </svg>
                 </div>
                 <div className="p-20 flex flex-col gap-12">
@@ -457,15 +542,23 @@ function Cart() {
                     </h3>
                     <div className="space-y-12">
                       <Flex justify="space-between" align="center">
-                        <Text className="text-gray-500! text-[14px]!">Tổng tiền</Text>
+                        <Text className="text-gray-500! text-[14px]!">
+                          Tổng tiền
+                        </Text>
                         <Text className="text-gray-900! font-semibold! text-[15px]!">
                           {total?.toLocaleString()}đ
                         </Text>
                       </Flex>
-                      
-                      <Flex justify="space-between" align="start" className="flex-col gap-6">
+
+                      <Flex
+                        justify="space-between"
+                        align="start"
+                        className="flex-col gap-6"
+                      >
                         <div className="flex justify-between w-full">
-                          <Text className="text-gray-500! text-[14px]!">Tổng khuyến mãi</Text>
+                          <Text className="text-gray-500! text-[14px]!">
+                            Tổng khuyến mãi
+                          </Text>
                           <Text className="text-gray-900! font-semibold! text-[15px]!">
                             -{totalDiscount?.toLocaleString()}đ
                           </Text>
@@ -475,28 +568,36 @@ function Cart() {
                             <Text className="text-gray-400! text-[13px]!">
                               Giảm giá sản phẩm
                             </Text>
-                            <Text className="text-gray-400! text-[13px]!">{totalDiscount?.toLocaleString()}đ</Text>
+                            <Text className="text-gray-400! text-[13px]!">
+                              {totalDiscount?.toLocaleString()}đ
+                            </Text>
                           </div>
                           <div className="flex justify-between w-full items-center">
                             <Text className="text-gray-400! text-[13px]!">
                               Voucher
                             </Text>
-                            <Text className="text-gray-400! text-[13px]!">0đ</Text>
+                            <Text className="text-gray-400! text-[13px]!">
+                              0đ
+                            </Text>
                           </div>
                           <div className="flex justify-between w-full items-center">
                             <Text className="text-gray-400! text-[13px]!">
                               Phí vận chuyển
                             </Text>
-                            <Text className="text-gray-400! text-[13px]!">0đ</Text>
+                            <Text className="text-gray-400! text-[13px]!">
+                              0đ
+                            </Text>
                           </div>
                         </div>
                       </Flex>
                     </div>
                   </div>
-                  
+
                   <div className="pt-4 mt-2">
                     <Flex justify="space-between" align="center">
-                      <Text className="text-gray-900! font-bold! text-[16px]!">Cần thanh toán</Text>
+                      <Text className="text-gray-900! font-bold! text-[16px]!">
+                        Cần thanh toán
+                      </Text>
                       <Text className="text-[#cb1c22]! font-bold! text-[20px]!">
                         {finalTotal?.toLocaleString()}đ
                       </Text>
@@ -522,10 +623,17 @@ function Cart() {
           {/* Mobile Sticky Checkout Bar */}
           <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-50 p-4 px-6 flex items-center justify-between">
             <div className="flex flex-col">
-              <span className="text-xs text-gray-500 mb-1">Tạm tính ({selectedItems.length} sản phẩm)</span>
-              <span className="text-[#cb1c22] font-bold text-[18px]">{finalTotal?.toLocaleString()}₫</span>
+              <span className="text-xs text-gray-500 mb-1">
+                Tạm tính ({selectedItems.length} sản phẩm)
+              </span>
+              <span className="text-[#cb1c22] font-bold text-[18px]">
+                {finalTotal?.toLocaleString()}₫
+              </span>
             </div>
-            <Link to="/order" className="w-[150px] text-white! hover:text-white!">
+            <Link
+              to="/order"
+              className="w-[150px] text-white! hover:text-white!"
+            >
               <button
                 disabled={selectedItems.length === 0}
                 className="w-full bg-[#cb1c22] hover:bg-[#a1161b] text-white! font-semibold rounded-lg h-[44px] text-[14px] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"

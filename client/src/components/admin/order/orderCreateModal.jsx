@@ -280,10 +280,7 @@ const CreateOrderModal = ({
 
         <Divider>Chọn sản phẩm</Divider>
 
-        <Card
-          size="small"
-          className="mb-16 bg-[#fafafa]"
-        >
+        <Card size="small" className="mb-16 bg-[#fafafa]">
           <div className="grid grid-cols-12 gap-10 items-end">
             <div className="col-span-12 md:col-span-6">
               <div className="mb-8">
@@ -438,7 +435,9 @@ const CreateOrderModal = ({
                         <div className="flex items-center gap-4">
                           <div
                             className="w-10 h-10 rounded-full border border-white"
-                            style={{ backgroundColor: item.variantColor?.toLowerCase() }}
+                            style={{
+                              backgroundColor: item.variantColor?.toLowerCase(),
+                            }}
                           />
                           {item.variantColor}
                         </div>

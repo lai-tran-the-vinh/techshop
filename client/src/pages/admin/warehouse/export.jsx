@@ -941,8 +941,12 @@ const WarehouseOutbound = () => {
           <Card
             title={
               <Space className="py-10!">
-                <Text strong className="text-[16px]!">Danh sách sản phẩm</Text>
-                <Text type="secondary" className="text-[16px]!">({outboundItems.length})</Text>
+                <Text strong className="text-[16px]!">
+                  Danh sách sản phẩm
+                </Text>
+                <Text type="secondary" className="text-[16px]!">
+                  ({outboundItems.length})
+                </Text>
               </Space>
             }
             style={{ marginTop: '16px' }}
@@ -1040,7 +1044,9 @@ const WarehouseOutbound = () => {
         <Card
           title={
             <Space className="py-10!">
-              <Text strong className="text-[16px]!">Chi tiết sản phẩm xuất kho</Text>
+              <Text strong className="text-[16px]!">
+                Chi tiết sản phẩm xuất kho
+              </Text>
             </Space>
           }
           style={{ marginTop: '24px' }}
@@ -1062,7 +1068,9 @@ const WarehouseOutbound = () => {
         <Card
           title={
             <Space className="py-10!">
-              <Text strong className="text-[16px]!">Lịch sử xuất kho</Text>
+              <Text strong className="text-[16px]!">
+                Lịch sử xuất kho
+              </Text>
             </Space>
           }
           style={{ marginTop: '24px' }}
@@ -1088,7 +1096,9 @@ const WarehouseOutbound = () => {
                     placeholder="Chọn chi nhánh"
                     style={{ width: '100%' }}
                     value={filters.branch}
-                    onChange={(value) => setFilters({ ...filters, branch: value })}
+                    onChange={(value) =>
+                      setFilters({ ...filters, branch: value })
+                    }
                     allowClear
                   >
                     {branches.map((branch) => (

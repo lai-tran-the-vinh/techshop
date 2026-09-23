@@ -502,7 +502,8 @@ const WarehouseTransferManagement = () => {
             Quản lý chuyển kho hàng hóa
           </div>
           <div className="text-[14px] md:text-[16px] text-[#6b7280]! mt-2!">
-            Theo dõi và quản lý các phiếu luân chuyển hàng hóa giữa các chi nhánh
+            Theo dõi và quản lý các phiếu luân chuyển hàng hóa giữa các chi
+            nhánh
           </div>
         </div>
 
@@ -519,7 +520,6 @@ const WarehouseTransferManagement = () => {
       </div>
 
       <Card>
-
         <Table
           columns={columns}
           dataSource={transfers}

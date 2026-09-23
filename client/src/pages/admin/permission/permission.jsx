@@ -405,19 +405,20 @@ const PermissionsManagement = () => {
           Quản lý các quyền hạn trong hệ thống.
           {hasActiveFilters() ? (
             <>
-              {' '}Hiển thị: <strong>{filteredPermissions.length}</strong> /{' '}
+              {' '}
+              Hiển thị: <strong>{filteredPermissions.length}</strong> /{' '}
               <strong>{permissions.length}</strong> quyền
             </>
           ) : (
             <>
-              {' '}Tổng cộng: <strong>{permissions.length}</strong> quyền
+              {' '}
+              Tổng cộng: <strong>{permissions.length}</strong> quyền
             </>
           )}
         </div>
       </div>
 
       <Card>
-
         <Row
           justify="space-between"
           align="middle"
@@ -438,7 +439,11 @@ const PermissionsManagement = () => {
             />
           </Col>
           <Col xs={24} md={14} lg={16}>
-            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+            <Flex
+              gap={8}
+              wrap="wrap"
+              className="justify-start md:justify-end mt-3 md:mt-0"
+            >
               <Select
                 showSearch
                 placeholder="Mô đun"
@@ -477,7 +482,10 @@ const PermissionsManagement = () => {
                 suffixIcon={<FilterOutlined />}
               >
                 {statusOptions.map((option) => (
-                  <Select.Option key={String(option.value)} value={option.value}>
+                  <Select.Option
+                    key={String(option.value)}
+                    value={option.value}
+                  >
                     {option.label}
                   </Select.Option>
                 ))}
@@ -497,7 +505,11 @@ const PermissionsManagement = () => {
 
         <Row justify="end" align="middle" style={{ marginBottom: 16 }}>
           <Col xs={24}>
-            <Flex gap={8} wrap="wrap" className="justify-start md:justify-end mt-3 md:mt-0">
+            <Flex
+              gap={8}
+              wrap="wrap"
+              className="justify-start md:justify-end mt-3 md:mt-0"
+            >
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -544,7 +556,7 @@ const PermissionsManagement = () => {
           </Col>
         </Row>
 
-          <Table
+        <Table
           loading={loading}
           rowKey={(record) => record._id}
           rowSelection={rowSelection}

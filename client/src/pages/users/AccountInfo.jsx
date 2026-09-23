@@ -1026,7 +1026,10 @@ const AccountInfoPage = () => {
       <div className="flex flex-col lg:flex-row gap-2 lg:gap-24 my-0 mx-auto bg-[#f3f4f6]">
         {/* Khối bên trái */}
         <div className="bg-[#f3f4f6] w-full lg:w-[300px] flex-shrink-0">
-          <Card className="p-4 lg:p-12! max-lg:rounded-none!" style={{ marginBottom: '8px' }}>
+          <Card
+            className="p-4 lg:p-12! max-lg:rounded-none!"
+            style={{ marginBottom: '8px' }}
+          >
             <div className="flex items-center mb-16">
               <div className="w-48 h-48 bg-[#ff6b35] rounded-full flex items-center justify-center mr-12">
                 <UserOutlined className="text-2xl! text-white!" />

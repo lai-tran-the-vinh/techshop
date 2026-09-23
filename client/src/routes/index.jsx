@@ -80,7 +80,6 @@ const router = createBrowserRouter([
         path: 'search/:query',
         element: <SearchProductResult />,
       },
-
     ],
   },
   {

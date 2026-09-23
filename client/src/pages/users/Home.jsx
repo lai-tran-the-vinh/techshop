@@ -116,8 +116,9 @@ function Home() {
     <button
       type="button"
       onClick={onClick}
-      className={`absolute -right-5 lg:-right-1 h-[60px] w-[60px] rounded-l-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
-        }`}
+      className={`absolute -right-5 lg:-right-1 h-[60px] w-[60px] rounded-l-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${
+        isHovered ? 'opacity-100' : 'opacity-0'
+      }`}
       aria-label="Next slide"
     >
       <RightOutlined className="text-lg font-bold" />
@@ -128,8 +129,9 @@ function Home() {
     <button
       type="button"
       onClick={onClick}
-      className={`absolute -left-5 lg:-left-1 h-[60px] w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
-        }`}
+      className={`absolute -left-5 lg:-left-1 h-[60px] w-[60px] rounded-r-full flex items-center justify-center hover:opacity-80 bg-white/30 backdrop-filter backdrop-blur-md top-1/2 -translate-y-1/2 z-10 text-white cursor-pointer shadow-lg transition-all duration-300 ${
+        isHovered ? 'opacity-100' : 'opacity-0'
+      }`}
       aria-label="Previous slide"
     >
       <LeftOutlined className="text-lg font-bold" />
@@ -153,7 +155,12 @@ function Home() {
     <div className="w-full min-h-screen px-4 sm:px-8 lg:px-0">
       <section className="w-full my-15">
         <Row gutter={[10]} className="w-full! h-full! mx-auto!">
-          <Col xs={24} md={24} lg={promoBanners?.length > 0 ? 18 : 24} xl={promoBanners?.length > 0 ? 19 : 24}>
+          <Col
+            xs={24}
+            md={24}
+            lg={promoBanners?.length > 0 ? 18 : 24}
+            xl={promoBanners?.length > 0 ? 19 : 24}
+          >
             <div
               className="relative rounded-lg overflow-hidden"
               onMouseEnter={() => setIsHovered(true)}
@@ -189,37 +196,38 @@ function Home() {
 
           {promoBanners?.length > 0 && (
             <Col xs={0} md={0} lg={6} xl={5} className="p-0! ">
-            <div className="flex flex-col h-full gap-6">
-              {promoBanners.slice(0, 3).map((banner, index) => (
-                <div
-                  key={index}
-                  className="h-1/3 cursor-pointer "
-                  onClick={() => handleBannerClick(banner)}
-                >
-                  <div className="relative h-full w-full rounded-xl overflow-hidden">
-                    <img
-                      src={banner.imageUrl}
-                      alt={banner.title}
-                      className="w-full! h-full! object-cover! cursor-pointer"
-                    />
+              <div className="flex flex-col h-full gap-6">
+                {promoBanners.slice(0, 3).map((banner, index) => (
+                  <div
+                    key={index}
+                    className="h-1/3 cursor-pointer "
+                    onClick={() => handleBannerClick(banner)}
+                  >
+                    <div className="relative h-full w-full rounded-xl overflow-hidden">
+                      <img
+                        src={banner.imageUrl}
+                        alt={banner.title}
+                        className="w-full! h-full! object-cover! cursor-pointer"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </Col>
+                ))}
+              </div>
+            </Col>
           )}
         </Row>
       </section>
-      {!loading && recommentProducts.length > 0 && (<>
-        <PreviewListProducts
-          key='recommended_products'
-          loading={false}
-          products={recommentProducts}
-          viewAll={false}
-          title={'Sản phẩm có thể phù hợp với bạn'}
-          className="mt-4 sm:mt-8"
-        />
-      </>
+      {!loading && recommentProducts.length > 0 && (
+        <>
+          <PreviewListProducts
+            key="recommended_products"
+            loading={false}
+            products={recommentProducts}
+            viewAll={false}
+            title={'Sản phẩm có thể phù hợp với bạn'}
+            className="mt-4 sm:mt-8"
+          />
+        </>
       )}
 
       {/* Danh sách danh mục */}

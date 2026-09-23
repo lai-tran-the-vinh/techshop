@@ -38,7 +38,10 @@ function PaymentFailure() {
     <div className="bg-[#f5f5f5]! lg:mt-10! w-full! max-w-[1200px] mx-auto">
       <div className="bg-white rounded-none lg:rounded-xl p-20 lg:p-30! border-y lg:border border-gray-200! flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0">
         <div className="flex flex-col gap-5 text-center lg:text-left items-center lg:items-start order-2 lg:order-1">
-          <Title level={1} className="font-semibold! mb-0! text-[20px]! lg:text-[32px]!">
+          <Title
+            level={1}
+            className="font-semibold! mb-0! text-[20px]! lg:text-[32px]!"
+          >
             Thanh toán thất bại
           </Title>
           <Text className="text-[#6b7280]! text-[14px] lg:text-base!">

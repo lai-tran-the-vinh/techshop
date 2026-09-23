@@ -1,13 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import SpeechToTextButton from './SpeechToTextButton';
-import {
-  Send,
-  X,
-  RefreshCw,
-  Loader,
-  Maximize2,
-  Minimize2,
-} from 'lucide-react';
+import { Send, X, RefreshCw, Loader, Maximize2, Minimize2 } from 'lucide-react';
 import axiosInstance, { callFreshToken } from '@/services/apis';
 import { Typography } from 'antd';
 import { jwtDecode } from 'jwt-decode';
@@ -379,14 +372,23 @@ const Chatbot = () => {
                   width: '36px',
                   height: '36px',
                   minWidth: '36px',
-                  backgroundColor: (loading || !input.trim() || isRecording) ? '#e5e7eb' : '#cb1c22',
-                  color: (loading || !input.trim() || isRecording) ? '#9ca3af' : 'white',
+                  backgroundColor:
+                    loading || !input.trim() || isRecording
+                      ? '#e5e7eb'
+                      : '#cb1c22',
+                  color:
+                    loading || !input.trim() || isRecording
+                      ? '#9ca3af'
+                      : 'white',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   border: 'none',
-                  cursor: (loading || !input.trim() || isRecording) ? 'not-allowed' : 'pointer'
+                  cursor:
+                    loading || !input.trim() || isRecording
+                      ? 'not-allowed'
+                      : 'pointer',
                 }}
               >
                 <Send size={18} className="ml-0.5" />
@@ -401,7 +403,11 @@ const Chatbot = () => {
           onClick={toggleChat}
           className="fixed bottom-24 right-10 w-[45px] h-[45px] bg-transparent text-white rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center z-[999] animate-bounce print:hidden"
         >
-          <img src="/chatbot.png" alt="Chatbot" className="w-full h-full object-contain rounded-full" />
+          <img
+            src="/chatbot.png"
+            alt="Chatbot"
+            className="w-full h-full object-contain rounded-full"
+          />
         </button>
       )}
 

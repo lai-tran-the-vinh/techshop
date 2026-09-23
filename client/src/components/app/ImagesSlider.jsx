@@ -44,7 +44,7 @@ const SliderProduct = ({ images = [] }) => {
 
   return (
     <div className="w-full h-full max-w-4xl mx-auto relative rounded-[15px] overflow-hidden">
-      <div 
+      <div
         className="overflow-hidden"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}

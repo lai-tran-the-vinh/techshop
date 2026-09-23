@@ -14,9 +14,12 @@ import { OrderService } from 'src/order/order.service';
 @Injectable()
 export class PaymentService {
   private readonly vnp_TmnCode = process.env.VNPAY_TMN_CODE || 'MOCK_TMN_CODE';
-  private readonly vnp_HashSecret = process.env.VNPAY_HASH_SECRET || 'MOCK_HASH_SECRET';
-  private readonly vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-  private readonly vnp_ReturnUrl = 'http://localhost:8080/api/v1/payment/vnpay/callback';
+  private readonly vnp_HashSecret =
+    process.env.VNPAY_HASH_SECRET || 'MOCK_HASH_SECRET';
+  private readonly vnp_Url =
+    'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+  private readonly vnp_ReturnUrl =
+    'http://localhost:8080/api/v1/payment/vnpay/callback';
 
   constructor(
     @InjectModel(Payment.name)
@@ -88,7 +91,9 @@ export class PaymentService {
 
     if (existingPayment.payUrl) {
       const now = new Date();
-      const diffMinutes = (now.getTime() - new Date(existingPayment.updatedAt).getTime()) / (1000 * 60);
+      const diffMinutes =
+        (now.getTime() - new Date(existingPayment.updatedAt).getTime()) /
+        (1000 * 60);
       if (diffMinutes < 15) {
         return {
           resultCode: 9000,
@@ -101,7 +106,7 @@ export class PaymentService {
     const ipAddr = '127.0.0.1'; // Mock IP
     const createDate = new Date();
     const expireDate = new Date(createDate.getTime() + 15 * 60000);
-    
+
     const vnp_CreateDate = this.formatVNPayDate(createDate);
     const vnp_ExpireDate = this.formatVNPayDate(expireDate);
 
@@ -122,17 +127,24 @@ export class PaymentService {
       vnp_ReturnUrl: this.vnp_ReturnUrl,
       vnp_IpAddr: ipAddr,
       vnp_CreateDate: vnp_CreateDate,
-      vnp_ExpireDate: vnp_ExpireDate
+      vnp_ExpireDate: vnp_ExpireDate,
     };
 
     vnp_Params = this.sortObject(vnp_Params);
 
-    const signData = querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+    const signData = querystring.stringify(vnp_Params, '&', '=', {
+      encodeURIComponent: (str) => str,
+    });
     const hmac = crypto.createHmac('sha512', this.vnp_HashSecret);
     const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
-    
+
     vnp_Params['vnp_SecureHash'] = signed;
-    const payUrl = this.vnp_Url + '?' + querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+    const payUrl =
+      this.vnp_Url +
+      '?' +
+      querystring.stringify(vnp_Params, '&', '=', {
+        encodeURIComponent: (str) => str,
+      });
 
     await this.paymentModel.findByIdAndUpdate(existingPayment._id, {
       vnpayTxnRef: orderId,
@@ -153,11 +165,14 @@ export class PaymentService {
 
       vnp_Params = this.sortObject(vnp_Params);
 
-      const signData = querystring.stringify(vnp_Params, '&', '=', { encodeURIComponent: (str) => str });
+      const signData = querystring.stringify(vnp_Params, '&', '=', {
+        encodeURIComponent: (str) => str,
+      });
       const hmac = crypto.createHmac('sha512', this.vnp_HashSecret);
       const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
 
-      const isSuccess = secureHash === signed && vnp_Params['vnp_ResponseCode'] === '00';
+      const isSuccess =
+        secureHash === signed && vnp_Params['vnp_ResponseCode'] === '00';
 
       const payment = await this.paymentModel.findOne({
         vnpayTxnRef: vnp_Params['vnp_TxnRef'],
@@ -165,9 +180,16 @@ export class PaymentService {
 
       if (!payment) {
         const baseOrderId = vnp_Params['vnp_TxnRef'].split('-')[0];
-        const fallbackPayment = await this.paymentModel.findOne({ order: baseOrderId });
-        if (!fallbackPayment) throw new Error('Không tìm thấy giao dịch tương ứng');
-        return this.processPaymentResult(fallbackPayment, isSuccess, vnp_Params);
+        const fallbackPayment = await this.paymentModel.findOne({
+          order: baseOrderId,
+        });
+        if (!fallbackPayment)
+          throw new Error('Không tìm thấy giao dịch tương ứng');
+        return this.processPaymentResult(
+          fallbackPayment,
+          isSuccess,
+          vnp_Params,
+        );
       }
 
       if (payment.status === PaymentStatus.COMPLETED) {
@@ -177,11 +199,18 @@ export class PaymentService {
       return this.processPaymentResult(payment, isSuccess, vnp_Params);
     } catch (error) {
       console.error('VNPay Redirect Error:', error);
-      return { success: false, message: (error as Error).message || 'Lỗi xử lý redirect VNPay' };
+      return {
+        success: false,
+        message: (error as Error).message || 'Lỗi xử lý redirect VNPay',
+      };
     }
   }
 
-  private async processPaymentResult(payment: any, isSuccess: boolean, query: any) {
+  private async processPaymentResult(
+    payment: any,
+    isSuccess: boolean,
+    query: any,
+  ) {
     try {
       if (isSuccess) {
         await this.paymentModel.findByIdAndUpdate(payment._id, {
@@ -211,9 +240,9 @@ export class PaymentService {
         if (order) {
           await this.orderService.update(
             payment.order,
-            { 
+            {
               paymentStatus: PaymentStatus.FAILED,
-              status: 'CANCELLED' // Dùng chuỗi 'CANCELLED' tương ứng OrderStatus.CANCELLED
+              status: 'CANCELLED', // Dùng chuỗi 'CANCELLED' tương ứng OrderStatus.CANCELLED
             },
             order.user,
           );
@@ -240,7 +269,9 @@ export class PaymentService {
   }
 
   async update(id: string, updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentModel.findByIdAndUpdate(id, updatePaymentDto, { new: true }).exec();
+    return this.paymentModel
+      .findByIdAndUpdate(id, updatePaymentDto, { new: true })
+      .exec();
   }
 
   async remove(id: string) {

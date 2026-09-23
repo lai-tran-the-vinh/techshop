@@ -65,7 +65,9 @@ function ProductDescription({ className, product = {}, loading = false }) {
             </div>
 
             {isOverflow && (
-              <div className={`flex justify-center ${expanded ? 'mt-6' : '-mt-6 relative z-10'}`}>
+              <div
+                className={`flex justify-center ${expanded ? 'mt-6' : '-mt-6 relative z-10'}`}
+              >
                 <Button
                   onClick={() => setExpanded(!expanded)}
                   className="
@@ -93,7 +95,11 @@ function ProductDescription({ className, product = {}, loading = false }) {
           </>
         ) : (
           <div className="text-center py-8 flex flex-col items-center justify-center">
-            <img src="/describe.svg" alt="No description" className="w-180 h-180 mb-4 object-contain opacity-80" />
+            <img
+              src="/describe.svg"
+              alt="No description"
+              className="w-180 h-180 mb-4 object-contain opacity-80"
+            />
             <p className="text-black font-medium">Sản phẩm chưa có mô tả</p>
             <p className="text-black text-sm mt-1">
               Thông tin mô tả sẽ được cập nhật sớm

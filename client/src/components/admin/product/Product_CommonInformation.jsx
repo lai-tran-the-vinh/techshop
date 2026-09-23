@@ -71,10 +71,7 @@ function CommonInformation({
         </Col>
         <Col xs={24} md={12} lg={6}>
           <Form.Item name="category" label="Thể loại">
-            <Select
-              placeholder="Chọn thể loại"
-              onChange={onCategoryChange}
-            >
+            <Select placeholder="Chọn thể loại" onChange={onCategoryChange}>
               {categories.map((category) => (
                 <Option key={category._id} value={category._id}>
                   {category.name}

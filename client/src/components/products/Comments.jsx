@@ -203,7 +203,10 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                 justify="center"
                 className="lg:mr-8"
               >
-                <Typography.Title level={1} className="mb-0! text-3xl sm:text-4xl!">
+                <Typography.Title
+                  level={1}
+                  className="mb-0! text-3xl sm:text-4xl!"
+                >
                   {stats?.averageRating?.toFixed(1)}
                 </Typography.Title>
                 <Typography.Text>
@@ -232,7 +235,10 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                 {Array.from({ length: 5 }, (_, index) => {
                   return (
                     <Flex key={index} gap={8} align="center">
-                      <Flex align="center" className="w-[35px]! justify-between!">
+                      <Flex
+                        align="center"
+                        className="w-[35px]! justify-between!"
+                      >
                         <Typography.Text>{5 - index}</Typography.Text>
                         <StarFilled className="text-yellow-400! text-xl!" />
                       </Flex>
@@ -277,40 +283,40 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                   autoSize={{ minRows: 2, maxRows: 4 }}
                   className="w-full min-h-100! placeholder:text-base! placeholder:text-gray-500! border-gray-400 rounded-md!"
                 />
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 sm:mt-8 gap-4 sm:gap-0">
-                    <div className="flex items-center gap-4 sm:gap-8">
-                      <Typography.Text className="text-base! font-medium! whitespace-nowrap">
-                        Đánh giá:
-                      </Typography.Text>
-                      <Rate
-                        value={rating}
-                        allowHalf
-                        onChange={(value) => {
-                          setRating(value === 0 ? 1 : value);
-                        }}
-                        className="text-yellow-400!"
-                      />
-                    </div>
-                    <div className="flex gap-4 sm:gap-8 w-full sm:w-auto">
-                      <Button
-                        onClick={() => setComment('')}
-                        disabled={submitting}
-                        className="flex-1 sm:min-w-100! rounded-md! h-40!"
-                      >
-                        Hủy
-                      </Button>
-                      <Button
-                        type="primary"
-                        onClick={handleSubmitComment}
-                        loading={submitting}
-                        disabled={!comment.trim() || submitting}
-                        className="flex-1 sm:min-w-100! rounded-md! font-medium! h-40!"
-                      >
-                        {submitting ? 'Đang gửi bình luận...' : 'Gửi bình luận'}
-                      </Button>
-                    </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 sm:mt-8 gap-4 sm:gap-0">
+                  <div className="flex items-center gap-4 sm:gap-8">
+                    <Typography.Text className="text-base! font-medium! whitespace-nowrap">
+                      Đánh giá:
+                    </Typography.Text>
+                    <Rate
+                      value={rating}
+                      allowHalf
+                      onChange={(value) => {
+                        setRating(value === 0 ? 1 : value);
+                      }}
+                      className="text-yellow-400!"
+                    />
+                  </div>
+                  <div className="flex gap-4 sm:gap-8 w-full sm:w-auto">
+                    <Button
+                      onClick={() => setComment('')}
+                      disabled={submitting}
+                      className="flex-1 sm:min-w-100! rounded-md! h-40!"
+                    >
+                      Hủy
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={handleSubmitComment}
+                      loading={submitting}
+                      disabled={!comment.trim() || submitting}
+                      className="flex-1 sm:min-w-100! rounded-md! font-medium! h-40!"
+                    >
+                      {submitting ? 'Đang gửi bình luận...' : 'Gửi bình luận'}
+                    </Button>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -336,9 +342,16 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
           ) : reviews.length === 0 ? (
             <div className="text-center py-12">
               <div className="">
-                <Image src='/rating.svg' width={150} height={150} preview={false} />
+                <Image
+                  src="/rating.svg"
+                  width={150}
+                  height={150}
+                  preview={false}
+                />
               </div>
-              <p className="text-black text-lg block mb-0">Chưa có bình luận nào</p>
+              <p className="text-black text-lg block mb-0">
+                Chưa có bình luận nào
+              </p>
               <p className="text-gray-600 text-sm">
                 Hãy là người đầu tiên chia sẻ nhận xét!
               </p>
@@ -363,7 +376,11 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                           <Text className="font-semibold! text-gray-800! text-xs sm:text-sm!">
                             {review.userId?.name || 'Người dùng'}
                           </Text>
-                          <Flex align="center" gap={4} className="bg-orange-50! border! border-orange-200! px-2! py-[2px]! rounded-md!">
+                          <Flex
+                            align="center"
+                            gap={4}
+                            className="bg-orange-50! border! border-orange-200! px-2! py-[2px]! rounded-md!"
+                          >
                             <Typography.Text className="text-orange-600! font-bold! text-[10px]! sm:text-[11px]!">
                               {review.rating}
                             </Typography.Text>

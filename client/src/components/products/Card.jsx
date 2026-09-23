@@ -46,7 +46,14 @@ function CardProduct({ product = {}, className, loading = false }) {
   return (
     <Link to={`/product/${product._id}`}>
       <Card
-        styles={{ body: { padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' } }}
+        styles={{
+          body: {
+            padding: '12px',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
         cover={
           <div className="flex items-center justify-center pt-4 sm:pt-6">
             <Image

@@ -344,7 +344,6 @@ const UserRoleManagement = () => {
       </div>
 
       <Card>
-
         <div className="flex flex-col lg:flex-row justify-between gap-4 mb-4">
           <div className="w-full lg:w-1/3">
             <Input
@@ -395,7 +394,7 @@ const UserRoleManagement = () => {
           </div>
         </div>
 
-          <Table
+        <Table
           loading={loading}
           rowKey={(record) => record._id}
           dataSource={filteredUsers}

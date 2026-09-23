@@ -293,7 +293,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           value={stats.totalOrders}
         />
       </Card>
-      
+
       <Card className="shadow-none!">
         <Statistic
           title={'Tổng doanh thu'}
@@ -301,7 +301,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           formatter={(value) => `${formatCurrency(value)} VND`}
         />
       </Card>
-      
+
       {filters.branch && stats.branchRevenue !== null && (
         <Card className="shadow-none!">
           <Statistic
@@ -312,7 +312,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           />
         </Card>
       )}
-      
+
       <Card className="shadow-none!">
         <Statistic
           title="Đơn chờ xử lý"
@@ -320,7 +320,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           valueStyle={{ color: '#faad14' }}
         />
       </Card>
-      
+
       <Card className="shadow-none!">
         <Statistic
           title="Chưa thanh toán"
@@ -328,7 +328,7 @@ const OrderStatistics = ({ orders, filters, branches }) => {
           valueStyle={{ color: '#ff4d4f' }}
         />
       </Card>
-      
+
       <Card className="shadow-none!">
         <Statistic
           title="Đơn trả hàng"

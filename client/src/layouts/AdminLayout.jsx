@@ -370,7 +370,9 @@ function AdminLayout() {
           type="default"
           className="w-full! border-none! flex! items-center! shadow-none! bg-transparent! mb-8! py-4! h-auto!"
           onClick={() => navigate('/')}
-          style={{ justifyContent: collapsed && !isMobile ? 'center' : 'flex-start' }}
+          style={{
+            justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+          }}
         >
           {collapsed && !isMobile ? null : 'Về trang chủ'}
         </Button>
@@ -378,7 +380,9 @@ function AdminLayout() {
           type="default"
           className="w-full! border-none! flex! items-center! text-primary! shadow-none! bg-transparent! py-4! h-auto!"
           onClick={handleLogout}
-          style={{ justifyContent: collapsed && !isMobile ? 'center' : 'flex-start' }}
+          style={{
+            justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+          }}
         >
           {collapsed && !isMobile ? null : 'Đăng xuất'}
         </Button>
@@ -480,7 +484,8 @@ function AdminLayout() {
             width={280}
             closeIcon={<span className="text-white text-lg font-bold">✕</span>}
             classNames={{
-              header: 'bg-gradient-primary-to-secondary! border-none! h-[56px]! min-h-[56px]! max-h-[56px]! py-0! px-4!',
+              header:
+                'bg-gradient-primary-to-secondary! border-none! h-[56px]! min-h-[56px]! max-h-[56px]! py-0! px-4!',
             }}
             styles={{
               body: {
@@ -517,7 +522,6 @@ function AdminLayout() {
           </Content>
         </Layout>
       </Layout>
-
     </Layout>
   );
 }
