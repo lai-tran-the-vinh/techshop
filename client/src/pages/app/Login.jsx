@@ -56,7 +56,7 @@ function Login() {
       {/* Right side - Form */}
       <div className="flex-1 flex flex-col bg-white relative max-h-screen overflow-y-auto">
         {/* Mobile Header */}
-        <div className="lg:hidden shrink-0 sticky top-0 left-0 w-full h-46 bg-gradient-primary-to-secondary flex items-center justify-between px-16 sm:px-24 shadow-md z-50">
+        <div className="lg:hidden shrink-0 sticky top-0 left-0 w-full h-[60px] bg-gradient-primary-to-secondary flex items-center justify-between px-16 sm:px-24 shadow-md z-50">
           <div className="cursor-pointer flex items-center text-white" onClick={() => navigate('/')}>
             <BsArrowLeft className="text-2xl" />
           </div>
@@ -72,7 +72,7 @@ function Login() {
             <Space
               size={16}
               direction="vertical"
-              className="w-full! text-center! mb-32! hidden! lg:block!"
+              className="w-full! text-center! mb-16! hidden! lg:block!"
             >
               <div>
                 <Title level={2} className="m-0! text-primary!">
@@ -91,6 +91,7 @@ function Login() {
                 autoComplete="off"
               >
                 <Form.Item
+                  className="mb-16!"
                   label={
                     <span className="text-[15px]! font-medium! text-[#262626]!">
                       Email
@@ -110,11 +111,12 @@ function Login() {
                 >
                   <Input
                     placeholder="Nhập email của bạn"
-                    className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                    className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                   />
                 </Form.Item>
 
                 <Form.Item
+                  className="mb-12!"
                   label={
                     <span className="text-[15px]! font-medium! text-[#262626]!">
                       Mật khẩu
@@ -141,11 +143,11 @@ function Login() {
                         <EyeInvisibleOutlined style={{ color: '#8c8c8c' }} />
                       )
                     }
-                    className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                    className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                   />
                 </Form.Item>
 
-                <div className="text-right! mb-24!">
+                <div className="text-right! mb-16!">
                   <Link
                     className="text-sm! font-medium! text-[#e53935]!"
                     onClick={() => navigate('/forgot-password')}
@@ -154,17 +156,17 @@ function Login() {
                   </Link>
                 </div>
 
-                <Form.Item>
+                <Form.Item className="mb-0!">
                   <Button
                     block
                     htmlType="submit"
-                    className="h-[44px]! rounded-lg! font-semibold! bg-[#e53935]! text-white! border-none!"
+                    className="h-[48px]! md:h-[44px]! rounded-lg! font-semibold! bg-[#e53935]! text-white! border-none!"
                   >
                     Đăng nhập
                   </Button>
                 </Form.Item>
 
-                <Divider plain className="my-32! mx-0! border-[#e0e0e0]!">
+                <Divider plain className="my-16! mx-0! border-[#e0e0e0]!">
                   <span className="text-[#8c8c8c]! text-sm! bg-white! px-4!">
                     Hoặc tiếp tục với
                   </span>
@@ -173,7 +175,7 @@ function Login() {
                 <Button
                   icon={<img src="/google-icon.svg" alt="Google" className="w-[18px] h-[18px]" />}
                   block
-                  className="h-[44px]! rounded-lg! text-base! font-semibold! border border-[#e0e0e0]! bg-white! flex! items-center! justify-center!"
+                  className="h-[48px]! md:h-[44px]! rounded-lg! text-base! font-semibold! border border-[#e0e0e0]! bg-white! flex! items-center! justify-center!"
                   onClick={() => handleLoginWithGoogle()}
                 >
                   Đăng nhập với Google
@@ -181,15 +183,16 @@ function Login() {
               </Form>
             </div>
 
-            <div className="text-center! py-32! px-0! bg-white! border-t border-t-[#f0f0f0]!">
-              <Text className="text-[#8c8c8c]! text-sm!">Chưa có tài khoản?</Text>
-              <Button
-                type="link"
-                className="text-[#e53935]! font-semibold!"
-                onClick={() => navigate('/signup')}
-              >
-                Đăng ký
-              </Button>
+            <div className="text-center! py-24! px-0! bg-white! border-t border-t-[#f0f0f0]!">
+              <Text className="text-[#8c8c8c]! text-[14px]!">
+                Chưa có tài khoản?{' '}
+                <span
+                  className="text-[#e53935]! font-semibold! cursor-pointer!"
+                  onClick={() => navigate('/signup')}
+                >
+                  Đăng ký
+                </span>
+              </Text>
             </div>
           </div>
         </div>

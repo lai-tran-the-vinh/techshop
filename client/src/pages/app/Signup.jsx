@@ -158,7 +158,7 @@ function Signup() {
       {/* Right side - Form */}
       <div className="flex-1 flex flex-col bg-white relative max-h-screen overflow-y-auto">
         {/* Mobile Header */}
-        <div className="lg:hidden shrink-0 sticky top-0 left-0 w-full h-46 bg-gradient-primary-to-secondary flex items-center justify-between px-16 sm:px-24 shadow-md z-50">
+        <div className="lg:hidden shrink-0 sticky top-0 left-0 w-full h-[60px] bg-gradient-primary-to-secondary flex items-center justify-between px-16 sm:px-24 shadow-md z-50">
           <div className="cursor-pointer flex items-center text-white" onClick={() => navigate('/')}>
             <BsArrowLeft className="text-2xl" />
           </div>
@@ -178,7 +178,7 @@ function Signup() {
       />
       {currentStep === 0 ? (
         <>
-          <Title level={2} className="text-primary! text-center! mt-16 hidden! lg:block! mb-32">
+          <Title level={2} className="text-primary! text-center! mt-16 hidden! lg:block! mb-16">
             Tạo tài khoản mới
           </Title>
           <div className="pb-48">
@@ -194,6 +194,7 @@ function Signup() {
               <Row gutter={16}>
                 <Col xs={24} sm={12}>
                   <Form.Item
+                    className="mb-12!"
                     label={
                       <span
                         style={{
@@ -216,12 +217,13 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập họ và tên"
-                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12}>
                   <Form.Item
+                    className="mb-12!"
                     label={
                       <span
                         style={{
@@ -241,13 +243,14 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập email"
-                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
               </Row>
 
               <Form.Item
+                className="mb-12!"
                 label={
                   <span
                     style={{ fontSize: 14, fontWeight: 500, color: '#262626' }}
@@ -270,13 +273,14 @@ function Signup() {
                       <EyeInvisibleOutlined style={{ color: '#8c8c8c' }} />
                     )
                   }
-                  style={{ borderRadius: 8, padding: '10px 12px' }}
+                  className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                 />
               </Form.Item>
 
               <Row gutter={16}>
                 <Col xs={24} sm={8}>
                   <Form.Item
+                    className="mb-12!"
                     label={
                       <span
                         style={{
@@ -298,12 +302,13 @@ function Signup() {
                   >
                     <Input
                       placeholder="Nhập SĐT"
-                      className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+                      className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
                     />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={8}>
                   <Form.Item
+                    className="mb-12!"
                     label={
                       <span
                         style={{
@@ -319,8 +324,8 @@ function Signup() {
                   >
                     <Select
                       placeholder="Chọn giới tính"
-                      className="[&_.ant-select-selector]:rounded-lg! [&_.ant-select-selection-item]:text-[14px]! [&_.ant-select-selection-placeholder]:text-[14px]!"
-                      style={{ borderRadius: 8, height: 44 }}
+                      className="h-[48px]! md:h-[44px]! [&_.ant-select-selector]:h-full! [&_.ant-select-selector]:items-center [&_.ant-select-selector]:rounded-lg! [&_.ant-select-selection-item]:text-[14px]! [&_.ant-select-selection-placeholder]:text-[14px]!"
+                      style={{ borderRadius: 8 }}
                     >
                       <Option value="male">Nam</Option>
                       <Option value="female">Nữ</Option>
@@ -330,6 +335,7 @@ function Signup() {
                 </Col>
                 <Col xs={24} sm={8}>
                   <Form.Item
+                    className="mb-12!"
                     label={
                       <span
                         style={{
@@ -353,14 +359,13 @@ function Signup() {
                   >
                     <InputNumber
                       placeholder="Nhập tuổi"
-                      className="w-full! rounded-lg! [&_input]:text-[14px]! [&_input]:placeholder:text-[14px]!"
-                      style={{ height: 44, padding: '4px 0px' }}
+                      className="h-[48px]! md:h-[44px]! w-full! rounded-lg! [&_input]:text-[14px]! [&_input]:placeholder:text-[14px]! [&_.ant-input-number-input-wrap]:flex [&_.ant-input-number-input-wrap]:items-center [&_.ant-input-number-input-wrap]:h-full [&_input]:h-full"
                     />
                   </Form.Item>
                 </Col>
                 <Col span={24}>
-                  <Form.Item>
-                    <div style={{ marginBottom: '10px', position: 'relative' }}>
+                  <Form.Item className="mb-16!">
+                    <div style={{ position: 'relative' }}>
                       <label
                         style={{
                           fontSize: 14,
@@ -379,7 +384,7 @@ function Signup() {
                         onClick={() =>
                           setShowAddressDropdown(!showAddressDropdown)
                         }
-                        className="rounded-lg! h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all! cursor-pointer! bg-white!"
+                        className="rounded-lg! h-[48px]! md:h-[44px]! px-[14px]! border border-[#e0e0e0]! text-[14px]! placeholder:text-[14px]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all! cursor-pointer! bg-white!"
                       />
 
                       {showAddressDropdown && (
@@ -492,13 +497,13 @@ function Signup() {
                 </Col>
               </Row>
 
-              <Form.Item>
+              <Form.Item className="mb-12!">
                 <Button
                   htmlType="submit"
                   loading={loading}
                   block
+                  className="h-[48px]! md:h-[44px]!"
                   style={{
-                    height: 44,
                     borderRadius: 8,
                     fontSize: 16,
                     fontWeight: 600,
@@ -511,7 +516,7 @@ function Signup() {
                 </Button>
               </Form.Item>
 
-              <Divider plain style={{ margin: '20px 0' }}>
+              <Divider plain style={{ margin: '16px 0' }}>
                 <span style={{ color: '#8c8c8c', fontSize: 14 }}>
                   Hoặc tiếp tục với
                 </span>
@@ -521,8 +526,8 @@ function Signup() {
                 icon={<img src="/google-icon.svg" alt="Google" className="w-[18px] h-[18px]" />}
                 onClick={handleGoogleSignup}
                 block
+                className="h-[48px]! md:h-[44px]!"
                 style={{
-                  height: 44,
                   borderRadius: 8,
                   fontSize: 16,
                   fontWeight: 600,
@@ -543,10 +548,10 @@ function Signup() {
           <Title level={2} className="text-primary! text-center!">
             Xác nhận mã OTP
           </Title>
-          <div className="relative mb-20!">
+          <div className="relative mb-16!">
             <Input
               value={otp}
-              className="h-[44px]! px-[14px]! rounded-lg! text-[14px]! placeholder:text-[14px]! border-[#e0e0e0]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
+              className="h-[48px]! md:h-[44px]! px-[14px]! rounded-lg! text-[14px]! placeholder:text-[14px]! border-[#e0e0e0]! hover:border-[#e53935]! focus-within:border-[#e53935]! focus-within:shadow-[0_0_0_2px_rgba(229,57,53,0.1)]! transition-all!"
               placeholder="Nhập mã OTP đã gửi đến email của bạn"
               onChange={(event) => {
                 setOtp(event.target.value);
@@ -576,7 +581,7 @@ function Signup() {
           <Button
             type="primary"
             disabled={!otp}
-            className="h-40! w-full! mb-20!"
+            className="h-[48px]! md:h-[44px]! w-full! mb-16!"
             onClick={async () => {
               try {
                 message.loading('Đang xác nhận mã OTP.');

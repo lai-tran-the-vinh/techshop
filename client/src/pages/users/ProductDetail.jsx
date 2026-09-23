@@ -664,7 +664,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className="bg-red-600 hover:bg-red-700 border-red-600 font-semibold hover:shadow-md shadow-md h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
+                      className="bg-red-600 hover:bg-red-700 border-red-600 font-bold! hover:shadow-md shadow-md h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning('Vui lòng đăng nhập để đặt hàng!!');
@@ -703,7 +703,7 @@ function ProductDetail() {
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className="font-semibold h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
+                      className="font-bold! h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning(
@@ -879,16 +879,15 @@ function ProductDetail() {
                   quantity: 1,
                 }]);
               }}
-              className="flex-1 lg:flex-none border-primary! text-primary! disabled:border-gray-200! disabled:text-gray-400! disabled:bg-gray-50! hover:bg-blue-50! font-semibold h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 lg:flex-none border-primary! text-primary! disabled:border-gray-200! disabled:text-gray-400! disabled:bg-gray-50! hover:bg-blue-50! font-bold! h-[44px]! text-xs! sm:text-base!"
             >
               <span className="lg:hidden">Thêm vào giỏ</span>
-              <ShoppingCartOutlined className="hidden lg:inline-block" />
             </Button>
             <Button
               type="primary"
               size="large"
               disabled={!currentStock || !selectedColor}
-              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! disabled:bg-gray-200! disabled:text-gray-400! border-none! font-semibold lg:px-8 h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! disabled:bg-gray-200! disabled:text-gray-400! border-none! font-bold! lg:px-8 h-[44px]! text-xs! sm:text-base!"
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');

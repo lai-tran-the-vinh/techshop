@@ -232,9 +232,9 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                 {Array.from({ length: 5 }, (_, index) => {
                   return (
                     <Flex key={index} gap={8} align="center">
-                      <Flex align="center">
+                      <Flex align="center" className="w-[35px]! justify-between!">
                         <Typography.Text>{5 - index}</Typography.Text>
-                        <StarFilled className="text-yellow-400! text-xl! ml-2!" />
+                        <StarFilled className="text-yellow-400! text-xl!" />
                       </Flex>
                       <Progress
                         showInfo={false}
@@ -348,7 +348,7 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-white flex items-start py-6! sm:p-6! gap-4 sm:gap-12"
+                  className="bg-white flex items-start py-6! sm:p-6! gap-10 sm:gap-16"
                 >
                   <div className="flex items-center gap-4 sm:gap-8 mb-4">
                     <div>
@@ -359,41 +359,35 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                   <div className="w-full">
                     <div className="mb-4 text-gray-700 w-full leading-relaxed rounded-lg">
                       <div className="flex-1!">
-                        <div className="flex! items-center! gap-4! mb-1!">
+                        <div className="flex! flex-wrap items-center gap-x-4 sm:gap-x-8 gap-y-2 mb-2!">
                           <Text className="font-semibold! text-gray-800! text-xs sm:text-sm!">
                             {review.userId?.name || 'Người dùng'}
                           </Text>
-                          <BsDot />
-                          <Typography.Text className="flex! items-center! text-[10px] sm:text-xs!">
+                          <Flex align="center" gap={4} className="bg-orange-50! border! border-orange-200! px-2! py-[2px]! rounded-md!">
+                            <Typography.Text className="text-orange-600! font-bold! text-[10px]! sm:text-[11px]!">
+                              {review.rating}
+                            </Typography.Text>
+                            <StarFilled className="text-orange-500! text-[10px]! sm:text-[11px]!" />
+                          </Flex>
+                          <Typography.Text className="text-[10px]! sm:text-xs! text-gray-500!">
                             {formatTime(review.createdAt)}
                           </Typography.Text>
-                          <BsDot />
-                          <div className="flex! items-center! gap-3! text-sm! text-gray-500!">
-                            <Rate
-                              allowHalf
-                              disabled
-                              defaultValue={review.rating}
-                              size="small"
-                              className="text-yellow-400! text-sm!"
-                            />
-                          </div>
-                          <BsDot />
-                          <div className="flex! items-center! gap-8! mt-4 text-sm! text-gray-500! mb-4!">
-                            <button
-                              onClick={() => toggleReplyInput(review._id)}
-                              className="flex! hover:underline! items-center! gap-2! transition-colors! px-8! cursor-pointer! text-black! py-4! rounded-full!"
-                            >
-                              Trả lời
-                            </button>
-                          </div>
                         </div>
                       </div>
-                      <Typography.Text className="text-sm! text-black!">
+                      <Typography.Text className="text-sm! text-black! block! mb-2!">
                         {review.content}
                       </Typography.Text>
+                      <div className="flex items-center gap-4 mt-2">
+                        <button
+                          onClick={() => toggleReplyInput(review._id)}
+                          className="flex! hover:underline! items-center! gap-2! transition-colors! px-0! cursor-pointer! text-gray-600! font-medium! text-xs! sm:text-sm! py-2! rounded-full!"
+                        >
+                          Trả lời
+                        </button>
+                      </div>
                     </div>
                     {review.replies && review.replies.length > 0 && (
-                      <div className="-ml-30 mt-20 bg-gray-50 p-20 rounded-md w-full mb-4! flex flex-col gap-20">
+                      <div className="mt-4 sm:mt-6 bg-gray-50 p-4 sm:p-6 rounded-md w-full mb-4! flex flex-col gap-4">
                         {review.replies.map((reply, index) => (
                           <div
                             key={index}
@@ -421,8 +415,8 @@ function Comments({ className, product, loading: initialLoading, stats = {} }) {
                       </div>
                     )}
                     {showReplyInput[review._id] && (
-                      <div className="ml-8 mt-16 p-10 bg-gray-50 rounded-md min-w-500">
-                        <div className="flex gap-8">
+                      <div className="mt-4 p-4 sm:p-6 bg-gray-50 rounded-md w-full">
+                        <div className="flex gap-4 sm:gap-8">
                           <div>
                             <AvatarDefault width={40} height={40} />
                           </div>
