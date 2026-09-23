@@ -34,7 +34,8 @@ const ModalBanner = (props) => {
     if (dataInit?._id) {
       form.setFieldsValue({
         ...dataInit,
-        dateRange: [dayjs(dataInit.startDate), dayjs(dataInit.endDate)],
+        startDate: dayjs(dataInit.startDate),
+        endDate: dayjs(dataInit.endDate),
       });
       if (dataInit?.imageUrl && typeof dataInit?.imageUrl === 'string') {
         setImage([{ uid: '-1', url: dataInit.imageUrl }]);
@@ -71,7 +72,7 @@ const ModalBanner = (props) => {
   };
 
   const handleSubmit = async (values) => {
-    const { dateRange, ...rest } = values;
+    const { startDate, endDate, ...rest } = values;
     message.loading({
       content: dataInit?._id ? 'Đang cập nhật banner' : 'Đang tạo banner',
       key: 'banner',
@@ -79,8 +80,8 @@ const ModalBanner = (props) => {
     const bannerData = {
       ...rest,
       _id: dataInit?._id,
-      startDate: dateRange?.[0]?.toISOString(),
-      endDate: dateRange?.[1]?.toISOString(),
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
     };
     if (image[0]?.originFileObj) {
       const filePathImage = await Files.upload(image[0]?.originFileObj);
@@ -134,8 +135,8 @@ const ModalBanner = (props) => {
           position: 'header',
         }}
       >
-        <Row gutter={16}>
-          <Col span={12}>
+        <div className="flex flex-col md:flex-row gap-0 md:gap-4">
+          <div className="w-full md:w-1/2">
             <Form.Item
               name="title"
               label="Tiêu đề banner"
@@ -143,8 +144,8 @@ const ModalBanner = (props) => {
             >
               <Input placeholder="Nhập tiêu đề banner" />
             </Form.Item>
-          </Col>
-          <Col span={12}>
+          </div>
+          <div className="w-full md:w-1/2">
             <Form.Item
               name="position"
               label="Vị trí hiển thị"
@@ -158,8 +159,8 @@ const ModalBanner = (props) => {
                 ))}
               </Select>
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         <Form.Item name="description" label="Mô tả">
           <TextArea rows={3} />
@@ -197,8 +198,8 @@ const ModalBanner = (props) => {
           <Input placeholder="https://example.com" />
         </Form.Item>
 
-        <Row gutter={16}>
-          <Col span={8}>
+        <div className="flex flex-col md:flex-row gap-0 md:gap-4">
+          <div className="w-full md:w-1/3">
             <Form.Item
               name="priority"
               label="Độ ưu tiên"
@@ -206,17 +207,26 @@ const ModalBanner = (props) => {
             >
               <InputNumber min={1} max={100} style={{ width: '100%' }} />
             </Form.Item>
-          </Col>
-          <Col span={16}>
+          </div>
+          <div className="w-full md:w-1/3">
             <Form.Item
-              name="dateRange"
-              label="Thời gian hiển thị"
-              rules={[{ required: true, message: 'Vui lòng chọn thời gian!' }]}
+              name="startDate"
+              label="Ngày bắt đầu"
+              rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}
             >
-              <RangePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
             </Form.Item>
-          </Col>
-        </Row>
+          </div>
+          <div className="w-full md:w-1/3">
+            <Form.Item
+              name="endDate"
+              label="Ngày kết thúc"
+              rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
+            >
+              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+            </Form.Item>
+          </div>
+        </div>
 
         <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
           <Switch checkedChildren="Hoạt động" unCheckedChildren="Tạm dừng" />
