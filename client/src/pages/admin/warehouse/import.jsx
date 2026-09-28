@@ -579,6 +579,7 @@ const WarehouseInbound = () => {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '100vh',
+          backgroundColor: '#ffffff',
         }}
       >
         <Spin size="large" />

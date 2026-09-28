@@ -255,9 +255,8 @@ export class DashboardService {
     }
   }
 
-  // Cron job - Cập nhật stats hàng tuần vào Thứ Hai
-  @Cron('0 0 * * 1') // 0h Thứ 2
-  // @Cron('*/2 * * * *') // Test: Mỗi 2 phút
+  // Cron job - Cập nhật stats hàng tuần
+  @Cron('*/2 * * * *')
   async updateWeeklyStats() {
     try {
       this.logger.log('Updating weekly stats...');
@@ -269,9 +268,8 @@ export class DashboardService {
     }
   }
 
-  // Cron job - Cập nhật stats hàng tháng vào ngày 1
-  @Cron('0 0 1 * *') // 0h ngày 1 mỗi tháng
-  // @Cron('*/2 * * * *') // Test: Mỗi 2 phút
+  // Cron job - Cập nhật stats hàng tháng
+  @Cron('*/2 * * * *')
   async updateMonthlyStats() {
     try {
       this.logger.log('Updating monthly stats...');
@@ -283,9 +281,8 @@ export class DashboardService {
     }
   }
 
-  // Cron job - Cập nhật stats hàng năm vào 1/1
-  @Cron('0 0 1 1 *') // 0h ngày 1 tháng 1
-  // @Cron('*/2 * * * *') // Test: Mỗi 2 phút
+  // Cron job - Cập nhật stats hàng năm
+  @Cron('*/2 * * * *')
   async updateYearlyStats() {
     try {
       this.logger.log('Updating yearly stats...');

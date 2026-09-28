@@ -734,7 +734,7 @@ function Order() {
                 disabled={!canOrder}
                 onClick={handleOrder}
                 type="primary"
-                className="print:hidden! h-40! rounded-md!"
+                className="print:hidden! h-40! rounded-full! font-medium!"
               >
                 Đặt hàng
               </Button>

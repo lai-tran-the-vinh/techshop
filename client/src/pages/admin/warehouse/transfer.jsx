@@ -488,7 +488,7 @@ const WarehouseTransferManagement = () => {
 
   if (loading) {
     return (
-      <div className="w-full h-[calc(100vh-60px)] flex justify-center items-center">
+      <div className="w-full h-[calc(100vh-60px)] flex justify-center items-center bg-white">
         <Spin size="large" />
       </div>
     );
