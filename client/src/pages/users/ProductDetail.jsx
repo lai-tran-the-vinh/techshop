@@ -341,13 +341,14 @@ function ProductDetail() {
     <div className="w-full h-full font-inter md:mt-10 px-0 sm:px-4 md:px-10 pb-[100px]">
       <div className="mx-auto rounded-[10px]">
         <Row
+          align="stretch"
           gutter={[
             { xs: 0, sm: 10 },
             { xs: 0, sm: 10 },
           ]}
         >
-          <Col xl={14} lg={14} md={24} sm={24} xs={24}>
-            <div className="h-full bg-white rounded-none sm:rounded-xl sm:border sm:border-gray-200 p-4 sm:p-20 flex! flex-col!">
+          <Col xl={14} lg={14} md={24} sm={24} xs={24} className="flex">
+            <div className="w-full h-full bg-white rounded-none sm:rounded-xl sm:border sm:border-gray-200 p-4 sm:p-20 flex! flex-col!">
               <div className="relative h-[60%] sm:h-[80%] px-10 sm:px-0">
                 <SliderProduct images={allImages} />
               </div>
@@ -415,9 +416,9 @@ function ProductDetail() {
             </div>
           </Col>
 
-          <Col xl={10} lg={10} md={24} sm={24} xs={24}>
+          <Col xl={10} lg={10} md={24} sm={24} xs={24} className="flex">
             <Card
-              className="h-full! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200! flex! flex-col!"
+              className="w-full! h-full! rounded-none! sm:rounded-xl! border-none! sm:border-solid! sm:border-gray-200! flex! flex-col!"
               styles={{
                 body: { display: 'flex', flexDirection: 'column', flex: 1 },
               }}
@@ -599,17 +600,24 @@ function ProductDetail() {
                     )}
                   </div>
                   <div className="p-10">
-                    {getDisplayedPromotions().map((promotion, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!"
-                        >
-                          <BsFillGiftFill className="text-primary!" />
-                          <Typography.Text>{promotion?.title}</Typography.Text>
-                        </div>
-                      );
-                    })}
+                    {promotions && promotions.length > 0 ? (
+                      getDisplayedPromotions().map((promotion, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!"
+                          >
+                            <BsFillGiftFill className="text-primary!" />
+                            <Typography.Text>{promotion?.title}</Typography.Text>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-6">
+                        <img src="/promotion.svg" alt="No promotion" className="w-[100px] h-[100px] mb-2" />
+                        <Typography.Text className="text-gray-500! font-medium!">Sản phẩm chưa có khuyến mãi</Typography.Text>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -632,17 +640,24 @@ function ProductDetail() {
                     )}
                   </div>
                   <div className="p-10">
-                    {getDisplayedWarranties().map((warranty, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!"
-                        >
-                          <BsCheckCircleFill className="text-primary!" />
-                          <Typography.Text>{warranty?.name}</Typography.Text>
-                        </div>
-                      );
-                    })}
+                    {warranties && warranties.length > 0 ? (
+                      getDisplayedWarranties().map((warranty, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="rounded-md! flex! p-8 gap-8 items-center! shadow-none!"
+                          >
+                            <BsCheckCircleFill className="text-primary!" />
+                            <Typography.Text>{warranty?.name}</Typography.Text>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-6">
+                        <img src="/warranty.svg" alt="No warranty" className="w-[100px] h-[100px] mb-2" />
+                        <Typography.Text className="text-gray-500! font-medium!">Sản phẩm chưa có chính sách bảo hành</Typography.Text>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* Extended Warranty Selection */}
@@ -677,106 +692,6 @@ function ProductDetail() {
 
               <div className="space-y-3 mt-auto!">
                 <Row gutter={[8, 8]}>
-                  <Col span={8}>
-                    <Button
-                      type="primary"
-                      size="large"
-                      block
-                      disabled={!currentStock || !selectedColor}
-                      className="bg-red-600 hover:bg-red-700 border-red-600 font-medium! md:font-semibold! h-[40px]! rounded-full! text-[13px]! sm:text-[15px]!"
-                      onClick={async () => {
-                        if (!user) {
-                          message.warning('Vui lòng đăng nhập để đặt hàng!!');
-                          navigate('/login');
-                          return;
-                        }
-
-                        if (!selectedColor) {
-                          message.warning('Vui lòng chọn màu sắc');
-                          return;
-                        }
-
-                        if (!currentStock) {
-                          message.error(
-                            'Sản phẩm đã hết hàng tại chi nhánh này',
-                          );
-                          return;
-                        }
-
-                        await handleBuy([
-                          {
-                            product: product._id,
-                            variant: selectedVariant._id,
-                            color: selectedColor,
-                            branch: selectBranchs,
-                            quantity: 1,
-                          },
-                        ]);
-                      }}
-                    >
-                      Mua ngay
-                    </Button>
-                  </Col>
-                  <Col span={8}>
-                    <Button
-                      size="large"
-                      block
-                      disabled={!currentStock || !selectedColor}
-                      className="font-medium! md:font-semibold! border-none! h-[40px]! hover:text-black! hover:bg-gray-200! bg-gray-100! rounded-full! text-[13px]! sm:text-[15px]!"
-                      onClick={async () => {
-                        if (!user) {
-                          message.warning(
-                            'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng',
-                          );
-                          navigate('/login');
-                          return;
-                        }
-
-                        if (!selectedColor) {
-                          message.warning('Vui lòng chọn màu sắc');
-                          return;
-                        }
-
-                        if (!currentStock) {
-                          message.error(
-                            'Sản phẩm đã hết hàng tại chi nhánh này',
-                          );
-                          return;
-                        }
-
-                        await handleAddItemsToCart([
-                          {
-                            product: product._id,
-                            variant: selectedVariant?._id,
-                            branch: selectBranchs,
-                            color: selectedColor,
-                            quantity: 1,
-                          },
-                        ]);
-                      }}
-                    >
-                      <span className="hidden! sm:inline!">
-                        Thêm vào giỏ
-                      </span>
-                      <span className="sm:hidden! font-medium!">Thêm vào giỏ</span>
-                    </Button>
-                  </Col>
-                  <Col span={8}>
-                    <Card
-                      className="shadow-none! rounded-full! border-none! bg-gray-100! hover:bg-gray-200! h-40! flex! items-center! justify-center! cursor-pointer!"
-                      style={{ borderRadius: 8 }}
-                      onClick={() => setDrawerAddessVisible(true)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-8">
-                          <span className="font-semibold">
-                            Cửa hàng
-                          </span>
-                        </div>
-                        <RightOutlined className="text-gray-400 pl-4 text-xs!" />
-                      </div>
-                    </Card>
-                  </Col>
                   {!selectedColor && selectedVariant && (
                     <Col span={24}>
                       <Text className="text-orange-500! text-sm! sm:text-base! text-center! font-medium!">
