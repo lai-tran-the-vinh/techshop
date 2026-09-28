@@ -1,12 +1,16 @@
 import React from 'react';
 import { HeartFilled } from '@ant-design/icons';
 import { Row, Col, Typography, Flex, Divider, Layout, Image } from 'antd';
+import { useLocation } from 'react-router-dom';
 
 const { Title, Text, Link } = Typography;
 
 const FooterComponent = () => {
+  const { pathname } = useLocation();
+  const isProductDetail = pathname.includes('/product/');
+
   return (
-    <Layout.Footer className="print:hidden! py-8! sm:py-12! px-0! bg-[#090D14]! flex! justify-center! w-full! mt-10! sm:mt-20!">
+    <Layout.Footer className={`print:hidden! py-8! sm:py-12! px-0! bg-[#090D14]! flex! justify-center! w-full! mt-10! sm:mt-20! ${isProductDetail ? 'pb-[120px]! sm:pb-[120px]!' : ''}`}>
       <div className="w-11/12 lg:w-5/6">
         <Flex vertical gap={6} className="w-full! py-12!">
           <Typography.Text className="text-white! text-lg! font-medium!">

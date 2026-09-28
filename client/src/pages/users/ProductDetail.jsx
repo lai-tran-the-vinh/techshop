@@ -338,7 +338,7 @@ function ProductDetail() {
   }
 
   return (
-    <div className="w-full h-full font-inter md:mt-10 px-0 sm:px-4 md:px-10">
+    <div className="w-full h-full font-inter md:mt-10 px-0 sm:px-4 md:px-10 pb-[100px]">
       <div className="mx-auto rounded-[10px]">
         <Row
           gutter={[
@@ -677,13 +677,13 @@ function ProductDetail() {
 
               <div className="space-y-3 mt-auto!">
                 <Row gutter={[8, 8]}>
-                  <Col span={12}>
+                  <Col span={8}>
                     <Button
                       type="primary"
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className="bg-red-600 hover:bg-red-700 border-red-600 font-bold! hover:shadow-md shadow-md h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
+                      className="bg-red-600 hover:bg-red-700 border-red-600 font-medium! md:font-semibold! h-[40px]! rounded-full! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning('Vui lòng đăng nhập để đặt hàng!!');
@@ -717,12 +717,12 @@ function ProductDetail() {
                       Mua ngay
                     </Button>
                   </Col>
-                  <Col span={12}>
+                  <Col span={8}>
                     <Button
                       size="large"
                       block
                       disabled={!currentStock || !selectedColor}
-                      className="font-bold! h-[44px]! rounded-md! text-[13px]! sm:text-[15px]!"
+                      className="font-medium! md:font-semibold! border-none! h-[40px]! hover:text-black! hover:bg-gray-200! bg-gray-100! rounded-full! text-[13px]! sm:text-[15px]!"
                       onClick={async () => {
                         if (!user) {
                           message.warning(
@@ -756,10 +756,26 @@ function ProductDetail() {
                       }}
                     >
                       <span className="hidden! sm:inline!">
-                        Thêm vào giỏ hàng
+                        Thêm vào giỏ
                       </span>
-                      <span className="sm:hidden!">Thêm vào giỏ</span>
+                      <span className="sm:hidden! font-medium!">Thêm vào giỏ</span>
                     </Button>
+                  </Col>
+                  <Col span={8}>
+                    <Card
+                      className="shadow-none! rounded-full! border-none! bg-gray-100! hover:bg-gray-200! h-40! flex! items-center! justify-center! cursor-pointer!"
+                      style={{ borderRadius: 8 }}
+                      onClick={() => setDrawerAddessVisible(true)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-8">
+                          <span className="font-semibold">
+                            Cửa hàng
+                          </span>
+                        </div>
+                        <RightOutlined className="text-gray-400 pl-4 text-xs!" />
+                      </div>
+                    </Card>
                   </Col>
                   {!selectedColor && selectedVariant && (
                     <Col span={24}>
@@ -776,23 +792,7 @@ function ProductDetail() {
                       </Text>
                     </Col>
                   )}
-                  <Col span={24}>
-                    <Card
-                      className="shadow-none! rounded-md! hover:border-gray-300! cursor-pointer!"
-                      style={{ borderRadius: 8 }}
-                      onClick={() => setDrawerAddessVisible(true)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-8">
-                          <BsShop className="text-gray-500! text-xl!" />
-                          <span className="font-medium text-gray-900">
-                            Danh sách cửa hàng
-                          </span>
-                        </div>
-                        <RightOutlined className="text-gray-400" />
-                      </div>
-                    </Card>
-                  </Col>
+                  
                 </Row>
               </div>
             </Card>
@@ -880,7 +880,7 @@ function ProductDetail() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto lg:mr-4">
+          <div className="hidden lg:flex items-center justify-between lg:justify-end w-full lg:w-auto lg:mr-4">
             <span className="lg:hidden text-gray-600 text-xs font-medium">
               Tạm tính:
             </span>
@@ -930,15 +930,15 @@ function ProductDetail() {
                   },
                 ]);
               }}
-              className="flex-1 lg:flex-none border-primary! text-primary! disabled:border-gray-200! disabled:text-gray-400! disabled:bg-gray-50! hover:bg-blue-50! font-bold! h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 lg:flex-none md:min-w-120! rounded-full! bg-gray-100! hover:bg-gray-200! text-gray-900! border-none! disabled:bg-gray-50! disabled:text-gray-400! font-medium! md:font-normal! h-[40px]! text-sm! sm:text-base!"
             >
-              <span className="lg:hidden">Thêm vào giỏ</span>
+              <span className="text-sm! sm:text-base! md:text-[14px]! font-medium! md:font-semibold!">Thêm vào giỏ</span>
             </Button>
             <Button
               type="primary"
               size="large"
               disabled={!currentStock || !selectedColor}
-              className="flex-1 lg:flex-none bg-red-600! hover:bg-red-700! disabled:bg-gray-200! disabled:text-gray-400! border-none! font-bold! lg:px-8 h-[44px]! text-xs! sm:text-base!"
+              className="flex-1 rounded-full! md:min-w-120! lg:flex-none bg-red-600! hover:bg-red-700! disabled:bg-gray-200! disabled:text-gray-400! border-none! font-medium! md:font-semibold! lg:px-8 h-[40px]! text-sm! sm:text-base! md:text-[14px]!"
               onClick={async () => {
                 if (!user) {
                   message.warning('Vui lòng đăng nhập để đặt hàng!!');
