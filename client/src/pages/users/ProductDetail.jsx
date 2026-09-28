@@ -370,7 +370,7 @@ function ProductDetail() {
                             onClick={() => setSelectBranchs(branch._id)}
                             className={`flex flex-col p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
                               isSelected
-                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
+                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-white'
                                 : 'border-gray-300 hover:border-gray-400 bg-white'
                             }`}
                           >
@@ -494,14 +494,14 @@ function ProductDetail() {
                             setSelectedMemory(variant.memory);
                             setSelectedColor(variant.color[0]?.colorName);
                           }}
-                          className={`flex items-center justify-center px-6 h-[40px] sm:h-[42px] rounded-lg border cursor-pointer transition-all duration-200 ${
+                          className={`flex items-center justify-center py-4 px-10 h-[40px] sm:h-[42px] rounded-md border cursor-pointer transition-all duration-200 ${
                             isSelected
-                              ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
-                              : 'border-gray-300 hover:border-gray-400 bg-white'
+                              ? 'border-[#cb1c22] bg-white border-2'
+                              : 'border-gray-300 bg-white hover:bg-gray-50'
                           }`}
                         >
                           <Text
-                            className={`text-sm! sm:text-sm! font-medium! ${isSelected ? 'text-[#cb1c22]!' : 'text-gray-800!'}`}
+                            className={`text-sm! sm:text-sm! font-medium! text-gray-900!`}
                           >
                             {variant.memory?.storage && variant.memory?.ram
                               ? `${variant.memory.storage} - ${variant.memory.ram}`
@@ -531,8 +531,8 @@ function ProductDetail() {
                             onClick={() => setSelectedColor(color.colorName)}
                             className={`flex items-center gap-4 p-8 sm:p-10 rounded-lg border cursor-pointer transition-all duration-200 ${
                               isSelected
-                                ? 'border-[#cb1c22] ring-1 ring-[#cb1c22] bg-[#cb1c22]/[0.02]'
-                                : 'border-gray-300 hover:border-gray-400 bg-white'
+                                ? 'border-[#cb1c22] bg-white border-2'
+                                : 'border-gray-300 bg-white hover:bg-gray-50'
                             }`}
                           >
                             <div className="w-50 h-50 bg-gray-100 rounded overflow-hidden flex-shrink-0">
@@ -548,11 +548,11 @@ function ProductDetail() {
                             <div className="flex-1 min-w-0 flex flex-col justify-center">
                               <Typography.Text
                                 strong
-                                className={`block text-xs sm:text-sm truncate mb-1 ${isSelected ? 'text-[#cb1c22]' : 'text-gray-900'}`}
+                                className="block text-[13px]! sm:text-sm! truncate mb-1 text-gray-900!"
                               >
                                 {color.colorName}
                               </Typography.Text>
-                              <Typography.Text className="text-gray-500! text-[11px] sm:text-xs block mb-0.5">
+                              <Typography.Text className="text-primary! font-medium! text-[12px]! block mb-0.5">
                                 {formatCurrency(
                                   selectedVariant?.price -
                                     selectedVariant?.price *
@@ -562,7 +562,7 @@ function ProductDetail() {
                               </Typography.Text>
                               <Typography.Text
                                 type="secondary"
-                                className="block text-[11px] sm:text-xs text-gray-400!"
+                                className="block text-[12px]! text-gray-400!"
                               >
                                 {selectedVariant.memory?.storage &&
                                 selectedVariant.memory?.ram
