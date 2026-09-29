@@ -258,7 +258,7 @@ function Cart() {
   }
 
   return (
-    <div className="bg-[#f3f4f6] min-h-screen max-lg:p-0 lg:px-24 min-md:mt-10 w-full relative">
+    <div className="bg-[#f3f4f6] min-h-screen max-lg:p-0 lg:px-0 min-md:mt-10 w-full relative">
       <Modal
         centered
         open={open}
@@ -279,37 +279,37 @@ function Cart() {
       </Modal>
 
       {cartItems.length === 0 || !cartData ? (
-        <div className="bg-white lg:rounded-xl lg:border lg:border-gray-200 lg:py-40 p-30 flex flex-col lg:flex-row items-center justify-center lg:gap-[200px] gap-4 text-center lg:text-left w-full max-w-[1200px] mx-auto">
-          <div className="w-[300px] lg:w-[450px] order-1 lg:order-2">
+        <div className="bg-white lg:rounded-xl lg:border lg:border-gray-200 py-12 lg:py-20 px-4 sm:px-12 lg:px-32 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 text-center lg:text-left w-full">
+          <div className="w-[250px] lg:w-[350px] order-1 lg:order-2 flex justify-end md:py-10">
             <Image
-              className="w-full h-auto"
+              className="w-full h-auto object-contain"
               preview={false}
               src="https://fptshop.com.vn/img/empty_cart.png?w=1920&q=75"
             />
           </div>
 
-          <div className="flex flex-col gap-24 lg:gap-24 items-center lg:items-start order-2 lg:order-1 px-8 mt-8 lg:mt-0">
+          <div className="flex flex-col gap-10 items-center lg:items-start order-2 lg:order-1 mt-4 lg:mt-0">
             <Title
               level={5}
-              className="font-semibold! mb-0! text-[16px]! text-gray-800! lg:text-[24px]!"
+              className="font-semibold! mb-0! text-lg! sm:text-xl! lg:text-3xl! text-gray-800!"
             >
               Chưa có sản phẩm nào trong giỏ hàng
             </Title>
-            <Text className="text-[#6b7280]! text-[13px]! lg:text-[16px]!">
+            <Text className="text-[#6b7280]! text-[13px]! lg:text-[14px]!">
               Cùng mua sắm hàng ngàn sản phẩm tại TechShop nhé!
             </Text>
-            <Link to="/" className="mt-16 lg:mt-16">
+            <Link to="/" className="mt-4 lg:mt-6">
               <Button
                 type="primary"
-                className="rounded-full! h-[40px]! px-48! lg:h-[48px]! lg:px-56! bg-[#cb1c22]! hover:bg-[#a1161b]! border-none! text-[14px]! font-medium!"
+                className="rounded-full! h-[40px]! px-8! lg:px-10! bg-[#cb1c22]! hover:bg-[#a1161b]! border-none! text-[14px]! lg:text-[15px]! font-medium! shadow-sm hover:shadow-md transition-all duration-300"
               >
-                Mua hàng
+                Tiếp tục mua sắm
               </Button>
             </Link>
           </div>
         </div>
       ) : (
-        <div className="w-full max-w-[1200px] mx-auto">
+        <div className="w-full">
           {/* Mobile Back to Shop Link */}
           <div className="lg:hidden px-16 py-12 bg-white flex items-center shadow-sm sticky top-0 z-40">
             <Link
@@ -646,7 +646,7 @@ function Cart() {
       )}
 
       {!loading && recommentProducts.length > 0 && (
-        <div className="mt-8 lg:mt-10 w-full max-w-[1200px] mx-auto max-lg:bg-white max-lg:pb-32 lg:px-0">
+        <div className="mt-8 lg:mt-10 w-full max-lg:bg-white max-lg:pb-32 lg:px-0">
           <PreviewListProducts
             title="Sản phẩm có thể bạn quan tâm"
             products={recommentProducts}
